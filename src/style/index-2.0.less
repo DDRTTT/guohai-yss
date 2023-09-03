@@ -1,0 +1,442 @@
+// 项目优化 全局样式 - 主色：#000000
+@import '~antd/es/style/themes/default.less';
+body {
+  color: #000;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  :global {
+    .ant-select-selection:hover {
+      border-color: @primary-color;
+    }
+    // 按钮
+    .ant-btn:hover,
+    .ant-btn:focus {
+      color: @primary-color;
+      border-color: @primary-color;
+    }
+    .ant-btn-primary {
+      background-color: @primary-color;
+      border-color: @primary-color;
+    }
+    .ant-btn-primary:hover,
+    .ant-btn-primary:focus {
+      color: #ffffff;
+      background-color: @primary-5;
+    }
+    .ant-btn-link,
+    .ant-btn-link:hover {
+      color: @primary-color;
+      border: 0;
+    }
+
+    .ant-menu-item-selected {
+      color: @primary-color;
+    }
+
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+      background-color: @primary-1;
+      a {
+        color: @primary-color;
+        &:hover {
+          color: @primary-color;
+        }
+      }
+    }
+    .ant-menu-item > a:hover {
+      color: @primary-color;
+    }
+
+    .ant-menu-submenu-selected,
+    .ant-menu-submenu-title:hover {
+      color: @primary-color;
+    }
+
+    // 分页
+    .ant-pagination-item:hover,
+    .ant-pagination-item-active {
+      border-color: @primary-color;
+    }
+    .ant-pagination-item:hover a,
+    .ant-pagination-item-active a {
+      color: @primary-color;
+    }
+
+    .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
+      color: @primary-color;
+    }
+
+    .ant-pagination-next:hover,
+    .ant-pagination-prev:hover {
+      .ant-pagination-item-link,
+      .ant-pagination-item-link:link {
+        color: @primary-color;
+        border-color: @primary-color;
+      }
+    }
+
+    .ant-pagination-options-quick-jumper {
+      input {
+        &:hover {
+          border-color: @primary-color;
+        }
+      }
+    }
+
+    // card
+    .ant-tabs-nav .ant-tabs-tab-active,
+    .ant-tabs-nav .ant-tabs-tab:hover {
+      color: @primary-color;
+    }
+
+    .ant-tabs-ink-bar {
+      background-color: @primary-color;
+    }
+
+    .ant-card-head .ant-tabs-bar .ant-btn-link {
+      color: @primary-color;
+    }
+
+    .ant-tabs-ink-bar {
+      background-color: @primary-color;
+    }
+  }
+
+  :global {
+    .ant-message-success {
+      background: #edf8e8;
+    }
+
+    .ant-message-warning {
+      background: #fef9ed;
+    }
+
+    .ant-message-error {
+      background: #fff2f1;
+    }
+
+    // 全局背景
+    .ant-layout {
+      background-color: #f2f5fc;
+    }
+
+    // 禁用按钮
+    .ant-btn-link-disabled,
+    .ant-btn-link.disabled,
+    .ant-btn-link[disabled],
+    .ant-btn-link-disabled:hover,
+    .ant-btn-link.disabled:hover,
+    .ant-btn-link[disabled]:hover,
+    .ant-btn-link-disabled:focus,
+    .ant-btn-link.disabled:focus,
+    .ant-btn-link[disabled]:focus,
+    .ant-btn-link-disabled:active,
+    .ant-btn-link.disabled:active,
+    .ant-btn-link[disabled]:active,
+    .ant-btn-link-disabled.active,
+    .ant-btn-link.disabled.active,
+    .ant-btn-link[disabled].active {
+      color: #babbc0;
+    }
+
+    // 表单 主色
+    .ant-form-item-label > label {
+      color: #000;
+    }
+
+    // 表格
+    .ant-table-thead > tr > th {
+      color: #000;
+      font-weight: 700;
+      background-color: #f2f5fc;
+    }
+
+    // 表头进入色
+    .ant-table-thead > tr > th.ant-table-column-has-actions.ant-table-column-has-sorters:hover {
+      background-color: #e9edfa;
+    }
+
+    // 表头间距
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      height: 48px;
+      padding: 0 16px;
+    }
+
+    .ant-table-row-hover {
+      background-color: #f2f2f3;
+    }
+
+    // 表格进入色
+    .ant-table-thead
+      > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+      > td,
+    .ant-table-tbody
+      > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+      > td,
+    .ant-table-thead > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td,
+    .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
+      background: #f2f2f3;
+    }
+
+    .ant-table-bordered .ant-table-thead > tr > th,
+    .ant-table-bordered .ant-table-tbody > tr > td {
+      border-right: 1px solid #f2f2f3;
+    }
+
+    .bgcFBFCFF {
+      background-color: #fbfcff;
+    }
+
+    // 面包屑
+    .ant-breadcrumb > span:nth-child(1) > span {
+      color: #8a8e99;
+    }
+
+    .ant-breadcrumb > span:last-child {
+      color: #000;
+    }
+
+    .ant-breadcrumb {
+      width: 100%;
+      height: 48px;
+      padding: 0 20px !important;
+      line-height: 48px;
+      background-color: #fff;
+    }
+
+    // 弹窗
+    .ant-modal-title {
+      color: #000;
+    }
+
+    // 内容边距
+    .ant-pro-basicLayout-content {
+      margin: 16px;
+    }
+
+    // 输入框禁用的文字颜色
+    .ant-form-item-children {
+      .ant-input-disabled {
+        color: #575d6c;
+      }
+    }
+
+    // tabs文字
+    .ant-tabs-tab {
+      font-size: 16px;
+    }
+  }
+}
+
+.seachForm2 {
+  .ant-form-item {
+    margin-bottom: 0;
+    padding: 8px 0;
+  }
+}
+
+.search-card2 {
+  margin: 0 -16px;
+  border: 1px solid #ffffff;
+  box-shadow: none !important;
+  .ant-card-body {
+    padding: 8px 16px 8px 16px;
+  }
+}
+
+.seachForm {
+  .ant-form-item {
+    margin-bottom: 0;
+    padding: 8px 0;
+  }
+}
+
+.search-card {
+  margin-bottom: 16px;
+
+  .ant-card-body {
+    padding: 8px 16px 8px 16px;
+  }
+}
+
+.content {
+  margin: 16px 0;
+  padding: 0 16px 16px 16px;
+  background-color: #fff;
+}
+
+.content-title {
+  width: 100%;
+  margin-top: -8px;
+  margin-bottom: 8px;
+  padding: 12px 8px;
+  font-weight: 500;
+  font-size: 16px;
+  background-color: #fff;
+
+  .ant-btn {
+    float: right;
+  }
+}
+
+.content-title::after {
+  display: block;
+  float: left;
+  width: 3px;
+  height: 16px;
+  margin-top: 4px;
+  margin-left: -8px;
+  background: #7693f5;
+  opacity: 1;
+  content: '';
+}
+
+// 表格下边框
+.ant-table-placeholder {
+  border-bottom: 0 !important;
+}
+
+.text_575d6c {
+  color: #575d6c;
+}
+
+.text_252b3a {
+  color: #252b3a;
+}
+
+.text_50D4AB {
+  color: #50d4ab;
+}
+
+.text_ADB0B8 {
+  color: #adb0b8;
+}
+
+.listCard {
+  margin-top: 16px;
+  .ant-tabs-bar {
+    border-bottom: 1px solid #ffffff;
+  }
+  .ant-card-body {
+    padding: 16px;
+  }
+  .ant-card-head {
+    border-bottom: 1px solid #ffffff;
+    .ant-tabs {
+      position: absolute;
+      top: 0;
+    }
+  }
+  .ant-tabs .ant-tabs-large-bar .ant-tabs-tab {
+    padding: 10px;
+  }
+}
+
+.moreTabsListCard {
+  .ant-card-head {
+    .ant-tabs {
+      position: static;
+      margin-bottom: -10px;
+    }
+  }
+}
+
+.antd-tree {
+  :global {
+    li:first-child {
+      border-top: 1px solid #e8e8e8;
+    }
+    li.ant-tree-treenode-switcher-close {
+      box-sizing: border-box;
+      padding: 16px !important;
+      white-space: pre-wrap;
+      border-right: 1px solid #e8e8e8;
+      border-bottom: 1px solid #e8e8e8;
+      border-left: 1px solid #e8e8e8;
+    }
+    li.ant-tree-treenode-switcher-open {
+      box-sizing: border-box;
+      padding: 16px !important;
+      white-space: pre-wrap;
+      background-color: #fff;
+      border-right: 1px solid #e8e8e8;
+      border-bottom: 1px solid #e8e8e8;
+      border-left: 1px solid #e8e8e8;
+    }
+
+    li > ul {
+      margin-top: 18px !important;
+      padding: 0 0 0 2% !important;
+    }
+
+    ul > li > ul.ant-tree-child-tree {
+      width: 100%;
+      background-color: #fff;
+    }
+
+    .auth-tree > ul > li.ant-tree-treenode-switcher-close {
+      display: inline-block;
+      justify-content: space-between;
+      width: 16.6%;
+      padding: 10px 0 !important;
+      text-align: left;
+      border: 0 !important;
+    }
+
+    .auth-tree > ul > li.ant-tree-treenode-switcher-open {
+      display: inline-block;
+      justify-content: space-between;
+      width: 16.6%;
+      padding: 10px 0 !important;
+      text-align: left;
+      border: 0 !important;
+    }
+
+    li .ant-tree-node-content-wrapper:hover,
+    li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+      background-color: #fff !important;
+    }
+
+    .auth-tree2 > ul > li.ant-tree-treenode-switcher-close {
+      display: inline-block;
+      justify-content: space-between;
+      width: 50%;
+      padding: 10px 0 !important;
+      text-align: left;
+      border: 0 !important;
+    }
+
+    .auth-tree2 > ul > li.ant-tree-treenode-switcher-open {
+      display: inline-block;
+      justify-content: space-between;
+      width: 50% !important;
+      padding: 10px 0 !important;
+      text-align: left;
+      border: 0 !important;
+    }
+  }
+}
+
+// 解决表单 多选框 第一条样式问题
+.cust-col {
+  :global {
+    .ant-checkbox-group {
+      .ant-checkbox-wrapper {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+// 运营日历，提示框左侧箭头样式
+.antd-pro-pages-operating-calendar-index-blackMode.ant-popover-placement-right {
+  :global {
+    .ant-popover-arrow {
+      border-left-color: rgba(9, 16, 34, 0.7) !important;
+      border-bottom-color: rgba(9, 16, 34, 0.7) !important;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+    }
+  }
+}

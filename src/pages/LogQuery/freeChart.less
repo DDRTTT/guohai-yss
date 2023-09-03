@@ -1,0 +1,64 @@
+@import '../../../node_modules/antd/lib/style/themes/default.less';
+@import '../../utils/utils.less';
+
+.freeChart {
+  :global {
+    .ant-card-head {
+      padding: 0 32px;
+    }
+    .ant-card-body {
+      padding: 0;
+      zoom: 1;
+    }
+    table {
+      border-style: hidden;
+      border-width: 0;
+      border-collapse: collapse;
+    }
+    table td {
+      line-height: 25px;
+      border: 1px solid #ccc;
+    }
+  }
+  .area {
+    min-height: 300px;
+    overflow-y: scroll;
+    color: #000;
+    background: #fff;
+  }
+  .head {
+    width: 100%;
+    height: 50px;
+    color: #fff;
+    font-size: 18px;
+    line-height: 50px;
+    text-align: center;
+    background: #3384d5;
+  }
+  .flexLeft {
+    flex: 1;
+    margin: 42px;
+  }
+  .flexRight {
+    flex: 1;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+  }
+  .freehead {
+    width: 100%;
+    height: 50px;
+    font-size: 18px;
+    line-height: 50px;
+    text-align: center;
+    background: #fff;
+    border-bottom: 1px dashed #e8e8e8;
+  }
+  .ellipsis {
+    display: inline-block;
+    width: 200px;
+    overflow: hidden; /* 内容超出后隐藏 */
+    white-space: nowrap; /* 文本不进行换行 */
+    text-overflow: ellipsis; /* 超出内容显示为省略号 */
+  }
+}

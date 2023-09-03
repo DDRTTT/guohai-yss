@@ -1,0 +1,11 @@
+@font-face {
+    font-family: SourceHanSansCN;
+    src: url('./SourceHanSansCN-Normal.otf');
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    font-family: SourceHanSansCN !important;
+}

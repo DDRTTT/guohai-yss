@@ -1,0 +1,82 @@
+@import '../../../node_modules/antd/lib/style/themes/default.less';
+@import '../../utils/utils.less';
+
+.index {
+  user-select: none;
+
+  .publicTabs {
+    display: flex;
+    width: 150px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+
+    p {
+      float: left;
+      width: 74px;
+      height: 32px;
+      margin-bottom: 0;
+      color: #666;
+      line-height: 32px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .selectTabs {
+      color: #fff;
+      background: #3384d5;
+    }
+
+    p:nth-child(1) {
+      border-right: 1px solid #d9d9d9;
+    }
+  }
+
+  .publicTitle {
+    color: #000;
+    font-size: 18px;
+  }
+
+  .seniorsearch {
+    float: right;
+  }
+
+  .searchForm {
+    margin-top: 20px;
+  }
+
+  .searchLabel {
+    color: #3384d5;
+    cursor: pointer;
+  }
+
+  .resetWord {
+    margin-left: 16px;
+    color: #4b92da;
+    font-size: 14px;
+    text-decoration: underline;
+  }
+
+  .resetCancel {
+    color: #333;
+    font-size: 14px;
+  }
+}
+
+.receiptStyle {
+  font-size: 14px;
+
+  .receiptLabel {
+    margin-right: 10px;
+    color: #666;
+    line-height: 24px;
+  }
+
+  .receiptCol {
+    margin-top: 50px;
+  }
+
+  .receiptWord {
+    color: #333;
+    line-height: 24px;
+  }
+}

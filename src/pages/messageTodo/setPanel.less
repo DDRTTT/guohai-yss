@@ -1,0 +1,91 @@
+@import '~antd/es/style/themes/default.less';
+
+.content {
+  background: #fff;
+
+  .generalContent {
+    min-height: 280px;
+    padding: 0 16px;
+    background: #fff;
+  }
+
+  .generalTitle {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    line-height: 48px;
+    background: #fff;
+    border-radius: 4px 4px 0 0;
+
+    .title {
+      height: 22px;
+      margin-left: 11px;
+      color: #252b3a;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: left;
+      opacity: 1;
+    }
+
+    .verticalLine {
+      position: absolute;
+      top: 16px;
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      background: #7693f5;
+    }
+  }
+
+  .pickColorItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 2%;
+    line-height: 40px;
+
+    :global {
+      .pickColor {
+        width: 20px;
+        height: 20px;
+        border: none;
+        border-radius: 2px;
+      }
+    }
+
+    input[type='color']::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type='color']::-webkit-color-swatch {
+      border: none;
+    }
+  }
+
+  .addForm {
+    :global {
+      .ant-col-24:last-child {
+        .ant-form-item {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .subscribe {
+    padding-right: 24px;
+    :global {
+      .ant-layout-sider {
+        margin-top: unset;
+      }
+
+      .ant-layout-sider-children {
+        border-right: 1px solid rgba(235, 235, 235, 1);
+      }
+    }
+  }
+}

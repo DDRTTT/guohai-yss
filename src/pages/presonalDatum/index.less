@@ -1,0 +1,361 @@
+@import '~antd/lib/style/themes/default.less';
+@import '../../utils/utils.less';
+
+.tableList {
+  .tableListOperator {
+    margin-bottom: 16px;
+
+    button {
+      margin-right: 8px;
+    }
+  }
+}
+
+//个人资料上半部分
+.presonTop {
+  width: 100%;
+  height: 140px;
+  padding: 24px 44px;
+  background: #fff;
+
+  img {
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-right: 16px;
+    border-radius: 40px;
+  }
+
+  .topWord {
+    margin-top: 16px;
+    margin-bottom: 7px;
+    font-size: 20px;
+  }
+
+  .bottomWord {
+    font-size: 12px;
+  }
+}
+
+//个人资料下半部分
+.presonBottom {
+  min-height: 70px;
+  margin: 20px;
+  padding-top: 12px;
+  background: #fff;
+
+  .pbTitle {
+    padding-bottom: 12px;
+    padding-left: 20px;
+    font-size: 14px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  .pbBlock {
+    margin: 0 48px 20px;
+
+    .pbShowText {
+      margin-top: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e6e6e6;
+
+      div {
+        float: left;
+        min-width: 220px;
+        //line-height: 16px;
+      }
+
+      .pbTitleTwo {
+        width: 64px;
+        margin-right: 108px;
+        font-size: 16px;
+      }
+
+      .pbEditText {
+        font-size: 14px;
+
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 20px;
+        }
+      }
+
+      .pbEdit {
+        float: right;
+        font-size: 16px;
+        text-align: right;
+        cursor: pointer;
+
+        img {
+          margin-top: -2px;
+          margin-left: 4px;
+          cursor: pointer;
+        }
+      }
+
+      // 编辑状态
+      .pbEditBlock {
+        width: 100%;
+        margin-top: 20px;
+        border-top: 1px dashed #e6e6e6;
+
+        .nonForm {
+          display: block;
+          // margin-bottom: 20px;
+          width: 100%;
+
+          .rightText {
+            float: left;
+            width: 100px;
+            height: 30px;
+            margin-bottom: 12px;
+            margin-left: 120px;
+            font-size: 14px;
+            line-height: 30px;
+            text-align: right;
+          }
+
+          .leftText {
+            float: left;
+            height: 30px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 30px;
+            :global {
+              .ant-btn {
+                padding: 0;
+              }
+            }
+
+            span.cancelBtn {
+              padding-left: 30px;
+              cursor: pointer;
+            }
+          }
+
+          .leftTextLine {
+            float: left;
+            height: 30px;
+            margin-bottom: 12px;
+            margin-left: 20px;
+            font-size: 14px;
+
+            button {
+              width: 90px;
+              padding: 0;
+              line-height: 0;
+              text-align: center;
+              border: #3384d5 1px solid;
+            }
+          }
+
+          .iconUser {
+            float: none;
+            height: 100px;
+
+            img {
+              width: 100px;
+              height: 100px;
+              background: rgba(0, 0, 0, 0.15);
+              border: 1px solid #c3c9d2;
+              border-radius: 50px;
+            }
+          }
+
+          .form-person {
+            height: 30px;
+            background: #3384d5;
+
+            .ant-form-item {
+              width: 240px;
+            }
+          }
+
+          .ant-form {
+            width: 240px;
+            height: 30px;
+            background: #3384d5;
+            // .has-error .ant-form-explain, .has-error .ant-form-split {
+            //   margin-top: 5px!important;
+            // }
+            // .ant-row .ant-form-item .ant-form-item-with-help {
+            // }
+          }
+        }
+
+        .nonForm:first-child {
+          margin-top: 30px;
+        }
+
+        button {
+          width: 80px;
+          height: 28px;
+          line-height: 28px;
+          font-size: 14px;
+          text-align: center;
+          border: 0;
+          border-radius: 4px;
+          outline: none;
+          cursor: pointer;
+        }
+
+        img {
+          float: left;
+          margin-left: 92px;
+        }
+      }
+    }
+
+    // 上传头像
+    .pbShowText:nth-child(2) {
+      .pbTitleTwo {
+        height: 40px;
+        line-height: 40px;
+      }
+
+      .pbEditText {
+        height: 40px;
+        line-height: 40px;
+      }
+
+      .pbEdit {
+        height: 40px;
+        line-height: 40px;
+      }
+
+      .UploadBtn {
+        float: left;
+
+        div {
+          min-width: 80px;
+          line-height: 16px;
+        }
+
+        :global {
+          .ant-upload-list,
+          .ant-upload-list-item {
+            display: none;
+          }
+        }
+      }
+
+      .sliderCircle {
+        float: left;
+        width: 220px;
+        min-width: 0;
+        margin-left: 0;
+
+        :global {
+          .ant-slider-handle,
+          .ant-tooltip-open {
+            min-width: 10px;
+          }
+        }
+      }
+
+      .cuttingBtn {
+        float: left;
+        margin-top: 40px;
+        // margin-top: 300px;
+        margin-left: -225px;
+
+        button {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 8px;
+  }
+}
+
+.standardTable {
+  :global {
+    .ant-table-pagination {
+      margin-top: 24px;
+      text-align: center;
+    }
+  }
+
+  .tableAlert {
+    margin-bottom: 16px;
+  }
+}
+
+.actionsButton {
+  button {
+    margin-left: 10px;
+  }
+}
+
+.dowmBuutton {
+  top: -65px;
+  left: 60px;
+}
+
+.RangePicker {
+  width: 100%;
+}
+
+.vertical-center-modal {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.vertical-center-modal::before {
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+
+.vertical-center-modal .ant-modal {
+  top: 0;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.center {
+  text-align: center;
+}
+
+@keyframes bubbleSlide {
+  from {
+    width: 100px;
+    height: 108px;
+    background-size: 100%;
+  }
+  to {
+    width: 100px;
+    height: 100px;
+    background-size: 102%;
+  }
+}
+
+.form {
+  //width: 240px !important;
+  //height: 30px !important;
+
+  //.formInput {
+  //  width: 240px !important;
+  //  height: 30px !important;
+  //  margin-bottom: 5px !important;
+  //}
+}
+
+.comHeight {
+  height: 50px;
+}

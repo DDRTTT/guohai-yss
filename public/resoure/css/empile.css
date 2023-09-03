@@ -1,0 +1,293 @@
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    border: none;
+}
+
+em,
+i {
+    font-style: normal;
+}
+/* 
+html {
+    font: 16px / 1.4 Helvetica;
+}
+
+body {
+    min-width: 1240px;
+    max-width: 2500px;
+    margin: 0 auto;
+    background-image: linear-gradient(120deg, #6fc9b7, #093637);
+} */
+
+.scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 100, 100, .4) transparent;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: .6rem;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    border-radius: .6rem;
+    background-color: rgba(100, 100, 100, .4)
+}
+
+
+.site {
+    overflow: hidden;
+}
+
+
+
+
+.wrapper {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    position: relative;
+    min-height: 200px;
+}
+ 
+
+.wrapper h3 {
+    position: absolute;
+    left: 4rem;
+    top: 4rem;
+    z-index: 1000;
+    padding: 0 1rem;
+    background-color: #fff;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #222;
+    border-radius: 1.4rem;
+}
+
+.wrapper .container {
+    position: relative;
+    /* margin: 0 auto; */
+}
+
+.horizontal .container {
+    width: 18rem;
+    height: 130px;
+}
+
+.vertical .container {
+    width: 37rem;
+    height: 14rem;
+}
+
+.container .cards-list {
+    cursor: pointer;
+    user-select:none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background-color: #f4f4f4;
+    border-radius: 0.3125rem;
+    transition: 330ms;
+}
+
+.container .cards-list:hover {
+    box-shadow: 0px 2px 5px 0 rgb(0 0 0 / 20%);
+}
+
+.horizontal .cards-list {
+    width: 100%;
+}
+
+.horizontal .img {
+    height: 11rem;
+}
+
+
+
+
+.vertical .cards-list {
+    display: flex;
+    height: 100%;
+}
+
+.vertical .img,
+.vertical .main-con {
+    height: 100%;
+}
+
+.vertical .img {
+    width: 18rem;
+}
+
+.vertical .main-con {
+    width: 19rem;
+}
+
+
+.img>img {
+
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-user-drag: none;
+    -moz-user-select: none;
+    user-select: none;
+
+}
+
+.main-con {
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.main-con-name {
+    padding-top: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #424242;
+    text-align: center;
+}
+
+.main-con-content {
+    height: 2.5rem;
+    font-size: 0.9rem;
+    color: #575d6c;
+    text-align: justify;
+    line-height: 1.3rem;
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2; 
+}
+
+.main-con-label {
+    font-size: 0.9rem;
+    color: #adb0b8;
+    padding-bottom: 0.5rem;
+}
+
+
+
+
+
+.btn-direct {
+    position: absolute;
+    top: 40%;
+    z-index: 100000;
+    width: 4rem;
+    height: 4rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: .2s;
+}
+
+
+.btn-direct.btn-left {
+    left: 0px;
+}
+
+.btn-direct.btn-right {
+    right: 0px;
+}
+
+.btn-direct>span {
+    position: absolute;
+    left: calc(50% - .6rem);
+    top: calc(50% - .6rem);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-top: 0.2rem solid #d7d8da;
+    border-left: 0.2rem solid #d7d8da;
+}
+
+.horizontal .shift-left {
+    transform: translateX(25%) rotate(-45deg);
+}
+
+.horizontal .shift-right {
+    transform: translateX(-25%) rotate(135deg);
+}
+
+.vertical .shift-left {
+    transform: translateY(25%) rotate(45deg);
+}
+
+.vertical .shift-right {
+    transform: translateY(-25%) rotate(-135deg);
+}
+
+.navigation {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.navigation .dot {
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin: 0.8rem;
+    border: .1rem solid #f5f7fd;
+    background-color:#f5f7fd;
+    border-radius: 100%;
+    cursor: pointer;
+}
+.navigation .dot.active {
+    background-color: transparent;
+    border-color: #617fe1;
+}
+
+.demo1-tip {
+    position: absolute;
+    left: 12rem;
+    top: 8rem;
+    color: #fff;
+    line-height: 1;
+}
+.demo1-tip .active-index{
+    color: lightgoldenrodyellow;
+    font-size: 1.5rem;
+    font-weight: 600;
+    vertical-align: middle;
+}

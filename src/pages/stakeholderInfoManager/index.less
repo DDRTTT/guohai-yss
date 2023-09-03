@@ -1,0 +1,41 @@
+.customerHeader {
+  padding: 10px 20px;
+  box-shadow: 0px 0px 10px 0px rgba(66, 124, 229, 0.1);
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  position: relative;
+  background: #fff;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  :global {
+    h3 {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.detailPage {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0;
+  overflow: auto;
+
+  :global {
+    .scollWrap {
+      height: calc(100vh - 195px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+}

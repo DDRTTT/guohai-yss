@@ -1,0 +1,769 @@
+@import '~antd/lib/style/themes/default.less';
+@import './../../utils/utils.less';
+
+.queryBox {
+  :global {
+    font-size: 14px;
+
+    .ant-card-head {
+      height: 50px;
+    }
+
+    .ant-card-head-title {
+      font-size: 14px;
+    }
+
+    .ant-card-wider-padding .ant-card-head {
+      padding: 0 20px;
+    }
+
+    .ant-card-extra {
+      padding: 7px 0;
+      margin-left: 0;
+
+      button {
+        height: 28px;
+        width: 80px;
+      }
+    }
+
+    .ant-card-body {
+      padding: 0 10px;
+    }
+
+    .ant-input {
+      height: 30px;
+    }
+
+    .ant-col-md-2 {
+      right: -10%;
+    }
+
+    th {
+      background: #e2edff;
+    }
+
+    .ant-table-pagination.ant-pagination {
+      margin-right: 20px;
+    }
+  }
+
+  .publicTitle {
+    width: 150px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+
+    div {
+      color: #666;
+      float: left;
+      height: 32px;
+      width: 74px;
+      font-size: 14px;
+      cursor: pointer;
+      line-height: 32px;
+      text-align: center;
+    }
+
+    .selectTab {
+      background: #3384d5;
+      color: #fff;
+    }
+
+    div:nth-child(1) {
+      border-right: 1px solid #d9d9d9;
+    }
+  }
+
+  .openSearch {
+    float: right;
+  }
+
+  .openSearchForm {
+    margin-top: 20px;
+  }
+
+  .openSearchLabel {
+    color: #3384d5;
+    cursor: pointer;
+  }
+}
+
+//其他一些样式
+.color_red {
+  color: #f5222d;
+}
+
+.color_yellow {
+  color: #faad14;
+}
+
+.color_normall {
+  color: #666;
+}
+
+//弹窗样式
+.resultBtnOpt {
+  button {
+    margin: 0 6px;
+    border-radius: 3px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    margin-top: 5px;
+    //-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    //-webkit-user-modify: read-write-plaintext-only;
+    outline: none;
+    box-shadow: none;
+    padding: 0 6px;
+  }
+
+  .resultBtn {
+    float: left;
+    color: #999;
+    background-color: rgba(242, 242, 242, 1);
+    border: 1px solid #999;
+    cursor: pointer;
+  }
+
+  .resultBtn__green {
+    float: left;
+    background-color: rgba(82, 196, 26, 1);
+    color: white;
+    border: 1px solid rgba(183, 235, 143, 1);
+  }
+
+  .resultBtn__purple {
+    float: left;
+    background-color: rgba(114, 46, 209, 1);
+    color: white;
+    border: 1px solid rgba(211, 173, 247, 1);
+  }
+
+  .resultBtn__red {
+    float: left;
+    background-color: rgba(245, 34, 45, 1);
+    color: white;
+    border: 1px solid rgba(255, 163, 158, 1);
+  }
+}
+
+//列表样式
+.Coltitle {
+  display: block;
+  float: left;
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+  width: 38%;
+  text-align: right;
+}
+
+.Coltext {
+  display: block;
+  padding-left: 10px;
+  float: left;
+  font-size: 14px;
+  color: #333;
+  width: 62%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+/** 页面第一部分样式 **/
+.mainPage1 {
+  min-height: 210px;
+  margin-bottom: 20px;
+  background-color: #fff;
+
+  .mainPageOne {
+    margin-left: 16px;
+
+    .mainPageOne_div {
+      height: 40px;
+      margin-bottom: 10px;
+
+      .mainPageOneH1 {
+        height: 24px;
+        font-size: 24px;
+        color: #000;
+        padding-top: 10px;
+        float: left;
+      }
+
+      .mainPageOneSpan {
+        float: left;
+        color: #d3d3d5;
+        margin-top: 20px;
+        margin-left: 10px;
+      }
+
+      .mainPageOne_return {
+        float: right;
+        margin-right: 40px;
+        margin-top: 4px;
+        border-color: #2e76ee;
+        background-color: #2e76ee;
+        color: white;
+      }
+    }
+
+    .mainPageOneButton {
+      float: right;
+      font-size: 14px;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .mainPageOneD1 {
+      width: 50%;
+      float: left;
+
+      .rowStyle1 {
+        padding: 10px 0;
+        height: 14px;
+        font-size: 14px;
+
+        span {
+          height: 15px;
+          font-size: 14px;
+          color: #333;
+        }
+
+        span + span {
+          height: 15px;
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+
+    .orangeText {
+      color: #f48212;
+    }
+
+    .blackText {
+      color: #000;
+    }
+
+    .mainPageOneD2 {
+      width: 40%;
+      float: right;
+      text-align: right;
+      margin-right: 50px;
+
+      .rowStyle2 {
+        padding: 10px 0;
+
+        .Coltext1 {
+          height: 14px;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .Coltext4 {
+          height: 18px;
+          font-size: 18px;
+          font-weight: 600;
+        }
+
+        .Coltext5 {
+          height: 14px;
+          font-size: 14px;
+          color: #999;
+        }
+      }
+    }
+  }
+}
+
+//表单样式
+.margin10 {
+  margin-left: 10px;
+}
+
+.tableListForm {
+  :global {
+    .ant-form-item {
+      margin-bottom: 10px;
+      margin-right: 0;
+      display: flex;
+      padding-right: 0;
+
+      > .ant-form-item-label {
+        white-space: wrap;
+        width: auto;
+        padding-right: 0;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    white-space: nowrap;
+    margin-bottom: 12px;
+    padding-right: 0;
+  }
+}
+
+.tableListForm1 {
+  :global {
+    .ant-form-item {
+      margin-bottom: 8px;
+      margin-right: 0;
+      display: flex;
+
+      label {
+        width: 145px;
+        display: inline-block;
+      }
+
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    white-space: nowrap;
+    margin-bottom: 24px;
+  }
+}
+
+.countDown {
+  span {
+    display: inline-block;
+  }
+
+  span:nth-child(2n) {
+    margin: 0 5px;
+  }
+}
+
+.fuzzyQueryBox {
+  // margin: -24px -24px 0;
+  margin-top: 16px;
+
+  .titleStyle {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+  }
+
+  .openSearch {
+    float: right;
+  }
+
+  .openSearchLabel {
+    color: #3384d5;
+    cursor: pointer;
+  }
+}
+
+.openQueryBtn {
+  text-align: right;
+  margin-top: 10px;
+
+  button {
+    width: 86px;
+    height: 28px;
+    margin: 0 4px;
+  }
+
+  span {
+    margin-left: 4px;
+  }
+}
+
+.tableActionsButton {
+  position: absolute;
+  bottom: 30px;
+
+  button {
+    margin-left: 10px;
+    height: 26px;
+    float: right;
+  }
+}
+
+.tipBtnBox {
+  height: 28px;
+}
+
+.tipText {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.btnStyleLong {
+  width: 86px;
+  float: right;
+  margin-top: 2px;
+  height: 28px;
+}
+
+.returnNum {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+}
+
+.orangeColor {
+  color: #fa0;
+}
+
+.iconNum {
+  color: #fa0;
+  margin: 0 15px;
+}
+
+.tabsBox {
+  background: #fff;
+  padding: 10px;
+  margin: 20px 0;
+  :global {
+    .ant-btn-sm {
+      padding: 0 5px;
+    }
+  }
+}
+
+.parentDiv {
+  :global {
+    .ant-breadcrumb {
+      border-bottom: none;
+    }
+  }
+}
+
+.theme {
+  margin: -24px -24px 0;
+  background: #fff;
+
+  :global {
+    .ant-card-head {
+      border-bottom: none;
+    }
+  }
+
+  > div {
+    padding: 20px 24px 0;
+  }
+
+  h3 {
+    font-size: 18px;
+    color: #000;
+
+    span {
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: text-bottom;
+      font-size: 14px;
+      color: #ccc;
+    }
+  }
+}
+
+.itemBox {
+  font-weight: bold;
+  clear: both;
+  height: 28px;
+  font-size: 14px;
+
+  > div {
+    //width: 25%;
+    float: left;
+  }
+
+  > div label {
+    color: #333;
+  }
+
+  > div .accountStatus {
+    color: #ccc;
+  }
+
+  > div .statusVal {
+    font-size: 16px;
+  }
+
+  > div span {
+    color: #666;
+  }
+}
+
+.investorManageBox {
+  background: #f0f2f5;
+  margin: 0 -24px;
+  padding: 20px;
+}
+
+.investorOperationBox {
+  background: #f0f2f5;
+  margin: 0 -24px;
+  padding: 0 20px 20px;
+}
+
+.cardContent {
+  border-top: 1px solid #ddd;
+}
+
+.contentBox {
+  div {
+    height: 40px;
+    line-height: 40px;
+
+    .major::before {
+      display: inline-block;
+      margin-right: 4px;
+      color: #f5222d;
+      font-size: 14px;
+      line-height: 1;
+      font-family: SimSun, sans-serif;
+      content: '*';
+    }
+
+    label {
+      display: inline-block;
+      width: 40%;
+      text-align: right;
+      color: #333;
+    }
+
+    span {
+      color: #666;
+    }
+  }
+}
+
+.fundBox {
+  margin: 20px 0;
+  height: 60px;
+
+  > div {
+    float: left;
+  }
+
+  label {
+    display: inline-block;
+    color: #ccc;
+    font-weight: bold;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  span {
+    display: inline-block;
+    font-weight: bold;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+  }
+}
+
+.serialNum {
+  line-height: 60px;
+  font-weight: bold;
+}
+
+.fundStatus::before {
+  display: inline-block;
+  margin-right: 4px;
+  line-height: 1px;
+  color: #3884d2;
+  font-size: 50px;
+  content: '.';
+}
+
+.balance {
+  font-size: 28px;
+  color: #fc6721;
+}
+
+.fundBtn {
+  padding: 14px 0;
+  width: 10%;
+  height: 60px;
+  line-height: 60px;
+
+  > button {
+    float: right;
+  }
+}
+
+.openAccountBox {
+  h3 {
+    font-size: 18px;
+    color: #000;
+
+    span {
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: text-bottom;
+      font-size: 14px;
+      color: #ccc;
+    }
+  }
+}
+
+.layerItemBox {
+  font-weight: bold;
+  clear: both;
+  height: 28px;
+  font-size: 14px;
+
+  > div {
+    width: 33%;
+    float: left;
+  }
+
+  > div label {
+    color: #333;
+  }
+
+  > div .accountStatus {
+    color: #ccc;
+  }
+
+  > div .statusVal {
+    font-size: 16px;
+  }
+
+  > div span {
+    color: #666;
+  }
+}
+
+.notAllowed {
+  color: rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    cursor: not-allowed;
+    color: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.dealItem {
+  border: 1px solid #ccc;
+  background: #f2f2f2;
+  font-weight: 500;
+
+  > label {
+    display: inline-block;
+    margin: 10px;
+    width: calc(20% - 2px);
+    text-indent: 20px;
+  }
+}
+
+.scroll {
+  max-height: 360px;
+  overflow-y: auto;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+
+  > div {
+    border-bottom: 1px solid #ccc;
+
+    &:hover {
+      background: #e6f7ff;
+    }
+  }
+
+  > div > label {
+    display: inline-block;
+    margin: 10px;
+    width: calc(20% - 2px);
+    text-indent: 20px;
+    font-size: 14px;
+    color: #333;
+  }
+}
+
+.annexesBox {
+  > div {
+    float: left;
+  }
+
+  .annexesTitle {
+    width: 20%;
+    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .annexesContent {
+    > ul {
+      margin-left: 20px;
+    }
+
+    > ul > li {
+      height: 30px;
+      line-height: 30px;
+    }
+
+    font-size: 14px;
+  }
+}
+
+.radioBox {
+  input {
+    width: 20px;
+  }
+}
+
+.rowBoxP {
+  height: 47px;
+}
+
+.uploadSubmitBox {
+  text-align: right;
+}
+
+.institutionBox {
+  display: inline-block;
+  width: 80%;
+  height: 32px;
+  text-indent: 10px;
+  line-height: 32px;
+  border: 1px solid #d9d9d9;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.major::before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #f5222d;
+  font-size: 14px;
+  line-height: 1;
+  font-family: SimSun, sans-serif;
+  content: '*';
+}
+
+.menuItem {
+  text-align: center;
+  cursor: pointer;
+  height: 32px;
+  line-height: 32px;
+}
+
+.searchTitle {
+  position: relative;
+  top: 10px;
+}

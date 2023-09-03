@@ -1,0 +1,168 @@
+@import '~antd/es/style/themes/default.less';
+@import '../../utils/utils.less';
+
+@pre: {
+  position: absolute;
+  color: @primary-color;
+  cursor: pointer;
+};
+
+.cont {
+  .content {
+    min-height: calc(100vh - 200px);
+
+    .drawers {
+      display: flex;
+      padding: 10px 30px 10px 30px;
+      background: #fff;
+
+      .middleBox {
+        width: calc(100%);
+
+        .innerUser {
+          margin: 7px 7px 22px 7px;
+          font-size: 24px;
+        }
+
+        .inner {
+          margin: 7px;
+        }
+
+        .innerButton {
+          margin: 7px;
+          text-align: right;
+        }
+      }
+
+      .bottomLeft .bottomRight {
+        flex: 1;
+      }
+    }
+
+    .sysBox {
+      :global {
+        .antd-pro-layouts-basic-layout-content .ant-card-bordered {
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      .hasChooseRoleTileSys {
+        height: 0;
+        margin-top: 20px;
+      }
+    }
+
+    .chooseText {
+      margin: 10px 0;
+      display: inline-block;
+    }
+
+    .fLeft {
+      float: left;
+      width: 70%;
+      // user-select: none;
+      .tagStyle {
+        font-size: 14px;
+        margin: 5px;
+      }
+    }
+
+    .roleAllStyle {
+      padding: 0;
+      font-size: 14px;
+      //border-bottom: 0;
+      //border-radius: 0;
+
+      .iconShow {
+        @pre();
+
+        right: 100px;
+      }
+
+      .addiconShow {
+        @pre();
+
+        right: 20px;
+      }
+
+      .hideTag {
+        float: left;
+        width: 70%;
+        height: 22px;
+        overflow: hidden;
+      }
+
+      .checkStyle {
+        margin-bottom: 15px;
+        color: white;
+        background-color: @primary-color;
+        user-select: none;
+      }
+
+      .hasCheckStyle {
+        height: 30px;
+        margin-bottom: 15px;
+        line-height: 27px;
+        border-radius: 15px;
+        user-select: none;
+      }
+
+      .unCheckStyle {
+        margin-bottom: 15px;
+        background-color: white;
+        border: 1px solid rgba(183, 177, 180, 0.5);
+        user-select: none;
+      }
+    }
+
+    .slider {
+      display: block;
+      //width: 300px;
+      max-height: 712px;
+      overflow: auto;
+      background: #fff;
+
+      .searchInput {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .box {
+      //border-bottom: 1px solid #e8e8e8;
+      height: 54px;
+      padding: 15px 0 15px 0;
+      text-align: center;
+    }
+
+    :global {
+      .ant-layout-sider {
+        margin-top: 0;
+      }
+
+      .ant-pagination {
+        margin-right: 10px;
+      }
+
+      .ant-form-item {
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  .saveContent {
+    background-color: #fff;
+    width: 100%;
+    height: 64px;
+    margin-top: 56px;
+
+    .saveContentBox {
+      float: right;
+      margin-top: 21px;
+
+      .btn {
+        margin-right: 10px;
+      }
+    }
+  }
+}

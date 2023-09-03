@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "single-spa": "/resoure/js/single-spa.min.js",
+    "vue": "/resoure/js/vue.min.js",
+    "vue-router": "/resoure/js/vue-router.js",
+    "react": "/resoure/js/react.production.min.js",
+    "react-dom": "/resoure/js/react-dom.production.min.js"
+  }
+}

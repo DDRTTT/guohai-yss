@@ -1,0 +1,50 @@
+.generalContent {
+  padding: 0px 0 24px 24px;
+  background: #fff;
+  min-height: 280px;
+}
+.generalTitle {
+  border-bottom: 1px solid #ebecf0;
+  margin-bottom: 12px;
+  background: #fff;
+  //   margin-top: 4px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 0 0 24px;
+  h1 {
+    margin-bottom: 0;
+  }
+}
+.pickColorItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2%;
+  height: 40px;
+  line-height: 40px;
+  :global {
+    .pickColor {
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+    }
+  }
+  input[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type='color']::-webkit-color-swatch {
+    border: none;
+  }
+}
+.addForm {
+  :global {
+    .ant-col-24:last-child {
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

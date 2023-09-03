@@ -1,0 +1,1132 @@
+@import '../../../../node_modules/antd/lib/style/themes/default.less';
+@import '../../../utils/utils.less';
+
+.header {
+  :global {
+    .ant-card-head {
+      height: 50px;
+      padding: 0 20px;
+    }
+
+    button {
+      width: 80px;
+      height: 28px;
+      padding: 0;
+    }
+
+    .ant-card-extra {
+      padding: 11px 0;
+    }
+
+    .ant-card-body {
+      padding: 0 20px;
+    }
+  }
+}
+
+.tableList {
+  .tableListOperator {
+    margin-bottom: 16px;
+
+    button {
+      margin-right: 8px;
+    }
+  }
+}
+
+// 报表导航
+.navigation {
+  position: relative;
+  width: 100%;
+  height: 91vh;
+  //background: url("../../../assets/navigationTable/bg.png") no-repeat;
+  background-size: 100% 100%;
+
+  li {
+    position: absolute;
+    list-style-type: none;
+
+    p {
+      margin: 0;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 26px;
+      text-align: center;
+    }
+
+    p.text {
+      width: 100px;
+      margin: 0 auto;
+    }
+
+    p.numNoZero {
+      color: #2fb839;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    p.num_more {
+      color: #2fb839;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  li:nth-child(1) {
+    top: 4.5vw;
+    left: 16.8375vw;
+    width: 110px;
+    height: 120px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 38px;
+      left: 24px;
+    }
+  }
+
+  li:nth-child(1):hover {
+    padding: 0;
+
+    img {
+      width: 110px;
+      height: 120px;
+    }
+  }
+
+  li:nth-child(2) {
+    top: 2.2vw;
+    left: 47.438vw;
+    width: 115px;
+    height: 126px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 32px;
+      left: 28px;
+    }
+  }
+
+  li:nth-child(2):hover {
+    padding: 0;
+
+    img {
+      width: 115px;
+      height: 126px;
+    }
+  }
+
+  li:nth-child(3) {
+    top: 0.8785vw;
+    left: 59vw;
+    // background: url("../../assets/navigationTable/infoTest.png") no-repeat ;
+    width: 155px;
+    height: 168px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 45px;
+      left: 48px;
+    }
+  }
+
+  li:nth-child(3):hover {
+    padding: 0;
+
+    img {
+      width: 155px;
+      height: 168px;
+    }
+  }
+
+  li:nth-child(4) {
+    top: 17.13vw;
+    left: 20.5vw;
+    width: 126px;
+    height: 138px;
+    padding: 5px;
+    background-size: 100%;
+
+    div {
+      position: absolute;
+      top: 38px;
+      left: 30px;
+    }
+  }
+
+  li:nth-child(4):hover {
+    padding: 0;
+
+    img {
+      width: 126px;
+      height: 138px;
+    }
+  }
+
+  li:nth-child(5) {
+    top: 11.86vw;
+    left: 55.637vw;
+    width: 116px;
+    height: 124px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 28px;
+      left: 30px;
+    }
+  }
+
+  li:nth-child(5):hover {
+    padding: 0;
+
+    img {
+      width: 116px;
+      height: 124px;
+    }
+  }
+
+  li:nth-child(6) {
+    top: 26.3543vw;
+    left: 13vw;
+    // background: url("../../assets/navigationTable/balance.png") no-repeat ;
+    width: 122px;
+    height: 134px;
+    // padding-top: 30px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+    }
+  }
+
+  li:nth-child(6):hover {
+    padding: 0;
+
+    img {
+      width: 122px;
+      height: 134px;
+    }
+  }
+
+  li:nth-child(7) {
+    top: 23vw;
+    left: 50.366vw;
+    // background: url("../../assets/navigationTable/profit.png") no-repeat ;
+    width: 96px;
+    height: 102px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 26px;
+      left: 18px;
+    }
+  }
+
+  li:nth-child(7):hover {
+    padding: 0;
+
+    img {
+      width: 96px;
+      height: 102px;
+    }
+  }
+
+  li:nth-child(8) {
+    top: 22vw;
+    left: 58vw;
+    // background: url("../../assets/navigationTable/change.png") no-repeat ;
+    width: 110px;
+    height: 120px;
+    // padding-top: 38px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 38px;
+      left: 8px;
+    }
+  }
+
+  li:nth-child(8):hover {
+    padding: 0;
+
+    img {
+      width: 110px;
+      height: 120px;
+    }
+  }
+
+  li:nth-child(9) {
+    top: 27vw;
+    left: 23.7vw;
+    // background: url("../../assets/navigationTable/sure.png") no-repeat ;
+    width: 114px;
+    height: 124px;
+    // padding-top: 28px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 28px;
+      left: 26px;
+    }
+  }
+
+  li:nth-child(9):hover {
+    padding: 0;
+
+    img {
+      width: 114px;
+      height: 124px;
+    }
+  }
+
+  li:nth-child(10) {
+    top: 30vw;
+    left: 45.827vw;
+    // background: url("../../assets/navigationTable/manage.png") no-repeat ;
+    width: 114px;
+    height: 124px;
+    // padding-top: 28px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 28px;
+      left: 28px;
+    }
+  }
+
+  li:nth-child(10):hover {
+    padding: 0;
+
+    img {
+      width: 114px;
+      height: 124px;
+    }
+  }
+
+  li:nth-child(11) {
+    top: 31.47877vw;
+    left: 56.369vw;
+    // background: url("../../assets/navigationTable/debt.png") no-repeat ;
+    width: 114px;
+    height: 124px;
+    padding: 5px;
+    background-size: 100%;
+    // position: relative;
+    div {
+      position: absolute;
+      top: 33px;
+      left: 28px;
+    }
+  }
+
+  li:nth-child(11):hover {
+    padding: 0;
+
+    img {
+      width: 114px;
+      height: 124px;
+    }
+  }
+
+  li:nth-child(12) {
+    top: 12.15227vw;
+    left: 22.4vw;
+  }
+
+  li:nth-child(13) {
+    top: 26.94vw;
+    left: 22.4744vw;
+  }
+
+  li:nth-child(14) {
+    top: 30.3vw;
+    left: 56vw;
+  }
+
+  li:nth-child(15) {
+    top: 10.688vw;
+    left: 52.27vw;
+  }
+
+  // 椭圆
+  .ellipse {
+    span {
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 26px;
+    }
+
+    img {
+      margin-right: 10px;
+    }
+  }
+}
+
+.tableListForm {
+  :global {
+    .ant-form-item {
+      display: flex;
+      //margin-bottom: 30px;
+      //margin-top: 30px;
+      margin-right: 0;
+
+      label {
+        display: inline-block;
+        width: 112px;
+      }
+
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    margin-bottom: 24px;
+    white-space: nowrap;
+  }
+}
+
+.personType {
+  float: left;
+  width: 160px;
+  margin-right: 10px;
+  text-align: center;
+  border: 1px solid #cecece;
+  cursor: pointer;
+}
+
+.disabledRole {
+  color: white;
+  background-color: gray;
+}
+
+.roleChoose {
+  border: 1px solid #458fd8;
+}
+
+.boby {
+  margin-top: 20px;
+
+  :global {
+    .ant-card-wider-padding {
+      //padding: 0 32px;
+    }
+
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+.fright {
+  margin-right: 10px;
+}
+
+.dowmWBRBuutton {
+  top: -65px;
+  left: 60px;
+  float: left;
+  width: 80px;
+  margin-right: 20px;
+}
+
+.table {
+  :global {
+    .ant-card-wider-padding .ant-card-body {
+      padding: 10px 10px;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 8px;
+  }
+}
+
+.standardTable {
+  :global {
+    .ant-table-pagination {
+      margin-top: 24px;
+    }
+  }
+
+  .tableAlert {
+    margin-bottom: 16px;
+  }
+}
+
+.actionsButtonFir {
+  button {
+    margin-left: 16px;
+  }
+}
+
+.actionsButton {
+  //margin-top: 30px;
+  float: right;
+  //margin-right: -12px;
+  margin-top: 30px;
+
+  button {
+    margin-left: 16px;
+  }
+}
+
+.btnWidth96 {
+  width: 96px;
+}
+
+.btnQuery {
+  width: 96px;
+  padding: 0 20px;
+}
+
+.btnStyleLong {
+  float: right;
+  width: 86px;
+  height: 28px;
+  margin-top: 2px;
+  margin-left: 30px;
+}
+
+.standardTable {
+  :global {
+    .ant-pagination {
+      margin-right: 20px;
+      text-align: center;
+    }
+  }
+}
+
+.dowmBuutton {
+  top: -52px;
+  left: 60px;
+}
+
+.RangePicker {
+  width: 100%;
+}
+
+.vertical-center-modal {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.vertical-center-modal::before {
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+
+.vertical-center-modal .ant-modal {
+  top: 0;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.center {
+  text-align: center;
+}
+
+.allCard {
+  width: 940px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.rowStyle {
+  padding: 10px 0;
+}
+
+/**  产品信息字段展示  **/
+.Coltitle {
+  display: block;
+  float: left;
+  width: 36%;
+  margin-bottom: 20px;
+  color: #999;
+  font-size: 14px;
+  text-align: right;
+}
+
+.modalTextTitle {
+  display: block;
+  float: left;
+  width: 36%;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: right;
+}
+
+.modalTextText {
+  display: block;
+  float: left;
+  width: 36%;
+  margin-bottom: 20px;
+  color: #5a5a5a;
+  font-size: 14px;
+  text-align: right;
+}
+
+.infoTile {
+  font-weight: 600;
+}
+
+.orgName {
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.Coltext {
+  display: block;
+  float: left;
+  width: 64%;
+  padding-left: 10px;
+  overflow: hidden;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+
+.ColtextE {
+  color: #3384d5;
+}
+
+/**  水平线样式  **/
+.hrStyle {
+  height: 2px;
+  margin: 10px 0;
+  margin-bottom: 30px;
+  background-color: #e8e8e8;
+  border: none;
+}
+
+/**  线上悬停样式  **/
+.posR {
+  position: relative;
+}
+
+.linePosBtn {
+  position: absolute;
+  bottom: 12px;
+  left: 45%;
+  width: 12%;
+  margin-left: -8px;
+  padding: 1px 8px;
+  color: #3384d5;
+  font-size: 18px;
+  background: #fff;
+  //color: #777;
+  border-radius: 2px 2px 0 0;
+  cursor: pointer;
+  -webkit-transition: background-color 0.4s;
+  transition: background-color 0.4s;
+
+  p {
+    float: left;
+  }
+
+  i {
+    float: left;
+  }
+}
+
+.linePosBtn_icon {
+  display: block;
+  width: 25px;
+  height: 25px;
+  background: url('../../../assets/product/rightArrow.png') right center no-repeat;
+}
+
+.linePosTile {
+  position: absolute;
+  top: -14px;
+  margin-left: -8px;
+  padding: 1px 8px;
+  color: #777;
+  background: #fff;
+  border-radius: 2px 2px 0 0;
+  -webkit-transition: background-color 0.4s;
+  transition: background-color 0.4s;
+}
+
+.btnAddStyle {
+  position: absolute;
+  top: -60px;
+  right: 100px;
+}
+
+.btnCancelStyle {
+  position: absolute;
+  top: -60px;
+  right: 0;
+}
+
+.btnStyle {
+  position: absolute;
+  top: -60px;
+  right: 0;
+}
+
+.fLeft {
+  float: left;
+  width: 70%;
+  // user-select: none;
+}
+
+.hasChooseStyle {
+  display: flex;
+  flex-wrap: wrap;
+  width: 65%;
+}
+
+.hideTag {
+  float: left;
+  width: 70%;
+  height: 22px;
+  overflow: hidden;
+}
+
+/**  自定义表单  **/
+.fromCustomTitle {
+  float: left;
+  width: 20%;
+  line-height: 30px;
+
+  .fromCustomTitle_star {
+    padding: 0 1px;
+    color: red;
+    font-size: 17px;
+  }
+
+  .fromCustomTitle_text {
+    padding: 0 6px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  div {
+    float: right;
+    padding: 0 2px;
+  }
+}
+
+.fromCustomContent {
+  position: relative;
+  float: left;
+  width: 80%;
+
+  .fromCustomContent_textwarn {
+    position: absolute;
+    bottom: -20px;
+    left: 5px;
+    color: red;
+  }
+}
+
+.borderWarn {
+  border: 1px solid red;
+  border-radius: 6px;
+}
+
+.showWain {
+  display: block;
+}
+
+.hideWarn {
+  display: none;
+}
+
+/**  表详情样式优化  **/
+.countClass {
+  text-align: center !important;
+}
+
+.licenseBlock {
+  margin-top: 15px;
+}
+
+.licenseBlock_single {
+  height: 190px;
+  margin-bottom: 20px;
+  padding: 8px;
+}
+
+.marginImg {
+  float: right;
+  margin-left: 10px;
+}
+
+.imgStyles {
+  height: 30px;
+}
+
+.licenseBlock_single__info__pBlock {
+  height: 40px;
+  margin-top: 10px;
+}
+
+.licenseBlock_single__info__p {
+  width: 100%;
+  margin: 0;
+  //margin-right: 40px;
+  //float: left;
+  overflow: hidden;
+  color: #ff8400;
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.licenseBlock_single__info__des {
+  //height: 100px;
+  margin: 0;
+}
+
+.licenseBlock_single__info__des_p {
+  height: 25px;
+  color: #999;
+  font-size: 16px;
+  //margin-bottom: 14px;
+}
+
+.hrModalStyle {
+  height: 1px;
+  border: none;
+  border-top: 1px dashed;
+}
+
+.checkStyle {
+  margin-bottom: 15px;
+  color: white;
+  background-color: @primary-color;
+  user-select: none;
+}
+
+.hasCheckStyle {
+  height: 30px;
+  margin-bottom: 15px;
+  line-height: 27px;
+  border-radius: 15px;
+  user-select: none;
+}
+
+.unCheckStyle {
+  margin-bottom: 15px;
+  background-color: white;
+  border: 1px solid rgba(183, 177, 180, 0.5);
+  user-select: none;
+}
+
+.unCheckStyle:hover {
+  color: @primary-color;
+  border: 1px solid @primary-color;
+}
+
+.checkStyleHas {
+  height: 80px;
+  margin-bottom: 15px;
+  color: white;
+  line-height: 27px;
+  background-color: #108de9;
+  border-radius: 15px;
+}
+
+.blueRole {
+  height: 30px;
+  margin-bottom: 15px;
+  color: #35b5e7;
+  line-height: 27px;
+  border-color: #35b5e7;
+  border-radius: 15px;
+}
+
+.greenRole {
+  // height: 30px;
+  // margin-bottom: 15px;
+  color: #2db89b;
+  line-height: 27px;
+  border-color: #2db89b;
+  border-radius: 15px;
+}
+
+.roleNameStyle {
+  min-width: 300px;
+}
+
+.moreTag {
+  position: absolute;
+  top: 14px;
+  right: 0;
+}
+
+@pre: {
+  position: absolute;
+  color: @primary-color;
+  cursor: pointer;
+};
+
+.iconShow {
+  @pre();
+
+  right: 100px;
+}
+
+.addiconShow {
+  @pre();
+
+  right: 20px;
+}
+
+.roleAllStyle {
+  padding: 0;
+  font-size: 14px;
+  border-bottom: 0;
+  border-radius: 0;
+}
+
+.sysBox {
+  :global {
+    .antd-pro-layouts-basic-layout-content .ant-card-bordered {
+      border: none;
+      box-shadow: none;
+    }
+  }
+
+  .hasChooseRoleTileSys {
+    height: 0;
+    margin-top: 20px;
+    font-weight: 600;
+  }
+}
+
+.hasChooseRoleTile {
+  // float: left;
+  // width: 150px;
+  height: 45px;
+  font-weight: 600;
+  // line-height: 45px;
+}
+
+.bot {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+@keyframes bubbleSlide {
+  from {
+    width: 100px;
+    height: 108px;
+    background-size: 100%;
+  }
+  to {
+    width: 110px;
+    height: 120px;
+    background-size: 102%;
+  }
+}
+
+//权限列表样式修改
+.authList {
+  height: 50px;
+  background-color: #f4f4f4;
+  //line-height: 50px;
+}
+
+.roleAuth {
+  float: left;
+  margin: 14px;
+  padding: 0;
+  color: #797979;
+}
+
+.checkAll {
+  float: right;
+  //padding: 0;
+  margin: 8px;
+  //color: #797979;
+}
+
+.updateAuth {
+  float: right;
+  width: 80px;
+  height: 30px;
+  margin-top: 8px;
+  margin-right: 15px;
+}
+
+.tableStyle {
+  :global {
+    .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
+      padding: 16px 16px;
+    }
+  }
+}
+
+.content {
+  padding: 10px 10px 80px 10px;
+  background: #fff;
+
+  .stepBox {
+    width: 96%;
+    margin: 10px auto 10px;
+  }
+
+  :global {
+    .steps-action {
+      position: fixed;
+      right: 0;
+      bottom: 20px;
+      left: 226px;
+      z-index: 99;
+      width: 340px;
+      margin-right: auto;
+      margin-left: auto;
+      padding: 20px;
+      text-align: center;
+      user-select: none;
+
+      button {
+        width: 86px;
+        height: 28px;
+        margin-left: 10px;
+      }
+    }
+
+    .steps-content {
+      margin-top: 20px;
+    }
+
+    .ant-btn {
+      width: 86px;
+      height: 28px;
+    }
+
+    .ant-btn-danger {
+      margin-left: 20px;
+    }
+  }
+}
+
+.RangePicker {
+  width: 100%;
+}
+
+/**  原生form样式修改  **/
+@media screen and (max-width: 1500px) {
+  .tableListForm {
+    :global {
+      .ant-select-selection-selected-value {
+        width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1500px) and (max-width: 1800px) {
+  .tableListForm {
+    :global {
+      .ant-select-selection-selected-value {
+        width: 160px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  .tableListForm {
+    :global {
+      .ant-select-selection-selected-value {
+        width: 210px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+/**  手写form表单媒体查询  **/
+@media screen and (max-width: 1600px) {
+  .fromCustomTitle {
+    width: 30%;
+  }
+
+  .fromCustomContent {
+    width: 70%;
+  }
+}
+
+.page {
+  margin: 30px;
+  text-align: center;
+}
+
+.job {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+  height: 70px;
+  margin: 10px;
+  padding: 9px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid @primary-color;
+  }
+}
+
+.chooesJob {
+  border: 1px solid @primary-color;
+}

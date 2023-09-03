@@ -1,0 +1,166 @@
+@import '~antd/es/style/themes/default.less';
+
+.card {
+  :global {
+    .ant-card-body {
+      padding: 10px;
+    }
+  }
+}
+
+.tableListForm {
+  :global {
+    .ant-form-item {
+      display: flex;
+      margin-right: 0;
+      margin-bottom: 6px;
+
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+        line-height: 32px;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+}
+
+.submitButtons {
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.tableListOperator {
+  margin: 0 1em;
+  text-align: right;
+}
+
+.standardTable {
+  :global {
+    .ant-table-pagination {
+      margin-top: 24px;
+    }
+  }
+
+  .tableAlert {
+    margin-bottom: 16px;
+  }
+}
+
+.tablePagination {
+  margin-top: 24px;
+  text-align: right;
+}
+
+.columnCenter {
+  text-align: center;
+}
+
+@media screen and (max-width: @screen-lg) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 8px;
+  }
+}
+
+.auditStatus {
+  background-color: red;
+}
+
+.operators {
+  margin-bottom: 25px;
+  text-align: right;
+
+  :global {
+    .buttonCommit {
+      width: 86px;
+      height: 32px;
+    }
+
+    .buttons1 {
+      line-height: 20px;
+      background-color: #eb2f96;
+
+      &:hover {
+        background-color: #c41d7f;
+      }
+    }
+
+    .buttons2 {
+      line-height: 20px;
+      background-color: #2f54eb;
+
+      &:hover {
+        background-color: #1d39c4;
+      }
+    }
+
+    .buttons3 {
+      line-height: 20px;
+      background-color: #f5222d;
+
+      &:hover {
+        background-color: #cf1322;
+      }
+    }
+
+    .buttons4 {
+      line-height: 20px;
+      background-color: #fa8c16;
+
+      &:hover {
+        background-color: #d46b08;
+      }
+    }
+
+    .buttons5 {
+      line-height: 20px;
+      background-color: #1890ff;
+
+      &:hover {
+        background-color: #096dd9;
+      }
+    }
+
+    .buttons6 {
+      line-height: 20px;
+      background-color: #13c2c2;
+
+      &:hover {
+        background-color: #08979c;
+      }
+    }
+
+    .buttons7 {
+      line-height: 20px;
+      background-color: #fa541c;
+
+      &:hover {
+        background-color: #d4380d;
+      }
+    }
+  }
+
+  .card___Fljla .ant-form-item .ant-form-item-label {
+    line-height: 40px;
+  }
+
+  button {
+    margin-left: 9px;
+    color: #fff;
+    border: none;
+  }
+}

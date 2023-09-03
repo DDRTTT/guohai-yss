@@ -1,0 +1,718 @@
+@import '~antd/es/style/themes/default.less';
+// 色调
+@tonal: #2f6aff;
+// 加粗字体的颜色
+@blodColor: #474c5c;
+// 正常字体
+@normalFz: 14px;
+// 边框
+@normalBorder: 1px solid #ebecf0;
+// 背景颜色
+@normalBgColor: #f5f7fc;
+
+.taskTypeWrap {
+  p {
+    border-bottom: 1px solid #e8e8e8;
+    cursor: pointer;
+
+    i {
+      padding-right: 5px;
+    }
+  }
+}
+
+.footerWrap {
+  :global {
+    .rowFlex;
+    .spaceBetween;
+  }
+}
+
+.rowFlex {
+  display: flex;
+  align-items: center;
+}
+
+.spaceBetween {
+  justify-content: space-between;
+}
+
+.calendarWrap {
+  :global {
+    .headwrap {
+      .ant-select,
+      .ant-switch {
+        margin-right: 8px;
+      }
+
+      .ant-btn {
+        margin-right: 8px;
+
+        &:last-child {
+          margin-right: 0;
+          // margin-left: 8px;
+        }
+      }
+
+      .titleWord {
+        font-size: 14px;
+        color: #474c5c;
+        font-weight: bold;
+        margin-right: 8px;
+      }
+    }
+
+    .taskWrap {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      .squareBlock {
+        width: 8px;
+        height: 8px;
+      }
+      .circleBlock {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .taskType {
+        color: #474c5c;
+        font-weight: 400;
+        margin-left: 6px;
+        width: 60%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .taskTitle {
+        color: #474c5c;
+        font-weight: 400;
+        margin-left: 6px;
+      }
+    }
+
+    .rowFlex {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .spaceBetween {
+      justify-content: space-between;
+    }
+
+    .fc-daygrid-day-number {
+      width: 100%;
+    }
+
+    .fc-daygrid-more-link {
+      color: #2450a5;
+      font-size: 14px;
+      font-weight: bold;
+      padding-left: 12px;
+    }
+
+    .fc-popover-title {
+      color: #242633;
+      //   font-size: 14px;
+      //   padding: 16px 17px 17px;
+      font-weight: bold;
+    }
+
+    .fc-theme-standard td {
+      border: 1px solid #ebecf0;
+    }
+
+    // .fc-theme-standard th {
+    //   border: 0;
+    // }
+
+    .fc-scrollgrid-sync-inner {
+      .fc-col-header-cell-cushion {
+        color: #242633;
+        font-size: 16px;
+        height: 48px;
+        line-height: 48px;
+      }
+    }
+  }
+}
+
+.customDayWrap {
+  :global {
+    .addTask {
+      width: 100%;
+      height: 48px;
+      border: 1px solid #ebecf0;
+      border-radius: 4px;
+      line-height: 48px;
+      text-align: center;
+      color: #484c54;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+}
+
+.customDayTask {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ebecf0;
+  padding: 17px 0 19px 24px;
+  cursor: pointer;
+
+  :global {
+    p {
+      margin-bottom: 0 !important;
+    }
+
+    .postpone {
+      color: #f0564a !important;
+    }
+
+    .dayTaskItem {
+      // flex-basis: 25%;
+      flex-grow: 1;
+
+      &:first-child {
+        // flex-basis: 15%;
+      }
+
+      &:nth-child(2) {
+        width: 25%;
+        flex-basis: 25%;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      p:first-child {
+        color: #484c5c;
+        margin-bottom: 11px;
+        width: 70%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      p:last-child {
+        color: #96a4bc;
+      }
+    }
+  }
+}
+
+.quadrantView {
+  :global {
+    p {
+      margin-bottom: 0;
+    }
+
+    .ant-card {
+      border-radius: 4px;
+      border: @normalBorder;
+      overflow: hidden !important;
+      .ant-card-head {
+        background-color: @normalBgColor;
+        height: 40px;
+      }
+      .ant-card-body {
+        padding: 0 12.5px;
+        height: 280px;
+        overflow: auto;
+      }
+    }
+
+    .titleWrap {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #474c5c;
+      font-weight: bold;
+      .colorBlock {
+        width: 4px;
+        height: 16px;
+        margin-right: 8px;
+      }
+    }
+
+    .taskItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      width: 100%;
+      max-width: '400px';
+      padding: 10px 0;
+      border-bottom: @normalBorder;
+      .leftWrap {
+        display: flex;
+        align-items: center;
+        // width: 85%;
+        width: 100%;
+
+        .checkbox {
+          margin-right: 12px;
+        }
+      }
+
+      .darkBlue {
+        color: #95a4bc;
+      }
+
+      .lineThrough {
+        text-decoration: line-through;
+        .darkBlue;
+      }
+
+      .detail {
+        // width: 80%;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        span {
+          padding-right: 10px;
+          color: @blodColor;
+        }
+
+        & + p {
+          padding-right: 12px;
+        }
+      }
+      .miniicon{
+        color: rgba(51,51,51);
+      }
+    }
+  }
+}
+
+
+.productView {
+  :global {
+    .ant-card-head {
+      display: flex;
+      align-items: center;
+      .ant-card-head-title {
+        padding-top: 0;
+      }
+    }
+  }
+}
+
+.collapseWrapp {
+  :global {
+    .ant-collapse {
+      background-color: transparent;
+    }
+
+    .ant-collapse-borderless > .ant-collapse-item {
+      border-bottom: 0;
+    }
+  }
+}
+
+// 延期
+.delay {
+  color: #ef5549;
+}
+
+// 即将到期
+.toBe {
+  color: #fcb430;
+}
+
+// 通用的右边距
+.commonMr {
+  margin-right: 8px;
+}
+
+.subscribe {
+  padding-right: 24px;
+  :global {
+    .ant-layout-sider {
+      margin-top: unset;
+    }
+
+    .ant-layout-sider-children {
+      border-right: 1px solid rgba(235, 235, 235, 1);
+    }
+  }
+}
+
+.taskItem {
+  :global {
+    .tradingDayItem {
+      list-style:disc;
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+      .rest {
+        margin-left: 20px;
+      }
+    }
+    .title {
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      .left {
+        display: inline-block;
+        width: 70%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .statusTag {
+        padding: 1px 4px;
+        color: #2f6aff;
+        background: rgba(6, 14, 34, 0.1);
+        border: 1px solid rgba(47, 106, 255, 0.6);
+        border-radius: 4px;
+        font-weight: normal;
+        font-size: 12px;
+      }
+    }
+
+    .ant-card-body {
+      width: 100%;
+      padding: 16px !important;
+    }
+    .rate {
+      span {
+        color: #474c5c;
+        font-size: 10px;
+      }
+    }
+
+    .ant-rate {
+      font-size: 12px;
+      // .ant-rate-star-first,
+      // .ant-rate-star-second {
+      //   color: #fcb43d;
+      // }
+
+      .ant-rate-star {
+        margin-right: 1px;
+      }
+    }
+
+    .omit {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // 产品事项 样式
+    .productMatters {
+      margin: 0 !important;
+      padding: 10px 0 4px !important;
+      font-size: 14px !important;
+      color: #333 !important;
+      font-weight: bold;
+    }
+    .desc {
+      // display: flex;
+      // line-height: 10px;
+      font-size: 12px;
+      color: #474c5c;
+      .descOmit {
+        .omit;
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .content,
+    .todoNode {
+      width: 100%;
+      color: #95a4bc;
+      font-size: 10px;
+    }
+  }
+}
+.homeCard {
+  :global {
+    p {
+      margin-bottom: 0;
+    }
+    .ant-tabs-bar {
+      margin: 0;
+    }
+    .ant-select-selection--single {
+      padding: 5px 5px;
+      font-size: 12px;
+      height: unset;
+      line-height: unset;
+    }
+    .ant-select-selection__rendered {
+      line-height: unset;
+    }
+    .ant-tabs-tab {
+      font-size: @normalFz;
+      // color: #474c5c;
+      padding: 12px 0;
+    }
+    .ant-tabs-tab-active {
+      // color: #242633;
+    }
+    .ant-card-body {
+      padding: 16px 25px;
+    }
+    .ant-card-head-title {
+      padding: 0;
+      padding-top: 4px;
+      overflow: unset;
+    }
+    .headwrap {
+      background-color: @normalBgColor;
+      border: @normalBorder;
+      .equal {
+        border: @normalBorder;
+        background-color: transparent;
+        border-radius: 0;
+        min-height: 41px;
+        min-width: 42px;
+        margin: -1px;
+        &:first-child {
+          border-left: unset;
+        }
+      }
+      .tody {
+        color: @primary-color;
+        font-weight: 500;
+        vertical-align: top;
+        border-left: unset;
+      }
+      .titleWord {
+        // // color: @blodColor;
+        color: @primary-color;
+        padding-left: 16px;
+        padding-right: 16px;
+        border: @normalBorder;
+        height: 40px;
+        margin: -1px;
+        display: inline-block;
+        vertical-align: top;
+        line-height: 40px;
+        cursor: pointer;
+      }
+      .ant-radio-button-wrapper {
+        padding: 5px 24px;
+        font-size: 12px;
+        color: @blodColor;
+        height: auto;
+        line-height: unset;
+      }
+      .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+        background: rgba(47, 106, 255, 0.1);
+        color: @primary-color;
+      }
+      .iconBtn {
+        height: unset;
+        padding: 5px 7.5px;
+        font-size: 12px;
+        &:last-child {
+          margin-right: 12px;
+        }
+      }
+    }
+    .fc-scrollgrid {
+      border: unset;
+      .fc-col-header {
+        background-color: @normalBgColor;
+        .fc-col-header-cell-cushion {
+          font-size: 16px;
+          color: @blodColor;
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+      .fc-day-today {
+        background-color: transparent !important;
+      }
+      .fc-highlight {
+        background: rgba(47, 106, 255, 0.1);
+      }
+      .fc-view-harness {
+        height: 100%;
+        .content {
+          height: 100%;
+          overflow: auto;
+        }
+      }
+    }
+    .dayCellWrap {
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .dayNum {
+        text-align: left;
+        font-size: 18px;
+        color: @blodColor;
+        font-weight: bold;
+      }
+      .exchangeItem {
+        font-size: 12px;
+        padding: 0 2px;
+        border-radius: 4px;
+        margin-right: 2px;
+        font-weight: bold;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      .theDay {
+        color: @primary-color;
+      }
+
+      .normal {
+        border: 1px solid #df5146;
+        color: #df5146;
+      }
+
+      .special {
+        border: 1px solid #19994b;
+        color: #19994b;
+      }
+    }
+
+    .taskList {
+      width: 400px;
+      .taskNav {
+        height: 43px;
+        background-color: @normalBgColor;
+        line-height: 43px;
+        padding: 0 16px;
+        font-size: 14px;
+        color: @blodColor;
+        font-weight: bold;
+        border: 2px solid #ebecf0;
+        box-sizing: border-box;
+        margin-left: -2px;
+      }
+      .ant-list {
+        height: calc(100vh - 43px);
+        overflow: auto;
+        padding-top: 12px;
+      }
+      .ant-list-bordered {
+        border-radius: 0;
+        border: @normalBorder;
+        border-left: 0;
+      }
+      .ant-list-item {
+        border-bottom: 0;
+        padding: 0 12px 8px;
+        .ant-card {
+          border-radius: 2px;
+          border: 1px solid #e1e4eb;
+          border-left: 2px solid;
+          .ant-card-body {
+            padding: 8px 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.blackMode {
+  :global {
+    p {
+      margin-bottom: 0;
+    }
+    max-width: 400px;
+    .ant-popover-arrow {
+      border-top-color: rgba(9, 16, 34, 0.7) !important;
+      border-right-color: rgba(9, 16, 34, 0.7) !important;
+    }
+    .ant-popover-inner {
+      background-color: rgba(9, 16, 34, 0.7);
+    }
+    .ant-popover-inner-content {
+      color: white;
+      font-size: 14px;
+      padding: 5px 8px;
+      word-break: normal;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+}
+
+.customDayEventWrap {
+  margin-top: 24px;
+  :global {
+    .topWrap {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      .square {
+        width: 12px;
+        height: 12px;
+        margin-right: 8px;
+      }
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+    .contentWrap {
+      display: flex;
+      flex-wrap: wrap;
+      .ant-card {
+        width: 240px;
+        margin-right: 16px;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+.subscribeCard {
+  :global {
+    .ant-card-body {
+      padding: 0;
+    }
+    .ant-menu-item {
+      margin-top: 0;
+    }
+  }
+}
+
+.pendingStyle {
+  :global {
+    p {
+      color: #333;
+    }
+    span {
+      color: #7f7f7f;
+      margin-right: 20px;
+    }
+  }
+}
+
+.cocolorItem {
+  ::-webkit-scrollbar {
+    display: none; /*ChromeSafari*/
+  }
+}
+
+.footerClass {
+  :global {
+    .ant-modal-footer .ant-btn + span,
+    span + button {
+      margin-bottom: 0;
+      margin-left: 8px;
+    }
+  }
+}

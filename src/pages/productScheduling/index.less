@@ -1,0 +1,94 @@
+.lifeCycle {
+  width: 150px;
+  height: 16px;
+  color: rgba(149, 163, 187, 1);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.addBtn {
+  display: inline-block;
+  width: 100px;
+  height: 32px;
+  margin-bottom: 12px;
+  color: white;
+  line-height: 32px;
+  text-align: center;
+  background-color: #2450a5;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.processName {
+  width: 150px;
+  height: 16px;
+  color: rgba(71, 75, 91, 1);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.button {
+  margin-left: 10px;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.inlineDiv {
+  display: inline-block;
+  width: 100px;
+  margin: 0 10px;
+  text-align: center;
+}
+
+.today {
+  display: inline-block;
+  width: 100px;
+  margin: 0 10px;
+  text-align: center;
+  border: 1px solid darkgrey;
+  cursor: pointer;
+}
+
+.box {
+  height: calc(100vh - 202px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.selectWrap {
+  display: inline-block;
+
+  .whiteColor {
+    color: white;
+  }
+
+  :global {
+    .ant-select-selection__placeholder,
+    .ant-select-search__field__placeholder {
+    @whitecolor . whiteColor;
+
+      text-align: center;
+    }
+
+    .ant-select-arrow .ant-select-arrow-icon {
+    @whitecolor . whiteColor;
+    }
+  }
+}
+
+.disabledBtn {
+  margin-right: 10px;
+  color: #999;
+  cursor: no-drop;
+}
+
+.disabledBtn:hover {
+  color: #999;
+}
+
+.rightBtn {
+  margin-right: 10px;
+}

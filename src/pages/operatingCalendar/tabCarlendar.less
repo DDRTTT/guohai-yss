@@ -1,0 +1,75 @@
+.tabCarlendar {
+  width: 100%;
+  background: #f5f7fc;
+  border: 1px solid #ebecf0;
+  border-top: 0;
+  :global {
+    .ant-tabs-nav {
+      z-index: 1;
+      .ant-tabs-ink-bar {
+        display: none !important;
+      }
+    }
+    .ant-tabs-bar {
+      border-bottom: 0;
+    }
+    .ant-tabs-tab {
+      font-size: 14px;
+      color: #474c5c;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      text-align: center;
+      border-left: 1px solid #ebecf0;
+      box-sizing: border-box;
+      &:first-child {
+        border-left: 0;
+      }
+      &:last-child {
+        border-right: 1px solid #ebecf0;
+      }
+    }
+    .ant-tabs-tab-active {
+      color: white !important;
+      position: relative;
+      font-size: 14px !important;
+      &::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        background-color: #2f6aff;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        z-index: -1;
+      }
+    }
+    .ant-tabs-nav-container-scrolling {
+      padding-right: 40px;
+      padding-left: 40px;
+    }
+    .ant-tabs-tab-arrow-show {
+      border-right: 1px solid #ebecf0;
+      height: 40px;
+      width: 40px;
+      background: #f5f7fc;
+      &:nth-child(2) {
+        border-left: 1px solid #ebecf0;
+      }
+    }
+    .ant-tabs-tab-prev-icon-target,
+    .ant-tabs-tab-next-icon-target {
+      font-size: 16px;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+  }
+  //   color: red;
+}

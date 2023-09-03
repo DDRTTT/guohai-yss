@@ -1,0 +1,526 @@
+@import '~antd/es/style/themes/default.less';
+@import '../../components/operation-unit';
+
+@width-sides: 52px;
+@key-color: #8a8e99;
+@value-color: #252b3a;
+
+.messageTodo {
+  .innerBox {
+    display: flex;
+    margin-top: 8px;
+    background: #fff;
+
+    .leftBox {
+      min-width: 194px;
+      max-width: 194px;
+    }
+
+    .rightBox {
+      width: calc(100% - 227px);
+      margin: 8px 16px;
+
+      .searchBox {
+        display: flex;
+        justify-content: space-between;
+        height: 49px;
+
+        .searchBoxLeft {
+          .searchSelect {
+            width: 200px;
+            height: 32px;
+          }
+
+          .searchInput {
+            width: 272px;
+            height: 32px;
+          }
+        }
+
+        .searchBoxRight {
+          .chooseBox {
+            .ant-radio-button-wrapper-checked {
+              background: @primary-color;
+            }
+          }
+
+          :global {
+            .ant-radio-group-outline {
+              position: relative;
+
+              .antd-pro-pages-message-todo-index-sButton {
+                .anticon {
+                  position: absolute;
+                  top: 4px;
+                }
+              }
+
+              .antd-pro-pages-message-todo-index-selectedButton {
+                .anticon {
+                  position: absolute;
+                  top: 4px;
+                }
+              }
+            }
+          }
+
+          .sButton {
+            width: 54px;
+            background: #5e7ce0;
+          }
+
+          .selectedButton {
+            width: 54px;
+            background: #fff;
+          }
+
+          .dropdown {
+            width: 104px;
+            height: 32px;
+            margin-left: 16px;
+          }
+        }
+      }
+    }
+
+    .sliders {
+      display: flex;
+      height: 52px;
+      background: #f2f5fc;
+      border-radius: 6px;
+
+      .inner {
+        flex: 1;
+        width: 0;
+        margin-top: 8px;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+        scroll-behavior: smooth;
+
+        &::-webkit-scrollbar {
+          height: 0;
+        }
+
+        //
+        //&::-webkit-scrollbar-track {
+        //  background-color: #eaeaea;
+        //  border-left: 1px solid #ccc;
+        //}
+        //
+        //&::-webkit-scrollbar-thumb {
+        //  background-color: #ccc;
+        //}
+        //
+        //&::-webkit-scrollbar-thumb:hover {
+        //  background-color: #aaa;
+        //}
+        //
+        //&::-webkit-scrollbar-thumb:active {
+        //  background-color: #333;
+        //}
+
+        .innerContent {
+          padding: 0 12px;
+          color: #8a8e99;
+          font-size: 14px;
+          user-select: none;
+
+          :global {
+            .ant-tag {
+              margin: 0 11px;
+              padding: 6px 16px;
+              font-size: 14px;
+              text-align: center;
+            }
+
+            .ant-tag-checkable-checked {
+              padding: 6px 16px;
+              color: #000;
+              text-align: center;
+              background: #fff;
+              border-radius: 6px;
+              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .leftSides {
+        .operation-unit();
+
+        min-width: @width-sides;
+        padding-top: 14px;
+        padding-left: 20px;
+        border-right: 1px solid #d9dce2;
+        cursor: pointer;
+      }
+
+      .rightSides {
+        .operation-unit();
+
+        min-width: @width-sides;
+        padding-top: 14px;
+        padding-left: 20px;
+        border-left: 1px solid #d9dce2;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .subscriptionStrategy {
+    margin-top: 16px;
+
+    :global {
+      .ant-table-thead > tr > th {
+        height: 48px;
+        background: #f2f5fc;
+      }
+    }
+  }
+
+  .cardList {
+    .cardContent {
+      position: relative;
+
+      .verticalLine {
+        position: absolute;
+        top: 19px;
+        left: 24px;
+        z-index: 99;
+        display: inline-block;
+        width: 3px;
+        height: 16px;
+        background: #7693f5;
+      }
+
+      .cardItemCheckbox {
+        position: absolute;
+        top: 17px;
+        right: 10px;
+        z-index: 1;
+      }
+
+      .cardItem {
+        position: relative;
+        width: 100%;
+        // height: 195px;
+        padding: 16px 32px 0 35px;
+        background: #fff;
+        border: 1px solid #dddddd;
+        border-radius: 7px;
+        opacity: 1;
+
+        &:hover {
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+          .cardItemOptionItemInner {
+            color: #5E7CE0;
+          }
+        }
+
+        .cardItemTitle {
+          display: flex;
+          justify-content: space-between;
+
+          .cardItemTitleLeft {
+            color: #252b3a;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: left;
+            opacity: 1;
+          }
+
+          .cardItemTitleRight {
+            color: #8a8e99;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: left;
+            opacity: 1;
+          }
+        }
+
+        .cardItemContent {
+          width: 332px;
+          height: 20px;
+          margin-top: 8px;
+          color: #575d6c;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 22px;
+          text-align: left;
+          opacity: 1;
+        }
+
+        .cardItemDetails {
+          display: flex;
+          justify-content: start;
+          margin-top: 32px;
+          margin-bottom: 12px;
+
+          .cardItemDetailItem {
+            width: 50%;
+
+            .cardItemDetailsKey {
+              color: @key-color;
+            }
+
+            .cardItemDetailsValue {
+              color: @value-color;
+            }
+          }
+          .cardItemDetailItem2 {
+            width: 100%;
+            .cardItemDetailsKey {
+              color: @key-color;
+            }
+
+            .cardItemDetailsValue {
+              color: @value-color;
+            }
+          }
+        }
+
+        .cardItemOptions {
+          display: flex;
+          justify-content: space-around;
+          padding-top: 4px;
+          text-align: center;
+          border-top: 1px solid #f2f2f3;
+          padding-bottom: 10px;
+
+          .cardItemOptionItem {
+            width: 92px;
+            height: 32px;
+            line-height: 32px;
+            border-radius: 16px;
+            cursor: pointer;
+
+            &:hover {
+              background: #f2f2f3;
+            }
+
+            .cardItemOptionItemInnerText {
+              display: inline-block;
+              width: 28px;
+              height: 20px;
+              margin-left: 4px;
+              color: #575d6c;
+              font-weight: 500;
+              font-size: 14px;
+              line-height: 22px;
+              text-align: left;
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.messageModalForm {
+  :global {
+    .ant-form-explain {
+      position: absolute !important;
+      margin-bottom: none !important;
+      bottom: -13px;
+    }
+    .ant-form-inline {
+      margin-bottom: 0 !important;
+    }
+    .ant-form-item-with-help {
+      margin-bottom: 0 !important;
+    }
+    .ant-input {
+      margin-bottom: 0 !important;
+    }
+    .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+      padding: 12px 8px !important;
+    }
+  }
+  .messageModalUser {
+    width: 830px;
+    min-height: 233px;
+    background: #f2f5fc;
+    border-radius: 6px
+  }
+  .messageModalUserCheckboxDiv {
+    display: inline-block;
+    width: 72%;
+    position: relative;
+    left: 130px;
+    border-bottom: 1px solid #dfe1e6;
+  }
+  .messageMdoalUserCheckboxButtonDiv {
+    display: inline-block;
+    width: 27%;
+    position: absolute;
+    border-bottom: 1px solid #dfe1e6;
+  }
+  .messageModalUserHint {
+    width: 726px;
+    height: 17px;
+    opacity: 1;
+    font-size: 12px;
+    font-family: PingFang SC, PingFang SC-Medium;
+    font-weight: 500;
+    text-align: left;
+    color: #8a8e99;
+    line-height: 20px;
+    margin-left: 60px;
+  }
+  .messageModalSpan1 {
+    display: inline-block;
+    width: 70px;
+    height: 20px;
+    opacity: 1;
+    font-size: 14px;
+    text-align: right;
+    line-height: 22px;
+    font-weight: 500;
+    position: relative;
+    left: 49px;
+  }
+  .messageModalSpan2 {
+    width: 84px;
+    height: 17px;
+    opacity: 1;
+    font-size: 12px;
+    font-family: PingFang SC, PingFang SC-Medium;
+    font-weight: 500;
+    text-align: left;
+    color: #8a8e99;
+    line-height: 20px;
+    position: relative;
+    left: 59px
+  }
+  .messageModalAddButton {
+    float: right;
+    width: 104px;
+    height: 24px;
+    opacity: 1;
+    background: #ffffff;
+    border: 1px solid #d7d8da;
+    border-radius: 5px;
+    position: relative;
+    left: -13px;
+  }
+  .messageModalAddButtonSpan1 {
+    font-size: 18px;
+    position: relative;
+    font-weight: 500;
+    left: -8px;
+    top: -2px;
+  }
+  .messageModalAddButtonSpan2 {
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    left: -7px;
+    top: -3px;
+  }
+}
+
+.messageModalFooter {
+  position: relative;
+  background-color: #fff;
+  top: -12px;
+  width: 942px;
+  height: 34px;
+  line-height: 56px;
+  right: 16px;
+}
+
+.messageUserArrayButtons {
+  height: 24px;
+  opacity: 1;
+  background: #ffffff;
+  border: 1px solid #d7d8da;
+  border-radius: 4px;
+  padding:0 8px !important;
+  margin-right: 8px;
+}
+
+.modalTitle {
+  color: #8A8E99;
+  font-size: 14px;
+  text-indent: 32px;
+}
+
+.modalFootBox {
+  height: 56px;
+  text-align: right;
+  padding: 12px 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.tableListForm {
+  padding: 0 60px;
+  :global {
+    .ant-form-item {
+      margin-bottom: 8px;
+      margin-right: 0;
+      display: flex;
+
+      label {
+        width: 80px;
+        display: inline-block;
+      }
+
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    white-space: nowrap;
+    margin-bottom: 24px;
+  }
+}
+
+.groupBox {
+  border-radius: 4px;
+  background-color: #F2F5FC;
+  padding-bottom: 24px;
+}
+
+.groupTitle {
+  height: 48px;
+  line-height: 48px;
+  .groupL {
+    float: left;
+    text-indent: 49px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.85);
+    span {
+      font-size: 12px;
+      color: #8A8E99;
+    }
+  }
+  .groupR {
+    float: right;
+    margin-right: 26px;
+  }
+}
+
+.groupTip {
+  text-indent: 45px;
+  font-size: 12px;
+  color: #8A8E99;
+  margin-top: 10px;
+}
+
+.paginationBox {
+  margin-top: 20px;
+  text-align: right;
+}

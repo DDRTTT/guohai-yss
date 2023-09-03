@@ -1,0 +1,91 @@
+.addPage {
+  :global {
+    .ant-card-body {
+      padding: 25px 10%;
+    }
+  }
+
+  .sysContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.content {
+  .description {
+    display: inline-block;
+    width: 220px;
+    margin-right: 30px;
+  }
+
+  .buttonGroup {
+    display: inline-block;
+    float: left;
+    margin-bottom: 20px;
+    //margin-top: -46px;
+
+    .buttonItem {
+      color: #2e76ee;
+    }
+
+    .actionsButton {
+      input {
+        border-radius: 16px;
+      }
+
+      .defaultButton {
+        width: 86px;
+      }
+    }
+  }
+
+  .publicTitle {
+    width: 200px;
+
+    div {
+      float: left;
+      width: 198px;
+      height: 32px;
+      font-size: 28px;
+      line-height: 32px;
+      text-align: center;
+    }
+  }
+
+  .openSearch {
+    float: right;
+  }
+
+  .openSearchForm {
+    margin-top: 20px;
+  }
+
+  .openSearchLabel {
+    color: #3384d5;
+    cursor: pointer;
+  }
+}
+
+.tableStyle {
+  margin-top: 40px;
+
+  :global {
+    .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
+      padding: 16px 16px;
+    }
+  }
+
+  //权限列表样式修改
+  .authList {
+    height: 50px;
+    background-color: #f4f4f4;
+    //line-height: 50px;
+
+    .roleAuth {
+      float: left;
+      margin: 14px;
+      padding: 0;
+      color: #797979;
+    }
+  }
+}

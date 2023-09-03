@@ -1,0 +1,126 @@
+.base {
+  :global {
+    .steps-action {
+      text-align: center;
+    }
+  }
+
+  .btn {
+    margin: 0 24px;
+  }
+}
+
+.registerResult {
+  :global {
+    .anticon {
+      font-size: 64px;
+    }
+  }
+
+  .title {
+    margin-top: 32px;
+    font-size: 20px;
+    line-height: 28px;
+
+    .message {
+      color: rgba(0, 0, 0, 0.447058823529412);
+      font-size: 14px;
+    }
+  }
+
+  .description {
+    background: #f0f2f5;
+
+    .content {
+      margin: 32px;
+      padding: 12px 0;
+      text-align: left;
+    }
+  }
+
+  .actions {
+    margin-top: 40px;
+
+    a + a {
+      margin-left: 8px;
+    }
+  }
+}
+
+.tableStyle {
+  margin-top: 40px;
+
+  :global {
+    .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
+      padding: 16px 16px;
+    }
+  }
+
+  //权限列表样式修改
+  .authList {
+    height: 50px;
+    background-color: #f4f4f4;
+    //line-height: 50px;
+
+    .roleAuth {
+      float: left;
+      margin: 14px;
+      padding: 0;
+      color: #797979;
+    }
+  }
+}
+
+.inputSearch {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: 1050;
+  display: block;
+  box-sizing: border-box;
+  height: 100px;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  line-height: 1.5;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 4px;
+  outline: none;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  font-feature-settings: 'tnum';
+}
+
+.slider {
+  display: block;
+  //width: 300px;
+  max-height: 712px;
+  overflow: auto;
+  background: #fff;
+}
+
+.box {
+  //border-bottom: 1px solid #e8e8e8;
+  height: 54px;
+  padding: 15px 0 15px 0;
+  text-align: center;
+}
+
+.plusBtn {
+  cursor: pointer;
+  position: absolute;
+  top: -4px;
+  right: -40px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+.plusBtn:hover {
+  color: #777;
+}
+.plusBtn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

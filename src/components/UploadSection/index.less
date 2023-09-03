@@ -1,0 +1,36 @@
+.uploadBorder {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+
+  input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer;
+  }
+}
+
+.progressBox {
+  border-radius: 4px;
+  padding: 10px 40px 10px 10px;
+  width: 330px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  .progress {
+    display: inline-block;
+    width: 80px;
+    padding-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+}

@@ -1,0 +1,46 @@
+@import '~antd/es/style/themes/default.less';
+
+.content {
+  z-index: 99;
+  height: 56px;
+  // background-image: linear-gradient(to left, #2450a5, #05225a) !important;
+  background: -o-linear-gradient(30deg, @primary-9, @primary-color);
+  background: -webket-linear-gradient(30deg, @primary-9, @primary-color);
+  background: -moz-linear-gradient(30deg, @primary-9, @primary-color);
+  background: linear-gradient(30deg, @primary-9, @primary-color);
+
+  .logo {
+    width: 128px;
+    height: 28px;
+    margin-top: 14px;
+    cursor: pointer;
+  }
+
+  .right {
+    display: flex;
+    font-weight: 400;
+
+    :global {
+      .ant-menu {
+        font-size: 16px;
+        line-height: 56px;
+        background: none;
+      }
+
+      .ant-menu-item-selected {
+        color: #fff;
+        background: none;
+        border-bottom: none;
+      }
+
+      .ant-menu-item-active {
+        color: #fff;
+        border-bottom: none;
+      }
+
+      .ant-menu-item {
+        //color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+}

@@ -1,0 +1,350 @@
+@import '~antd/es/style/themes/default.less';
+@import './style/common.less';
+@import './style/index-2.0.less';
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+canvas {
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+// 兼容IE11
+@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
+  body .ant-design-pro > .ant-layout {
+    // min-height: 100vh;
+  }
+}
+
+// flow流程图
+
+/* 设置连接线鼠滑样式 */
+.jtk-connector.jtk-hover {
+  cursor: pointer;
+}
+
+/* 设置端点鼠滑样式 */
+.jtk-endpoint.jtk-hover {
+  cursor: pointer;
+}
+
+#visobox {
+  position: relative;
+  display: flex;
+  height: 100%;
+  .visobox-left {
+    width: 300px;
+    padding: 8px;
+    background: #fff;
+  }
+  .flowNodeList {
+    height: 128px;
+    overflow-y: scroll;
+  }
+}
+
+#operate {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  padding: 10px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+}
+
+#operate .viso-item + .viso-item {
+  margin-top: 10px;
+}
+
+#operate .viso-item {
+  width: 50px;
+  padding: 5px 10px;
+  color: #eee;
+  font-size: 12px;
+  text-align: center;
+  background-color: rgb(14, 158, 184);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+#visobox-left .operate-item {
+  margin-bottom: 8px;
+  text-align: center;
+}
+#visobox-left .flowNodeItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+#visobox-left .flowNodeItem::after {
+  flex: auto;
+  content: '';
+}
+
+#visobox-left .flowNodeTitle {
+  line-height: 32px;
+  background: #f0f2f5;
+}
+#operate .operate-item button {
+  width: 100%;
+}
+
+#operate .operate-item + .operate-item {
+  margin-top: 10px;
+}
+
+#diagramContainer {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-image: url(./assets/flow/grid.jpeg);
+  background-repeat: repeat;
+  user-select: none;
+}
+
+#diagramContainer .jtk-overlay-label {
+  padding: 0 2px;
+  color: #333;
+  font-size: 12px;
+  line-height: 15px;
+  background-color: #fff;
+  opacity: 0.8;
+}
+
+#diagramContainer .viso-item {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  color: #eee;
+  font-size: 12px;
+  background-color: rgb(9, 116, 116);
+  border: 2px solid #40affe;
+  cursor: pointer;
+
+  .viso-name {
+    overflow: hidden;
+  }
+}
+
+#diagramContainer .viso-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: #333;
+  text-align: center;
+  background: none;
+  border: none;
+}
+
+#diagramContainer .ant-select {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: #eee;
+  text-align: center;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+#diagramContainer .ant-select .ant-select-selection {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+}
+#diagramContainer .ant-select .ant-select-selection__rendered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+#diagramContainer .ant-select .ant-select-selection-selected-value {
+  float: none;
+  padding-right: 0;
+  font-size: 12px;
+}
+#diagramContainer .ant-select .ant-select-arrow {
+  display: none;
+}
+
+#diagramContainer .viso-close {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  z-index: 10;
+  display: none;
+  width: 15px;
+  height: 20px;
+  color: #666;
+  font-size: 15px;
+  font-family: 'Segoe UI', 'Lucida Grande', Helvetica, Arial;
+  line-height: 20px;
+  cursor: pointer;
+}
+#diagramContainer .viso-commonIcon {
+  position: absolute;
+  left: 0;
+  z-index: 10;
+  width: 15px;
+  height: 20px;
+  font-size: 15px;
+  font-family: 'Segoe UI', 'Lucida Grande', Helvetica, Arial;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+#diagramContainer .viso-add {
+  bottom: 0;
+  background: url(./assets/flow/add.png) no-repeat center center;
+}
+#diagramContainer .viso-cut {
+  top: 0;
+  background: url(./assets/flow/cut.png) no-repeat center center;
+}
+
+#diagramContainer .viso-close:hover {
+  color: #333;
+}
+
+#diagramContainer .viso-start {
+  width: 80px;
+  height: 30px;
+  background-color: orange;
+  border-radius: 10px;
+}
+#diagramContainer .viso-start .viso-input {
+  background-color: orange;
+}
+
+#diagramContainer .viso-end {
+  width: 80px;
+  height: 30px;
+  background-color: green;
+  border-radius: 10px;
+}
+#diagramContainer .viso-end .viso-input {
+  background-color: green;
+}
+
+#diagramContainer .viso-task {
+  width: 100px;
+  height: 50px;
+  background-color: rgb(9, 116, 116);
+}
+#diagramContainer .viso-task .viso-input {
+  background-color: rgb(9, 116, 116);
+}
+
+#diagramContainer .viso-gateway-exclusive {
+  width: 48px;
+  height: 48px;
+  font-size: 0;
+  line-height: 0;
+  background: url(./assets/flow/gateway_exclusive.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+
+#diagramContainer .viso-gateway-parallel {
+  width: 48px;
+  height: 48px;
+  font-size: 0;
+  line-height: 0;
+  background: url(./assets/flow/gateway_parallel.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+
+#diagramContainer .diagram-item.select {
+  background-color: rgb(20, 85, 85);
+}
+.visobox-right {
+  width: 220px;
+  padding: 8px;
+  background: #fff;
+  border-left: 1px solid #ccc;
+}
+.right-types {
+  margin-bottom: 8px;
+  color: #08979c;
+  font-size: 16px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.drag-item-type1,
+#diagramContainer .viso-item-type1 {
+  z-index: 1;
+  width: 99% !important;
+  height: 200px;
+  background: #08979c;
+  opacity: 0.5;
+}
+
+.drag-item-type2,
+#diagramContainer .viso-item-type2 {
+  color: #333;
+
+  /* background-color: rgb(220, 107, 107); */
+  background-color: rgb(107, 171, 220);
+}
+.drag-item-type3,
+#diagramContainer .viso-item-type3 {
+  color: #333;
+  background-color: rgb(107, 171, 220);
+}
+
+.right-types-item {
+  margin-bottom: 8px;
+}
+
+.visobox-mid {
+  flex: 1;
+  overflow: auto;
+}
+#diagramContainer .jtk-connector-outline,
+.jtk-connector,
+.jtk-endpoint-anchor {
+  z-index: 100;
+}
+
+.ant-radio-group-wrapper .ant-radio-group {
+  display: none;
+}

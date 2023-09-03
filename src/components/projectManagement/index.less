@@ -1,0 +1,100 @@
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 4rem;
+  padding: 0 1rem;
+  background: white;
+  border-bottom: 1px solid #ccc;
+}
+.topBtn {
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+  button {
+    margin-left: 10px;
+  }
+  .save {
+    color: #fff;
+    background-color: #2450a5;
+    border-color: #2450a5;
+  }
+  .save:hover {
+    background-color: #446cb3;
+    border-color: #446cb3;
+  }
+  .commit {
+    color: #446cb3;
+    border-color: #446cb3;
+  }
+}
+
+.tableEdit {
+  display: flex;
+  div {
+    width: 3rem;
+    color: #2e76ee;
+  }
+}
+.content {
+  width: 100%;
+  height: 80vh;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+  background: white;
+}
+.list {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+.row {
+  display: flex;
+  margin: 1rem 0;
+  div {
+    display: flex;
+    align-items: center;
+    width: 10%;
+  }
+}
+.topBg {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 4rem;
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+  background: white;
+}
+
+.actionBut {
+  display: flex;
+  div {
+    width: 3rem;
+    color: #2e76ee;
+    cursor: pointer;
+  }
+  span {
+    width: 3rem;
+    color: #2e76ee;
+    cursor: pointer;
+  }
+}
+:global {
+  .ant-input[disabled] {
+    color: #bbb;
+  }
+  .table-fixed {
+    /deep/ .el-table__fixed-right {
+      height: 100% !important; //设置高优先，以覆盖内联样式
+    }
+    /deep/ .el-table__fixed {
+      height: 110px !important; //设置高优先，以覆盖内联样式
+    }
+  }
+  .ant-table-wrapper {
+    background: white;
+  }
+}
