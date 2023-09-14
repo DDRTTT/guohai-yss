@@ -5,7 +5,6 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import Action, { linkHoc } from '@/utils/hocUtil';
-import { getProFname } from '@/utils/utils';
 import MoreOperation from '@/components/moreOperation';
 import { handleShowTransferHistory } from '@/utils/transferHistory';
 import { Table } from '@/components';
@@ -34,11 +33,11 @@ class ProductLiquidation extends Component {
     batchList: [],
     columns: [
       {
-        key: 'proFname',
-        title: '产品简称',
-        dataIndex: 'proFname',
+        key: 'proName',
+        title: '产品全称',
+        dataIndex: 'proName',
         sorter: true,
-        width: 280,
+        width: 400,
         render: text => {
           return (
             <Tooltip title={text}>
@@ -46,8 +45,8 @@ class ProductLiquidation extends Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </span>
             </Tooltip>
           );
@@ -59,7 +58,7 @@ class ProductLiquidation extends Component {
         title: '产品代码',
         dataIndex: 'proCode',
         sorter: true,
-        width: 130,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -76,7 +75,7 @@ class ProductLiquidation extends Component {
         title: '产品类型',
         dataIndex: 'proTypeName',
         sorter: true,
-        width: 130,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -93,7 +92,7 @@ class ProductLiquidation extends Component {
         title: '产品终止日期',
         dataIndex: 'proEndDate',
         sorter: true,
-        width: 140,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -127,7 +126,7 @@ class ProductLiquidation extends Component {
         title: '清算起始日',
         dataIndex: 'clearStartDate',
         sorter: true,
-        width: 140,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -144,7 +143,7 @@ class ProductLiquidation extends Component {
         title: '清算结束日',
         dataIndex: 'clearAbortDate',
         sorter: true,
-        width: 140,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -161,7 +160,7 @@ class ProductLiquidation extends Component {
         title: '任务到达时间',
         dataIndex: 'taskTime',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -178,7 +177,8 @@ class ProductLiquidation extends Component {
         title: '状态',
         dataIndex: 'statusName',
         sorter: true,
-        width: 140,
+        width: 200,
+        align: 'right',
         ellipsis: {
           showTitle: false,
         },
@@ -194,171 +194,162 @@ class ProductLiquidation extends Component {
         key: 'option',
         title: '操作',
         dataIndex: 'option',
-        align: 'center',
+        // width: 200,
         fixed: 'right',
         render: (val, record) => {
           const { taskTypeCode } = this.state;
           return (
             <span>
               <Action code="productLiquidation:update">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
+                      record.statusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.updateTable(val, record);
                   }}
                 >
                   修改
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:copy">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
+                      record.statusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.copyTable(val, record);
                   }}
                 >
                   复制
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:commit">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
+                      record.statusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.submitTable(val, record);
                   }}
                 >
                   提交
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:delete">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display: record.statusName === '待提交' ? 'inline-block' : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.deleteTable(val, record);
                   }}
                 >
                   删除
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:check">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '流程中'
+                      record.statusName === '流程中'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.handleTable(val, record);
                   }}
                 >
                   办理
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:detail">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                         record.statusName === '已结束') ||
-                        taskTypeCode === 'T001_3' ||
-                        taskTypeCode === 'T001_5'
+                      taskTypeCode === 'T001_3' ||
+                      taskTypeCode === 'T001_5'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.lookDetail(val, record);
                   }}
                 >
                   详情
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:history">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                         record.statusName !== '待提交') ||
-                        taskTypeCode === 'T001_3' ||
-                        taskTypeCode === 'T001_5'
+                      taskTypeCode === 'T001_3' ||
+                      taskTypeCode === 'T001_5'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => handleShowTransferHistory(record)}
                 >
                   流转历史
-                </Button>
+                </a>
               </Action>
               <Action code="productLiquidation:revoke">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
-                      record.statusName === '流程中' && record.revoke == 1
+                      record.statusName === '流程中' && record.revoke === 1
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.revokeTable(val, record);
                   }}
                 >
                   撤销
-                </Button>
+                </a>
               </Action>
               {/* <Dropdown overlay={this.HandleGetMenu(val, record)} trigger={['click']}> */}
               {/* <Action code="productLiquidation:more"> */}
-              <Button
-                type="link"
-                size="small"
+              <a
                 className="ant-dropdown-link"
                 style={{
                   display:
                     (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                      record.statusName === '流程中'
+                    record.statusName === '流程中'
                       ? 'inline-block'
                       : 'none',
+                  marginRight: 10,
                 }}
-              // onClick={e => e.preventDefault()}
+                // onClick={e => e.preventDefault()}
               >
                 {/* 更多 */}
                 <MoreOperation record={record} fn={this.getTableList} />
-              </Button>
+              </a>
               {/* </Action> */}
               {/* </Dropdown> */}
             </span>
@@ -472,8 +463,6 @@ class ProductLiquidation extends Component {
     this.setState(
       {
         keyWords: value,
-        pageNum: 1,
-        pageSize: 10,
       },
       () => {
         this.handleGetTableList();
@@ -683,6 +672,7 @@ class ProductLiquidation extends Component {
       `?id=${record.id}&proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}`,
     );
   }
+
   /**
    * 复制
    * @param {*} val
@@ -726,6 +716,7 @@ class ProductLiquidation extends Component {
         }
       });
   };
+
   /**
    * 批量处理接口调用成功以后的回调
    */
@@ -790,6 +781,7 @@ class ProductLiquidation extends Component {
       }),
     );
   }
+
   /**
    * @method 删除
    * @param {*} val
@@ -821,6 +813,7 @@ class ProductLiquidation extends Component {
       },
     });
   }
+
   /**
    * @method 撤销
    * @param {*} val
@@ -856,6 +849,7 @@ class ProductLiquidation extends Component {
   callBackHandler = value => {
     this.setState({ columns: value });
   };
+
   /**
    * @method 渲染模板
    */
@@ -877,7 +871,7 @@ class ProductLiquidation extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -885,7 +879,7 @@ class ProductLiquidation extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeList,
       },
       {
@@ -893,7 +887,7 @@ class ProductLiquidation extends Component {
         label: '任务状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts && dicts.S001List,
       },
     ];
@@ -936,7 +930,7 @@ class ProductLiquidation extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 200 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -983,7 +977,7 @@ class ProductLiquidation extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1023,7 +1017,7 @@ class ProductLiquidation extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1070,7 +1064,7 @@ class ProductLiquidation extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />

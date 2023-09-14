@@ -38,10 +38,12 @@ export default {
         };
         message.success('操作成功!');
         const response = yield call(queryRule, basic);
-        yield put({
-          type: 'save',
-          payload: response,
-        });
+        if (response && response.status === 200) {
+          yield put({
+            type: 'saveListFetch',
+            payload: response.data,
+          });
+        }
       } else {
         message.warn('很抱歉，由于网络原因本次操作未能成功!');
       }

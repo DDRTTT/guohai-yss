@@ -31,3 +31,23 @@ export async function GET_REFRESH_TOKEN_WITH_USERID_API(params: { userId: string
     method: 'POST',
   });
 }
+
+// ES对比日期查询
+export async function GET_ES_BOOL_LIST_API(params: { fid: string; ids: string }) {
+  return request(`${type.GET_ES_BOOL_LIST_API}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+// ES对比查询
+export async function GET_ES_QUERY_BY_ID_API(params: { fid: string; ids: string }) {
+  return request(`${type.GET_ES_QUERY_BY_ID_API}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// ES对比查询
+export async function GET_ENCRYPTION_API() {
+  return request(`${type.GET_ENCRYPTION_API}`);
+}

@@ -125,7 +125,7 @@ class AddProjectInfo extends Component {
         render: (declareTime, record) => (
           <DatePicker
             placeholder="请选择"
-            value={declareTime ? moment(this.deFormatDate(declareTime)) : null}
+            value={declareTime ? moment(this.deFormatDate(declareTime)) : ''}
             disabled={this.state.dis}
             onChange={(date, dateString) =>
               this.reportDatePickerAction(record, dateString, 'declareTime')
@@ -208,7 +208,7 @@ class AddProjectInfo extends Component {
           <DatePicker
             disabled={this.state.dis}
             placeholder="请选择"
-            value={issueTime ? moment(this.deFormatDate(issueTime)) : null}
+            value={issueTime ? moment(this.deFormatDate(issueTime)) : ''}
             onChange={(date, dateString) =>
               this.publishDatePickerAction(record, dateString, 'issueTime')
             }
@@ -378,7 +378,7 @@ class AddProjectInfo extends Component {
         render: (sex, record) => {
           return (
             <Select
-              disabled
+              disabled={this.state.dis}
               style={{ width: '100%' }}
               placeholder="请选择"
               showArrow
@@ -419,6 +419,22 @@ class AddProjectInfo extends Component {
           );
         },
       },
+      // {
+      //   key: 'idName',
+      //   title: '其他证件类型',
+      //   dataIndex: 'idName',
+      //   width: 200,
+      //   align: 'center',
+      //   render: (idName, record) => {
+      //     return (
+      //       <Input
+      //         value={idName}
+      //         placeholder="请输入"
+      //         onChange={e => this.proMembersInputAction(e, record, 'idName')}
+      //       />
+      //     );
+      //   },
+      // },
       {
         key: 'idCard',
         title: '证件号码',
@@ -446,10 +462,10 @@ class AddProjectInfo extends Component {
         render: (department, record) => {
           return (
             <Input
+              disabled={this.state.dis}
               value={department}
               placeholder="请输入"
               onChange={e => this.proMembersInputAction(e, record, 'department')}
-              disabled
               maxLength={50}
             />
           );
@@ -508,10 +524,10 @@ class AddProjectInfo extends Component {
         render: (email, record) => {
           return (
             <Input
+              disabled={this.state.dis}
               placeholder="请输入"
               value={email}
               onChange={e => this.proMembersInputAction(e, record, 'email')}
-              disabled
               maxLength={50}
             />
           );
@@ -526,11 +542,11 @@ class AddProjectInfo extends Component {
         render: (mobile, record) => {
           return (
             <Input
+              disabled={this.state.dis}
               placeholder="请输入"
               maxLength={14}
               value={mobile}
               onChange={e => this.proMembersInputAction(e, record, 'mobile')}
-              disabled
             />
           );
         },
@@ -635,6 +651,7 @@ class AddProjectInfo extends Component {
     if (document.getElementsByClassName('ant-layout').length > 1) {
       document.getElementsByClassName('ant-layout')[2].scrollTop = 0;
     }
+
     const { proCode, taskId, update } = this.props.location.query;
     if (update) this.setState({ update: 1 });
     if (proCode) this.setState({ code: proCode });
@@ -652,16 +669,7 @@ class AddProjectInfo extends Component {
             processType: businessData.processType,
           });
           if (taskComments) this.setState({ taskComments });
-          this.props.dispatch({
-            type: 'projectInfoManger/getMemberInfoByCodeReq',
-            payload: {
-              proCode: businessData.proCode,
-            },
-            callback: result => {
-              businessData.proMembers = result.data;
-              this.handleData(businessData);
-            },
-          });
+          this.handleData(businessData);
         } else {
           message.warn(res.message);
         }
@@ -693,7 +701,7 @@ class AddProjectInfo extends Component {
       proParticipants,
       proMembers,
       proReportList,
-      proPublishInfoList = [],
+      proPublishInfoList,
       proBusType,
       customerType,
       idType,
@@ -701,13 +709,23 @@ class AddProjectInfo extends Component {
       proArea,
       publicSector,
     } = data;
+    const pageInfo = { ...data };
+
+    if (pageInfo.customerList) {
+      pageInfo.customerList = pageInfo.customerList.map((item, index) => ({
+        ...item,
+        expands: true,
+        id: `${index}`,
+      }));
+    }
+
     this.setState(
       {
-        pageInfo: data,
+        pageInfo,
         proParticipants: proParticipants ? proParticipants : [],
         proMembers,
         proReportList: proReportList ? proReportList : [],
-        proPublishInfoList,
+        proPublishInfoList: proPublishInfoList ? proReportList : [],
         customerType,
         proArea,
         proBusType,
@@ -882,7 +900,7 @@ class AddProjectInfo extends Component {
         if (dataString) {
           item[name] = `${dataString} 00:00:00`;
         } else {
-          item[name] = null;
+          item[name] = '';
         }
       }
       return true;
@@ -1217,7 +1235,7 @@ class AddProjectInfo extends Component {
   handleSubmit = actionType => {
     const {
       dispatch,
-      form: { validateFields },
+      form: { validateFields, getFieldsValue },
     } = this.props;
     const {
       code,
@@ -1225,9 +1243,13 @@ class AddProjectInfo extends Component {
       proMembers,
       proReportList,
       proPublishInfoList,
+      pageInfo,
       processType,
       processInstanceId,
     } = this.state;
+    // if (pageInfo.projectState === 'state3' && !proPublishInfoList.length) {
+    //   return message.warn('请至少添加一条发行信息');
+    // }
 
     validateFields((err, values) => {
       if (!err) {
@@ -1275,7 +1297,7 @@ class AddProjectInfo extends Component {
 
         if (hasRepeat) return message.warn('项目成员中有重复人员，请重新选择');
         if (!hasfzr) return message.warn('必须在项目成员中添加一个项目负责人');
-        if (hascy < 1) return message.warn('必须在项目成员中添加1个项目成员');
+        if (hascy < 2) return message.warn('必须在项目成员中添加两个项目成员');
 
         for (let i = 0; i < proMembers.length; i++) {
           if (proMembers[i].membeName === '') return message.warn('项目成员中有姓名未填写');
@@ -1428,7 +1450,7 @@ class AddProjectInfo extends Component {
    * 项目参与人下拉框过滤
    */
   selectProParticipantList() {
-    const { localProParticipantList } = this.state;
+    const { proParticipants, newProParticipantList, localProParticipantList } = this.state;
     if (localProParticipantList.length !== 0) {
       const newProParticipant = [];
       localProParticipantList.forEach(item => {
@@ -1567,7 +1589,14 @@ class AddProjectInfo extends Component {
       })
       .then(res => {
         if (res && res.status === 200) {
-          const { proArea, proMembers } = res.data;
+          const { proArea, proMembers, customerList } = res.data;
+          if (customerList) {
+            res.data.customerList = res.data.customerList.map((item, index) => ({
+              ...item,
+              expands: true,
+              index: `${index}`,
+            }));
+          }
           const datainfo = {
             ...res.data,
             proName: pageInfo.proName,
@@ -1633,6 +1662,7 @@ class AddProjectInfo extends Component {
         proTradeList,
         proLocaList,
         proPlateList,
+        proParticipantList,
         idTypeList,
         tradingPlacesList,
         capitalCurrencyList,
@@ -1648,9 +1678,13 @@ class AddProjectInfo extends Component {
       proReportList,
       proArea,
       proBusType,
+      customerType,
+      idType,
       pageInfo,
       code,
+      publicSector,
       newProParticipantList,
+      tradingPlaces,
       reportInfoColumns,
       publishInfoColumns,
       columns,
@@ -1668,6 +1702,9 @@ class AddProjectInfo extends Component {
 
     return (
       <Card
+        style={{
+          marginBottom: 10,
+        }}
         className={styles.addprojectinfo}
         title={
           <Breadcrumb>
@@ -1762,7 +1799,7 @@ class AddProjectInfo extends Component {
                       <TextArea
                         rows={4}
                         allowClear
-                        autoSize={{ minRows: 3, maxRows: 6 }}
+                        autosize={{ minRows: 3, maxRows: 6 }}
                         maxLength={500}
                         disabled={processType !== 'project_terminate'}
                       />,
@@ -1774,7 +1811,7 @@ class AddProjectInfo extends Component {
                     {getFieldDecorator('terminationDate', {
                       initialValue: pageInfo.terminationDate
                         ? moment(this.deFormatDate(pageInfo.terminationDate))
-                        : null,
+                        : '',
                       rules: [
                         {
                           required: processType === 'project_terminate',
@@ -1805,7 +1842,6 @@ class AddProjectInfo extends Component {
                 display: JSON.stringify(taskComments) !== '[]' ? 'block' : 'none',
                 margin: '15px 0 30px',
               }}
-              rowKey={(r, index) => index}
               columns={taskCommentsColumn}
               dataSource={taskComments}
               bordered
@@ -1901,6 +1937,13 @@ class AddProjectInfo extends Component {
                   )}
                 </Form.Item>
               </Col>
+              {/* <Col span={8}>
+                     <Form.Item label="其他项目类型:">
+                       {getFieldDecorator('otherProType', { initialValue: pageInfo.otherProType })(
+                         <Input placeholder="请输入" />,
+                       )}
+                     </Form.Item>
+                   </Col> */}
               <Col span={8}>
                 <Form.Item label="项目区域:">
                   {getFieldDecorator('proArea', {
@@ -1969,7 +2012,7 @@ class AddProjectInfo extends Component {
                   {getFieldDecorator('proCDate', {
                     initialValue: pageInfo.proCDate
                       ? moment(this.deFormatDate(pageInfo.proCDate))
-                      : null,
+                      : '',
                   })(<DatePicker placeholder="请选择" disabled={dis} />)}
                 </Form.Item>
               </Col>
@@ -2031,9 +2074,19 @@ class AddProjectInfo extends Component {
               }}
             />
           </Form>
-          {pageInfo && pageInfo.proReportList && code && !dis ? (
-            <div className={styles.sonTableTitle}>
-              项目申报信息
+          <div
+            style={{
+              display:
+                pageInfo.proReportList && JSON.stringify(pageInfo.proReportList) !== '[]' && code
+                  ? 'block'
+                  : 'none',
+            }}
+            className={styles.sonTableTitle}
+          >
+            项目申报信息
+            {dis ? (
+              ''
+            ) : (
               <ReportModal
                 onConfirm={this.addReport}
                 data={{
@@ -2041,20 +2094,35 @@ class AddProjectInfo extends Component {
                   tradingPlacesList,
                 }}
               />
-            </div>
-          ) : null}
-          {pageInfo && pageInfo.proReportList && code ? (
-            <Table
-              rowKey={(r, index) => index}
-              columns={reportInfoColumns}
-              dataSource={proReportList}
-              bordered
-              pagination={false}
-            />
-          ) : null}
-          {pageInfo && pageInfo.proPublishInfoList && code && !dis ? (
-            <div className={styles.sonTableTitle}>
-              项目发行信息
+            )}
+          </div>
+          <Table
+            style={{
+              display:
+                pageInfo.proReportList && JSON.stringify(pageInfo.proReportList) !== '[]' && code
+                  ? 'block'
+                  : 'none',
+            }}
+            columns={reportInfoColumns}
+            dataSource={proReportList}
+            bordered
+            pagination={false}
+          />
+          <div
+            style={{
+              display:
+                pageInfo.proPublishInfoList &&
+                JSON.stringify(pageInfo.proPublishInfoList) !== '[]' &&
+                code
+                  ? 'block'
+                  : 'none',
+            }}
+            className={styles.sonTableTitle}
+          >
+            项目发行信息
+            {dis ? (
+              ''
+            ) : (
               <PublishModal
                 onConfirm={this.addPublish}
                 data={{
@@ -2062,38 +2130,42 @@ class AddProjectInfo extends Component {
                   listedPlateList: proPlateList,
                 }}
               />
-            </div>
-          ) : null}
-          {pageInfo && pageInfo.proPublishInfoList ? (
-            <Table
-              rowKey={(r, index) => index}
-              columns={publishInfoColumns}
-              dataSource={proPublishInfoList}
-              bordered
-              pagination={false}
-            />
-          ) : null}
-          {!dis ? (
-            <div className={styles.sonTableTitle}>
-              项目参与人
-              <ModalForm
-                onConfirm={this.onParticipantConfirm}
-                data={{
-                  proParticipantList: newProParticipantList,
-                }}
-              />
-            </div>
-          ) : null}
+            )}
+          </div>
           <Table
-            rowKey={(r, index) => index}
-            columns={columns}
-            dataSource={proParticipants}
+            style={{
+              display:
+                pageInfo.proPublishInfoList &&
+                JSON.stringify(pageInfo.proPublishInfoList) !== '[]' &&
+                code
+                  ? 'block'
+                  : 'none',
+            }}
+            columns={publishInfoColumns}
+            dataSource={proPublishInfoList}
             bordered
             pagination={false}
           />
-          {!dis ? (
-            <div className={styles.sonTableTitle}>
-              项目成员信息
+          <div className={styles.sonTableTitle}>
+            项目参与人
+            {dis ? (
+              ''
+            ) : (
+              <ModalForm
+                onConfirm={this.onParticipantConfirm}
+                data={{
+                  productFilterOption: this.productFilterOption,
+                  proParticipantList: newProParticipantList,
+                }}
+              />
+            )}
+          </div>
+          <Table columns={columns} dataSource={proParticipants} bordered pagination={false} />
+          <div className={styles.sonTableTitle}>
+            项目成员信息
+            {dis ? (
+              ''
+            ) : (
               <ProMemberModal
                 onConfirm={this.onProMemberConfirm}
                 data={{
@@ -2103,10 +2175,9 @@ class AddProjectInfo extends Component {
                   proMembers,
                 }}
               />
-            </div>
-          ) : null}
+            )}
+          </div>
           <Table
-            rowKey={(r, index) => index}
             columns={memberColumn}
             scroll={{ x: 1300 }}
             dataSource={proMembers}

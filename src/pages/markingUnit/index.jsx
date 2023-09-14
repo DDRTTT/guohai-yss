@@ -40,6 +40,7 @@ const Index = ({
   const [batchData, setDatchData] = useState([]); // 批量操作参数
   const [batchObj, setBatchObj] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
   const [columns, setColumns] = useState(
     // 表头数据(有时间)
     [
@@ -332,8 +333,6 @@ const Index = ({
    * @param   {key}         搜索框值
    */
   const blurSearch = key => {
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
     keyWordsData.current = key;
     handleGetListData();
   };
@@ -504,7 +503,7 @@ const Index = ({
   const handleAddButtonUpdate = record => {
     return (
       <Action code="markingUnit:update">
-        <Button type="link" size="small" onClick={() => handleCanUpdate(record)}>
+        <Button type="link" onClick={() => handleCanUpdate(record)} style={{ width: '45px' }}>
           修改
         </Button>
       </Action>
@@ -517,7 +516,7 @@ const Index = ({
   const handleAddButtonCopy = record => {
     return (
       // <Action code="markingUnit:copy">
-      <Button type="link" size="small" onClick={() => handleCanCopy(record)}>
+      <Button type="link" onClick={() => handleCanCopy(record)} style={{ width: '45px' }}>
         复制
       </Button>
       // </Action>
@@ -530,7 +529,7 @@ const Index = ({
   const handleAddButtonCommit = record => {
     return (
       <Action code="markingUnit:commit">
-        <Button type="link" size="small" onClick={() => handleCanSubmit(record)}>
+        <Button type="link" onClick={() => handleCanSubmit(record)} style={{ width: '45px' }}>
           提交
         </Button>
       </Action>
@@ -543,7 +542,7 @@ const Index = ({
   const handleAddButtonCheck = record => {
     return (
       <Action code="markingUnit:check">
-        <Button type="link" size="small" onClick={() => handleCanCheck(record)}>
+        <Button type="link" onClick={() => handleCanCheck(record)} style={{ width: '45px' }}>
           办理
         </Button>
       </Action>
@@ -556,7 +555,11 @@ const Index = ({
   const handleAddButtonTransferHistory = record => {
     return (
       <Action code="markingUnit:transferHistory">
-        <Button type="link" size="small" onClick={() => handleShowTransferHistory(record)}>
+        <Button
+          type="link"
+          onClick={() => handleShowTransferHistory(record)}
+          style={{ width: '75px' }}
+        >
           流转历史
         </Button>
       </Action>
@@ -569,7 +572,7 @@ const Index = ({
   const handleAddButtonBackOut = record => {
     return (
       <Action code="markingUnit:backOut">
-        <Button type="link" size="small" onClick={() => handleCanBackOut(record)}>
+        <Button type="link" onClick={() => handleCanBackOut(record)} style={{ width: '45px' }}>
           撤销
         </Button>
       </Action>
@@ -582,7 +585,7 @@ const Index = ({
   const handleAddButtonDelete = record => {
     return (
       <Action code="markingUnit:delete">
-        <Button type="link" size="small" onClick={() => handleCanDelete(record)}>
+        <Button type="link" onClick={() => handleCanDelete(record)} style={{ width: '45px' }}>
           删除
         </Button>
       </Action>
@@ -595,7 +598,7 @@ const Index = ({
   const handleAddButtonDetails = record => {
     return (
       <Action code="markingUnit:details">
-        <Button type="link" size="small" onClick={() => handleCanDetails(record)}>
+        <Button type="link" onClick={() => handleCanDetails(record)} style={{ width: '45px' }}>
           详情
         </Button>
       </Action>
@@ -641,6 +644,7 @@ const Index = ({
   const tableData = columns => {
     return (
       <Table
+        className={styles.controlButtonDiv}
         rowSelection={rowSelection} // 开启checkbox多选框
         pagination={paginationProps} // 分页栏
         loading={listLoading} // 加载中效果
@@ -702,7 +706,7 @@ const Index = ({
       label: '托管行',
       type: 'select',
       readSet: { name: 'orgName', code: 'id' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTrusBankList.current,
     },
     {
@@ -710,7 +714,7 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.S001,
     },
   ];
@@ -750,7 +754,16 @@ const Index = ({
             </Button>
           </Action>
         }
-        tableList={tableData(columns)}
+        tableList={
+          <>
+            {(taskTypeCodeData.current === 'T001_1' || taskTypeCodeData.current === 'T001_4') && (
+              <>{tableData(columns)}</>
+            )}
+            {(taskTypeCodeData.current === 'T001_3' || taskTypeCodeData.current === 'T001_5') && (
+              <>{tableData(columns)}</>
+            )}
+          </>
+        }
       />
 
       <MoreOperation

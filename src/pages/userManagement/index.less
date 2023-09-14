@@ -1,3 +1,6 @@
+@import '../../../node_modules/antd/lib/style/themes/default.less';
+@authList-color-white:#f4f4f4;
+
 .addPage {
   :global {
     .ant-card-body {
@@ -24,10 +27,6 @@
     margin-bottom: 20px;
     //margin-top: -46px;
 
-    .buttonItem {
-      color: #2e76ee;
-    }
-
     .actionsButton {
       input {
         border-radius: 16px;
@@ -39,19 +38,6 @@
     }
   }
 
-  .publicTitle {
-    width: 200px;
-
-    div {
-      float: left;
-      width: 198px;
-      height: 32px;
-      font-size: 28px;
-      line-height: 32px;
-      text-align: center;
-    }
-  }
-
   .openSearch {
     float: right;
   }
@@ -60,12 +46,20 @@
     margin-top: 20px;
   }
 
-  .openSearchLabel {
-    color: #3384d5;
-    cursor: pointer;
-  }
 }
 
+.resMargin {
+  margin-top: 56px  !important;
+}
+
+.addTable {
+  margin-top: -45px;
+  .batch{
+    margin-right: 10px;
+    width: 100px;
+    height: 26px;
+  }
+}
 .tableStyle {
   margin-top: 40px;
 
@@ -78,14 +72,68 @@
   //权限列表样式修改
   .authList {
     height: 50px;
-    background-color: #f4f4f4;
+    background-color: @authList-color-white;
     //line-height: 50px;
-
     .roleAuth {
       float: left;
       margin: 14px;
       padding: 0;
-      color: #797979;
     }
   }
+}
+
+.displayStyle2 {
+  display: none;
+}
+
+
+.stepsStyle{
+  margin-bottom: 30px;
+}
+.checkboxStyle {
+  width: 100%
+}
+
+.btnsStyle{
+  margin-left: 20px
+}
+
+.tabBtnStyle{
+  margin: 5px;
+}
+
+.current0Style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+
+  .current0btn {
+    margin-left: 20px
+  }
+}
+.current1Style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .current1btn {
+    margin-left: 10px
+  }
+}
+
+.radioStyle {
+  margin-left: 20px;
+}
+.col1Style {
+  margin-top: 24px;
+  .colDiv{
+    margin-left: 20px;
+    display: inline-block;
+  }
+}
+
+.handleTagStyle{
+  font-size: @font-size-base;
+  cursor: pointer;
 }

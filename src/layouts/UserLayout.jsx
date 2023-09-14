@@ -1,17 +1,23 @@
 import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import loginEnv from '@/utils/loginenv';
 import styles from './UserLayout.less';
 import plmBgVideo from '@/assets/login/plm_bgvideo.mp4';
 import plmBg from '@/assets/login/plm_bg.png';
 
 const UserLayout = props => {
+  const { dispatch } = props;
+
   useEffect(() => {
     // waterMark.set(`YSSPLM${getDateStr(0, false)}`);
-    props.dispatch({
+    // 重置用户信息
+    dispatch({
       type: 'user/saveCurrentUser',
       payload: {},
+    });
+    // 获取加密信息
+    dispatch({
+      type: 'global/GET_ENCRYPTION_FETCH',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -20,6 +26,7 @@ const UserLayout = props => {
     route = {
       routes: [],
     },
+    user: { SAVE_PROJECT_INFO },
   } = props;
   const { routes = [] } = route;
   const {
@@ -56,7 +63,11 @@ const UserLayout = props => {
         <div className={styles.content}>
           <div className={styles.topHeader}>
             <div style={{ display: 'flex', color: 'rgba(255,255,255,.8)' }}>
-              <img className={styles.logo} src={loginEnv.LOGO} alt="LOGO" />
+              <img
+                className={styles.logo}
+                src={`data:image/png;base64,${SAVE_PROJECT_INFO?.loginLogo}`}
+                alt="LOGO"
+              />
               <span
                 style={{
                   width: 1,
@@ -66,20 +77,8 @@ const UserLayout = props => {
                 }}
               />
               <div style={{ marginTop: -3, fontSize: 16 }}>
-                {/* <span style={{ display: 'block', height: 21 }}>产品生命周期</span> */}
+                <span style={{ display: 'block', height: 21 }}>{SAVE_PROJECT_INFO?.loginTitle}</span>
                 {/* <span style={{ display: 'block' }}>资管业务管理平台</span> */}
-                <span
-                  style={{
-                    letterSpacing: '3px',
-                    display: 'block',
-                    fontSize: '26px',
-                    height: '42px',
-                    fontWeight: '400',
-                    lineHeight: '42px',
-                  }}
-                >
-                  资管业务管理平台
-                </span>
               </div>
             </div>
             <div className={styles.headerLink}>
@@ -110,4 +109,7 @@ const UserLayout = props => {
   );
 };
 
-export default connect(({ settings }) => ({ ...settings }))(UserLayout);
+export default connect(({ settings, user }) => ({
+  ...settings,
+  user,
+}))(UserLayout);

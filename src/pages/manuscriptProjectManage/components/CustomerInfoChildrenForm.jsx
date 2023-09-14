@@ -26,9 +26,9 @@ class CustomerInfoChildrenForm extends React.Component {
         customerType: '1',
         customerCode: '',
         industryInvolved: '',
-        setUpTime: null,
+        setUpTime: '',
         publicSector: '',
-        publicTime: null,
+        publicTime: '',
         legalRepresentative: '',
         registeredCapital: '',
         registeredCapitalCurrency: 'CNY',
@@ -44,23 +44,6 @@ class CustomerInfoChildrenForm extends React.Component {
       },
     ],
   };
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      JSON.stringify(this.state.customerList) !==
-      JSON.stringify(nextProps.data.pageInfo.customerList)
-    ) {
-      this.setState({
-        customerList: nextProps.data.pageInfo.customerList
-          ? nextProps.data.pageInfo.customerList.map((item, index) => ({
-              ...item,
-              expands: true,
-              id: `${index}`,
-            }))
-          : this.state.customerList,
-      });
-    }
-  }
 
   // 客户信息 新增、删除、展开操作后 更新子表单的数据
   childFormSetFieldsValue = callback => {
@@ -79,28 +62,8 @@ class CustomerInfoChildrenForm extends React.Component {
   handleAdd = () => {
     this.childFormSetFieldsValue(customerList => {
       customerList.push({
+        ...this.state.customerList[0],
         id: `${Date.now()}`,
-        expands: true,
-        customerName: '',
-        customerShortName: '',
-        customerType: '1',
-        customerCode: '',
-        industryInvolved: '',
-        setUpTime: null,
-        publicSector: '',
-        publicTime: null,
-        legalRepresentative: '',
-        registeredCapital: '',
-        registeredCapitalCurrency: 'CNY',
-        contact: '',
-        contactNumber: '',
-        businessScope: '',
-        remark: '',
-        idType: '',
-        otherIdType: '',
-        idNumber: '',
-        sex: '',
-        email: '',
       });
       return customerList;
     });
@@ -150,7 +113,7 @@ class CustomerInfoChildrenForm extends React.Component {
       const customerListNew = { ...customerList };
       customerListNew[index].publicSector = value;
       if (value === '1006') {
-        customerListNew[index].publicTime = null;
+        customerListNew[index].publicTime = '';
       }
       return customerListNew;
     });
@@ -171,144 +134,203 @@ class CustomerInfoChildrenForm extends React.Component {
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
-      data: { idTypeList, proTradeList, proPlateList, moneyFormat, capitalCurrencyList, dis },
+      data: {
+        idTypeList,
+        proTradeList,
+        proPlateList,
+        moneyFormat,
+        capitalCurrencyList,
+        pageInfo,
+        dis,
+      },
     } = this.props;
     getFieldDecorator('customerList', {
-      initialValue: this.state.customerList,
+      initialValue: pageInfo.customerList ? pageInfo.customerList : this.state.customerList,
     });
     const customerList = getFieldValue('customerList');
 
     return (
       <>
-        {customerList &&
-          customerList.map((customerListItem, customerListIndex) => (
-            <Card
-              title="客户信息"
-              key={customerListItem.id}
-              extra={
-                <>
-                  <Button type="link" onClick={this.handleAdd} disabled={dis}>
-                    添加
-                  </Button>
-                  {customerList.length > 1 ? (
-                    <Button
-                      type="link"
-                      onClick={() => this.handleRemove(customerListIndex)}
-                      disabled={dis}
-                    >
-                      删除
-                    </Button>
-                  ) : null}
+        {customerList.map((customerListItem, customerListIndex) => (
+          <Card
+            title="客户信息"
+            extra={
+              <>
+                <Button type="link" onClick={this.handleAdd} disabled={dis}>
+                  添加
+                </Button>
+                {customerList.length > 1 ? (
                   <Button
                     type="link"
-                    onClick={() => this.handleExpands(customerListIndex)}
+                    onClick={() => this.handleRemove(customerListIndex)}
                     disabled={dis}
                   >
-                    {customerListItem.expands ? '收起' : '展开'}
+                    删除
                   </Button>
-                </>
-              }
-              style={{ marginBottom: '24px' }}
-            >
-              <div style={{ display: customerListItem.expands ? 'block' : 'none' }}>
-                <Row>
-                  <Col span={8}>
-                    <Form.Item label="客户名称:">
-                      {getFieldDecorator(`customerInfoCustomerName[${customerListItem.id}]`, {
-                        initialValue: customerListItem.customerName,
-                        rules: [{ required: true, message: '客户名称是必填项' }],
-                      })(<Input placeholder="请输入" maxLength={50} disabled={dis} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item label="客户简称:">
-                      {getFieldDecorator(`customerInfoCustomerShortName[${customerListItem.id}]`, {
-                        initialValue: customerListItem.customerShortName,
-                      })(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item label="客户类型:">
-                      {getFieldDecorator(`customerInfoCustomerType[${customerListItem.id}]`, {
-                        initialValue: customerListItem.customerType || '1',
-                        rules: [{ required: true, message: '客户类型是必填项' }],
-                      })(
-                        <Radio.Group
-                          onChange={e => this.handleCustomerType(e, customerListIndex)}
-                          disabled={dis}
-                        >
-                          <Radio value="1">机构</Radio>
-                          <Radio value="0">自然人</Radio>
-                        </Radio.Group>,
-                      )}
-                    </Form.Item>
-                  </Col>
-                  {customerListItem.customerType === '1' ? (
-                    <>
-                      {/* 客户类型：机构 */}
-                      <Col span={8}>
-                        <Form.Item label="统一社会信用代码:">
-                          {getFieldDecorator(`customerInfoCustomerCode[${customerListItem.id}]`, {
-                            initialValue: customerListItem.customerCode,
-                            rules: [
-                              {
-                                required: true,
-                                message: '统一社会信用代码是必填项',
-                              },
-                              {
-                                validator: (rule, value, callback) => {
-                                  if (value && !creditNumReg.test(value)) {
-                                    callback('统一社会信用代码格式错误');
-                                  } else {
-                                    callback();
-                                  }
-                                },
-                              },
-                            ],
-                          })(<Input placeholder="请输入" disabled={dis} />)}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="所属行业:">
-                          {getFieldDecorator(
-                            `customerInfoIndustryInvolved[${customerListItem.id}]`,
+                ) : null}
+                <Button type="link" onClick={() => this.handleExpands(customerListIndex)}>
+                  {customerListItem.expands ? '展开' : '收起'}
+                </Button>
+              </>
+            }
+            style={{ marginBottom: '24px' }}
+          >
+            <div style={{ display: customerListItem.expands ? 'block' : 'none' }}>
+              <Row>
+                <Col span={8}>
+                  <Form.Item label="客户名称:">
+                    {getFieldDecorator(`customerInfoCustomerName[${customerListItem.id}]`, {
+                      initialValue: customerListItem.customerName,
+                      rules: [{ required: true, message: '客户名称是必填项' }],
+                    })(<Input placeholder="请输入" maxLength={50} disabled={dis} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="客户简称:">
+                    {getFieldDecorator(`customerInfoCustomerShortName[${customerListItem.id}]`, {
+                      initialValue: customerListItem.customerShortName,
+                    })(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="客户类型:">
+                    {getFieldDecorator(`customerInfoCustomerType[${customerListItem.id}]`, {
+                      initialValue: customerListItem.customerType || '1',
+                      rules: [{ required: true, message: '客户类型是必填项' }],
+                    })(
+                      <Radio.Group
+                        onChange={e => this.handleCustomerType(e, customerListIndex)}
+                        disabled={dis}
+                      >
+                        <Radio value="1">机构</Radio>
+                        <Radio value="0">自然人</Radio>
+                      </Radio.Group>,
+                    )}
+                  </Form.Item>
+                </Col>
+                {customerListItem.customerType === '1' ? (
+                  <>
+                    {/* 客户类型：机构 */}
+                    <Col span={8}>
+                      <Form.Item label="统一社会信用代码:">
+                        {getFieldDecorator(`customerInfoCustomerCode[${customerListItem.id}]`, {
+                          initialValue: customerListItem.customerCode,
+                          rules: [
                             {
-                              initialValue: customerListItem.industryInvolved,
-                              rules: [
-                                {
-                                  required: true,
-                                  message: '所属行业是必填项',
-                                },
-                              ],
+                              required: true,
+                              message: '统一社会信用代码是必填项',
                             },
-                          )(
-                            <Select placeholder="请选择" showSearch allowClear disabled={dis}>
-                              {proTradeList &&
-                                proTradeList.map(item => (
-                                  <Option key={item.code} value={item.code}>
-                                    {item.name}
-                                  </Option>
-                                ))}
-                            </Select>,
-                          )}
-                        </Form.Item>
-                      </Col>
+                            {
+                              validator: (rule, value, callback) => {
+                                if (value && !creditNumReg.test(value)) {
+                                  callback('统一社会信用代码格式错误');
+                                } else {
+                                  callback();
+                                }
+                              },
+                            },
+                          ],
+                        })(<Input placeholder="请输入" disabled={dis} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="所属行业:">
+                        {getFieldDecorator(`customerInfoIndustryInvolved[${customerListItem.id}]`, {
+                          initialValue: customerListItem.industryInvolved,
+                          rules: [
+                            {
+                              required: true,
+                              message: '所属行业是必填项',
+                            },
+                          ],
+                        })(
+                          <Select placeholder="请选择" showSearch allowClear disabled={dis}>
+                            {proTradeList &&
+                              proTradeList.map(item => (
+                                <Option key={item.code} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              ))}
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="成立时间">
+                        {getFieldDecorator(`customerInfoSetUpTime[${customerListItem.id}]`, {
+                          initialValue: customerListItem.setUpTime
+                            ? moment(this.formatDate(customerListItem.setUpTime))
+                            : '',
+                          rules: [
+                            {
+                              validator: (rule, value, callback) => {
+                                if (
+                                  value &&
+                                  moment(this.formatDate(customerListItem.setUpTime)).isAfter(
+                                    this.formatDate(customerListItem.publicTime),
+                                  )
+                                ) {
+                                  callback('成立时间不能大于上市时间');
+                                } else {
+                                  callback();
+                                }
+                              },
+                            },
+                          ],
+                        })(
+                          <DatePicker
+                            placeholder="请选择"
+                            disabled={dis}
+                            onChange={(date, dateString) =>
+                              this.handleDatePicker(
+                                date,
+                                dateString,
+                                customerListIndex,
+                                'setUpTime',
+                              )
+                            }
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="上市板块:">
+                        {getFieldDecorator(`customerInfoPublicSector[${customerListItem.id}]`, {
+                          initialValue: customerListItem.publicSector,
+                        })(
+                          <Select
+                            placeholder="请选择"
+                            showArrow
+                            onChange={value => this.handlePublicSector(value, customerListIndex)}
+                            disabled={dis}
+                          >
+                            {proPlateList &&
+                              proPlateList.map(item => (
+                                <Option key={item.code} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              ))}
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    {customerListItem.publicSector !== '1006' ? (
                       <Col span={8}>
-                        <Form.Item label="成立时间">
-                          {getFieldDecorator(`customerInfoSetUpTime[${customerListItem.id}]`, {
-                            initialValue: customerListItem.setUpTime
-                              ? moment(this.formatDate(customerListItem.setUpTime))
-                              : null,
+                        <Form.Item label="上市时间">
+                          {getFieldDecorator(`customerInfoPublicTime[${customerListItem.id}]`, {
+                            initialValue: customerListItem.publicTime
+                              ? moment(this.formatDate(customerListItem.publicTime))
+                              : '',
                             rules: [
                               {
                                 validator: (rule, value, callback) => {
                                   if (
                                     value &&
-                                    moment(this.formatDate(customerListItem.setUpTime)).isAfter(
-                                      this.formatDate(customerListItem.publicTime),
+                                    moment(this.formatDate(customerListItem.publicTime)).isBefore(
+                                      this.formatDate(customerListItem.setUpTime),
                                     )
                                   ) {
-                                    callback('成立时间不能大于上市时间');
+                                    callback('上市时间需大于成立时间');
                                   } else {
                                     callback();
                                   }
@@ -324,383 +346,320 @@ class CustomerInfoChildrenForm extends React.Component {
                                   date,
                                   dateString,
                                   customerListIndex,
-                                  'setUpTime',
+                                  'publicTime',
                                 )
                               }
                             />,
                           )}
                         </Form.Item>
                       </Col>
-                      <Col span={8}>
-                        <Form.Item label="上市板块:">
-                          {getFieldDecorator(`customerInfoPublicSector[${customerListItem.id}]`, {
-                            initialValue: customerListItem.publicSector,
-                          })(
-                            <Select
-                              placeholder="请选择"
-                              showArrow
-                              onChange={value => this.handlePublicSector(value, customerListIndex)}
-                              disabled={dis}
-                            >
-                              {proPlateList &&
-                                proPlateList.map(item => (
-                                  <Option key={item.code} value={item.code}>
-                                    {item.name}
-                                  </Option>
-                                ))}
-                            </Select>,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      {customerListItem.publicSector !== '1006' ? (
-                        <Col span={8}>
-                          <Form.Item label="上市时间">
-                            {getFieldDecorator(`customerInfoPublicTime[${customerListItem.id}]`, {
-                              initialValue: customerListItem.publicTime
-                                ? moment(this.formatDate(customerListItem.publicTime))
-                                : null,
-                              rules: [
-                                {
-                                  validator: (rule, value, callback) => {
-                                    if (
-                                      value &&
-                                      moment(this.formatDate(customerListItem.publicTime)).isBefore(
-                                        this.formatDate(customerListItem.setUpTime),
-                                      )
-                                    ) {
-                                      callback('上市时间需大于成立时间');
-                                    } else {
-                                      callback();
-                                    }
-                                  },
+                    ) : null}
+                    <Col span={8}>
+                      <Form.Item label="法人代表:">
+                        {getFieldDecorator(
+                          `customerInfoLegalRepresentative[${customerListItem.id}]`,
+                          {
+                            initialValue: customerListItem.legalRepresentative,
+                          },
+                        )(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="注册资本(万):">
+                        {getFieldDecorator(
+                          `customerInfoRegisteredCapital[${customerListItem.id}]`,
+                          {
+                            initialValue: customerListItem.registeredCapital,
+                            rules: [
+                              {
+                                validator: (rule, value, callback) => {
+                                  const reg = /^[0-9\.\,]*$/g;
+                                  if (value && !reg.test(value)) {
+                                    callback('输入金额格式不对');
+                                  } else {
+                                    callback();
+                                  }
                                 },
-                              ],
-                            })(
-                              <DatePicker
-                                placeholder="请选择"
-                                disabled={dis}
-                                onChange={(date, dateString) =>
-                                  this.handleDatePicker(
-                                    date,
-                                    dateString,
-                                    customerListIndex,
-                                    'publicTime',
-                                  )
+                              },
+                            ],
+                          },
+                        )(
+                          <InputNumber
+                            style={{ width: '100%' }}
+                            maxLength={20}
+                            formatter={value => moneyFormat(value)}
+                            parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            placeholder="请输入"
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="币种:">
+                        {getFieldDecorator(
+                          `customerInfoRegisteredCapitalCurrency[${customerListItem.id}]`,
+                          {
+                            initialValue: customerListItem.registeredCapitalCurrency || 'CNY',
+                          },
+                        )(
+                          <Select placeholder="请选择" showArrow disabled={dis}>
+                            {capitalCurrencyList &&
+                              capitalCurrencyList.map(item => (
+                                <Option key={item.code} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              ))}
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="联系人:">
+                        {getFieldDecorator(`customerInfoContact[${customerListItem.id}]`, {
+                          initialValue: customerListItem.contact,
+                        })(<Input placeholder="请输入" maxLength={10} disabled={dis} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="联系电话:">
+                        {getFieldDecorator(`customerInfoContactNumber[${customerListItem.id}]`, {
+                          initialValue: customerListItem.contactNumber,
+                          rules: [
+                            {
+                              validator: (rule, value, callback) => {
+                                if (
+                                  (value &&
+                                    (phoneReg.test(value) ||
+                                      phoneReg2.test(value) ||
+                                      numReg.test(value))) ||
+                                  !value
+                                ) {
+                                  callback();
+                                } else {
+                                  callback('格式校验失败!');
                                 }
-                              />,
-                            )}
-                          </Form.Item>
-                        </Col>
-                      ) : null}
-                      <Col span={8}>
-                        <Form.Item label="法人代表:">
-                          {getFieldDecorator(
-                            `customerInfoLegalRepresentative[${customerListItem.id}]`,
-                            {
-                              initialValue: customerListItem.legalRepresentative,
+                              },
                             },
-                          )(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
+                          ],
+                        })(
+                          <Input
+                            placeholder="请输入"
+                            type="number"
+                            maxLength={14}
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Item label="经营范围:" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
+                        {getFieldDecorator(`customerInfoBusinessScope[${customerListItem.id}]`, {
+                          initialValue: customerListItem.businessScope,
+                          rules: [
+                            {
+                              required: true,
+                              message: '经营范围是必填项',
+                            },
+                          ],
+                        })(
+                          <TextArea
+                            rows={4}
+                            allowClear
+                            maxLength={2000}
+                            autoSize={{ minRows: 3, maxRows: 6 }}
+                            placeholder="请输入2000字以内内容..."
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Item label="备注:" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
+                        {getFieldDecorator(`customerInfoRemark[${customerListItem.id}]`, {
+                          initialValue: customerListItem.remark,
+                        })(
+                          <TextArea
+                            rows={4}
+                            allowClear
+                            maxLength={2000}
+                            autoSize={{ minRows: 3, maxRows: 6 }}
+                            placeholder="请输入2000字以内内容..."
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </>
+                ) : (
+                  <>
+                    {/* 客户类型：自然人 */}
+                    <Col span={8}>
+                      <Form.Item label="证件类型:">
+                        {getFieldDecorator(`customerInfoIdType[${customerListItem.id}]`, {
+                          initialValue: customerListItem.idType,
+                          rules: [
+                            {
+                              required: true,
+                              message: '证件类型是必填项',
+                            },
+                          ],
+                        })(
+                          <Select
+                            placeholder="请选择"
+                            showArrow
+                            onChange={value => this.handleIdType(value, customerListIndex)}
+                            disabled={dis}
+                          >
+                            {idTypeList &&
+                              idTypeList.map(item => (
+                                <Option key={item.code} value={item.code}>
+                                  {item.name}
+                                </Option>
+                              ))}
+                          </Select>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    {customerListItem.idType === '1007' ? (
+                      <Col span={8}>
+                        <Form.Item label="其他证件类型:">
+                          {getFieldDecorator(`customerInfoOtherIdType[${customerListItem.id}]`, {
+                            initialValue: customerListItem.otherIdType,
+                            rules: [
+                              {
+                                required: true,
+                                message: '其他证件类型是必填项',
+                              },
+                            ],
+                          })(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
                         </Form.Item>
                       </Col>
-                      <Col span={8}>
-                        <Form.Item label="注册资本(万):">
-                          {getFieldDecorator(
-                            `customerInfoRegisteredCapital[${customerListItem.id}]`,
+                    ) : null}
+                    <Col span={8}>
+                      <Form.Item label="证件号码:">
+                        {getFieldDecorator(`customerInfoIdNumber[${customerListItem.id}]`, {
+                          initialValue: customerListItem.idNumber,
+                          rules: [
                             {
-                              initialValue: customerListItem.registeredCapital,
-                              rules: [
-                                {
-                                  validator: (rule, value, callback) => {
-                                    const reg = /^[0-9\.\,]*$/g;
-                                    if (value && !reg.test(value)) {
-                                      callback('输入金额格式不对');
-                                    } else {
-                                      callback();
+                              required: true,
+                              message: '证件号码是必填项',
+                            },
+                            {
+                              validator: (rule, value, callback) => {
+                                switch (customerListItem.idType) {
+                                  case '1001':
+                                    if (!idCardReg.test(value)) {
+                                      callback('身份证号格式不正确!');
                                     }
-                                  },
-                                },
-                              ],
+                                    break;
+                                  case '1002':
+                                    if (!(PASSPORT1.test(value) || PASSPORT2.test(value))) {
+                                      callback('护照号码格式不正确!');
+                                    }
+                                    break;
+                                  case '1003':
+                                    if (!HKMAKAO.test(value)) {
+                                      callback('港澳居民通行证号码格式不正确!');
+                                    }
+                                    break;
+                                  case '1004':
+                                    if (!(TAIWAN1.test(value) || TAIWAN2.test(value))) {
+                                      callback('台湾来往通行证号码格式不正确!');
+                                    }
+                                    break;
+                                  default:
+                                    callback();
+                                }
+                              },
                             },
-                          )(
-                            <InputNumber
-                              style={{ width: '100%' }}
-                              maxLength={20}
-                              formatter={value => moneyFormat(value)}
-                              parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                              placeholder="请输入"
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="币种:">
-                          {getFieldDecorator(
-                            `customerInfoRegisteredCapitalCurrency[${customerListItem.id}]`,
+                          ],
+                        })(<Input placeholder="请输入" maxLength={18} disabled={dis} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="性别:">
+                        {getFieldDecorator(`customerInfoSex[${customerListItem.id}]`, {
+                          initialValue: customerListItem.sex,
+                        })(
+                          <Radio.Group disabled={dis}>
+                            <Radio value="0">男</Radio>
+                            <Radio value="1">女</Radio>
+                          </Radio.Group>,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="邮箱:">
+                        {getFieldDecorator(`customerInfoEmail[${customerListItem.id}]`, {
+                          initialValue: customerListItem.email,
+                          rules: [
                             {
-                              initialValue: customerListItem.registeredCapitalCurrency || 'CNY',
+                              validator: (rule, value, callback) => {
+                                if (value && !emailReg.test(value)) {
+                                  callback('邮箱格式错误');
+                                } else {
+                                  callback();
+                                }
+                              },
                             },
-                          )(
-                            <Select placeholder="请选择" showArrow disabled={dis}>
-                              {capitalCurrencyList &&
-                                capitalCurrencyList.map(item => (
-                                  <Option key={item.code} value={item.code}>
-                                    {item.name}
-                                  </Option>
-                                ))}
-                            </Select>,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="联系人:">
-                          {getFieldDecorator(`customerInfoContact[${customerListItem.id}]`, {
-                            initialValue: customerListItem.contact,
-                          })(<Input placeholder="请输入" maxLength={10} disabled={dis} />)}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="联系电话:">
-                          {getFieldDecorator(`customerInfoContactNumber[${customerListItem.id}]`, {
-                            initialValue: customerListItem.contactNumber,
-                            rules: [
-                              {
-                                validator: (rule, value, callback) => {
-                                  if (
-                                    (value &&
-                                      (phoneReg.test(value) ||
-                                        phoneReg2.test(value) ||
-                                        numReg.test(value))) ||
-                                    !value
-                                  ) {
-                                    callback();
-                                  } else {
-                                    callback('格式校验失败!');
-                                  }
-                                },
+                          ],
+                        })(<Input placeholder="请输入" maxLength={50} disabled={dis} />)}
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item label="联系电话:">
+                        {getFieldDecorator(`customerInfoContactNumber[${customerListItem.id}]`, {
+                          initialValue: customerListItem.contactNumber,
+                          rules: [
+                            {
+                              validator: (rule, value, callback) => {
+                                if (
+                                  (value &&
+                                    (phoneReg.test(value) ||
+                                      phoneReg2.test(value) ||
+                                      numReg.test(value))) ||
+                                  !value
+                                ) {
+                                  callback();
+                                } else {
+                                  callback('格式校验失败!');
+                                }
                               },
-                            ],
-                          })(
-                            <Input
-                              placeholder="请输入"
-                              type="number"
-                              maxLength={14}
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={24}>
-                        <Form.Item
-                          label="经营范围:"
-                          labelCol={{ span: 3 }}
-                          wrapperCol={{ span: 21 }}
-                        >
-                          {getFieldDecorator(`customerInfoBusinessScope[${customerListItem.id}]`, {
-                            initialValue: customerListItem.businessScope,
-                            rules: [
-                              {
-                                required: true,
-                                message: '经营范围是必填项',
-                              },
-                            ],
-                          })(
-                            <TextArea
-                              rows={4}
-                              allowClear
-                              maxLength={2000}
-                              autoSize={{ minRows: 3, maxRows: 6 }}
-                              placeholder="请输入2000字以内内容..."
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={24}>
-                        <Form.Item label="备注:" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
-                          {getFieldDecorator(`customerInfoRemark[${customerListItem.id}]`, {
-                            initialValue: customerListItem.remark,
-                          })(
-                            <TextArea
-                              rows={4}
-                              allowClear
-                              maxLength={2000}
-                              autoSize={{ minRows: 3, maxRows: 6 }}
-                              placeholder="请输入2000字以内内容..."
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                    </>
-                  ) : (
-                    <>
-                      {/* 客户类型：自然人 */}
-                      <Col span={8}>
-                        <Form.Item label="证件类型:">
-                          {getFieldDecorator(`customerInfoIdType[${customerListItem.id}]`, {
-                            initialValue: customerListItem.idType,
-                            rules: [
-                              {
-                                required: true,
-                                message: '证件类型是必填项',
-                              },
-                            ],
-                          })(
-                            <Select
-                              placeholder="请选择"
-                              showArrow
-                              onChange={value => this.handleIdType(value, customerListIndex)}
-                              disabled={dis}
-                            >
-                              {idTypeList &&
-                                idTypeList.map(item => (
-                                  <Option key={item.code} value={item.code}>
-                                    {item.name}
-                                  </Option>
-                                ))}
-                            </Select>,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      {customerListItem.idType === '1007' ? (
-                        <Col span={8}>
-                          <Form.Item label="其他证件类型:">
-                            {getFieldDecorator(`customerInfoOtherIdType[${customerListItem.id}]`, {
-                              initialValue: customerListItem.otherIdType,
-                              rules: [
-                                {
-                                  required: true,
-                                  message: '其他证件类型是必填项',
-                                },
-                              ],
-                            })(<Input placeholder="请输入" maxLength={25} disabled={dis} />)}
-                          </Form.Item>
-                        </Col>
-                      ) : null}
-                      <Col span={8}>
-                        <Form.Item label="证件号码:">
-                          {getFieldDecorator(`customerInfoIdNumber[${customerListItem.id}]`, {
-                            initialValue: customerListItem.idNumber,
-                            rules: [
-                              {
-                                required: true,
-                                message: '证件号码是必填项',
-                              },
-                              {
-                                validator: (rule, value, callback) => {
-                                  if (
-                                    customerListItem.idType === '1001' &&
-                                    !idCardReg.test(value)
-                                  ) {
-                                    callback('身份证号格式不正确!');
-                                  } else if (
-                                    customerListItem.idType === '1002' &&
-                                    !(PASSPORT1.test(value) || PASSPORT2.test(value))
-                                  ) {
-                                    callback('护照号码格式不正确!');
-                                  } else if (
-                                    customerListItem.idType === '1003' &&
-                                    !HKMAKAO.test(value)
-                                  ) {
-                                    callback('港澳居民通行证号码格式不正确!');
-                                  } else if (
-                                    customerListItem.idType === '1004' &&
-                                    !(TAIWAN1.test(value) || TAIWAN2.test(value))
-                                  ) {
-                                    callback('台湾来往通行证号码格式不正确!');
-                                  } else {
-                                    callback();
-                                  }
-                                },
-                              },
-                            ],
-                          })(<Input placeholder="请输入" maxLength={18} disabled={dis} />)}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="性别:">
-                          {getFieldDecorator(`customerInfoSex[${customerListItem.id}]`, {
-                            initialValue: customerListItem.sex,
-                          })(
-                            <Radio.Group disabled={dis}>
-                              <Radio value="0">男</Radio>
-                              <Radio value="1">女</Radio>
-                            </Radio.Group>,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="邮箱:">
-                          {getFieldDecorator(`customerInfoEmail[${customerListItem.id}]`, {
-                            initialValue: customerListItem.email,
-                            rules: [
-                              {
-                                validator: (rule, value, callback) => {
-                                  if (value && !emailReg.test(value)) {
-                                    callback('邮箱格式错误');
-                                  } else {
-                                    callback();
-                                  }
-                                },
-                              },
-                            ],
-                          })(<Input placeholder="请输入" maxLength={50} disabled={dis} />)}
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item label="联系电话:">
-                          {getFieldDecorator(`customerInfoContactNumber[${customerListItem.id}]`, {
-                            initialValue: customerListItem.contactNumber,
-                            rules: [
-                              {
-                                validator: (rule, value, callback) => {
-                                  if (
-                                    (value &&
-                                      (phoneReg.test(value) ||
-                                        phoneReg2.test(value) ||
-                                        numReg.test(value))) ||
-                                    !value
-                                  ) {
-                                    callback();
-                                  } else {
-                                    callback('格式校验失败!');
-                                  }
-                                },
-                              },
-                            ],
-                          })(
-                            <Input
-                              placeholder="请输入"
-                              type="number"
-                              maxLength={14}
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                      <Col span={24}>
-                        <Form.Item label="备注:" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
-                          {getFieldDecorator(`customerInfoRemark[${customerListItem.id}]`, {
-                            initialValue: customerListItem.remark,
-                          })(
-                            <TextArea
-                              rows={4}
-                              allowClear
-                              maxLength={2000}
-                              autoSize={{ minRows: 3, maxRows: 6 }}
-                              placeholder="请输入2000字以内内容..."
-                              disabled={dis}
-                            />,
-                          )}
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
-                </Row>
-              </div>
-            </Card>
-          ))}
+                            },
+                          ],
+                        })(
+                          <Input
+                            placeholder="请输入"
+                            type="number"
+                            maxLength={14}
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Item label="备注:" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }}>
+                        {getFieldDecorator(`customerInfoRemark[${customerListItem.id}]`, {
+                          initialValue: customerListItem.remark,
+                        })(
+                          <TextArea
+                            rows={4}
+                            allowClear
+                            maxLength={2000}
+                            autoSize={{ minRows: 3, maxRows: 6 }}
+                            placeholder="请输入2000字以内内容..."
+                            disabled={dis}
+                          />,
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </>
+                )}
+              </Row>
+            </div>
+          </Card>
+        ))}
       </>
     );
   }

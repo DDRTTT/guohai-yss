@@ -45,23 +45,3 @@ export const submitWpDictDeliverOosApi = params => {
 export const submitWpFileUploadWithoutDictApi = params => {
   return request(`${uri}/remote/wpFileUploadWithoutDict?${stringify(params)}&fileCode`);
 };
-
-// 目录报送预览
-export const getWpDictDeliverPreviewApi = params => {
-  return request(`${uri}/remote/wpDictDeliverPreview?${stringify(params)}`);
-};
-
-// 文件报送预览
-export const getWpFileUploadPreviewApi = params => {
-  return request(`${uri}/remote/wpFileUploadPreview?${stringify(params)}`);
-};
-
-// 底稿范围外项目报送预览
-export const getWpDictDeliverOosPreviewApi = params => {
-  return request(`${uri}/remote/wpDictDeliverOosPreview?${stringify(params)}`);
-};
-
-// 底稿范围外文件报送预览
-export const getWpFileUploadWithoutDictPreviewApi = params => {
-  return request(`${uri}/remote/wpFileUploadWithoutDictPreview?${stringify(params)}&fileCode`);
-};

@@ -27,7 +27,7 @@ export interface homeState {
   pendingData: any;
   pendingModalVisible: boolean;
   hoverVisible: boolean;
-  dateTitleInputVisible: boolean;
+  dateTitleInputVisible:boolean;
   remarks: string;
 
   showTaskmodal: boolean;
@@ -81,7 +81,6 @@ export interface CustiomDayEventProps {
   time: string;
   data: any;
   key: number | string;
-  flag: string;
 }
 
 export interface FiltrateProps {
@@ -142,5 +141,4 @@ export interface tasItemData {
   title?: string;
   remarks?: string;
   itemTypeCode: string;
-  flag: string;
 }

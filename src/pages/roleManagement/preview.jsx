@@ -246,7 +246,7 @@ const Preview = ({
           key={tag.id}
           checked={selectTags.indexOf(tag.id) > -1}
           onChange={checked => fn(tag.id, checked)}
-          style={{ fontSize: 14, cursor: 'pointer' }}
+          className={styles.checkableTag}
         >
           {tag.name}
         </CheckableTag>
@@ -268,18 +268,13 @@ const Preview = ({
       // destroyOnClose
     >
       <Row>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-evenly',
-          }}
-        >
+        <div className={styles.roleName}>
           <span> 角色名称：{name}</span>
           <span> 角色代码：{code}</span>
         </div>
 
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ marginTop: 24 }}>
+          <Tabs className={styles.tabPane} tabPosition="left">
             <TabPane tab="功能组件" key="1">
               已关联功能组件 :{handleTag(tags, functions, handleTagChange, selectTags)}
               <AuthTree
@@ -301,9 +296,9 @@ const Preview = ({
                 fetchGetAuthTreeLoading={fetchGetPositionsTreeLoading}
               />
             </TabPane>
-            <TabPane tab="数据策略组件" key="3">
+            {/* <TabPane tab="数据策略组件" key="3">
               <CheckboxGroup options={authorizationStrategy} value={dataStrategies} />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </Col>
       </Row>

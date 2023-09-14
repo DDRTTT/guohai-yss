@@ -384,7 +384,7 @@ class AddProjectSeries extends Component {
               placeholder="请选择"
               showArrow
               value={sex || []}
-              disabled
+              disabled={dis}
               onChange={val => this.proMembersSelectAction(val, record, 'sex')}
             >
               <Option value="0">男</Option>
@@ -448,11 +448,12 @@ class AddProjectSeries extends Component {
         width: 200,
         align: 'center',
         render: (department, record) => {
+          const { dis } = this.state;
           return (
             <Input
               value={department}
               placeholder="请输入"
-              disabled
+              disabled={dis}
               onChange={e => this.proMembersInputAction(e, record, 'department')}
               maxLength={50}
             />
@@ -512,11 +513,12 @@ class AddProjectSeries extends Component {
         width: 220,
         align: 'center',
         render: (email, record) => {
+          const { dis } = this.state;
           return (
             <Input
               placeholder="请输入"
               value={email}
-              disabled
+              disabled={dis}
               onChange={e => this.proMembersInputAction(e, record, 'email')}
               maxLength={50}
             />
@@ -530,12 +532,13 @@ class AddProjectSeries extends Component {
         width: 200,
         align: 'center',
         render: (mobile, record) => {
+          const { dis } = this.state;
           return (
             <Input
               placeholder="请输入"
               maxLength={14}
               value={mobile}
-              disabled
+              disabled={dis}
               onChange={e => this.proMembersInputAction(e, record, 'mobile')}
             />
           );
@@ -624,7 +627,9 @@ class AddProjectSeries extends Component {
   }
 
   messageHandle = event => {
+    console.log('addProjectSeries event::', event);
     const eventData = event.data;
+
     if (eventData.code === '200' && eventData.type === 'dataDispatched') {
       if (
         eventData.data.formData &&
@@ -635,16 +640,7 @@ class AddProjectSeries extends Component {
           isIframe: true,
           dis: true,
         });
-        this.props.dispatch({
-          type: 'projectInfoManger/getMemberInfoByCodeReq',
-          payload: {
-            proCode: eventData.data.formData.businessData.proCode,
-          },
-          callback: result => {
-            eventData.data.formData.businessData.proMembers = result.data;
-            this.handleDetailInfo(eventData.data.formData.businessData);
-          },
-        });
+        this.handleDetailInfo(eventData.data.formData.businessData);
       }
     }
   };
@@ -719,9 +715,19 @@ class AddProjectSeries extends Component {
       proMembers,
       proReportList,
     } = data;
+    const pageInfo = { ...data };
+
+    if (pageInfo.customerList) {
+      pageInfo.customerList = pageInfo.customerList.map((item, index) => ({
+        ...item,
+        expands: true,
+        id: `${index}`,
+      }));
+    }
+
     this.setState({
       proCode,
-      pageInfo: data,
+      pageInfo,
       proMembers: proMembers ? proMembers : [],
       proReportList: proReportList ? proReportList : [],
       customerType,
@@ -1025,7 +1031,7 @@ class AddProjectSeries extends Component {
 
         if (hasRepeat) return message.warn('项目成员中有重复人员，请重新选择');
         if (!hasfzr) return message.warn('必须在项目成员中添加一个项目负责人');
-        if (hascy < 1) return message.warn('必须在项目成员中添加1个项目成员');
+        if (hascy < 2) return message.warn('必须在项目成员中添加两个项目成员');
 
         for (let i = 0; i < proMembers.length; i++) {
           if (proMembers[i].membeName === '') return message.warn('项目成员中有姓名未填写');
@@ -1115,7 +1121,7 @@ class AddProjectSeries extends Component {
             });
             if (res && res.status === 200) {
               message.success('保存成功!');
-              router.push('/projectManagement/seriesManage');
+              router.push('/projectManagement/informationManagement');
             } else {
               message.error(res.message);
             }
@@ -1133,7 +1139,7 @@ class AddProjectSeries extends Component {
             });
             if (res && res.status === 200) {
               message.success('提交成功!');
-              router.push('/projectManagement/seriesManage');
+              router.push('/projectManagement/informationManagement');
             } else {
               message.error(res.message);
             }
@@ -1397,7 +1403,7 @@ class AddProjectSeries extends Component {
       >
         <div
           style={{
-            height: 'calc(100vh - 220px)',
+            height: isIframe ? 'auto' : 'calc(100vh - 220px)',
             overflowY: 'auto',
           }}
         >
@@ -1424,7 +1430,7 @@ class AddProjectSeries extends Component {
                       <TextArea
                         rows={4}
                         allowClear
-                        autoSize={{ minRows: 3, maxRows: 6 }}
+                        autosize={{ minRows: 3, maxRows: 6 }}
                         maxLength={500}
                         disabled={processType !== 'series_terminate'}
                       />,
@@ -1617,6 +1623,7 @@ class AddProjectSeries extends Component {
               <ProMemberModal
                 onConfirm={this.addproMembers}
                 data={{
+                  productFilterOption: this.productFilterOption,
                   idTypeList,
                   memberNameList,
                   proMembers,

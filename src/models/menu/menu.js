@@ -1,5 +1,15 @@
-import { add, del, edit, geturi, init, menuMTree, query } from '@/services/menu/menu';
+import {
+  add,
+  del,
+  edit,
+  geturi,
+  init,
+  menuMTree,
+  query,
+  AddAuthPointToAdmin,
+} from '@/services/menu/menu';
 import { getCrudModel } from '@/utils/commonTemplate';
+import { message } from 'antd';
 
 const namespace = 'menu';
 const stateClear = model => {
@@ -43,7 +53,7 @@ const model = {
         const parameter = { needAction: true, queryStr: search == null ? '' : search };
         const response = yield call(menuMTree, parameter);
 
-        if (response.data) {
+        if (response?.data) {
           // 初始化菜单树
           yield put({
             type: 'loadMenus',
@@ -67,6 +77,14 @@ const model = {
             search: {},
           },
         });
+      }
+    },
+
+    *getAddAuthPointToAdmin({ payload }, { put, call }) {
+      const response = yield call(AddAuthPointToAdmin, payload);
+      if (response) {
+        // 初始化菜单树
+        message.success('操作成功');
       }
     },
 
@@ -100,7 +118,7 @@ const model = {
       if (response && response.status === 200) {
         yield put({
           type: 'saveuri',
-          payload: response.data,
+          payload: response?.data,
         });
       }
     },

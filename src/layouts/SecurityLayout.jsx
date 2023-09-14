@@ -48,6 +48,7 @@ const SecurityLayout = ({
   if (!isLogin && window.location.pathname !== '/user/login') {
     // return <Redirect to={`/user/login?${queryString}`} />;
     return <Redirect to="/user/login" />;
+    // return <Redirect to="/userCustomer/loginCustomer" />; // 对客平台默认到对客登录页
   }
 
   return children;

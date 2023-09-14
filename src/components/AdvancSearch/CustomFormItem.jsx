@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   AutoComplete,
   Checkbox,
@@ -11,7 +11,6 @@ import {
   Switch,
   TimePicker,
   TreeSelect,
-  Tooltip,
 } from 'antd';
 
 const { TextArea } = Input;
@@ -29,13 +28,8 @@ const { RangePicker } = DatePicker;
  * @param {object} readSet 自定义读取option属性的key 例子:{ name: 'proName', code: 'proCode', bracket?: 'proCode' },bracket是name后面括号里的内容
  * @param {boolean} unRender 是否渲染
  */
-const CustomInputItem = props => {
-  const { data, loginId, onChange, tabvalue } = props;
+const CustomInputItem = (data, loginId) => {
   const { config = {} } = data;
-  const [selectedNameList, setSelectedNameList] = useState([]);
-  useEffect(() => {
-    setSelectedNameList([]);
-  }, [tabvalue]);
   let child;
   switch (data.type && typeof data.type === 'string' && data.type.toLowerCase()) {
     case 'select':
@@ -47,164 +41,64 @@ const CustomInputItem = props => {
             showArrow
             optionFilterProp="children"
             placeholder="请选择"
-            maxTagCount="1"
-            disabled={loginId && loginId !== '1' && data.name === 'orgId' ? true : false} // 产品要素库需求变更：查询时，非管理员登录，归属机构默认为登录时所属的归属机构，不可编辑
-            {...props}
+            maxTagCount={1}
+            disabled={loginId !== '1' && data.name === 'orgId' ? true : false}// 产品要素库需求变更：查询时，非管理员登录，归属机构默认为登录时所属的归属机构，不可编辑
             {...config}
-            onChange={val => {
-              onChange(val);
-              if (config.onChange) {
-                config.onChange(val);
-              }
-            }}
           />
         );
       } else {
         // 设置默认值  默认绑定的字段是 name和code
         const { readSet = { name: 'name', code: 'code' } } = data;
-        const getSelectedNameList = selectedCodeList => {
-          const options = data.option || [];
-          let nameList = [];
-          options.forEach(item => {
-            const isObj = Object.prototype.toString.call(item) === '[object Object]';
-            const value = isObj ? item[readSet.code] : item;
-            if (selectedCodeList.includes(value)) {
-              const name = isObj ? item[readSet.name] : item;
-              nameList.push(name);
-            }
-          });
-          setSelectedNameList(nameList);
-        };
         child = (
-          <Tooltip
-            arrowPointAtCenter
-            placement="top"
-            overlayStyle={{ maxWidth: 400 }}
-            title={
-              config.mode === 'multiple' &&
-              selectedNameList.length > 1 && (
-                <ul style={{ marginBottom: 0 }}>
-                  {selectedNameList.map(item => {
-                    return <li key={item}>{item}</li>;
-                  })}
-                </ul>
-              )
-            }
+          <Select
+            allowClear
+            showSearch
+            showArrow
+            optionFilterProp="children"
+            placeholder="请选择"
+            maxTagCount={1}
+            disabled={loginId !== '1' && data.name === 'orgId' ? true : false}// 产品要素库需求变更：查询时，非管理员登录，归属机构默认为登录时所属的归属机构，不可编辑
+            {...config}
           >
-            <Select
-              mouseEnterDelay={200}
-              allowClear
-              showSearch
-              showArrow
-              optionFilterProp="children"
-              placeholder="请选择"
-              maxTagCount="1"
-              getPopupContainer={triggerNode => triggerNode.parentElement}
-              disabled={loginId && loginId !== '1' && data.name === 'orgId' ? true : false} // 产品要素库需求变更：查询时，非管理员登录，归属机构默认为登录时所属的归属机构，不可编辑
-              {...props}
-              {...config}
-              onChange={val => {
-                onChange(val);
-                if (config.mode === 'multiple') {
-                  getSelectedNameList(val);
-                }
-                if (config.onChange) {
-                  config.onChange(val);
-                }
-              }}
-            >
-              {data &&
-                data.option &&
-                data.option.map((item, index) => {
-                  const isObj = Object.prototype.toString.call(item) === '[object Object]';
-                  return (
-                    <Select.Option
-                      key={`${isObj ? item[readSet.code] : item}`}
-                      value={`${isObj ? item[readSet.code] : item}`}
-                      title={
-                        isObj
-                          ? item[readSet.bracket]
-                            ? `${item[readSet.name]}(${item[readSet.bracket]})`
-                            : item[readSet.name]
-                          : item
-                      }
-                    >
-                      {isObj
-                        ? item[readSet.bracket]
-                          ? `${item[readSet.name]}(${item[readSet.bracket]})` // 因为要特殊显示所以加了一个bracket属性 显示为 产品名称(产品代码)
-                          : item[readSet.name]
-                        : item}
-                    </Select.Option>
-                  );
-                })}
-            </Select>
-          </Tooltip>
+            {data &&
+            Array.isArray(data?.option)&&
+              data.option.map((item, index) => {
+                const isObj = Object.prototype.toString.call(item) === '[object Object]';
+                return (
+                  <Select.Option
+                    key={`${isObj ? item[readSet.code] : item}`}
+                    value={`${isObj ? item[readSet.code] : item}`}
+                    title={isObj
+                      ? item[readSet.bracket]
+                        ? `${item[readSet.name]}(${item[readSet.bracket]})` // 因为要特殊显示所以加了一个bracket属性 显示为 产品名称(产品代码)
+                        : item[readSet.name]
+                      : item}
+                  >
+                    {isObj
+                      ? item[readSet.bracket]
+                        ? `${item[readSet.name]}(${item[readSet.bracket]})` // 因为要特殊显示所以加了一个bracket属性 显示为 产品名称(产品代码)
+                        : item[readSet.name]
+                      : item}
+                  </Select.Option>
+                );
+              })}
+          </Select>
         );
       }
       break;
     case 'datepicker':
-      child = (
-        <DatePicker
-          placeholder="请选择日期"
-          style={{ width: '100%' }}
-          allowClear
-          {...props}
-          {...config}
-          onChange={(moment, string) => {
-            onChange(moment, string);
-            if (config.onChange) {
-              config.onChange(moment, string);
-            }
-          }}
-        />
-      );
+      child = <DatePicker placeholder="请选择日期" allowClear {...config}  style={{width:"100%"}}/>;
       break;
     case 'rangepicker':
-      child = (
-        <RangePicker
-          placeholder="请选择日期"
-          style={{ width: '100%' }}
-          allowClear
-          {...props}
-          {...config}
-          onChange={(dates, dateStrings) => {
-            onChange(dates, dateStrings);
-            if (config.onChange) {
-              config.onChange(dates, dateStrings);
-            }
-          }}
-        />
-      );
+      child = <RangePicker placeholder="请选择日期" allowClear {...config} />;
       break;
     case 'timepicker':
-      child = (
-        <TimePicker
-          placeholder="请选择时间"
-          allowClear
-          {...props}
-          {...config}
-          onChange={(moment, string) => {
-            onChange(moment, string);
-            if (config.onChange) {
-              config.onChange(moment, string);
-            }
-          }}
-        />
-      );
+      child = <TimePicker placeholder="请选择时间" allowClear {...config} />;
       break;
     case 'radio':
       const { readSet = { name: 'name', code: 'code' } } = data;
       child = (
-        <Radio.Group
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-        >
+        <Radio.Group {...config}>
           {data.option.map((item, index) => {
             const isObj = Object.prototype.toString.call(item) === '[object Object]';
             return (
@@ -219,16 +113,7 @@ const CustomInputItem = props => {
     case 'checkbox':
       const { readSet: readB = { name: 'name', code: 'code' } } = data;
       child = (
-        <Checkbox.Group
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-        >
+        <Checkbox.Group {...config}>
           {data.option.map((item, index) => {
             const isObj = Object.prototype.toString.call(item) === '[object Object]';
             return (
@@ -241,82 +126,20 @@ const CustomInputItem = props => {
       );
       break;
     case 'area':
-      child = (
-        <TextArea
-          allowClear
-          placeholder="请输入"
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-          autoSize={{ minRows: 2 }}
-        />
-      );
+      child = <TextArea allowClear placeholder="请输入" {...config} autoSize={{ minRows: 2 }} />;
       break;
     case 'treeselect':
-      child = (
-        <TreeSelect
-          placeholder="请选择"
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-        />
-      );
+      child = <TreeSelect placeholder="请选择" {...config} />;
       break;
     case 'switch':
-      child = (
-        <Switch
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-        />
-      );
+      child = <Switch {...config} />;
       break;
     case 'autocomplete':
-      child = (
-        <AutoComplete
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-          placeholder="请输入"
-        />
-      );
+      child = <AutoComplete {...config} placeholder="请输入" />;
       break;
 
     default:
-      child = (
-        <Input
-          allowClear
-          placeholder="请输入"
-          {...props}
-          {...config}
-          onChange={val => {
-            onChange(val);
-            if (config.onChange) {
-              config.onChange(val);
-            }
-          }}
-        />
-      );
+      child = <Input allowClear placeholder="请输入" {...config} />;
       break;
   }
   return child;
@@ -338,24 +161,28 @@ const CustomInputItem = props => {
  * @param {boolean} unRender 是否不渲染 默认是false
  * @param {Element} extra 额外的组建
  */
+
 const CustomFormItem = props => {
   const { getFieldDecorator } = props.form;
-  const { loginId, tabvalue } = props;
-  return props.formItemList.map(item => {
+  const { loginId } = props;
+  return props.formItemList.map((item,index) => {
     const { rules = [], initialValue, otherConfig = {}, extra } = item;
+    // console.log("打印下组件接受的东西--------------------")
+    // console.log(item)
     return !item.unRender ? (
       <Col
-        span={item.width || 8}
+        span={item.width || 6}
         key={item.name}
         pull={item.pull}
         offset={item.offset}
         style={item.style}
-        className={'cust-col'}
+        className=  {`"cust-col" ${item.className}`}
+        // className={"cust-col"}
       >
         <Form.Item
           name={item.name}
-          // labelCol={item.labelCol || { span: 2 }}
-          // wrapperCol={item.wrapperCol || { span: 4 }}
+          // labelCol={item.labelCol || { span: 7 }}
+          // wrapperCol={item.wrapperCol || { span: 17 }}
           required={item.required}
           label={item.label}
           {...item.formItemConfig}
@@ -364,7 +191,7 @@ const CustomFormItem = props => {
             rules,
             initialValue,
             ...otherConfig,
-          })(<CustomInputItem data={item} loginId={loginId} tabvalue={tabvalue} />)}
+          })(CustomInputItem(item, loginId))}
           {extra && extra}
         </Form.Item>
       </Col>

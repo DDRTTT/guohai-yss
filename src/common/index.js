@@ -5,10 +5,11 @@ import ManuscriptResources from './manuscriptResources';
 import SchedulingResources from './schedulingResources';
 import PositionResources from './positionResources';
 import DataCenterResources from './dataCenterResources';
-import FundApplication from './fundApplication';
-import SpecialProductsResources from './specialProductsResources';
+import AccessManagerResources from './accessManagerResources';
+import ProductInventoryResources from './productInventoryResources';
 
 export {
+  AccessManagerResources,
   BasicResources,
   ReportWorldBasicResources,
   MultipleCheckBasicResources,
@@ -16,6 +17,5 @@ export {
   SchedulingResources,
   PositionResources,
   DataCenterResources,
-  FundApplication,
-  SpecialProductsResources,
+  ProductInventoryResources,
 };

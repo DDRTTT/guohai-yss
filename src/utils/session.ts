@@ -7,6 +7,7 @@ export const USER_INFO = 'USER_INFO';
 export const MOCK = 'MOCK';
 export const PRODUCT = 'PRODUCT';
 export const SYSID = 'SYSID';
+export const ENCRYPTION = 'ENCRYPTION';
 
 /**
  * 获取本地token
@@ -82,3 +83,13 @@ export const getSession = (parameters: string) => sessionStorage.getItem(paramet
  * @method  getSys
  */
 export const getSys = () => sessionStorage.getItem(SYSID);
+/**
+ * 设置本地sysId
+ * @method  setSys
+ * @param   {string} payload
+ */
+export const setSys = (payload: string) => sessionStorage.setItem(SYSID, payload);
+
+export const setCustomerFlag = () => sessionStorage.setItem('customerFlag', 'true');
+
+export const getCustomerFlag = () => sessionStorage.getItem('customerFlag');

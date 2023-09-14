@@ -71,7 +71,7 @@ const model = {
     },
 
     // 获取全部文件列表，或者根据左侧选择目录查询文件列表支持排序
-    *handleQueryTableReq({ payload, callback }, { call, put }) {
+    *handleQueryTableReq({ payload }, { call, put }) {
       const res = yield call(getFileListAbleSortApi, payload);
       if (res && res.status === 200) {
         yield put({
@@ -85,7 +85,6 @@ const model = {
                 },
           },
         });
-        callback && callback();
       } else {
         message.error(res.message);
       }

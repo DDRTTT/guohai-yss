@@ -6,295 +6,13 @@ import Action from '@/utils/hocUtil';
 import { routerRedux } from 'dva/router';
 import { Button, Dropdown, Form, Menu, Modal, Tooltip } from 'antd';
 
-import styles from './less/index.less';
 import { handleValidator } from '@/utils/utils';
-import { Table, Card, CommonSearch } from '@/components';
+import { Card, Table } from '@/components';
 import List from '@/components/List';
 import DynamicHeader from '@/components/DynamicHeader';
 
 @Form.create()
 class InstitutionalInfoManager extends Component {
-  state = {
-    // 页面数据的条数
-    pageSize: 10,
-    // 当前页数
-    pageNum: 1,
-    // 展开搜索判断
-    isForm: true,
-    // 排序
-    direction: '',
-    // 排序名称
-    fieldName: '',
-    // 模糊查询
-    fuzzy: '',
-    checkedArr: [],
-    formData: {},
-    myList: [
-      {
-        title: '机构名称',
-        dataIndex: 'orgName',
-        sorter: true,
-        width: 400,
-        render: this.Render,
-      },
-      {
-        title: '机构简称',
-        dataIndex: 'orgShortName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '所属组织机构',
-        dataIndex: 'parentName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '资质类型',
-        dataIndex: 'orgTypeName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '注册资本（元）',
-        dataIndex: 'registCapital',
-        sorter: true,
-        width: 120,
-        render: text => (
-          <Tooltip title={text}>
-            {text ? text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
-          </Tooltip>
-        ),
-      },
-      {
-        title: '资本币种',
-        dataIndex: 'capitalCurrencyName',
-        sorter: true,
-        width: 150,
-        render: this.Render,
-      },
-      {
-        title: '客户服务电话',
-        dataIndex: 'orgPhone',
-        sorter: true,
-        width: 120,
-        render: this.Render,
-      },
-      {
-        title: '网址',
-        dataIndex: 'orgWebSite',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '统一社会信用代码',
-        dataIndex: 'orgOtherCode',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '报送机构编号',
-        dataIndex: 'submitOrgCode',
-        sorter: true,
-        width: 150,
-        render: this.Render,
-      },
-      {
-        title: '操作',
-        fixed: 'right',
-        key: 'action',
-        dataIndex: 'action',
-        render: (_, record) => (
-          <span>
-            <Action code="institutionalInfoManager:myshow">
-              <Button
-                type="link"
-                size="small"
-                onClick={() => this.goMyDetails(record, '本家机构')}
-              >
-                查看
-              </Button>
-            </Action>
-            <Action code="institutionalInfoManager:mymodify">
-              <Button
-                type="link"
-                size="small"
-                onClick={() => this.goMyModify(record, '本家机构')}
-              >
-                修改
-              </Button>
-            </Action>
-            <Action code="institutionalInfoManager:delete">
-              <Button type="link" size="small" onClick={() => this.myOrgDelete(record)}>
-                删除
-              </Button>
-            </Action>
-          </span>
-        ),
-      },
-    ],
-    otherList: [
-      {
-        title: '机构名称',
-        dataIndex: 'orgName',
-        sorter: true,
-        width: 400,
-        render: this.Render,
-      },
-      {
-        title: '机构简称',
-        dataIndex: 'orgShortName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '所属组织机构',
-        dataIndex: 'parentName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '资质类型',
-        dataIndex: 'orgTypeName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '机构类型',
-        dataIndex: 'qualifyTypeName',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '注册资本（元）',
-        dataIndex: 'registCapital',
-        sorter: true,
-        width: 120,
-        render: text => (
-          <Tooltip title={text}>
-            {text ? text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
-          </Tooltip>
-        ),
-      },
-      {
-        title: '资本币种',
-        dataIndex: 'capitalCurrencyName',
-        sorter: true,
-        width: 150,
-        render: this.Render,
-      },
-      {
-        title: '客户服务电话',
-        dataIndex: 'orgPhone',
-        sorter: true,
-        width: 120,
-        render: this.Render,
-      },
-      {
-        title: '网址',
-        dataIndex: 'orgWebSite',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '统一社会信用代码',
-        dataIndex: 'orgCode',
-        sorter: true,
-        width: 200,
-        render: this.Render,
-      },
-      {
-        title: '报送机构编号',
-        dataIndex: 'submitOrgCode',
-        sorter: true,
-        width: 150,
-        render: this.Render,
-      },
-      {
-        title: '状态',
-        dataIndex: 'statusName',
-        width: 100,
-        sorter: true,
-        render: this.Render,
-      },
-      {
-        title: '操作',
-        fixed: 'right',
-        key: 'action',
-        dataIndex: 'action',
-        render: (text, record) => {
-          return (
-            <>
-              <Action code="institutionalInfoManager:othershow">
-                <Button
-                  type="link"
-                  size="small"
-                  onClick={() => this.goMyDetails(record, '其他机构')}
-                >
-                  查看
-                </Button>
-              </Action>
-              <Action code="institutionalInfoManager:othermodify">
-                <Button
-                  type="link"
-                  size="small"
-                  disabled={record.status == '1'}
-                  onClick={() => this.goMyModify(record, '其他机构')}
-                >
-                  修改
-                </Button>
-              </Action>
-              <Action code="institutionalInfoManager:examine">
-                <Button
-                  type="link"
-                  size="small"
-                  disabled={record.status == '1'}
-                  onClick={() => {
-                    this.examine(record, '0');
-                  }}
-                >
-                  审核
-                </Button>
-              </Action>
-              <Action code="institutionalInfoManager:examine">
-                <Button
-                  type="link"
-                  size="small"
-                  disabled={record.status == '0'}
-                  onClick={() => {
-                    this.examine(record, '1');
-                  }}
-                >
-                  反审核
-                </Button>
-              </Action>
-              <Action code="institutionalInfoManager:delete">
-                <Button
-                  type="link"
-                  size="small"
-                  disabled={record.status == '1'}
-                  onClick={() => this.otherOrgDelete(record)}
-                >
-                  删除
-                </Button>
-              </Action>
-            </>
-          );
-        },
-      },
-    ],
-  };
-
   /**
    * 初始化钩子函数
    * @method componentDidMountco
@@ -435,14 +153,12 @@ class InstitutionalInfoManager extends Component {
     const { dispatch } = this.props;
     sessionStorage.setItem('orgName', record.orgName);
     sessionStorage.setItem('id', record.id);
-    const orgCode = record.orgCode || ''
     dispatch(
       routerRedux.push({
         pathname: '/productDataManage/institutionalInfoManager/index/modify',
         query: {
           id: record.id,
           name,
-          orgCode,
         },
       }),
     );
@@ -635,6 +351,265 @@ class InstitutionalInfoManager extends Component {
     </Tooltip>
   );
 
+  state = {
+    // 页面数据的条数
+    pageSize: 10,
+    // 当前页数
+    pageNum: 1,
+    // 展开搜索判断
+    isForm: true,
+    // 排序
+    direction: '',
+    // 排序名称
+    fieldName: '',
+    // 模糊查询
+    fuzzy: '',
+    checkedArr: [],
+    formData: {},
+    myList: [
+      {
+        title: '机构名称',
+        dataIndex: 'orgName',
+        sorter: true,
+        width: 400,
+        render: this.Render,
+      },
+      {
+        title: '机构简称',
+        dataIndex: 'orgShortName',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '资质类型',
+        dataIndex: 'orgTypeName',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '注册资本（元）',
+        dataIndex: 'registCapital',
+        sorter: true,
+        width: 120,
+        render: text => (
+          <Tooltip title={text}>
+            {text ? text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
+          </Tooltip>
+        ),
+      },
+      {
+        title: '资本币种',
+        dataIndex: 'capitalCurrencyName',
+        sorter: true,
+        width: 150,
+        render: this.Render,
+      },
+      {
+        title: '客户服务电话',
+        dataIndex: 'orgPhone',
+        sorter: true,
+        width: 120,
+        render: this.Render,
+      },
+      {
+        title: '网址',
+        dataIndex: 'orgWebSite',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '统一社会信用代码',
+        dataIndex: 'orgOtherCode',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '报送机构编号',
+        dataIndex: 'submitOrgCode',
+        sorter: true,
+        width: 150,
+        render: this.Render,
+      },
+      {
+        title: '操作',
+        fixed: 'right',
+        key: 'action',
+        dataIndex: 'action',
+        render: (_, record) => (
+          <span>
+            <Action code="institutionalInfoManager:myshow">
+              <Button type="link" size="small" onClick={() => this.goMyDetails(record, '本家机构')}>
+                查看
+              </Button>
+            </Action>
+            <Action code="institutionalInfoManager:mymodify">
+              <Button type="link" size="small" onClick={() => this.goMyModify(record, '本家机构')}>
+                修改
+              </Button>
+            </Action>
+            <Action code="institutionalInfoManager:delete">
+              <Button type="link" size="small" type="link" onClick={() => this.myOrgDelete(record)}>
+                删除
+              </Button>
+            </Action>
+          </span>
+        ),
+      },
+    ],
+    otherList: [
+      {
+        title: '机构名称',
+        dataIndex: 'orgName',
+        sorter: true,
+        width: 400,
+        render: this.Render,
+      },
+      {
+        title: '机构简称',
+        dataIndex: 'orgShortName',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '资质类型',
+        dataIndex: 'orgTypeName',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '机构类型',
+        dataIndex: 'qualifyTypeName',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '注册资本（元）',
+        dataIndex: 'registCapital',
+        sorter: true,
+        width: 120,
+        render: text => (
+          <Tooltip title={text}>
+            {text ? text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
+          </Tooltip>
+        ),
+      },
+      {
+        title: '资本币种',
+        dataIndex: 'capitalCurrencyName',
+        sorter: true,
+        width: 150,
+        render: this.Render,
+      },
+      {
+        title: '客户服务电话',
+        dataIndex: 'orgPhone',
+        sorter: true,
+        width: 120,
+        render: this.Render,
+      },
+      {
+        title: '网址',
+        dataIndex: 'orgWebSite',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '统一社会信用代码',
+        dataIndex: 'orgCode',
+        sorter: true,
+        width: 200,
+        render: this.Render,
+      },
+      {
+        title: '报送机构编号',
+        dataIndex: 'submitOrgCode',
+        sorter: true,
+        width: 150,
+        render: this.Render,
+      },
+      {
+        title: '状态',
+        dataIndex: 'statusName',
+        width: 100,
+        sorter: true,
+        render: this.Render,
+      },
+      {
+        title: '操作',
+        fixed: 'right',
+        key: 'action',
+        dataIndex: 'action',
+        render: (text, record) => {
+          return (
+            <>
+              <Action code="institutionalInfoManager:othershow">
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => this.goMyDetails(record, '其他机构')}
+                >
+                  查看
+                </Button>
+              </Action>
+              <Action code="institutionalInfoManager:othermodify">
+                <Button
+                  type="link"
+                  size="small"
+                  disabled={record.status === '1'}
+                  onClick={() => this.goMyModify(record, '其他机构')}
+                >
+                  修改
+                </Button>
+              </Action>
+              <Action code="institutionalInfoManager:examine">
+                <Button
+                  type="link"
+                  size="small"
+                  disabled={record.status === '1'}
+                  onClick={() => {
+                    this.examine(record, '0');
+                  }}
+                >
+                  审核
+                </Button>
+              </Action>
+              <Action code="institutionalInfoManager:examine">
+                <Button
+                  type="link"
+                  size="small"
+                  disabled={record.status === '0'}
+                  onClick={() => {
+                    this.examine(record, '1');
+                  }}
+                >
+                  反审核
+                </Button>
+              </Action>
+              <Action code="institutionalInfoManager:delete">
+                <Button
+                  type="link"
+                  size="small"
+                  disabled={record.status === '1'}
+                  onClick={() => this.otherOrgDelete(record)}
+                >
+                  删除
+                </Button>
+              </Action>
+            </>
+          );
+        },
+      },
+    ],
+  };
+
   selfCallBackHandler = value => {
     this.setState({
       myList: value,
@@ -733,7 +708,7 @@ class InstitutionalInfoManager extends Component {
         />
         <Card
           title="其他机构"
-          defaultTitle={true}
+          defaultTitle
           style={{
             borderTop: 'none',
             borderRadiusTop: 'none',
@@ -745,7 +720,7 @@ class InstitutionalInfoManager extends Component {
                 <Button
                   type="primary"
                   onClick={() => this.goOtherAddOrg()}
-                // style={{ float: 'right' }}
+                  // style={{ float: 'right' }}
                 >
                   新建机构
                 </Button>
@@ -783,7 +758,6 @@ class InstitutionalInfoManager extends Component {
                 <Menu>
                   <Menu.Item
                     style={{ textAlign: 'center' }}
-                    disabled={this.state.checkedArr.some(item => item.status === '1')}
                     key="0"
                     onClick={() => {
                       this.plexamineInfo('0');
@@ -793,7 +767,6 @@ class InstitutionalInfoManager extends Component {
                   </Menu.Item>
                   <Menu.Item
                     style={{ textAlign: 'center' }}
-                    disabled={this.state.checkedArr.some(item => item.status === '0')}
                     key="1"
                     onClick={() => {
                       this.plexamineInfo('1');
@@ -801,6 +774,14 @@ class InstitutionalInfoManager extends Component {
                   >
                     反审核
                   </Menu.Item>
+                  {/* <Menu.Item
+                      key="2"
+                      onClick={() => {
+                        this.pldelInfo();
+                      }}
+                    >
+                      删除
+                    </Menu.Item> */}
                 </Menu>
               }
               trigger={['click']}

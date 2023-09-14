@@ -163,7 +163,7 @@ export async function ADD_GROUP_FUN(productGroup: { groupName: string; parentId:
 }
 
 // 获取全部产品code
-export async function GET_ALL_PRO_CODE_FUN(params: any) {
+export async function GET_ALL_PRO_CODE_FUN(params: {}) {
   return request<Record<any, any>>(`${type.GET_ALL_PRO_CODE_API}`, {
     method: 'POST',
     data: params,

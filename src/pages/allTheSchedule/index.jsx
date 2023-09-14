@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { Col, Form, message, Pagination, Progress, Row, Tabs, Tooltip, Button } from 'antd';
+import { Col, Form, message, Pagination, Progress, Row, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { handleShowTransferHistory } from '@/utils/transferHistory';
-import CollectionCreateForm from './Circulate';
 import { Table } from '@/components';
 import List from '@/components/List';
 import styles from './index.less';
 
-const { TabPane } = Tabs;
 const comColAttr = () => ({
   ellipsis: true,
   render: text => (
@@ -21,110 +19,6 @@ const comColAttr = () => ({
 
 @Form.create()
 class Index extends Component {
-  state = {
-    taskType: this.props.publicTas,
-    tableList: [],
-    oTotal: 10,
-    page: 1,
-    limit: 10,
-    startDate: '',
-    endDate: '',
-    processKeys: '',
-    proCodes: '',
-    dataList: [],
-    visible: false,
-    curTaskId: '',
-    columns: [
-      {
-        title: '主体名称',
-        dataIndex: 'subjectName',
-        width: 300,
-        ...comColAttr(),
-      },
-      {
-        title: '主体代码',
-        dataIndex: 'subjectCode',
-        width: 120,
-        ...comColAttr(),
-      },
-      {
-        title: '任务名称',
-        dataIndex: 'taskName',
-        width: 300,
-        ...comColAttr(),
-      },
-      {
-        title: '流程类型',
-        dataIndex: 'processName',
-        width: 300,
-        ...comColAttr(),
-      },
-      {
-        title: '截止时间',
-        dataIndex: 'taskArrivalTime',
-        width: 180,
-        ...comColAttr(),
-      },
-      {
-        dataIndex: 'action',
-        title: '操作',
-        fixed: 'right',
-        render: (val, record) => {
-          const { taskType } = this.state;
-          switch (taskType) {
-            case 'T001_3':
-            case 'T001_5':
-            case 'T001_6':
-              return (
-                <>
-                  <Button
-                    type="link"
-                    size="small"
-                    onClick={() => handleShowTransferHistory(record)}
-                  >
-                    流转历史
-                  </Button>
-                  {taskType === 'T001_3' ? (
-                    <Button
-                      type="link"
-                      size="small" onClick={() => this.handleCirculate(record)}>
-                      传阅
-                    </Button>
-                  ) : null}
-                </>
-              );
-            default:
-              return (
-                <Button
-                  type="link"
-                  size="small"
-                  // onClick={()=>this.handleJumpToTaskDeal(record)}
-                  // 上面这个方法不知道是谁加的，但结果是把原来正常的东西改坏了。
-                  // 原本正常的东西请不要乱改，如果要改请改正确，改出来新bug这是什么东东？？？
-                  onClick={() => {
-                    const params = {
-                      taskId: record.taskId,
-                      processDefinitionId: record.processDefinitionId,
-                      processInstanceId: record.processInstanceId,
-                      taskDefinitionKey: record.taskDefinitionKey,
-                    };
-
-                    this.props.dispatch({
-                      type: 'allTheSchedule/getLinkRouter',
-                      payload: params,
-                    });
-                  }}
-                >
-                  进入办理
-                </Button>
-              );
-          }
-        },
-      },
-    ],
-    confirmLoading: false,
-  };
-
   componentDidMount() {
     // 从首页我待办/已办理/传阅等不同tab 点击更多 进入流程管理对应tab页面
     const tabKey = new URLSearchParams(window.location.search).get('tabKey');
@@ -146,6 +40,9 @@ class Index extends Component {
     );
 
     this.getproTypeList();
+    this.state.timer = setInterval(() => {
+      this.getproTypeList();
+    }, 30000);
 
     const { dispatch } = this.props;
     dispatch({
@@ -162,7 +59,9 @@ class Index extends Component {
   }
 
   componentWillUnmount() {
-
+    if (this.state.timer) {
+      clearInterval(this.state.timer);
+    }
   }
 
   // 表格数据查询
@@ -222,7 +121,7 @@ class Index extends Component {
       type: 'publicModel/setPublicTas',
       payload: key,
     });
-    this.setState({ taskType: key, page: 1, limit: 10 }, () => {
+    this.setState({ taskType: key }, () => {
       this.getTableDataList();
     });
   };
@@ -250,15 +149,15 @@ class Index extends Component {
   handleReset = () => {
     this.setState(
       {
-        startDate: "",
-        endDate: "",
-        processKeys: "",
-        proCodes: "",
+        startDate: '',
+        endDate: '',
+        processKeys: '',
+        proCodes: '',
         page: 1,
       },
       () => this.getTableDataList(),
     );
-  }
+  };
 
   handleClearVal = () => {
     const { taskType } = this.state;
@@ -345,6 +244,107 @@ class Index extends Component {
     });
   };
 
+  state = {
+    taskType: this.props.publicTas,
+    tableList: [],
+    oTotal: 10,
+    page: 1,
+    limit: 10,
+    startDate: '',
+    endDate: '',
+    processKeys: '',
+    proCodes: '',
+    dataList: [],
+    timer: null,
+    visible: false,
+    curTaskId: '',
+    columns: [
+      {
+        title: '主体名称',
+        dataIndex: 'subjectName',
+        width: 300,
+        ...comColAttr(),
+      },
+      {
+        title: '主体代码',
+        dataIndex: 'subjectCode',
+        width: 120,
+        ...comColAttr(),
+      },
+      {
+        title: '任务名称',
+        dataIndex: 'taskName',
+        width: 300,
+        ...comColAttr(),
+      },
+      {
+        title: '流程类型',
+        dataIndex: 'processName',
+        width: 300,
+        ...comColAttr(),
+      },
+      {
+        title: '截止时间',
+        dataIndex: 'taskArrivalTime',
+        width: 180,
+        ...comColAttr(),
+      },
+      {
+        dataIndex: 'action',
+        title: '操作',
+        fixed: 'right',
+        render: (val, record) => {
+          const { taskType } = this.state;
+          switch (taskType) {
+            case 'T001_3':
+            case 'T001_5':
+            case 'T001_6':
+              return (
+                <>
+                  <a
+                    style={{ marginRight: '12px' }}
+                    onClick={() => handleShowTransferHistory(record)}
+                  >
+                    流转历史
+                  </a>
+                  {taskType === 'T001_3' ? (
+                    <a style={{ marginRight: '12px' }} onClick={() => this.handleCirculate(record)}>
+                      传阅
+                    </a>
+                  ) : null}
+                </>
+              );
+            default:
+              return (
+                <a
+                  style={{ marginRight: '12px' }}
+                  // onClick={()=>this.handleJumpToTaskDeal(record)}
+                  // 上面这个方法不知道是谁加的，但结果是把原来正常的东西改坏了。
+                  // 原本正常的东西请不要乱改，如果要改请改正确，改出来新bug这是什么东东？？？
+                  onClick={() => {
+                    const params = {
+                      taskId: record.taskId,
+                      processDefinitionId: record.processDefinitionId,
+                      processInstanceId: record.processInstanceId,
+                      taskDefinitionKey: record.taskDefinitionKey,
+                    };
+
+                    this.props.dispatch({
+                      type: 'allTheSchedule/getLinkRouter',
+                      payload: params,
+                    });
+                  }}
+                >
+                  进入办理
+                </a>
+              );
+          }
+        },
+      },
+    ],
+    confirmLoading: false,
+  };
+
   showModal = () => {
     this.setState({ visible: true });
   };
@@ -397,9 +397,9 @@ class Index extends Component {
 
   render() {
     const {
-      allTheSchedule: { processName, productName, authUserInfo, circulateHistoryUsers },
+      allTheSchedule: { processName, productName },
     } = this.props;
-    const { taskType, visible, dataList, confirmLoading } = this.state;
+    const { taskType, dataList } = this.state;
 
     const formItemData = [
       {
@@ -407,7 +407,7 @@ class Index extends Component {
         label: '流程类型',
         type: 'select',
         readSet: { name: 'processName', code: 'processKey' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: processName,
       },
       {
@@ -415,18 +415,18 @@ class Index extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productName,
       },
       {
         name: 'date',
-        label: '截至日期',
+        label: '开始日期',
         type: 'RangePicker',
       },
     ];
 
     return (
-      <div>
+      <div className={styles.list}>
         <List
           title={false}
           formItemData={formItemData}
@@ -481,17 +481,6 @@ class Index extends Component {
                   </div>
                 </Col>
               </Row>
-              {taskType === 'T001_3' ? (
-                <CollectionCreateForm
-                  wrappedComponentRef={this.saveFormRef}
-                  visible={visible}
-                  confirmLoading={confirmLoading}
-                  circulateHistoryUsers={circulateHistoryUsers}
-                  authUserInfo={authUserInfo}
-                  onCancel={this.handleCancel}
-                  onCreate={this.handleCreate}
-                />
-              ) : null}
               {this.baseTable()}
             </>
           }

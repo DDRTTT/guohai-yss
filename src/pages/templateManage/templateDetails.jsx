@@ -508,7 +508,7 @@ class Index extends Component {
 
   // 获取地址
   getNginxIP = () => {
-    request('/ams-base-contract/contractfile/getnginxip').then(res => {
+    request('/ams-file-service/businessArchive/getnginxip').then(res => {
       if (res?.status === 200) {
         this.appendJQCDN(res.data.jsApi);
         this.setState({ IPObject: res.data });

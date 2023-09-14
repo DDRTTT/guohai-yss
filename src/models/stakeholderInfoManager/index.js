@@ -29,6 +29,8 @@ export default {
     orgNameList: [],
     // 干系人名字的列表
     nameList: [],
+    // 搜索用的名字的列表
+    searchNameList: [],
   },
   reducers: {
     /**
@@ -76,6 +78,15 @@ export default {
       return {
         ...state,
         nameList: payload,
+      };
+    },
+    /**
+     * 同步搜索用的姓名的下拉列表
+     */
+    setSearchNameList(state, { payload }) {
+      return {
+        ...state,
+        searchNameList: payload,
       };
     },
     // 清空
@@ -204,13 +215,12 @@ export default {
     *getSearchNameList({ payload, callBack }, { put, call }) {
       const res = yield call(searchNameListApi, payload);
       if (res && res.status === 200) {
-        return res.data;
+        yield put({
+          type: 'setSearchNameList',
+          payload: res.data,
+        });
       } else {
-        if (res.message) {
-          message.error(res.message);
-        } else {
-          console.log('获取姓名下拉数据失败');
-        }
+        message.error(res.message);
       }
     },
     /**

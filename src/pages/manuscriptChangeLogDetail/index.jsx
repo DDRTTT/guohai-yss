@@ -1,3 +1,7 @@
+/**
+ * 项目管理--操作日志详情
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';

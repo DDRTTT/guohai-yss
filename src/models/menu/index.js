@@ -17,12 +17,14 @@ const stateClear = model => {
   return model;
 };
 const combine = models => {
-  return models.reduce((prev, cur) => ({
-    state: { ...prev.state, ...cur.state },
-    effects: { ...prev.effects, ...cur.effects },
-    reducers: { ...prev.reducers, ...cur.reducers },
-    subscriptions: { ...prev.subscriptions, ...cur.subscriptions },
-  }));
+  return models.reduce(function(prev, cur) {
+    return {
+      state: { ...prev.state, ...cur.state },
+      effects: { ...prev.effects, ...cur.effects },
+      reducers: { ...prev.reducers, ...cur.reducers },
+      subscriptions: { ...prev.subscriptions, ...cur.subscriptions },
+    };
+  });
 };
 
 const model = {
@@ -40,7 +42,7 @@ const model = {
 
   effects: {
     fetchMenu: [
-      function*({ payload: { search, sysId } }, { call, put, select }) {
+      function*({ payload: { search, sysId } }, { call, put }) {
         // let userId = yield select(state => state['user'].URL);
         const parameter = {
           needAction: true,
@@ -63,16 +65,16 @@ const model = {
       { type: 'takeLatest' },
     ],
 
-    *Menu({ payload: { fieldValues, code, sysId } }, { put, call, select }) {
+    *Menu({ payload: { fieldValues, code, searchData = {} } }, { put, call, select }) {
       let gData = [];
       const response = yield call(code === '1' ? add : code === '2' ? del : edit, fieldValues);
       if (response && response.status === 200 && response.data) {
         const res = yield call(menuMTree, {
           needAction: true,
           queryStr: '',
-          sysId,
+          ...searchData,
         });
-        if (res.data) {
+        if (res?.data) {
           gData = res.data;
           yield put({
             type: 'loadMenus',
@@ -84,7 +86,9 @@ const model = {
 
         // 删除子菜单后，子菜单table刷新
         const query_data = yield select(state => {
-          const { current, pageSize, queryParameters } = state.personMenu;
+          const {
+            personMenu: { queryParameters, current, pageSize },
+          } = state;
           return { current, pageSize, queryParameters };
         });
 
@@ -97,13 +101,11 @@ const model = {
 
         message.success(`菜单${code === '1' ? '新增' : code === '2' ? '删除' : '修改'}成功!`);
       } else {
-        message.error('服务异常，请稍后再试!', 3);
+        message.error(response?.message || '服务异常，请稍后再试!', 3);
       }
 
-      yield put({
-        type: 'modelSwitch_new',
-        payload: false,
-      });
+      yield put({ type: 'modelSwitch_new' });
+
       return gData;
     },
 
@@ -178,7 +180,7 @@ const model = {
         url: action.payload,
       };
     },
-    modelSwitch_new(state) {
+    modelSwitch_new(state, {}) {
       return {
         ...state,
         modelVisible_new: !state.modelVisible_new,

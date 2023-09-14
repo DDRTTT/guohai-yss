@@ -1,5 +1,6 @@
 import React from 'react';
-import { Table, Switch, Spin, Collapse } from 'antd';
+import { Switch, Spin, Collapse } from 'antd';
+import { Table } from '@/components';
 import { connect } from 'dva';
 import styles from './../index.less';
 import { SetPanelLayout } from '../components/strategyComponent';

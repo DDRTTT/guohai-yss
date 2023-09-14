@@ -6,9 +6,8 @@ import Action from '@/utils/hocUtil';
 import router from 'umi/router';
 import { tableRowConfig } from '@/pages/investorReview/func';
 import styles from './index.less';
-import { Table, TableBtn } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
-import Gird from '@/components/Gird';
 
 @Form.create()
 class ProductScheduling extends Component {
@@ -443,19 +442,72 @@ class ProductScheduling extends Component {
         dataIndex: 'id',
         title: '操作',
         fixed: 'right',
-        width: 260,
+        width: 240,
         render: (text, record) => {
           const userId = JSON.parse(sessionStorage.getItem('USER_INFO'));
           return (
-            <TableBtn 
-              config={[
-                {name:"查看", Action:true, code:"productScheduling:detail", click:() => this.dealTask(record)},
-                {name:"修改", disabled: !(record.checked === 'D001_1' && record.creatorId == userId.id), Action:true, code:"productScheduling:update", click:() => this.openEditPage(record)},
-                {name:"删除", disabled: !(record.checked === 'D001_1' && record.creatorId == userId.id), Action:true, code:"productScheduling:delete", click:() => this.onConfirmDel(record)},
-                {name:"审核", disabled: !(record.checked === 'D001_1' && record.creatorId == userId.id), Action:true, code:"productScheduling:check", click:() => this.examineInfo(record, '0')},
-                {name:"反审核", disabled: !(record.checked === 'D001_2' && record.creatorId == userId.id), Action:true, code:"productScheduling:deCheck", click:() => this.examineInfo(record, '1')},
-              ]}
-            />
+            <span>
+              <Action code="productScheduling:detail">
+                <a onClick={() => this.dealTask(record)} className={styles.rightBtn}>
+                  查看
+                </a>
+              </Action>
+              {record.checked === 'D001_1' && record.creatorId == userId.id ? (
+                // <Action code="salesOrgManagement:examine">
+                <>
+                  <Action code="productScheduling:update">
+                    <a onClick={() => this.openEditPage(record)} className={styles.rightBtn}>
+                      修改
+                    </a>
+                  </Action>
+                  <Action code="productScheduling:delete">
+                    <a onClick={() => this.onConfirmDel(record)} className={styles.rightBtn}>
+                      删除
+                    </a>
+                  </Action>
+                  <Action code="productScheduling:check">
+                    <a
+                      onClick={() => {
+                        this.examineInfo(record, '0');
+                      }}
+                      className={styles.rightBtn}
+                    >
+                      审核
+                    </a>
+                  </Action>
+                </>
+              ) : (
+                // </Action>
+                <>
+                  <Action code="productScheduling:update">
+                    <a className={styles.disabledBtn}>修改</a>
+                  </Action>
+                  <Action code="productScheduling:delete">
+                    <a className={styles.disabledBtn}>删除</a>
+                  </Action>
+                  <Action code="productScheduling:check">
+                    <a className={styles.disabledBtn}>审核</a>
+                  </Action>
+                </>
+              )}
+              {record.checked === 'D001_2' && record.creatorId == userId.id ? (
+                <Action code="productScheduling:deCheck">
+                  <a
+                    onClick={() => {
+                      this.examineInfo(record, '1');
+                    }}
+                    className={styles.rightBtn}
+                  >
+                    反审核
+                  </a>
+                </Action>
+              ) : (
+                // </Action>
+                <Action code="productScheduling:deCheck">
+                  <a className={styles.disabledBtn}>反审核</a>
+                </Action>
+              )}
+            </span>
           );
         },
       },
@@ -508,39 +560,21 @@ class ProductScheduling extends Component {
         label: '产品名称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList || [],
       },
       {
         name: 'ta',
         label: '所属TA',
         type: 'select',
-        readSet: { name: 'name', code: 'code'},
-        config: { mode: 'multiple' },
+        readSet: { name: 'name', code: 'code', bracket: 'code' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: [
-          { name: '分TA', code: '0' },
+          { name: '分他', code: '0' },
           { name: '自TA', code: '1' },
         ],
       },
     ];
-
-    // 弹窗配置-产品计划排期表-查看基本信息
-    const drawerConfig = [
-      { label: '产品名称', value: 'proNames'},
-      { label: '产品代码', value: 'proCode'},
-      { label: '产品类型', value: 'proTypeName'},
-      { label: '投资类型', value: 'proArchivalTypeName'},
-      { label: '产品归属部门', value: 'proBelongDepartmentNames'},
-      { label: '所属TA', value: 'proTaName'},
-      { label: '募集开始日', value: 'recSdate'},
-      { label: '募集结束日', value: 'recEdate'},
-      { label: '计划成立日', value: 'proCdate'},
-      { label: '成立备案联系人', value: 'proRecordContactorNames'},
-      { label: '是否自有资金参与', value: 'canOwnfundParticipation',type:'select',option:[{name:'是', code: '1'},{name:'否', code: '2'}]},
-      { label: '预计自有资金参与日', value: 'canOwnfundPartDate',rule:activeItem && activeItem.canOwnfundParticipation !== '1'},
-      { label: '最晚自有资金公告日', value: 'canOwnfundNoticeDate',rule:activeItem && activeItem.canOwnfundParticipation !== '1'},
-      { label: '备注', value: 'remarks', proportion: true},
-    ]
 
     return (
       <div>
@@ -562,7 +596,7 @@ class ProductScheduling extends Component {
         />
         <Modal
           title="查看详情"
-          width={900}
+          width={540}
           visible={isShowModal}
           onCancel={() => {
             this.setState({ isShowModal: false });
@@ -596,7 +630,100 @@ class ProductScheduling extends Component {
             </Button>,
           ]}
         >
-          <Gird config={drawerConfig} col={2} info={activeItem}/>
+          {activeItem && (
+            <>
+              <Row>
+                <Col offset={4} span={7}>
+                  产品名称：
+                </Col>
+                <Col span={13}>{activeItem.proNames}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  产品代码：
+                </Col>
+                <Col span={13}>{activeItem.proCode}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  产品类型：
+                </Col>
+                <Col span={13}>{activeItem.proTypeName}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  投资类型：
+                </Col>
+                <Col span={13}>{activeItem.proArchivalTypeName}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  产品归属部门：
+                </Col>
+                <Col span={13}>{activeItem.proBelongDepartmentNames}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  所属TA：
+                </Col>
+                <Col span={13}>{activeItem.proTaName}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  募集开始日：
+                </Col>
+                <Col span={13}>{activeItem.recSdate}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  募集结束日：
+                </Col>
+                <Col span={13}>{activeItem.recEdate}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  计划成立日：
+                </Col>
+                <Col span={13}>{activeItem.proCdate}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  成立备案联系人：
+                </Col>
+                <Col span={13}>{activeItem.proRecordContactorNames}</Col>
+              </Row>
+              <Row>
+                <Col offset={4} span={7}>
+                  是否自有资金参与：
+                </Col>
+                {activeItem.canOwnfundParticipation && (
+                  <Col span={13}>{activeItem.canOwnfundParticipation === '1' ? '是' : '否'}</Col>
+                )}
+              </Row>
+              {activeItem.canOwnfundParticipation === '1' && (
+                <>
+                  <Row>
+                    <Col offset={4} span={7}>
+                      预计自有资金参与日：
+                    </Col>
+                    <Col span={13}>{activeItem.canOwnfundPartDate}</Col>
+                  </Row>
+                  <Row>
+                    <Col offset={4} span={7}>
+                      最晚自有资金公告日：
+                    </Col>
+                    <Col span={13}>{activeItem.canOwnfundNoticeDate}</Col>
+                  </Row>
+                </>
+              )}
+              <Row>
+                <Col offset={4} span={7}>
+                  备注：
+                </Col>
+                <Col span={13}>{activeItem.remarks ? activeItem.remarks : ''}</Col>
+              </Row>
+            </>
+          )}
         </Modal>
       </div>
     );

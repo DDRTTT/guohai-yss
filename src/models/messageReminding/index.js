@@ -54,12 +54,6 @@ export default {
       if (response && response.status === 200) {
         message.success(`操作成功 , ${response.message}`);
         if (callback) callback(response.data);
-      } else {
-        if (response.message) {
-          message.warn(response.message);
-        } else {
-          message.warn('操作失败');
-        }
       }
     },
 

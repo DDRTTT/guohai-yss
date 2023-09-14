@@ -60,11 +60,11 @@ const Index = ({
   // 表格表头
   const [columns, setColumns] = useState([
     {
-      title: '产品简称',
-      dataIndex: 'proFname',
-      key: 'proFname',
+      title: '产品全称',
+      dataIndex: 'proName',
+      key: 'proName',
       sorter: true,
-      width: 280,
+      width: 400,
       render: text => {
         return (
           <Tooltip title={text}>
@@ -72,8 +72,8 @@ const Index = ({
               {text
                 ? text.toString().replace(/null/g, '-')
                 : text === '' || text === undefined
-                  ? '-'
-                  : 0}
+                ? '-'
+                : 0}
             </span>
           </Tooltip>
         );
@@ -88,7 +88,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 130,
     },
     {
       title: '产品类型',
@@ -98,7 +97,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 140,
     },
     {
       title: '投资经理',
@@ -108,7 +106,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 200,
     },
     {
       title: '募集开始日',
@@ -118,7 +115,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 150,
     },
     {
       title: '募集计划结束日',
@@ -128,16 +124,13 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 180,
     },
     {
       title: '调整类型',
       dataIndex: 'adjustmentType',
       key: 'adjustmentType',
-      render: text =>
-        text === '0' ? <div className="success">提前</div> : <div className="error">延后</div>,
+      render: text => (text === '0' ? <Tag color="green">提前</Tag> : <Tag color="red">延后</Tag>),
       sorter: true,
-      width: 150,
     },
     {
       title: '任务到达时间',
@@ -147,20 +140,19 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 170,
     },
     {
       title: '状态',
       dataIndex: 'statusName',
       key: 'status',
       sorter: true,
-      width: 140,
+      width: 100,
     },
     {
       title: '操作',
       dataIndex: 'opeator',
       key: 'opeator',
-      align: 'center',
+      align: 'left',
       fixed: 'right',
       render: (text, record) => {
         const actionBtnList = getActionBtn(record, taskTypeCodeRef.current);
@@ -218,14 +210,15 @@ const Index = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             display: 'inline-block',
+            width: '180px',
             paddingTop: '5px',
           }}
         >
           {text
             ? text.toString().replace(/null/g, '-')
             : text === '' || text === undefined
-              ? '-'
-              : 0}
+            ? '-'
+            : 0}
         </span>
       </Tooltip>
     );
@@ -402,28 +395,26 @@ const Index = ({
         // 审阅按钮
         if (item.label === '审阅') {
           button = (
-            <Button
-              type="link"
-              size="small"
+            <a
+              style={{ marginRight: 10 }}
               onClick={() => {
                 props.handlerBack(item.label, props.record);
               }}
             >
               {item.label}
-            </Button>
+            </a>
           );
         } else {
           button = (
             <Action code={item.code}>
-              <Button
-                type="link"
-                size="small"
+              <a
+                style={{ marginRight: 10 }}
                 onClick={() => {
                   props.handlerBack(item.label, props.record);
                 }}
               >
                 {item.label}
-              </Button>
+              </a>
             </Action>
           );
         }
@@ -447,9 +438,7 @@ const Index = ({
         );
         button = (
           <Dropdown overlay={menu} trigger={['click']}>
-            <Button
-              type="link"
-              size="small"
+            <a
               className="ant-dropdown-link"
               onClick={e => {
                 e.preventDefault();
@@ -457,7 +446,7 @@ const Index = ({
             >
               更多
               <Icon type="caret-right" />
-            </Button>
+            </a>
           </Dropdown>
         );
       }
@@ -831,7 +820,7 @@ const Index = ({
         columns={columns}
         pagination={paginationProps}
         onChange={handlePaginationChange}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 200 + 200 }}
         rowSelection={{
           type: 'checkbox',
           selectedRowKeys: selectedRowKeys,
@@ -852,6 +841,14 @@ const Index = ({
     });
     setTabs(key);
     taskTypeCodeRef.current = key;
+    // 隐藏任务到达时间
+    const dataIndex = 'taskArriveTime';
+    // hideTaskArriveTime(key, ['T001_3', 'T001_5'], columns, dataIndex, {
+    //   key: dataIndex,
+    //   dataIndex,
+    //   title: '任务到达时间',
+    //   sorter: true,
+    // });
     handleReset();
   };
 
@@ -973,6 +970,10 @@ const Index = ({
     fnLink('productOfferingPeriod:link', '');
   };
 
+  const callBackHandler = value => {
+    setColumns(value);
+  };
+
   // 条件查询配置
   const formItemData = [
     {
@@ -980,7 +981,7 @@ const Index = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveProductSelection,
     },
     {
@@ -988,7 +989,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.A002,
     },
     {
@@ -996,7 +997,7 @@ const Index = ({
       label: '投资经理',
       type: 'select',
       readSet: { name: 'name', code: 'empNo', bracket: 'empNo' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveManagerFetch,
     },
     {
@@ -1004,6 +1005,7 @@ const Index = ({
       label: '调整类型',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'code' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: [
         { code: '0', name: '提前' },
         { code: '1', name: '延后' },
@@ -1014,14 +1016,10 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.S001,
     },
   ];
-
-  const callBackHandler = value => {
-    setColumns(value);
-  };
   return (
     <>
       <List
@@ -1053,20 +1051,20 @@ const Index = ({
             {publicTas === 'T001_3' && <> {tableCom()} </>}
             {publicTas === 'T001_4' && <> {tableCom()} </>}
             {publicTas === 'T001_5' && <> {tableCom()} </>}
-            {/* <div className={styles.batchBtn}> */}
-            <MoreOperation
-              opertations={{
-                tabs: taskTypeCodeRef.current,
-                statusKey: 'status',
-              }}
-              batchStyles={{ marginLeft: '38px', position: 'relative', top: '-40px' }}
-              fn={handleGetSearchFetch}
-              type="batch"
-              batchList={selectData}
-              submitCallback={handlerBatchSubmit}
-              successCallback={handlerSuccessCallback}
-            />
-            {/* </div> */}
+            <div className={styles.batchBtn}>
+              <MoreOperation
+                opertations={{
+                  tabs: taskTypeCodeRef.current,
+                  statusKey: 'status',
+                }}
+                batchStyles={{ marginLeft: '38px', marginTop: '-77px', float: 'left' }}
+                fn={handleGetSearchFetch}
+                type="batch"
+                batchList={selectData}
+                submitCallback={handlerBatchSubmit}
+                successCallback={handlerSuccessCallback}
+              />
+            </div>
           </>
         }
       />

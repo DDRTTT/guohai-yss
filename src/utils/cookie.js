@@ -5,9 +5,7 @@ const YYS_ORGID = 'yys_orgid';
 const YSS_ORGNAME = 'yss_orgname';
 const NOUNT_TYPE = 'nount_type';
 const LOGIN_ORG = 'login_org';
-const PROJECT_TIME = 'project_time'
-// export const CHECK_TIME = 60; // 分钟
-export const CHECK_TIME = 600; // 涛哥让把屏幕锁定改成600分钟
+export const CHECK_TIME = 60; // 分钟
 
 /**
  * 登录机构-保存登录机构的标识
@@ -121,10 +119,4 @@ export function checkUserActionTime() {
   const lastTime = getLassTime();
   const timeDiffer = currentTime - lastTime;
   return timeDiffer > 60 * CHECK_TIME * 1000;
-}
-
-// 设置缓存时间
-export function setCatchProjectConfigTime() {
-  const currentTime = new Date().getTime();
-  sessionStorage.setItem(PROJECT_TIME, currentTime);
 }

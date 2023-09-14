@@ -21,7 +21,7 @@ const { TextArea } = Input;
 @Form.create()
 @connect(({ operationLog, loading }) => ({
   operationLog,
-  loading: loading.effects['operationLog/fetchStackLog'],
+  loading: loading.effects['operationLog/fetchStackLog2'],
 }))
 export default class stackLog extends BaseCrudComponent {
   state = {
@@ -38,7 +38,7 @@ export default class stackLog extends BaseCrudComponent {
     formValues.currentPage = page;
     formValues.pageSize = pageSize;
     dispatch({
-      type: `operationLog/fetchStackLog`,
+      type: `operationLog/fetchStackLog2`,
       payload: {
         ...formValues,
       },
@@ -69,15 +69,15 @@ export default class stackLog extends BaseCrudComponent {
     });
 
     dispatch({
-      type: `operationLog/fetchStackLog`,
+      type: `operationLog/fetchStackLog2`,
       payload: values,
     });
   };
-  
+
   //重置
   handleReset = () => {
     const { dispatch } = this.props;
-    const values = { 
+    const values = {
       currentPage: 1,
       pageSize: 1,
       startDate: moment(getDateStr(-15), dateFormat).format('YYYY-MM-DD'),
@@ -85,16 +85,16 @@ export default class stackLog extends BaseCrudComponent {
     };
     this.setState({ formValues: values });
     dispatch({
-      type: `operationLog/fetchStackLog`,
+      type: `operationLog/fetchStackLog2`,
       payload: values,
     });
-  }
+  };
 
   componentDidMount = () => {
     const { dispatch } = this.props;
     // 服务模块 下拉
     dispatch({
-      type: 'operationLog/searchgroup2',
+      type: 'operationLog/searchStackGroupList',
       payload: {
         startDate: getDateStr(-7),
         endDate: getDateStr(0),
@@ -118,7 +118,7 @@ export default class stackLog extends BaseCrudComponent {
 
   render() {
     const {
-      operationLog: { saveVocabularyDic, saveStackLog, saveSearchGroup },
+      operationLog: { saveVocabularyDic, saveStackLog, saveStackGroup },
       loading,
     } = this.props;
 
@@ -140,7 +140,7 @@ export default class stackLog extends BaseCrudComponent {
         label: '服务模块',
         type: 'select',
         readSet: { name: 'key', code: 'key' },
-        option: saveSearchGroup.rows,
+        option: saveStackGroup.rows,
       },
       {
         name: 'severity',
@@ -163,8 +163,9 @@ export default class stackLog extends BaseCrudComponent {
           resetFn={this.handleReset}
           loading={loading}
           fuzzySearchBool={false}
-          tableList={(<>
-            {saveStackLog.rows !== '' ? (
+          tableList={
+            <>
+              {saveStackLog.rows !== '' ? (
                 <TextArea disabled value={formatJson(saveStackLog.rows)} className={styles.area} />
               ) : (
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -183,7 +184,8 @@ export default class stackLog extends BaseCrudComponent {
               ) : (
                 ''
               )}
-          </>)}
+            </>
+          }
         />
       </div>
     );

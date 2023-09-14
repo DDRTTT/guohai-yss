@@ -5,14 +5,12 @@
 import React, { useEffect, useState } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
-import { Button, Calendar, Col, Icon, Row, Spin, Table } from 'antd';
+import { Button, Calendar, Col, Icon, Row, Table } from 'antd';
 import { getAuthToken, setSession, SYSID } from '@/utils/session';
-import loginEnv from '@/utils/loginenv';
 import Empile from './empile';
 import styles from './index.less';
 import ic_right from '@/assets/workspace/right.svg';
 import { Card } from '@/components';
-
 // 解决 跳转某菜单返回 样式问题（菜单样式是 rem）
 const _html = document.querySelector('html');
 _html.style.fontSize = '16px';
@@ -30,9 +28,9 @@ const Index = ({
     SAVE_DATA_DICTIONARY: { SSOUrl = [], attributionSystem = [] },
   },
   currentUser: { id },
+  user: { SAVE_PROJECT_INFO },
   loading,
   swiperLoading,
-  pageLoading,
 }) => {
   const [tabKey, setTabKey] = useState('todo');
 
@@ -53,11 +51,9 @@ const Index = ({
 
   const [hover, setHover] = useState(null);
 
-  const [keyAndSysId, setKeyAndSysId] = useState([]); // 所有流程key和sysId 对应关系集合
-
   const sysIdArr = GET_USER_SYSID?.split(',');
 
-  document.title = `${loginEnv.LOGINTITLE}`;
+  document.title = `${SAVE_PROJECT_INFO?.loginTitle}`;
 
   const handleGetSSOUrl = () => {
     if (dispatch) {
@@ -167,6 +163,14 @@ const Index = ({
       key: 'todo',
       tab: '我待办',
     },
+    /* {
+      key: 'participate',
+      tab: '我参与',
+    },
+    {
+      key: 'initiated',
+      tab: '我发起',
+    }, */
     {
       key: 'handled',
       tab: '已办理',
@@ -179,16 +183,45 @@ const Index = ({
   const goMore = tabKeys => {
     // 从首页我待办/已办理/传阅等不同tab 点击更多 进入流程管理对应tab页面。
     const path = `/taskCenter/allTheSchedule?tabKey=${tabKeys}`;
-    dispatch({
-      type: 'user/handleGetMenu',
-      payload: { sysId: 1 },
-      callBack: () => router.push(path),
-    });
-    setSession('t', '/base/processCenterHome');
-    setSession('d', '产品中心');
+    router.push(path);
   };
 
+  // const dataSource1 = [
+  //   {
+  //     key: '1',
+  //     title: '待办任务',
+  //   },
+  // ];
+
+  // const renderTime = date => {
+  //   const dateee = new Date(date).toJSON();
+  //   return new Date(+new Date(dateee) + 8 * 3600 * 1000)
+  //     .toISOString()
+  //     .replace(/T/g, ' ')
+  //     .replace(/\.[\d]{3}Z/, '');
+  // };
+
+  // const columns = [
+  //   {
+  //     title: '任务名称',
+  //     dataIndex: 'name',
+  //     key: 'name',
+  //   },
+  //   {
+  //     title: '开始时间',
+  //     dataIndex: 'startTime',
+  //     key: 'startTime',
+  //     align: 'right',
+  //     render: t => renderTime(t),
+  //   },
+  // ];
+
   const columns1 = [
+    // {
+    //   title: '业务主键名称',
+    //   dataIndex: 'processName',
+    //   key: 'processName',
+    // },
     {
       title: '任务名称',
       dataIndex: 'taskName',
@@ -204,13 +237,26 @@ const Index = ({
         return `${taskName}${productContractAbbreviation}`;
       },
     },
+    // {
+    //   title: '业务主键名称',
+    //   dataIndex: 'productContractAbbreviation',
+    //   key: 'productContractAbbreviation',
+    // },
     {
       title: '任务到达时间',
       dataIndex: 'taskArrivalTime',
       key: 'taskArrivalTime',
       align: 'right',
+      // render: t => renderTime(t),
     },
   ];
+  // const columns1 = [
+  //   {
+  //     title: '标题',
+  //     dataIndex: 'title',
+  //     key: 'title',
+  //   },
+  // ];
 
   const onPanelChange = () => {
     dispatch({
@@ -253,41 +299,29 @@ const Index = ({
       processDefinitionId: record.processDefinitionId,
       processInstanceId: record.processInstanceId,
       taskDefinitionKey: record.taskDefinitionKey,
-      formKey: record.formKey,
     };
 
     dispatch({
       type: 'workSpace/getLinkRouter',
       payload: params,
     });
+
+    // router.push({
+    //   pathname: '/processCenter/taskDeal',
+    //   query: { ...params },
+    // });
   };
 
   const handleJump = record => {
-    const Len = attributionSystem.length;
-    const arr = [];
-    for (let i = 0; i < Len; i++) {
-      const obj = {
-        sysId: attributionSystem[i]?.code,
-        title: attributionSystem[i]?.name,
-      };
-      arr.push(obj);
-    }
-    const allList = arr.filter(item => sysIdArr.includes(item.sysId));
-    // 更新系统菜单
-    const resultArr = keyAndSysId.filter(item => item.processKey == record.processDefinitionKey);
-    const targetSysId = resultArr[0].sysId;
-    const filterObj = allList.filter(i => i.sysId == targetSysId)[0];
-    // 渲染目标sysId对应的左侧菜单
-    dispatch({
-      type: 'user/handleGetMenu',
-      payload: { sysId: filterObj.sysId },
-    });
-    setSession('d', filterObj.title);
-    setSession('sysId', filterObj.sysId);
-
     if (tabKey === 'todo') {
       handleJumpToTodo(record);
     }
+    // if (tabKey === 'participate') {
+    //   handleJumpToDetail(record);
+    // }
+    // if (tabKey === 'initiated') {
+    //   handleJumpToDetail(record);
+    // }
     if (tabKey === 'handled') {
       router.push(
         `/processCenter/processDetail?processInstanceId=${record.processInstanceId}&nodeId=${record.taskDefinitionKey}&taskId=${record.taskId}`,
@@ -299,6 +333,12 @@ const Index = ({
       );
     }
   };
+
+  // // 跳转到详情
+  // const handleJumpToDetail = record => {
+  //   const url = `/processCenter/processDetail?processInstanceId=${record.processInstanceId}&nodeId=${record.taskDefinitionKey}`;
+  //   router.push(url);
+  // };
 
   const handleGenerateTable = () => {
     let data;
@@ -374,6 +414,12 @@ const Index = ({
     );
   };
 
+  // const handleGenerateTable1 = () => {
+  //   return (
+  //     <Table dataSource={dataSource1} columns={columns1} showHeader={false} pagination={false} />
+  //   );
+  // };
+
   const getMapping = sysId => {
     return dispatch({
       type: 'workSpace/GET_SYS_USER_INFO_FETCH',
@@ -386,12 +432,11 @@ const Index = ({
     dispatch({
       type: 'user/handleGetMenu',
       payload: { sysId },
-      callBack: () => {
-        setSession('d', title);
-        setSession('sysId', sysId);
-        router.push(link);
-      },
     });
+    setSession('d', title);
+    setSession('sysId', sysId);
+    setSession(SYSID, sysId);
+    router.push(link);
   };
 
   /**
@@ -422,8 +467,6 @@ const Index = ({
   };
 
   const handleToSSO = (_linkTo, _title, sysId, flag) => {
-    // 点击便捷导航
-    setSession(SYSID, sysId);
     switch (flag) {
       case '0':
         handleIndirectToSSO(_linkTo, _title, sysId);
@@ -466,22 +509,11 @@ const Index = ({
     }
   };
 
-  // 获取所有流程key和sysId
-  function getAllProcessKeyAndSysId() {
-    dispatch({
-      type: 'workSpace/getAllProcessKeyAndSysId',
-    }).then(res => {
-      setKeyAndSysId(res);
-    });
-  }
-
   // 获取非底稿任务流程
   useEffect(() => {
-    sessionStorage.removeItem('breadcrumb') 
     handleProductCenterFlowId();
     handleGetSSOUrl();
     handleGetUserSys();
-    getAllProcessKeyAndSysId();
   }, []);
 
   // 我待办的任务
@@ -523,10 +555,11 @@ const Index = ({
 
   const handLeaveHover = () => setHover(null);
 
-  // 获取词汇信息
-  function list() {
+  const list = () => {
+    const arr = [];
+
+    // 颜色
     const colorList = [
-      // 颜色
       { color: '#f0f4ff', hoverColor: '#e2eaff' },
       { color: '#fefbeb', hoverColor: '#fcf6d5' },
       { color: '#eff9fa', hoverColor: '#d2f4f8' },
@@ -534,8 +567,9 @@ const Index = ({
       { color: '#fde2e1', hoverColor: '#ffcbc9' },
       { color: '#f0f4fd', hoverColor: '#e2ebff' },
     ];
+
+    // 获取词汇信息
     const Len = attributionSystem.length;
-    const arr = [];
     for (let i = 0; i < Len; i++) {
       const c_i = parseInt(i % colorList.length, 10);
       const obj = {
@@ -551,7 +585,7 @@ const Index = ({
       arr.push(obj);
     }
     return arr.filter(item => sysIdArr.includes(item.sysId));
-  }
+  };
 
   // 判断导航列宽度
   const widthFn = () => {
@@ -568,97 +602,44 @@ const Index = ({
         return '';
     }
   };
+
   return (
-    <Spin spinning={!!pageLoading}>
-      <div className={styles.main}>
-        <Row gutter={24} className={styles.content}>
-          <Col span={19} className={styles.leftContent}>
-            <Card
-              title="便捷导航"
-              loading={swiperLoading}
-              style={{
-                marginBottom: 12,
-                display: sysIdArr.length > 4 ? 'block' : 'none',
-              }}
-            >
-              {sysIdArr.length > 4 && list().length && <Empile list={list()} />}
-            </Card>
-            <Card
-              title="便捷导航"
-              loading={swiperLoading}
-              style={{
-                marginBottom: 12,
-                display: sysIdArr.length <= 4 && sysIdArr.length > 1 ? 'block' : 'none',
-              }}
-            >
-              <div className={styles.menuBlock}>
-                {list() &&
-                  list().map((item, index) => {
-                    return (
-                      <div
-                        key={item.title}
-                        className={styles.blockItem}
-                        onClick={() =>
-                          item.handleFun(item.linkTo, item.title, item.sysId, item.flag)
-                        }
-                        onMouseEnter={() => handEnterHover(index)}
-                        onMouseLeave={handLeaveHover}
-                        style={{
-                          background: index === hover ? item.hoverColor : item.color,
-                          paddingRight: index === hover ? '150px' : '0',
-                          marginLeft: index >= 1 ? '20px' : '',
-                          width: widthFn(),
-                        }}
-                      >
-                        <span className={styles.blockItemText}>{item.title}</span>
-                        <img
-                          style={{ display: index === hover ? 'block' : 'none' }}
-                          src={ic_right}
-                          className={styles.ri}
-                          alt={'right'}
-                        />
-                      </div>
-                    );
-                  })}
-              </div>
-            </Card>
-            <Card
-              className={styles.todo}
-              style={{ width: '100%' }}
-              tabList={tabListNoTitle}
-              activeTabKey={tabKey}
-              // tabBarExtraContent={<a href="#">{'更多>>'}</a>}
-              tabBarExtraContent={
-                <Button type="link" onClick={() => goMore(tabKey)}>
-                  {'更多>>'}
-                </Button>
-              }
-              onTabChange={key => handleTaskTabs(key)}
-            >
-              {handleGenerateTable()}
-            </Card>
-          </Col>
-          <Col span={5} style={{ paddingLeft: '0' }}>
-            <Card
-              title="便捷导航"
-              loading={swiperLoading}
-              style={{
-                marginBottom: '16px',
-                display: GET_USER_SYSID && sysIdArr.length <= 1 ? 'block' : 'none',
-              }}
-            >
-              {sysIdArr.length <= 1 &&
+    <div className={styles.main}>
+      <Row gutter={24} className={styles.content}>
+        <Col span={19} className={styles.leftContent}>
+          <Card
+            title="便捷导航"
+            loading={swiperLoading}
+            style={{
+              marginBottom: 12,
+              display: sysIdArr.length > 4 ? 'block' : 'none',
+            }}
+          >
+            {sysIdArr.length > 4 && list().length && <Empile list={list()} />}
+          </Card>
+          <Card
+            title="便捷导航"
+            loading={swiperLoading}
+            style={{
+              marginBottom: 12,
+              display: sysIdArr.length <= 4 && sysIdArr.length > 1 ? 'block' : 'none',
+            }}
+          >
+            <div className={styles.menuBlock}>
+              {list() &&
                 list().map((item, index) => {
                   return (
                     <div
                       key={item.title}
-                      className={styles.navR}
+                      className={styles.blockItem}
                       onClick={() => item.handleFun(item.linkTo, item.title, item.sysId, item.flag)}
                       onMouseEnter={() => handEnterHover(index)}
                       onMouseLeave={handLeaveHover}
                       style={{
                         background: index === hover ? item.hoverColor : item.color,
                         paddingRight: index === hover ? '150px' : '0',
+                        marginLeft: index >= 1 ? '20px' : '',
+                        width: widthFn(),
                       }}
                     >
                       <span className={styles.blockItemText}>{item.title}</span>
@@ -671,26 +652,72 @@ const Index = ({
                     </div>
                   );
                 })}
-            </Card>
-            <Card
-              bordered={false}
-              title="办公日历"
-              extra={
-                <a>
-                  <Icon type="more" />
-                </a>
-              }
-            >
-              <Calendar
-                className="ant-radio-group-wrapper"
-                fullscreen={false}
-                onSelect={onPanelChange}
-              />
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </Spin>
+            </div>
+          </Card>
+          <Card
+            className={styles.todo}
+            style={{ width: '100%' }}
+            tabList={tabListNoTitle}
+            activeTabKey={tabKey}
+            // tabBarExtraContent={<a href="#">{'更多>>'}</a>}
+            // tabBarExtraContent={
+            //   <Button type="link" onClick={() => goMore(tabKey)}>
+            //     {'更多>>'}
+            //   </Button>
+            // }
+            onTabChange={key => handleTaskTabs(key)}
+          >
+            {handleGenerateTable()}
+          </Card>
+        </Col>
+        <Col span={5} style={{ paddingLeft: '0' }}>
+          <Card
+            title="便捷导航"
+            loading={swiperLoading}
+            style={{
+              marginBottom: '16px',
+              display: GET_USER_SYSID && sysIdArr.length <= 1 ? 'block' : 'none',
+            }}
+          >
+            {sysIdArr.length <= 1 &&
+              list().map((item, index) => {
+                return (
+                  <div
+                    key={item.title}
+                    className={styles.navR}
+                    onClick={() => item.handleFun(item.linkTo, item.title, item.sysId, item.flag)}
+                    onMouseEnter={() => handEnterHover(index)}
+                    onMouseLeave={handLeaveHover}
+                    style={{
+                      background: index === hover ? item.hoverColor : item.color,
+                      paddingRight: index === hover ? '150px' : '0',
+                    }}
+                  >
+                    <span className={styles.blockItemText}>{item.title}</span>
+                    <img
+                      style={{ display: index === hover ? 'block' : 'none' }}
+                      src={ic_right}
+                      className={styles.ri}
+                      alt={'right'}
+                    />
+                  </div>
+                );
+              })}
+          </Card>
+          <Card
+            bordered={false}
+            title="办公日历"
+            extra={
+              <a>
+                <Icon type="more" />
+              </a>
+            }
+          >
+            <Calendar fullscreen={false} onSelect={onPanelChange} />
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
@@ -708,5 +735,4 @@ export default connect(({ workSpace, user, loading }) => ({
   swiperLoading:
     loading.effects['workSpace/DATA_DICTIONARY_FETCH'] ||
     loading.effects['workSpace/GET_USER_SYSID_FETCH'],
-  pageLoading: loading.effects['user/handleGetMenu'],
 }))(Index);

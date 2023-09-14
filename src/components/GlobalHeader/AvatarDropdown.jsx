@@ -20,7 +20,6 @@ class AvatarDropdown extends React.Component {
       const tempFlag = sessionStorage.getItem('isLogin');
       if (tempFlag) {
         sessionStorage.removeItem('isLogin');
-        sessionStorage.removeItem('project_time');
       }
       if (dispatch) {
         dispatch({
@@ -50,10 +49,16 @@ class AvatarDropdown extends React.Component {
         });
         dispatch({
           type: 'login/logout',
+        }).then(res => {
+          if (res) {
+            location.reload();
+          }
         });
+      } else {
+        location.reload();
       }
 
-      window.location.reload();
+      //
 
       return;
     }
@@ -93,7 +98,7 @@ class AvatarDropdown extends React.Component {
     return currentUser && currentUser.username ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.photoUrl} alt="avatar" />
+          {/* <Avatar size="small" className={styles.avatar} src={currentUser.photoUrl} alt="avatar" /> */}
           <span className={styles.name}>{currentUser.username}</span>
         </span>
       </HeaderDropdown>

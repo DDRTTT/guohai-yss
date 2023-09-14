@@ -15,14 +15,12 @@ import {
   Row,
   Select,
   Spin,
-  Tag,
-  Tooltip
 } from 'antd';
 import { connect } from 'dva';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import record from '../electronicRecord/record';
-import { Card, Table, TableBtn } from '@/components';
+import { Card, Table } from '@/components';
 import Gird from '@/components/Gird';
 import List from '@/components/List';
 
@@ -378,24 +376,53 @@ class Index extends Component {
       {
         title: '用印状态',
         key: 'successFlag',
-        width: 140,
-        render: record => record.successFlag ? <div className="success">用印成功</div> : <div className="error">用印失败</div>
+        width: 100,
+        render: record => (
+          <span>
+            {record.successFlag ? (
+              <Button size="small" style={{ color: 'green' }}>
+                用印成功
+              </Button>
+            ) : (
+              <Button size="small" style={{ color: 'red' }}>
+                用印失败
+              </Button>
+            )}
+          </span>
+        ),
       },
       {
         title: '操作',
         key: 'operation',
-        width: 220,
+        width: 200,
         render: record => (
-          <TableBtn 
-            config={[
-              {name:"查看", Action:true, code:"useRegistrate:detail", click:() => this.showDrawer(record)},
-              {name:"重新发送OA", disabled: record.successFlag == true, Action:true, code:"useRegistrate:send", click:() => this.sendOA(record, '1')},
-            ]}
-          />
+          <span className="table-operation">
+            <Action key="useRegistrate:detail" code="useRegistrate:detail">
+              <Button
+                type="link"
+                onClick={() => {
+                  this.showDrawer(record);
+                }}
+              >
+                查看
+              </Button>
+            </Action>
+            <Action key="useRegistrate:send" code="useRegistrate:send">
+              <Button
+                type="link"
+                disabled={record.successFlag == true}
+                onClick={() => {
+                  this.sendOA(record, '1');
+                }}
+              >
+                重新发送OA
+              </Button>
+            </Action>
+          </span>
         ),
       },
     ];
-    return <Table style={{marginTop:0,marginBottom:0}} columns={columns} dataSource={record.resultList || []} pagination={false} />;
+    return <Table style={{margin: "0 -16px"}} columns={columns} dataSource={record.resultList || []} pagination={false} />;
   };
 
   // 一级表格
@@ -411,7 +438,6 @@ class Index extends Component {
         title: '主体代码',
         dataIndex: 'subjectCode',
         key: 'subjectCode',
-        width: '400px',
         render: subjectCode => <span>{subjectCode || '-'}</span>,
       },
       {
@@ -471,7 +497,7 @@ class Index extends Component {
       personList,
       contractTypeList,
       payTypeList,
-      detailInfo: { sealRegisterRemark, usingFileList, usingRegistrationInfoList, usingApplyTitle  },
+      detailInfo: { sealRegisterRemark, usingFileList, usingRegistrationInfoList },
     } = this.props.useRegistrate;
     const { pageNum, pageSize, loading } = this.state;
 
@@ -482,7 +508,7 @@ class Index extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList || [],
       },
       {
@@ -490,7 +516,7 @@ class Index extends Component {
         label: '流程名称',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList.dataSource || [],
       },
     ];
@@ -521,7 +547,7 @@ class Index extends Component {
       { label: '合同期限', value: 'contractdeadline'},
       { label: '合同开始日期', value: 'contractstartdate'},
       { label: '合同截止日期', value: 'contractenddate'},
-      { label: '收付款类型', value: 'paymenttype',type:'select',option: payTypeList || []},
+      { label: '收付款类型', value: 'contractresponsible',type:'select',option: payTypeList || []},
       { label: '合同金额(元)', value: 'contractamount'},
     ]
 
@@ -580,12 +606,6 @@ class Index extends Component {
           </div>
           <Row gutter={24}>
             <Col className="gutter-row" span={24}>
-              <b>用印标题：</b>
-              <span>{usingApplyTitle}</span>
-            </Col>
-          </Row>
-          <Row gutter={24}>
-            <Col className="gutter-row" span={24}>
               <b>用印说明：</b>
               <span>{sealRegisterRemark}</span>
             </Col>
@@ -593,7 +613,7 @@ class Index extends Component {
           {usingRegistrationInfoList &&
             usingRegistrationInfoList.length > 0 &&
             usingRegistrationInfoList.map((item, index) => (
-              <Card title={`第${index + 1}条登记信息`} defaultTitle={true} style={{ marginTop: 20 }} key={index}>
+              <Card title={`第${index + 1}条登记信息`} style={{ marginTop: 20 }} key={index}>
                 <b>用印基本信息</b>
                 <Gird config={drawerConfigForSeal} info={item}/>
                 {item.iscontractagreement === 1 && (
@@ -605,12 +625,13 @@ class Index extends Component {
               </Card>
             ))}
 
-          <Card title="用印文件列表" defaultTitle={true} style={{ marginTop: 20 }}>
+          <Card style={{ marginTop: 20 }} title="用印文件列表">
             <Table
               dataSource={usingFileList}
               columns={this.fileListColumns(record)}
               pagination={false}
             />
+            ;
           </Card>
           {!this.state.successFlag ? (
             <div

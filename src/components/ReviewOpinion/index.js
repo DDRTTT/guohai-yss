@@ -1,3 +1,8 @@
+/**
+ * 底稿--审核意见
+ * processInstanceId：流程实例id
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Button, Col, Row, Modal, List } from 'antd';
@@ -21,7 +26,7 @@ class ReviewOpinion extends Component {
 
   /**
    * 审核意见
-   * * */
+   * **/
   handleReviewOpinion = () => {
     const { dispatch, processInstanceId } = this.props;
     this.handleModalShow();

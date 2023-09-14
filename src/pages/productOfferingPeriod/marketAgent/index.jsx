@@ -8,21 +8,16 @@ import {
   Card,
   Col,
   Divider,
-  Dropdown,
   Form,
   Icon,
   Input,
-  Menu,
-  Modal,
-  Radio,
   Row,
   Select,
-  Table,
   Tag,
   Tabs,
 } from 'antd';
+import { Table } from '@/components';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import styles from './index.less';
@@ -89,8 +84,7 @@ const Index = ({
       title: '调整类型',
       dataIndex: 'adjustmentType',
       key: 'adjustmentType',
-      width: 140,
-      render: text => (text === 1 ? <div className="success">提前</div> : <div className="error">延后</div>),
+      render: text => (text === 1 ? <Tag color="green">提前</Tag> : <Tag color="red">延后</Tag>),
     },
     {
       title: '任务到达时间/办理时间',

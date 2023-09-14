@@ -67,11 +67,10 @@ export default class Index extends Component {
       },
       {
         key: 'proName',
-        dataIndex: 'proName',// 实际含义：系列展示全称，产品展示简称
-        width: 220,
-        title: '系列/产品简称',
-        ellipsis: true,
-        sorter: true,
+        dataIndex: 'proName',
+        width: 400,
+        title: '系列/产品全称',
+        // render: columnTooltip,
         render: proName => {
           return (
             <Tooltip title={proName}>
@@ -79,14 +78,15 @@ export default class Index extends Component {
             </Tooltip>
           );
         },
+        ellipsis: true,
+        sorter: true,
       },
       {
         key: 'proCode',
         dataIndex: 'proCode',
-        width: 160,
+        width: 150,
         title: '系列号/产品代码',
-        ellipsis: true,
-        sorter: true,
+        // render: columnTooltip,
         render: proCode => {
           return (
             <Tooltip title={proCode}>
@@ -94,6 +94,8 @@ export default class Index extends Component {
             </Tooltip>
           );
         },
+        ellipsis: true,
+        sorter: true,
       },
       {
         key: 'assetTypeName',
@@ -113,9 +115,7 @@ export default class Index extends Component {
         key: 'investManagerNames',
         dataIndex: 'investManagerNames',
         width: 200,
-        ellipsis: true,
-        title: '投资经理',
-        sorter: true,
+        // render: columnTooltip,
         render: investManagerNames => {
           return (
             <Tooltip title={investManagerNames}>
@@ -123,14 +123,17 @@ export default class Index extends Component {
             </Tooltip>
           );
         },
+        ellipsis: true,
+        title: '投资经理',
+        sorter: true,
       },
       {
         key: 'taskTime',
         width: 180,
         dataIndex: 'taskTime',
         title: '任务到达时间',
-        sorter: true,
         render: text => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>,
+        sorter: true,
       },
       {
         key: 'status',
@@ -152,7 +155,6 @@ export default class Index extends Component {
         key: 'action',
         dataIndex: 'action',
         width: 280,
-        align: 'center',
         render: (text, record) => {
           // 待提交 S001_1   流程中S001_2  已结束 S001_3
           const { taskTypeCode } = this.state;
@@ -292,7 +294,7 @@ export default class Index extends Component {
     });
     setTimeout(() => {
       this.initTableData();
-    }, 3000);
+    }, 10000);
   }
 
   /**
@@ -379,16 +381,13 @@ export default class Index extends Component {
 
   // 查询触发的函数 获取表单中的所有查询条件 然后调用getTableData  请求数据
   handlerSearch = fieldsValue => {
-    if (this.props.tableLoading) return;
     const formValues = { ...fieldsValue };
     formValues.proType = formValues.proType ? formValues.proType.join() : '';
     formValues.investmentManager = formValues.investmentManager
       ? formValues.investmentManager.join()
       : '';
     formValues.status = formValues.status ? formValues.status.join() : '';
-    this.setState({ formValues, keyWords: '', currentPage: 1, pageSize: 10 }, () =>
-      this.getTableData(),
-    );
+    this.setState({ formValues, keyWords: '' }, () => this.getTableData());
   };
 
   /**
@@ -399,8 +398,6 @@ export default class Index extends Component {
       {
         formValues: {},
         direction: '',
-        currentPage: 1,
-        pageSize: 10,
         field: '',
         selectedRowKeys: [],
         isCheckAll: false,
@@ -413,7 +410,7 @@ export default class Index extends Component {
   /**
    *查询表格数据
    */
-  getTableData = () => {
+  getTableData() {
     const { pageSize, currentPage, taskTypeCode, formValues, direction, field } = this.state;
     const params = {
       keyWords: this.state.keyWords,
@@ -470,8 +467,6 @@ export default class Index extends Component {
     this.setState(
       {
         keyWords: keywords,
-        currentPage: 1,
-        pageSize: 10,
       },
       () => {
         this.getTableData();
@@ -525,6 +520,7 @@ export default class Index extends Component {
     const isCheckAll = taskListTable.rows.length === selectedRowKeys.length;
     this.setState({ isCheckAll });
   };
+
   /**
    * 修改跳转
    */
@@ -534,6 +530,7 @@ export default class Index extends Component {
       `?proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&code=${record.proCode}`,
     );
   };
+
   /**
    * 提交跳转
    */
@@ -706,6 +703,7 @@ export default class Index extends Component {
       },
     });
   }
+
   showRevokeConfirm(record) {
     const { confirm } = Modal;
     const ts = this;
@@ -739,6 +737,7 @@ export default class Index extends Component {
         }
       });
   };
+
   /**
    * 批量处理接口调用成功以后的回调
    */
@@ -762,6 +761,12 @@ export default class Index extends Component {
     const { tableLoading } = this.props;
     const { selectedRowKeys, taskTypeCode, batchList, columns } = this.state;
 
+    // // 我发起 已办理 不展示 任务到达时间
+    // if (this.state.taskTypeCode === 'T001_3' || this.state.taskTypeCode === 'T001_5') {
+    //   const index = columns.findIndex(item => item.title === '任务到达时间');
+    //   columns.splice(index, 1);
+    // }
+
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -772,8 +777,8 @@ export default class Index extends Component {
           rowSelection={rowSelection}
           dataSource={taskListTable.rows}
           columns={columns}
-          scroll={{ x: true }}
-          loading={tableLoading || this.state.initLoading}
+          scroll={{ x: 1500 }}
+          // loading={tableLoading || this.state.initLoading}
           pagination={false}
           onChange={this.onTableChange}
         />
@@ -812,7 +817,7 @@ export default class Index extends Component {
         label: '系列/产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -820,7 +825,7 @@ export default class Index extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeDropList,
       },
       {
@@ -828,7 +833,7 @@ export default class Index extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investmentManagerDropList,
       },
       {
@@ -836,7 +841,7 @@ export default class Index extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.S001List,
       },
     ];

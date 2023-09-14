@@ -1,3 +1,7 @@
+/**
+ * 精确搜索
+ * author: jiaqiuhua
+ * * */
 import React from 'react';
 import { Button, Col, Row, Form, Select, Icon } from 'antd';
 import { handleFilterOption } from '@/pages/archiveTaskHandleList/util';
@@ -32,23 +36,23 @@ const PreciseSearch = ({
     data = [],
     label = '',
   }) => (
-    <Form.Item label={ label } { ...formItemLayout }>
-      { getFieldDecorator(name)(
+    <Form.Item label={label} {...formItemLayout}>
+      {getFieldDecorator(name)(
         <Select
-          placeholder={ `请选择${label}` }
-          mode={ mode }
-          showArrow={ showArrow }
-          allowClear={ allowClear }
-          filterOption={ handleFilterOption }
+          placeholder={`请选择${label}`}
+          mode={mode}
+          showArrow={showArrow}
+          allowClear={allowClear}
+          filterOption={handleFilterOption}
         >
-          { name &&
+          {name &&
             data.map(item => (
-              <Select.Option key={ `${item.code || item.key}` } title={ item.name || item.value }>
-                { item.name || item.value }
+              <Select.Option key={`${item.code || item.key}`} title={item.name || item.value}>
+                {item.name || item.value}
               </Select.Option>
-            )) }
+            ))}
         </Select>,
-      ) }
+      )}
     </Form.Item>
   );
   // select下拉数据源
@@ -93,64 +97,26 @@ const PreciseSearch = ({
 
   return (
     <Form>
-      <Row gutter={ { md: 8, lg: 24, xl: 48 } }>
-        { formSelectData.map((item, index) => (
-          <Col span={ 8 } key={ index }>
+      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        {formSelectData.map((item, index) => (
+          <Col span={8} key={index}>
             <FormSelect
-              label={ item.label }
-              name={ item.name }
-              data={ formSelectDataObject[item.name] }
+              label={item.label}
+              name={item.name}
+              data={formSelectDataObject[item.name]}
             />
           </Col>
-        )) }
-        <Col span={ 8 }>
-          <Form.Item label="是否需要用印" { ...formItemLayout }>
-            { getFieldDecorator('needUseSeals')(
-              <Select
-                placeholder={ `请选择是否需要用印` }
-                showArrow
-                allowClear
-                mode="multiple"
-                filterOption={ handleFilterOption }
-              >
-                <Select.Option key={ 1 } value={ 1 }>
-                  是
-                </Select.Option>
-                <Select.Option key={ 0 } value={ 0 }>
-                  否
-                </Select.Option>
-              </Select>,
-            ) }
-          </Form.Item>
-        </Col>
-        <Col span={ 8 }>
-          <Form.Item label="是否用印文档" { ...formItemLayout }>
-            { getFieldDecorator('archives')(
-              <Select
-                placeholder={ `请选择是否用印文档` }
-                showArrow
-                allowClear
-                mode="multiple"
-                filterOption={ handleFilterOption }
-              >
-                <Select.Option key={ 1 } value={ 1 }>
-                  是
-                </Select.Option>
-                <Select.Option key={ 0 } value={ 0 }>
-                  否
-                </Select.Option>
-              </Select>,
-            ) }
-          </Form.Item>
-        </Col>
-        <Col span={ 8 }>
-          <Button type="primary" onClick={ handleSearch }>
+        ))}
+      </Row>
+      <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex" justify="end">
+        <Col>
+          <Button type="primary" onClick={handleSearch}>
             查询
           </Button>
-          <Button style={ { margin: '0 23px 0 10px' } } onClick={ handleReset }>
+          <Button style={{ margin: '0 23px 0 10px' }} onClick={handleReset}>
             重置
           </Button>
-          <a onClick={ handleToggle }>
+          <a onClick={handleToggle}>
             收起
             <Icon type="up" />
           </a>

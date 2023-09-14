@@ -2,7 +2,7 @@ import {
   getDictsAPI,
   getProNameAndCodeAPI,
   getTableAPI,
-  handleExportAPI, auditAPI
+  handleExportAPI,
 } from '@/services/accountParameter';
 import { message } from 'antd';
 
@@ -17,7 +17,7 @@ export default {
   effects: {
     // 获取词汇字典数据
     *getDictsFunc({ payload, callback }, { call, put }) {
-      const response = yield call(auditAPI, payload.codeList);
+      const response = yield call(getDictsAPI, payload.codeList);
       if (response && response.status === 200) {
         yield put({
           type: 'dicts',
@@ -66,15 +66,6 @@ export default {
         if (callback) callback(res.data);
       }
     },
-
-    // 审核/反审核
-    *auditFunc({ payload, callback }, { call }) {
-      const response = yield call(auditAPI, payload);
-      if (response && response.status === 200) {
-        if (callback) callback(response.data);
-      } else message.error(response.message)
-    },
-
   },
 
   reducers: {

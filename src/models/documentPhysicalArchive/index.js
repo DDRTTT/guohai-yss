@@ -9,7 +9,6 @@ import {
   getRealTimeSaveApi,
   getTaskQueryProcessIdApi,
   getBatchRevokeApi,
-  downloadApi
 } from '@/services/documentPhysicalArchive';
 import { cloneDeep } from 'lodash';
 
@@ -133,13 +132,6 @@ const model = {
       const res = yield call(getBatchRevokeApi, payload);
       callback && callback(res);
     },
-    // 导出
-    *getDownload({ payload, callback }, { call, put }) {
-      const res = yield call(downloadApi, payload);
-      callback && callback(res);
-    },
-
-    
   },
   reducers: {
     updateSysTree(state, { payload }) {

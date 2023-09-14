@@ -123,8 +123,8 @@ const Index = (props: any) => {
           loading={buttonLoading}
           onClick={handleSumbitModalForm}
           style={{
-            background: '#5e7ce0',
-            border: '1px solid #5e7ce0',
+            background: '#2450A5',
+            border: '1px solid #2450A5',
             marginRight: '24px',
           }}
         >

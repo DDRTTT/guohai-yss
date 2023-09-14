@@ -45,35 +45,38 @@ const Index = props => {
         dataIndex: 'clientType',
         title: '客户类型',
         ...tableRowConfig,
-        width: 130,
       },
       {
         key: 'clientName',
         dataIndex: 'clientName',
         title: '客户名称',
         ...tableRowConfig,
-        width: 300,
+        width: 400,
       },
       {
         key: 'isProfessInvestor',
         dataIndex: 'isProfessInvestor',
         title: '是否专业投资者',
         ...tableRowConfig,
-        width: 210,
+        width: 150,
       },
       {
         key: 'auditItems',
         dataIndex: 'auditItems',
         title: '审查项',
         ...tableRowConfig,
-        width: 130,
       },
+      // {
+      //   key: 'creditCode',
+      //   dataIndex: 'creditCode',
+      //   title: '信用编码',
+      //   ...tableRowConfig,
+      // },
       {
-        key: 'status',
-        dataIndex: 'status',
-        title: '状态',
+        key: 'reviewProduct',
+        dataIndex: 'reviewProduct',
+        title: '审查产品',
         ...tableRowConfig,
-        width: 100,
       },
       {
         key: 'missionArrivalTime',
@@ -83,11 +86,17 @@ const Index = props => {
         width: 180,
       },
       {
+        key: 'status',
+        dataIndex: 'status',
+        title: '状态',
+        ...tableRowConfig,
+        width: 100,
+      },
+      {
         key: 'action',
         dataIndex: 'action',
         title: '操作',
         fixed: 'right',
-        align: 'center',
         render: (val, record) => {
           const buttonList = getEditButton(
             record.processStatus,
@@ -119,7 +128,7 @@ const Index = props => {
     ],
   });
 
-  const { dispatch, tableList, codeList, allInvestList } = props;
+  const { dispatch, tableList, tabList, codeList, productList, allInvestList } = props;
   const [batchList, setBatchList] = useState([]);
   const [batchObj, setBatchObj] = useState({});
 
@@ -130,7 +139,7 @@ const Index = props => {
       label: '客户类型',
       type: 'select',
       option: codeList.I009,
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
     },
     {
       name: 'clientName',
@@ -138,25 +147,33 @@ const Index = props => {
       type: 'select',
       option: allInvestList,
       readSet: { name: 'clientName', code: 'clientName' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
     },
     {
       name: 'examineItem',
       label: '审查项',
       type: 'select',
       option: codeList.L001,
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
     },
     // {
     //   name: 'creditNumber',
     //   label: '信用编码',
     // },
     {
+      name: 'proName',
+      label: '审查产品',
+      type: 'select',
+      readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
+      option: productList,
+      config: { mode: 'multiple', optionFilterProp: 'children' },
+    },
+    {
       name: 'processStatusCode',
       label: '流程状态',
       type: 'select',
       option: codeList.S001,
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
     },
   ];
   /**
@@ -167,6 +184,10 @@ const Index = props => {
     dispatch({
       type: 'investorReview/getDicsByTypes',
       payload: ['I009', 'S001', 'L001'],
+    });
+    // 获取审查产品
+    dispatch({
+      type: 'investorReview/getProductEnum',
     });
     // 获取客户名称
     dispatch({
@@ -210,6 +231,7 @@ const Index = props => {
   //   初始化生命周期 只执行一次
   useEffect(() => {
     getDicsByTypes();
+    // hideTaskTime(taskTypeCodeRef.current, state.columns, 'missionArrivalTime');
   }, []);
   //   监控数值变化
   useEffect(() => {
@@ -291,6 +313,8 @@ const Index = props => {
       direction: '',
       field: '',
     });
+    // 隐藏任务到达时间
+    // hideTaskTime(_key, state.columns, 'missionArrivalTime');
   };
 
   /**
@@ -366,7 +390,7 @@ const Index = props => {
         resetFn={handleReset}
         searchInputWidth="300"
         loading={props.tableLoading}
-        searchPlaceholder="请输入客户名称"
+        searchPlaceholder="请输入客户名称/审查产品"
         fuzzySearch={handlerFuzzySearch}
         tabs={{
           tabList: [
@@ -379,19 +403,21 @@ const Index = props => {
           onTabChange: changeTab,
         }}
         extra={
-          <EnrichEditButton
-            buttonConfig={{ type: 'primary' }}
-            moreBtnStyle={{ marginRight: 0 }}
-            buttonList={[
-              {
-                label: '发起流程',
-                code: 'start',
-                type: 'button',
-              },
-            ]}
-            pageConfig={pageConfig}
-            pageName="investorReview"
-          />
+          <>
+            <EnrichEditButton
+              buttonConfig={{ type: 'primary' }}
+              moreBtnStyle={{ marginRight: 0 }}
+              buttonList={[
+                {
+                  label: '发起流程',
+                  code: 'start',
+                  type: 'button',
+                },
+              ]}
+              pageConfig={pageConfig}
+              pageName="investorReview"
+            />
+          </>
         }
         tableList={
           <>
@@ -405,7 +431,7 @@ const Index = props => {
               onChange={tableChange}
               rowKey="taskId"
               loading={props.tableLoading}
-              scroll={{ x: true }}
+              scroll={{ x: state.columns.length * 200 + 200 }}
             />
             <MoreOperation
               opertations={{

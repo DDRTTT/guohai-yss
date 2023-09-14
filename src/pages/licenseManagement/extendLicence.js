@@ -44,7 +44,7 @@ export default class ExtendLicence extends BaseCrudComponent {
         dispatch({
           type: `licenseManagement/DismissPass`,
           payload: {
-            id,
+            id, 
             checkResult: 1,
             effectiveDate: values.effectiveDate,
             expireDate: values.expireDate,

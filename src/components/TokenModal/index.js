@@ -18,12 +18,12 @@ const FormItem = Form.Item;
 }))
 export default class TokenModal extends PureComponent {
   componentWillUnmount() {
-    // clearInterval(this.interval);
+    clearInterval(this.interval);
   }
 
   componentDidMount() {
-    // this.getTimeDiffer(); // 初始加载状态监测扫描
-    // this.interval = setInterval(this.getTimeDiffer, CHECK_TIME * 60 * 1000); // 检测一次
+    this.getTimeDiffer(); // 初始加载状态监测扫描
+    this.interval = setInterval(this.getTimeDiffer, CHECK_TIME * 60 * 1000); // 检测一次
 
     document.addEventListener('keydown', () => {
       if (!checkUserActionTime()) setLassTime();
@@ -40,7 +40,7 @@ export default class TokenModal extends PureComponent {
     if (checkUserActionTime()) {
       // 超过60min未操作，锁定屏幕，强制重新登录
       // token过期后，请求前token置空
-      // setAuthToken('');
+      setAuthToken('');
       console.log('____No Operating___');
       this.props.dispatch({
         type: 'login/modelSwitch',

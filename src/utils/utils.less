@@ -1,3 +1,5 @@
+@import '~antd/es/style/themes/default.less';
+
 .textOverflow() {
   overflow: hidden;
   white-space: nowrap;
@@ -13,6 +15,7 @@
   overflow: hidden;
   line-height: 1.5em;
   text-align: justify;
+
   &::before {
     position: absolute;
     right: 14px;
@@ -21,6 +24,7 @@
     background: @bg;
     content: '...';
   }
+
   &::after {
     position: absolute;
     right: 14px;
@@ -36,15 +40,98 @@
 // ------------------------
 .clearfix() {
   zoom: 1;
+
   &::before,
   &::after {
     display: table;
     content: ' ';
   }
+
   &::after {
     clear: both;
     height: 0;
     font-size: 0;
     visibility: hidden;
+  }
+}
+
+.warning {
+  color: @error-color
+}
+
+.nohighlight {}
+
+.menuCard {
+  margin-bottom: 24px;
+
+}
+
+.selectSystem {
+  float: left;
+
+  .seleWidth {
+    width: 120px;
+  }
+
+  .initialization {
+    margin-left: 12px
+  }
+}
+
+.treeselectwidth {
+  width: 300px !important;
+}
+
+.tips {
+  color: @error-color;
+  margin-left: 10px
+}
+
+
+.sublevelmenu {
+  margin-bottom: 24px;
+}
+
+.menuPageblock {
+  display: block;
+}
+
+.menuPagenone {
+  display: none;
+}
+
+.carddiv {
+  text-align: center;
+  margin-top: 5px;
+
+  .save {
+    height: 28px;
+    margin-right: 20px
+  }
+
+  .cancel {
+    height: 28px
+  }
+}
+
+.qurry {
+  width: 526px;
+  margin-left: -87px
+}
+
+.Card2 {
+  margin-bottom: 24px
+}
+
+.modalDiv {
+  text-align: center;
+
+  .modalSave {
+    margin-right: 20px;
+
+  }
+
+  .modalCancel {
+    height: 28
   }
 }

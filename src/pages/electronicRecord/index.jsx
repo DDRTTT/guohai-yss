@@ -14,6 +14,7 @@ import {
   Menu,
   Row,
   Select,
+  Table,
   message,
   Modal,
   Checkbox,
@@ -23,6 +24,7 @@ import {
   Tooltip,
   Layout,
   Breadcrumb,
+  Upload,
 } from 'antd';
 import { routerRedux } from 'dva/router';
 import SelfTree from '@/pages/lifeCyclePRD/compoments/SelfTree';
@@ -38,7 +40,6 @@ import styles from './index.less';
 import { cloneDeep } from 'lodash';
 import staticInstance from '@/utils/staticInstance';
 import List from '@/components/List';
-import { Table } from '@/components';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -81,7 +82,7 @@ const Index = ({ dispatch }) => {
 
   // 切换tabs
   const handleTabsChanges = data => {
-    setTaskType(data)
+    setTaskType(data);
     switch (data) {
       case 'E1':
         setShow1(true);
@@ -220,6 +221,11 @@ const Index = ({ dispatch }) => {
         searchPlaceholder="请输入文档名称"
         fuzzySearch={value => blurSearch(value)}
         advancSearchBool={false}
+        extra={
+          <Upload fileList={[]}>
+            <Button>文件上传</Button>
+          </Upload>
+        }
         tabs={{
           tabList: [
             { key: 'E1', tab: '产品电子档案' },
@@ -229,11 +235,13 @@ const Index = ({ dispatch }) => {
           activeTabKey: taskType,
           onTabChange: handleTabsChanges,
         }}
-        tableList={(<>
-          {show1 && <ProductPRD productRef={productRef} />}
-          {show2 && <LifeCyclePRD lifeRef={lifeRef} />}
-          {show3 && <PersonalPRD personRef={personRef} />}
-        </>)}
+        tableList={
+          <>
+            {show1 && <ProductPRD productRef={productRef} />}
+            {show2 && <LifeCyclePRD lifeRef={lifeRef} />}
+            {show3 && <PersonalPRD personRef={personRef} />}
+          </>
+        }
       />
     </>
   );

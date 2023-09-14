@@ -40,12 +40,11 @@ export const getConventionalEndApi = params => {
 };
 
 // 一级任务撤销
-export const getTaskRevokeApi = params => {
-  return request(`${uri}/awp/task/taskRevoke?ids=${params.ids}`, {
+export const getTaskRevokeApi = params =>
+  request(`${uri}/awp/task/taskRevoke?${stringify(params)}`, {
     method: 'POST',
     data: {},
   });
-};
 
 //项目编码
 export const getProCodeApi = params => request(`${uri}/awp/common/projects?${stringify(params)}`);
@@ -64,22 +63,3 @@ export const getReviewApi = params =>
 
 // 获取任务完成的文件数量(数量大于0可以完成任务)
 export const getFileSizeApi = params => request(`${uri}/awp/task/getFileSize?${stringify(params)}`);
-
-// 删除的历史记录
-export const getDeleteRecordApi = data => {
-  return request(`${uri}/awp/task/process/deleteDocumentRecord`, {
-    method: 'POST',
-    data,
-  });
-};
-
-export async function getCheckedUseSealFileApi(params) {
-  return request(`${uri}/awp/task/checkedUseSealFile?${stringify(params)}`);
-}
-
-export async function getFileDeleteBatchRevokeApi(params) {
-  return request(`${uri}/awp/task/process/fileDelete/batchRevoke`, {
-    method: 'POST',
-    data: params,
-  });
-}

@@ -34,18 +34,18 @@ class CapitalVerificationLetter extends Component {
     field: '',
     columns: [
       {
-        key: 'proFname',
-        title: '产品简称',
-        dataIndex: 'proFname',
+        key: 'productName',
+        title: '产品全称',
+        dataIndex: 'productName',
         sorter: true,
-        width: 300,
+        width: 400,
         ellipsis: {
           showTitle: false,
         },
-        render: (proFname, record) => {
+        render: (productName, record) => {
           return (
-            <Tooltip title={proFname}>
-              <span>{proFname ? proFname : '-'}</span>
+            <Tooltip title={productName}>
+              <span>{productName ? productName : '-'}</span>
             </Tooltip>
           );
         },
@@ -55,7 +55,7 @@ class CapitalVerificationLetter extends Component {
         title: '产品代码',
         dataIndex: 'proCode',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -72,7 +72,7 @@ class CapitalVerificationLetter extends Component {
         title: '产品类型',
         dataIndex: 'assetTypeName',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -106,7 +106,7 @@ class CapitalVerificationLetter extends Component {
         title: '托管人',
         dataIndex: 'custodianName',
         sorter: true,
-        width: 220,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -123,7 +123,7 @@ class CapitalVerificationLetter extends Component {
         title: '任务到达时间',
         dataIndex: 'taskTime',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -140,7 +140,8 @@ class CapitalVerificationLetter extends Component {
         title: '状态',
         dataIndex: 'operStatus',
         sorter: true,
-        width: 150,
+        width: 200,
+        align: 'right',
         ellipsis: {
           showTitle: false,
         },
@@ -157,7 +158,6 @@ class CapitalVerificationLetter extends Component {
         title: '操作',
         dataIndex: 'option',
         // width: 200,
-        align: 'center',
         fixed: 'right',
         render: (val, record) => {
           const { taskTypeCode } = this.state;
@@ -168,7 +168,7 @@ class CapitalVerificationLetter extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatus == '待提交'
+                      record.operStatus == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -185,7 +185,7 @@ class CapitalVerificationLetter extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatus == '待提交'
+                      record.operStatus == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -202,7 +202,7 @@ class CapitalVerificationLetter extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatus == '待提交'
+                      record.operStatus == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -249,7 +249,7 @@ class CapitalVerificationLetter extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatus == '流程中'
+                      record.operStatus == '流程中'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -267,8 +267,8 @@ class CapitalVerificationLetter extends Component {
                     display:
                       ((taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
                         record.operStatus == '已结束') ||
-                        taskTypeCode == 'T001_3' ||
-                        taskTypeCode == 'T001_5'
+                      taskTypeCode == 'T001_3' ||
+                      taskTypeCode == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -286,8 +286,8 @@ class CapitalVerificationLetter extends Component {
                     display:
                       ((taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
                         record.operStatus != '待提交') ||
-                        taskTypeCode == 'T001_3' ||
-                        taskTypeCode == 'T001_5'
+                      taskTypeCode == 'T001_3' ||
+                      taskTypeCode == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -320,12 +320,12 @@ class CapitalVerificationLetter extends Component {
                 style={{
                   display:
                     (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                      record.operStatus == '流程中'
+                    record.operStatus == '流程中'
                       ? 'inline-block'
                       : 'none',
                   marginRight: 10,
                 }}
-              // onClick={e => e.preventDefault()}
+                // onClick={e => e.preventDefault()}
               >
                 {/* 更多 */}
                 <MoreOperation record={record} fn={this.getTableList} />
@@ -430,7 +430,7 @@ class CapitalVerificationLetter extends Component {
     }
   };
 
-  getTableList = () => {
+  getTableList() {
     const payload = {
       fuzzy: this.state.fuzzy,
       proCode: this.state.proCode,
@@ -459,8 +459,6 @@ class CapitalVerificationLetter extends Component {
     this.setState(
       {
         fuzzy: value,
-        pageNum: 1,
-        pageSize: 10,
       },
       () => {
         this.handleGetTableList();
@@ -507,8 +505,6 @@ class CapitalVerificationLetter extends Component {
         operStatus: '',
         direction: '',
         field: '',
-        pageNum: 1,
-        pageSize: 10,
       },
       () => {
         this.handleGetTableList();
@@ -548,6 +544,7 @@ class CapitalVerificationLetter extends Component {
       `?id=${record.id}&proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}`,
     );
   }
+
   /**
    * 复制
    * @param {*} val
@@ -631,6 +628,7 @@ class CapitalVerificationLetter extends Component {
       },
     });
   }
+
   /**
    * @method 撤销
    * @param {*} val
@@ -666,6 +664,7 @@ class CapitalVerificationLetter extends Component {
       },
     });
   }
+
   /**
    * @method 办理
    * @param {*} val
@@ -1020,7 +1019,7 @@ class CapitalVerificationLetter extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -1028,7 +1027,7 @@ class CapitalVerificationLetter extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: [
           { name: '小集合', code: 'A002_2' },
           { name: '大集合', code: 'A002_3' },
@@ -1039,7 +1038,7 @@ class CapitalVerificationLetter extends Component {
         label: '托管人',
         type: 'select',
         readSet: { name: 'orgName', code: 'id' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: trusteeList,
       },
       {
@@ -1047,7 +1046,7 @@ class CapitalVerificationLetter extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investManagerNameList,
       },
       {
@@ -1055,7 +1054,7 @@ class CapitalVerificationLetter extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.S001List,
       },
     ];
@@ -1097,7 +1096,7 @@ class CapitalVerificationLetter extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 400 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1147,7 +1146,7 @@ class CapitalVerificationLetter extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 400 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1189,7 +1188,7 @@ class CapitalVerificationLetter extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 400 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1239,7 +1238,7 @@ class CapitalVerificationLetter extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 400 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />

@@ -1,4 +1,4 @@
-import { Button, Icon, Menu, notification } from 'antd';
+import { Button, Dropdown, Icon, Menu, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import Avatar from './AvatarDropdown';
@@ -9,13 +9,14 @@ import bellIcon from '@/assets/header/bell.svg';
 import messageIcon from '@/assets/header/message.svg';
 import router from 'umi/router';
 import { uuid } from '@/utils/utils';
+// import cloneDeep from 'lodash/cloneDeep';
 import SingleCustomerEvents from '@/utils/SingleCustomerEvents';
 
-const ENVTagColor = {
-  dev: 'orange',
-  test: 'green',
-  pre: '#87d068',
-};
+// const ENVTagColor = {
+//   dev: 'orange',
+//   test: 'green',
+//   pre: '#87d068',
+// };
 
 let infoArr = [];
 
@@ -43,7 +44,7 @@ const GlobalHeaderRight = ({
    * @param {*} websocket websocket实例
    */
   const msgCloseHandler = (id, status, websocket) => {
-    const tempIndex = infoArr.indexOf(id);
+    let tempIndex = infoArr.indexOf(id);
     if (~tempIndex) {
       infoArr.splice(tempIndex, 1);
     }
@@ -56,7 +57,7 @@ const GlobalHeaderRight = ({
         isComplete: status == 3 ? '1' : '0',
         isHandle: '1',
       },
-    }).then(res => {});
+    }).then(() => { });
     websocket && websocket.sendMessage('/aloneRequest', id);
   };
 
@@ -65,6 +66,7 @@ const GlobalHeaderRight = ({
       clearAllInfo(null);
     });
   }, []);
+
   /**
    * 清除所有消息
    */
@@ -89,6 +91,7 @@ const GlobalHeaderRight = ({
   );
   /**
    * 弹出消息狂
+   * @param key
    * @param {*} id 消息id
    * @param {*} content 消息内容
    * @param {*} title 消息标题
@@ -102,7 +105,7 @@ const GlobalHeaderRight = ({
       className: styles.notification,
       description: (
         <>
-          <p className="customNotifactiondesc" dangerouslySetInnerHTML={{ __html: content }} />
+          <p className="customNotifactiondesc">{content}</p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Button
               type="link"
@@ -135,22 +138,22 @@ const GlobalHeaderRight = ({
       icon: <Icon type="info-circle" theme="twoTone" />,
       style: { padding: '12px 8px 0' },
       btn: (
-        // <Dropdown overlay={closeMenu}>
-        <Icon
-          type="close"
-          className="ant-notification-notice-close"
-          onClick={e => {
-            e.stopPropagation();
-            msgCloseHandler(id, 1, websocket);
-            notification.close(key);
-          }}
-        />
-        // </Dropdown>
+        <Dropdown overlay={closeMenu}>
+          <Icon
+            type="close"
+            className="ant-notification-notice-close"
+            onClick={e => {
+              e.stopPropagation();
+              msgCloseHandler(id, 1, websocket);
+              notification.close(key);
+            }}
+          />
+        </Dropdown>
       ),
       onClick: () => {
         allMsgNum--;
         notification.close(key);
-        const tempIndex = infoArr.indexOf(id);
+        let tempIndex = infoArr.indexOf(id);
         if (~tempIndex) {
           infoArr.splice(tempIndex, 1);
         }
@@ -165,7 +168,7 @@ const GlobalHeaderRight = ({
     if (id) {
       if (tempFlag) return;
       sessionStorage.setItem('isLogin', 1);
-      msgInit();
+      // msgInit();
       try {
         const lifecycleWebsocket = new WEBSOCKET(`/ws/ams-base-admin/ws-start`);
         lifecycleWebsocket.init().then(() => {
@@ -220,9 +223,7 @@ const GlobalHeaderRight = ({
                   onClick: () => {
                     allMsgNum--;
                     notification.close(key);
-                    router.push(
-                      `/messageReminding/matterMessage/detail?id=${msg.messageId}&messageType=process`,
-                    );
+                    router.push(`/messageReminding/detail?id=${msg.messageId}&messageType=process`);
                   },
                 });
               });
@@ -258,9 +259,7 @@ const GlobalHeaderRight = ({
                     onClick: () => {
                       allMsgNum--;
                       notification.close(key);
-                      router.push(
-                        `/messageReminding/matterMessage/detail?id=${messageId}&messageType=process`,
-                      );
+                      router.push(`/messageReminding/detail?id=${messageId}&messageType=process`);
                     },
                   });
                 }
@@ -273,13 +272,13 @@ const GlobalHeaderRight = ({
         console.info(e);
       }
     }
-    dispatch({
-      type: 'user/handleGetCountUnread',
-    }).then(count => {
-      if (count) {
-        setCount(count);
-      }
-    });
+    // dispatch({
+    //   type: 'user/handleGetCountUnread',
+    // }).then(count => {
+    //   if (count) {
+    //     setCount(count);
+    //   }
+    // });
   }, [id]);
 
   const handleGetCountUnread = item => {
@@ -291,6 +290,7 @@ const GlobalHeaderRight = ({
       }
     });
   };
+
   const handleGetUnreadMsgList = () => {
     dispatch({
       type: 'user/handleGetUnreadMsgList',
@@ -346,9 +346,7 @@ const GlobalHeaderRight = ({
         dispatch({
           type: 'user/updateAllRead',
           payload: data,
-        }).then(res => {
-          processMsgList();
-        });
+        }).then(() => processMsgList());
     }
   };
 
@@ -421,14 +419,14 @@ const GlobalHeaderRight = ({
        onSearch={() => {}}
        onPressEnter={() => {}}
       /> */}
-      <NoticeIcon
+      {/* <NoticeIcon
         className={styles.action} // count={currentUser.notifyCount}
         count={count}
         onItemClick={(item, tabProps) => {
           console.log(item, tabProps);
           // 存详情
           sessionStorage.setItem('messagePath', '事项消息');
-          if (tabProps.type == 'lifecycle') {
+          if (tabProps.type === 'lifecycle') {
             sessionStorage.setItem('messageData', JSON.stringify(item));
             dispatch({
               type: 'messageReminding/saveMessageDel',
@@ -453,15 +451,13 @@ const GlobalHeaderRight = ({
             dispatch({
               type: 'user/updateOneRead',
               payload: item.id,
-            }).then(res => {
+            }).then(() => {
               // 刷新列表
               // handleGetUnreadMsgList();
               processMsgList();
             });
           }
-          router.push(
-            `/messageReminding/matterMessage/detail?id=${item.id}&messageType=${tabProps.type}`,
-          );
+          router.push(`/messageReminding/detail?id=${item.id}&messageType=${tabProps.type}`);
         }}
         onClear={handleNoticeClear}
         onMore={handleNoticeMore}
@@ -508,8 +504,8 @@ const GlobalHeaderRight = ({
           title="OA消息"
           emptyText="你已完成所有消息"
           emptyImage={todoIcon}
-        /> */}
-      </NoticeIcon>
+        />
+      </NoticeIcon> */}
       {/*      <Tooltip title="使用文档">
         <a
           target="_blank"
@@ -525,10 +521,10 @@ const GlobalHeaderRight = ({
             }}
           />
         </a>
-      </Tooltip> */}
+      </Tooltip>*/}
       <Avatar />
       {/*      {REACT_APP_ENV && <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>}
-      <SelectLang className={styles.action} /> */}
+      <SelectLang className={styles.action} />*/}
     </div>
   );
 };

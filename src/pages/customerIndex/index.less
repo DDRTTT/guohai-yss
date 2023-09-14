@@ -1,0 +1,68 @@
+.tableHeader {
+  margin-bottom: 13px;
+  .moreBtn {
+    color: #3861ce;
+    font-size: 14px;
+    line-height: 32px;
+    cursor: pointer;
+  }
+  .textRight {
+    text-align: right;
+  }
+}
+
+.viewText {
+  color: #3861ce;
+  cursor: pointer;
+}
+.status {
+  position: relative;
+  top: -2px;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  vertical-align: middle;
+  border-radius: 4px;
+  &.statusOrange {
+    background: #f8ad53;
+  }
+  &.statusRed {
+    background: #fa5656;
+  }
+  &.statusGreen {
+    background: #91cc75;
+  }
+}
+
+.tableHeaderTitle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  color: #242b44;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 32px;
+  &::after {
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 3px;
+    height: 16px;
+    background: #2450a5;
+    border-radius: 2px;
+    content: '';
+  }
+}
+.cardWrap {
+  padding: 24px;
+  img {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+}
+.Card {
+  margin-top: 0;
+}

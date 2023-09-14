@@ -19,17 +19,18 @@ const runCss = async url => {
 // 普通路径模式
 export function pathPrefix(app) {
   return location => {
+    const locationPathname = location.pathname.split('/');
     let isShow = false;
     // 如果该应用 有多个需要匹配的路劲
     if (isArray(app.path)) {
       app.path.forEach(path => {
-        if (location.pathname.indexOf(`${path}`) === 0) {
+        if (locationPathname.includes(path) || location.pathname.indexOf(`${path}/`) === 0) {
           isShow = true;
         }
       });
     }
     // 普通情况
-    else if (location.pathname.indexOf(`${app.path || app.url}`) === 0) {
+    else if (locationPathname.includes(app.path || app.url) || location.pathname.indexOf(`${app.path || app.url}`) === 0) {
       isShow = true;
     }
     return isShow;

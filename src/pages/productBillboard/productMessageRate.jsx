@@ -2,7 +2,8 @@
  * 产品看板-查看产品-产品数据-费率信息
  */
 import React, { useContext } from 'react';
-import { Col, Divider, Row, Table } from 'antd';
+import { Col, Divider, Row } from 'antd';
+import { Table } from '@/components';
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';

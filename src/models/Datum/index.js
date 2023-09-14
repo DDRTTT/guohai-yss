@@ -1788,6 +1788,16 @@ const model = {
       }
     },
 
+    // 客户经理/信披岗获取岗位名称
+    *handlePosiNames({ payload }, { call, put }) {
+      const res = yield call(detailJobAPI, payload);
+      if (res && res.status === 200) {
+        return res;
+      } else {
+        if(res.message) message.warn(res.message);
+      }
+    },
+
     // 修改岗位详情
     *handleModifyDetailJob({ payload }, { put }) {
       yield put({

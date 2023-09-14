@@ -47,16 +47,17 @@ const SpoTable = ({
   const [batchObj, setBatchObj] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [seachData, setSeachData] = useState([]);
+
   const [columns, setColumns] = useState(
     // 表头数据(有时间)
     [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
         ...tableRowConfig,
-        width: 300,
+        width: 400,
       },
       {
         title: '产品代码',
@@ -95,10 +96,9 @@ const SpoTable = ({
       },
       {
         title: '操作',
-        key: 'action',
+        key:'action',
         dataIndex: 'action',
         fixed: 'right',
-        align: 'center',
         render: (_, record) => {
           switch (taskTypeCodeData.current) {
             case 'T001_1':
@@ -348,8 +348,6 @@ const SpoTable = ({
     operStatusData.current = values.operStatus;
     directionData.current = values.direction;
     fieldData.current = values.field;
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
     handleGetDataObj();
     handleGetListData();
   };
@@ -363,8 +361,6 @@ const SpoTable = ({
     directionData.current = '';
     fieldData.current = '';
     keyWordsData.current = '';
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
     handleGetDataObj();
     handleGetListData();
   };
@@ -450,8 +446,6 @@ const SpoTable = ({
    */
   const blurSearch = key => {
     keyWordsData.current = key;
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
     handleGetListData();
   };
 
@@ -748,7 +742,7 @@ const SpoTable = ({
         dataSource={sellProductOnlineTableData.rows} // 表数据源
         columns={columns} // 表头数据
         onChange={handleChangeSorter}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 200 + 400 }}
       />
     );
   };
@@ -798,6 +792,10 @@ const SpoTable = ({
     handleGetListData(); // 请求:获取分页列表数据
   }, []);
 
+  const callBackHandler = value => {
+    setColumns(value);
+  };
+
   // 条件查询配置
   const formItemData = [
     {
@@ -805,7 +803,7 @@ const SpoTable = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proName', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proNameAndCodeData,
     },
     {
@@ -813,7 +811,7 @@ const SpoTable = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeData,
     },
     {
@@ -821,14 +819,10 @@ const SpoTable = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.S001,
     },
   ];
-
-  const callBackHandler = value => {
-    setColumns(value);
-  };
   return (
     <>
       <List
@@ -855,14 +849,7 @@ const SpoTable = ({
           onTabChange: handleClickGetTabsData,
         }}
         extra={operations}
-        tableList={
-          <>
-            {taskTypeCodeData.current === 'T001_1' && <>{tableData(columns)}</>}
-            {taskTypeCodeData.current === 'T001_3' && <>{tableData(columns)}</>}
-            {taskTypeCodeData.current === 'T001_4' && <>{tableData(columns)}</>}
-            {taskTypeCodeData.current === 'T001_5' && <>{tableData(columns)}</>}
-          </>
-        }
+        tableList={tableData(columns)}
       />
       <MoreOperation
         batchStyles={{ position: 'relative', left: '35px', top: '-63px' }}

@@ -58,9 +58,3 @@ export const getBatchRevokeApi = params =>
     method: 'POST',
     data: params,
   });
-
-// 归档导出
-export const downloadApi = params =>
-  request(`${uri}/awp/task/download?proCode=${params}`, {
-    responseType: 'blob',
-  });

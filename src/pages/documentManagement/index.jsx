@@ -1,3 +1,7 @@
+/**
+ * 项目文档管理--项目信息列表
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -9,7 +13,6 @@ import {
   Col,
   Input,
   Row,
-  Table,
   Form,
   Icon,
   Select,
@@ -21,6 +24,7 @@ import {
   Modal,
   message,
 } from 'antd';
+import { Table } from '@/components';
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -94,7 +98,7 @@ class Agent extends Component {
       },
       {
         key: 'projectState',
-        title: '项目阶段',
+        title: '状态',
         dataIndex: 'projectState',
         width: 150,
         sorter: true,
@@ -191,11 +195,7 @@ class Agent extends Component {
         dataIndex: 'customerType',
         width: 150,
         sorter: true,
-        render: text => (
-          <Tooltip placement="topLeft" title={text}>
-            <span>{text}</span>
-          </Tooltip>
-        ),
+        render: text => <span>{text === '1' ? '机构' : '自然人'}</span>,
       },
       {
         key: 'createTime',
@@ -306,7 +306,7 @@ class Agent extends Component {
       },
       {
         key: 'projectState',
-        title: '项目阶段',
+        title: '状态',
         dataIndex: 'projectState',
         sorter: true,
         render: (text, record) => <Tag>{record.projectStateName}</Tag>,
@@ -362,11 +362,7 @@ class Agent extends Component {
         dataIndex: 'customerType',
         width: 150,
         sorter: true,
-        render: text => (
-          <Tooltip placement="topLeft" title={text}>
-            <span>{text}</span>
-          </Tooltip>
-        ),
+        render: text => <span>{text === '1' ? '机构' : '自然人'}</span>,
       },
       {
         key: 'createTime',
@@ -415,38 +411,6 @@ class Agent extends Component {
       },
     ],
   };
-
-  getCheckedUseSealFileFn(proCode) {
-    return new Promise(resolve => {
-      this.props
-        .dispatch({
-          type: 'archiveTaskHandleList/getCheckedUseSealFileReq',
-          payload: { proCode },
-        })
-        .then(res => {
-          // type:1表示是在移动流程，0表示在文件删除流程 2表示正常 3 是全部都在删除流程
-          if (res?.data?.type === 0) {
-            confirm({
-              maskClosable: true,
-              title: '用印文件归档',
-              content: `其中目前部分文档已在删除流程中，无法用印，文档包括：${res?.data?.fileNames?.join(
-                '、',
-              )}`,
-              onOk: () => {
-                resolve();
-              },
-            });
-          } else if (res?.data?.type === 1) {
-            message.error('需要用印的文件正处于文件移动审批流程，请完成审批');
-          } else if (res?.data?.type === 3) {
-            message.error('目前文档已发起删除流程，无法发起用印文件归档操作！');
-          } else {
-            resolve();
-          }
-        });
-    });
-  }
-
   /**
    * 跳转至用印上传页面
    * * */
@@ -457,23 +421,23 @@ class Agent extends Component {
       centered: true,
       onOk: () => {
         const { proCode } = record;
-        this.getCheckedUseSealFileFn(proCode).then(() => {
-          const payload = {
-            generateArchiveTask: 1,
-            type: 2,
-            proCode,
-          };
-          this.props.dispatch(
-            routerRedux.push({
-              pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
-              query: payload,
-            }),
-          );
-        });
+        const payload = {
+          generateArchiveTask: 1,
+          type: 2,
+          proCode,
+        };
+        this.props.dispatch(
+          routerRedux.push({
+            pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
+            query: payload,
+          }),
+        );
       },
     });
   }
-
+  /**
+   * @method componentDidMount 生命周期
+   */
   componentDidMount() {
     const { type } = this.props.router.location.query;
     if (typeof type !== 'undefined') {
@@ -494,7 +458,6 @@ class Agent extends Component {
       this.handleGetTableList(this.state.params); // table列表数据请求
     }
   }
-
   /**
    * 获取项目/系列编码
    * * */
@@ -529,10 +492,7 @@ class Agent extends Component {
    * * */
   handleLookDocument({ proCode, type, path }) {
     const { dispatch } = this.props;
-    if (path === 0) {
-      message.error('项目目录树未生成~');
-      return;
-    }
+    if (path === 0) return message.error('项目目录树未生成~');
     dispatch(
       routerRedux.push({
         pathname: '/projectManagement/documentManagementDetail',
@@ -546,7 +506,7 @@ class Agent extends Component {
 
   /**
    *  物理归档入库
-   * * */
+   * **/
   handledPhysicalArchive = ({ proCode, type, path }) => {
     const { dispatch } = this.props;
     if (path === 0) return message.error('项目目录树未生成~');
@@ -566,6 +526,7 @@ class Agent extends Component {
    * tab切换
    * * */
   handleRadioChange(e) {
+    const { dispatch } = this.props;
     const type = e.target.value;
     this.setState(
       ({ params }) => ({
@@ -679,7 +640,7 @@ class Agent extends Component {
 
   /**
    * select 模糊搜索
-   * * */
+   * **/
   handleFilterOption = (input, option) => {
     return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };

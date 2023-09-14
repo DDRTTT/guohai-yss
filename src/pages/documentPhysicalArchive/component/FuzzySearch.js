@@ -1,5 +1,9 @@
+/**
+ * 模糊搜索
+ * author: jiaqiuhua
+ * * */
 import React, { useImperativeHandle, forwardRef } from 'react';
-import { Col, Input, Row, Form, Icon } from 'antd';
+import { Breadcrumb, Col, Input, Row, Form, Icon } from 'antd';
 
 const { Search } = Input;
 const FuzzySearch = forwardRef(
@@ -18,7 +22,7 @@ const FuzzySearch = forwardRef(
     const handleBlurSearch = keyWords => {
       handleGetTableData({
         ...initParams,
-        keyWords,
+        keyWords: keyWords.replace(/\s/g, ''),
       });
     };
     // 重置

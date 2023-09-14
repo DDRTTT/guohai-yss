@@ -6,9 +6,6 @@ import {
   projectPublishAPI,
   checkTerminationAPI,
   projectTerminationAPI,
-  getMemberInfoByCodeApi,
-  getProSetUpTimeInfoApi,
-  updateDelSaveProSetUpTimeInfoApi,
 } from '@/services/projectInfoManger';
 import { message } from 'antd';
 
@@ -17,7 +14,6 @@ export default {
   state: {
     proCodeList: [],
     proDeptList: [],
-    setUpTime: null,
   },
   effects: {
     //获取列表数据
@@ -76,34 +72,6 @@ export default {
       }
       return response;
     },
-
-    *getMemberInfoByCodeReq({ payload, callback }, { call, put }) {
-      const res = yield call(getMemberInfoByCodeApi, payload);
-      if (res && res.status === 200) {
-        callback(res);
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *getProSetUpTimeInfoReq({ payload }, { call, put }) {
-      const res = yield call(getProSetUpTimeInfoApi, payload);
-      if (res && res.status === 200) {
-        yield put({
-          type: 'updateSetUpTime',
-          payload: {
-            setUpTime: res.data?.setUpTime || null
-          }
-        })
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *updateDelSaveProSetUpTimeInfoReq({ payload }, { call }) {
-      const res = yield call(updateDelSaveProSetUpTimeInfoApi, payload);
-      return res;
-    },
   },
 
   reducers: {
@@ -121,12 +89,5 @@ export default {
         };
       }
     },
-
-    updateSetUpTime(state, { payload }) {
-      return {
-        ...state,
-        setUpTime: payload.setUpTime,
-      }
-    }
   },
 };

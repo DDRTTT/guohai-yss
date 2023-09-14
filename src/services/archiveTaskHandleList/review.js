@@ -53,21 +53,3 @@ export const getSendReminderApi = params =>
     method: 'POST',
     data: params,
   });
-
-export async function getFileDeleteHandleApi(params) {
-  return request(`${uri}/awp/task/process/fileDelete/handle`, {
-    method: 'POST',
-    data: params,
-  });
-}
-
-export async function getFileDeleteNotPassHandleApi(params) {
-  return request(`${uri}/awp/task/process/fileDelete/notPassHandle`, {
-    method: 'POST',
-    data: params,
-  })
-}
-
-export async function getFileDeleteFileDelReasonByFileIdApi(params) {
-  return request(`${uri}/awp/task/process/fileDelete/fileDelReasonByFileId?${stringify(params)}`);
-}

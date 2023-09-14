@@ -1,6 +1,8 @@
 @import '~antd/es/style/themes/default.less';
 @import '../../utils/utils.less';
-
+@uncheck-color-gray :rgba(183, 177, 180, 0.5);
+@border-color-white:#e8e8e8;
+@font-size-inner:24px;
 @pre: {
   position: absolute;
   color: @primary-color;
@@ -14,14 +16,14 @@
     .drawers {
       display: flex;
       padding: 10px 30px 10px 30px;
-      background: #fff;
+      background: @white;
 
       .middleBox {
         width: calc(100%);
 
         .innerUser {
           margin: 7px 7px 22px 7px;
-          font-size: 24px;
+          font-size: @font-size-inner;
         }
 
         .inner {
@@ -63,27 +65,42 @@
       width: 70%;
       // user-select: none;
       .tagStyle {
-        font-size: 14px;
+        font-size: @font-size-base;
         margin: 5px;
       }
+
+    }
+
+    .fLeftMargin {
+      margin-top: 35px;
     }
 
     .roleAllStyle {
       padding: 0;
-      font-size: 14px;
+      font-size: @font-size-base;
       //border-bottom: 0;
       //border-radius: 0;
 
-      .iconShow {
+      .iconShow1 {
         @pre();
 
         right: 100px;
+        display : block;
+      }
+      .iconShow2 {
+        @pre();
+
+        right: 100px;
+        display : none;
       }
 
       .addiconShow {
         @pre();
 
         right: 20px;
+        .tag {
+          cursor: pointer;
+        }
       }
 
       .hideTag {
@@ -94,8 +111,9 @@
       }
 
       .checkStyle {
+        font-size: @font-size-base;
         margin-bottom: 15px;
-        color: white;
+        color: @white;
         background-color: @primary-color;
         user-select: none;
       }
@@ -109,24 +127,43 @@
       }
 
       .unCheckStyle {
+        font-size: @font-size-base;
         margin-bottom: 15px;
-        background-color: white;
-        border: 1px solid rgba(183, 177, 180, 0.5);
+        background-color: @white;
+        border: 1px solid @uncheck-color-gray;
         user-select: none;
       }
     }
 
-    .slider {
-      display: block;
-      //width: 300px;
-      max-height: 712px;
-      overflow: auto;
-      background: #fff;
 
-      .searchInput {
-        margin-bottom: 0 !important;
+    .borderStyle {
+      border: 1px solid @border-color-white;
+      display: flex;
+      .borderDivStyle {
+        background: @white;
+        width: 200px;
+        .slider {
+          display: block;
+          //width: 300px;
+          max-height: 712px;
+          overflow: auto;
+          background: @white;
+
+          .searchInput {
+            margin-bottom: 0 !important;
+            .search {
+              width: 180px;
+              margin: 10px;
+            }
+          }
+        }
+      }
+      .borderDiv1Style {
+        background: @white;
+        width: 100%;
       }
     }
+
 
     .box {
       //border-bottom: 1px solid #e8e8e8;
@@ -151,7 +188,7 @@
   }
 
   .saveContent {
-    background-color: #fff;
+    background-color: @white;
     width: 100%;
     height: 64px;
     margin-top: 56px;
@@ -164,5 +201,59 @@
         margin-right: 10px;
       }
     }
+  }
+}
+
+.cardStyle1 {
+  float: left;
+}
+
+.cardStyle2block {
+  display: block
+}
+
+.cardStyle2none {
+  display: none
+}
+
+
+.modalStyle {
+  width: 90%;
+  .formStyle {
+    width: 200px;
+  }
+}
+.colDiv {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  .searchStyle {
+    width: 200px;
+  }
+  .treeSelect {
+    width: 200px;
+  }
+}
+.col1Div {
+  position: relative;
+  .col1Divs1 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .col1Divs2 {
+    height: 440px;
+    overflow-y: scroll;
+    margin-top: 50px;
+
+    .colDiv2Tag {
+      margin: 5px;
+    }
+  }
+}
+.modalStyle1 {
+  width: 650px;
+  .tree {
+    width: 200px;
   }
 }

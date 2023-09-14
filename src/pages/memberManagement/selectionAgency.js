@@ -98,7 +98,7 @@ export default class Index extends Component {
         <Card style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.basic}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="机构名称" {...formItemLayout}>
                   {getFieldDecorator('orgName', {
                     rules: [{ required: true, message: '请选择机构名称' }],
@@ -117,7 +117,7 @@ export default class Index extends Component {
                 </FormItem>
               </Col>
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="机构类型" {...formItemLayout}>
                   {getFieldDecorator('orgTypeName', {
                     initialValue: orgTypeName,
@@ -137,7 +137,7 @@ export default class Index extends Component {
                 </FormItem>
               </Col> */}
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="机构代码" {...formItemLayout}>
                   {getFieldDecorator('orgCode', {
                     initialValue: orgCode,

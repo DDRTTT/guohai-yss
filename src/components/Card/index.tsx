@@ -11,7 +11,7 @@ const CardProvider: React.FC<{
   title?: any;
   default?: any;
   defaultTitle?: any;
-}> = ({ title, defaultTitle, ...ret }) => {
+}> = ({ title,defaultTitle, ...ret }) => {
   let props;
   if (title || title === undefined) {
     props = {

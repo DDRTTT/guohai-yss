@@ -36,8 +36,6 @@ export default {
     SuperiorOrgs: [],
     //详情
     detailsList: {},
-    // 获取详情
-    detailOtherData: {}
   },
 
   effects: {
@@ -190,16 +188,6 @@ export default {
       }
       return flag;
     },
-    // 获取机构详情
-    *getOtherDetails({ payload }, { call, put }) {
-      const response = yield call(details, payload);
-      if (response && response.status === 200) {
-        yield put({
-          type: 'setOtherDetails',
-          payload: response.data,
-        });
-      }
-    },
     // 组织架构机构修改保存
     *modifyOrg({ payload }, { call, put }) {
       const response = yield call(updateOrg, payload);
@@ -276,13 +264,6 @@ export default {
       return {
         ...state,
         detailsList: payload,
-      };
-    },
-    //机构信息详情接口获取数据
-    setOtherDetails(state, { payload }) {
-      return {
-        ...state,
-        detailOtherData: payload,
       };
     },
     //字典

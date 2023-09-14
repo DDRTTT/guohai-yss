@@ -40,11 +40,11 @@ export default class Index extends Component {
     searchFormData: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
-        width: 300,
+        width: 400,
         render: text => {
           return (
             <Tooltip title={text}>
@@ -52,8 +52,8 @@ export default class Index extends Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </span>
             </Tooltip>
           );
@@ -62,6 +62,7 @@ export default class Index extends Component {
       },
       {
         key: 'proCode',
+        width: 200,
         dataIndex: 'proCode',
         title: '产品代码',
         sorter: true,
@@ -73,6 +74,7 @@ export default class Index extends Component {
         key: 'proType',
         dataIndex: 'proType',
         title: '产品类型',
+        width: 200,
         sorter: true,
         render: text => {
           return handleTableCss(text);
@@ -80,6 +82,7 @@ export default class Index extends Component {
       },
       {
         key: 'proSdate',
+        width: 200,
         dataIndex: 'proSdate',
         title: '产品终止日期',
         sorter: true,
@@ -89,7 +92,7 @@ export default class Index extends Component {
       },
       {
         key: 'causeTermination',
-        width: 250,
+        width: 200,
         dataIndex: 'causeTermination',
         title: '终止原因',
         sorter: true,
@@ -99,6 +102,7 @@ export default class Index extends Component {
       },
       {
         key: 'taskTime',
+        width: 200,
         dataIndex: 'taskTime',
         title: '任务到达时间',
         sorter: true,
@@ -111,7 +115,6 @@ export default class Index extends Component {
         dataIndex: 'status',
         title: '状态',
         sorter: true,
-        width: 130,
         render: text => {
           return handleTableCss(text);
         },
@@ -121,7 +124,6 @@ export default class Index extends Component {
         fixed: 'right',
         key: 'action',
         dataIndex: 'action',
-        align: 'center',
         render: (text, record) => {
           // 待提交 S001_1   流程中S001_2  已结束 S001_3
           const { taskTypeCode } = this.state;
@@ -161,36 +163,31 @@ export default class Index extends Component {
                 content = (
                   <>
                     <Action code="productEnd:update">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'edit')}
                       >
                         修改
-                      </Button>
+                      </a>
                     </Action>
                     <Action code="productEnd:copy">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'copy')}
                       >
                         复制
-                      </Button>
+                      </a>
                     </Action>
                     <Action code="productEnd:commit">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'submit')}
                       >
                         提交
-                      </Button>
+                      </a>
                     </Action>
                     <Action code="productEnd:delete">
-                      <Button type="link" size="small" onClick={() => this.deleteInfo(record)}>
-                        删除
-                      </Button>
+                      <a onClick={() => this.deleteInfo(record)}>删除</a>
                     </Action>
                   </>
                 );
@@ -199,23 +196,21 @@ export default class Index extends Component {
                 content = (
                   <>
                     <Action code="productEnd:check">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'handle')}
                       >
                         {' '}
                         办理{' '}
-                      </Button>
+                      </a>
                     </Action>
                     <Action code="productEnd:transferHistory">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'history')}
                       >
                         流转历史
-                      </Button>
+                      </a>
                     </Action>
                     {this.revokeShow(record)}
                     <MoreOperation record={record} fn={this.initTableData} />
@@ -226,22 +221,15 @@ export default class Index extends Component {
                 content = (
                   <>
                     <Action code="productEnd:details">
-                      <Button
-                        type="link"
-                        size="small"
+                      <a
+                        className={styles.operationBtn}
                         onClick={() => this.dealTask(record, 'details')}
                       >
                         详情
-                      </Button>
+                      </a>
                     </Action>
                     <Action code="productEnd:transferHistory">
-                      <Button
-                        type="link"
-                        size="small"
-                        onClick={() => this.dealTask(record, 'history')}
-                      >
-                        流转历史
-                      </Button>
+                      <a onClick={() => this.dealTask(record, 'history')}>流转历史</a>
                     </Action>
                   </>
                 );
@@ -250,14 +238,20 @@ export default class Index extends Component {
             content = (
               <>
                 <Action code="productEnd:details">
-                  <Button type="link" size="small" onClick={() => this.dealTask(record, 'details')}>
+                  <a
+                    className={styles.operationBtn}
+                    onClick={() => this.dealTask(record, 'details')}
+                  >
                     详情
-                  </Button>
+                  </a>
                 </Action>
                 <Action code="productEnd:transferHistory">
-                  <Button type="link" size="small" onClick={() => this.dealTask(record, 'history')}>
+                  <a
+                    className={styles.operationBtn}
+                    onClick={() => this.dealTask(record, 'history')}
+                  >
                     流转历史
-                  </Button>
+                  </a>
                 </Action>
                 {this.revokeShow(record)}
               </>
@@ -320,6 +314,7 @@ export default class Index extends Component {
       type: `productEnd/queryProductList`,
     });
   }
+
   /**
    * 方法说明  产品类型
    * @method   getProductType
@@ -392,7 +387,7 @@ export default class Index extends Component {
   /**
    *查询表格数据
    */
-  getTableData = val => {
+  getTableData(val) {
     const {
       keyWords,
       pageSize,
@@ -434,7 +429,7 @@ export default class Index extends Component {
         params,
       },
     });
-  };
+  }
 
   /**
    * 条件查询
@@ -550,13 +545,13 @@ export default class Index extends Component {
   // 判断撤销按钮是否显示
   revokeShow(record) {
     if (record.checked === 'S001_2') {
-      if (record.revoke == 1) {
+      if (record.revoke === 1 || record.revoke === '1') {
         return (
           <>
             <Action code="productEnd:cancel">
-              <Button type="link" size="small" onClick={() => this.handleCanBackOut(record)}>
+              <a className={styles.operationBtn} onClick={() => this.handleCanBackOut(record)}>
                 撤销
-              </Button>
+              </a>
             </Action>
           </>
         );
@@ -725,6 +720,10 @@ export default class Index extends Component {
       showTotal: () => `共 ${dataSource.total} 条数据`,
     };
 
+    // if (taskTypeCode === 'T001_3' || taskTypeCode === 'T001_5') {
+    //   columns.splice(5, 1);
+    // }
+
     const rowSelection = {
       selectedRowKeys,
       onChange: (selectedRowKeys, selectRows) => {
@@ -756,7 +755,7 @@ export default class Index extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
         rules: [{ required: true }],
       },
@@ -765,7 +764,7 @@ export default class Index extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productType,
       },
       {
@@ -773,7 +772,7 @@ export default class Index extends Component {
         label: '任务状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts && dicts.S001List,
       },
     ];
@@ -811,7 +810,7 @@ export default class Index extends Component {
                   dataSource={dataSource.rows}
                   columns={columns}
                   pagination={pagination}
-                  scroll={{ x: true }}
+                  scroll={{ x: 2000 }}
                   loading={tableLoading}
                   rowSelection={rowSelection}
                   onChange={this.handleTableChange}
@@ -823,7 +822,7 @@ export default class Index extends Component {
                   dataSource={dataSource.rows}
                   columns={columns}
                   pagination={pagination}
-                  scroll={{ x: true }}
+                  scroll={{ x: 2000 }}
                   loading={tableLoading}
                   rowSelection={rowSelection}
                   onChange={this.handleTableChange}
@@ -835,7 +834,7 @@ export default class Index extends Component {
                   dataSource={dataSource.rows}
                   columns={columns}
                   pagination={pagination}
-                  scroll={{ x: true }}
+                  scroll={{ x: 1800 }}
                   loading={tableLoading}
                   rowSelection={rowSelection}
                   onChange={this.handleTableChange}
@@ -847,7 +846,7 @@ export default class Index extends Component {
                   dataSource={dataSource.rows}
                   columns={columns}
                   pagination={pagination}
-                  scroll={{ x: true }}
+                  scroll={{ x: 1800 }}
                   loading={tableLoading}
                   rowSelection={rowSelection}
                   onChange={this.handleTableChange}

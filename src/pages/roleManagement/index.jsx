@@ -295,19 +295,19 @@ const RoleManagement = ({
         return handleTableCss(data);
       },
     },
-    {
-      title: '数据策略组件',
-      dataIndex: 'dataStrategies',
-      key: 'dataStrategies',
-      ...tableRowConfig,
-      sorter: false,
-      render: (_, { dataStrategies }) => {
-        const arr = [];
-        dataStrategies.forEach(item => arr.push(item?.strategyName));
-        const data = arr.length !== 0 ? arr.join(' ') : '-';
-        return handleTableCss(data);
-      },
-    },
+    // {
+    //   title: '数据策略组件',
+    //   dataIndex: 'dataStrategies',
+    //   key: 'dataStrategies',
+    //   ...tableRowConfig,
+    //   sorter: false,
+    //   render: (_, { dataStrategies }) => {
+    //     const arr = [];
+    //     dataStrategies.forEach(item => arr.push(item?.strategyName));
+    //     const data = arr.length !== 0 ? arr.join(' ') : '-';
+    //     return handleTableCss(data);
+    //   },
+    // },
     {
       title: '状态',
       dataIndex: 'checked',
@@ -335,31 +335,31 @@ const RoleManagement = ({
         </span>,
         <Action key="roleManagement:modify" code="roleManagement:modify">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.btnMargin}>
               <a onClick={() => handleUpdateRole(record)}>修改</a>
             </span>
           )}
         </Action>,
         <Action key="roleManagement:review" code="roleManagement:review">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.btnMargin}>
               <a onClick={() => handleReview({ roleComIds: record.id, check: 1 })}>复核</a>
             </span>
           )}
           {record.checked === 1 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.btnMargin}>
               <a onClick={() => handleReview({ roleComIds: record.id, check: 0 })}>反复核</a>
             </span>
           )}
         </Action>,
         <Action key="roleManagement:delete" code="roleManagement:delete">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.btnMargin}>
               <Popconfirm
                 title="删除为不可逆操作，确认删除吗?"
                 onConfirm={() => handleDelete({ roleComIds: record.id })}
               >
-                <a style={{ color: '#D9001B' }}>删除</a>
+                <a className={styles.delete}>删除</a>
               </Popconfirm>
             </span>
           )}
@@ -440,7 +440,6 @@ const RoleManagement = ({
   return (
     <div className={styles.base}>
       <List
-        title={false}
         formItemData={formItemData}
         // 查询按钮
         advancSearch={queryInit}
@@ -474,7 +473,7 @@ const RoleManagement = ({
               pagination={paginationProps}
               scroll={{ x: columns.length * 200 }}
             />
-            <div style={{ marginTop: -45 }}>
+            <div className={styles.batch}>
               <Dropdown
                 overlay={
                   <Menu onClick={handleMenuClick}>
@@ -495,7 +494,7 @@ const RoleManagement = ({
                 }
                 placement="topLeft"
               >
-                <Button style={{ marginRight: 10, width: 100, height: 26 }}>
+                <Button className={styles.batchBtn}>
                   批量操作
                   <Icon type="up" />
                 </Button>

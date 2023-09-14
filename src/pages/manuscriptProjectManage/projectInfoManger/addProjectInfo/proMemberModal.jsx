@@ -3,7 +3,6 @@ import ModalWin from './ModalWin.jsx';
 import { connect } from 'dva';
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const phoneReg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/; //手机号码校验规则
 const phoneReg2 = /^\+86(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/; // 手机号码校验规则
@@ -13,7 +12,7 @@ const PASSPORT1 = /^[a-zA-Z]{5,17}$/; //护照验证规则
 const PASSPORT2 = /^[a-zA-Z0-9]{5,17}$/; //护照验证规则
 const HKMAKAO = /^[HMhm]{1}([0-9]{10}|[0-9]{8})$/; //港澳通行证
 const TAIWAN1 = /^[0-9]{8}$/; //台湾来往大陆通行证
-const TAIWAN2 = /^[0-9]{10}$/; // 台湾来往大陆通行证
+const TAIWAN2 = /^[0-9]{10}$/; //台湾来往大陆通行证
 const emailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
 const CollectionForm = Form.create({ name: 'form_in_modal' })(
@@ -43,14 +42,17 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
       dispatch({
         type: 'addProjectInfo/getMemberInfoReq',
         payload: {
-          userId: value,
+          userId: value.split(',')[0],
         },
         callback: res => {
           if ('data' in res) {
             const { data } = res;
+            for (let key in data) {
+              data[key] = data[key].toString();
+            }
             setFieldsValue({
               ...data,
-              idType: `${data.idType}`,
+              membeName: data.membeCode + ',' + data.membeName,
             });
           } else {
             setFieldsValue({});
@@ -62,7 +64,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
     render() {
       const { idType } = this.state;
       const { visible, onCancel, onCreate, form, data } = this.props;
-      const { idTypeList, memberNameList } = data;
+      const { productFilterOption, idTypeList, memberNameList } = data;
       const { getFieldDecorator } = form;
 
       return (
@@ -77,7 +79,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
           <div style={{ height: '40vh', overflowY: 'auto' }}>
             <Form layout="vertical">
               <Form.Item label="姓名">
-                {getFieldDecorator('membeCode', {
+                {getFieldDecorator('membeName', {
                   rules: [
                     {
                       required: true,
@@ -89,14 +91,12 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                     style={{ display: 'block' }}
                     placeholder="请选择"
                     showSearch
-                    filterOption={(input, option) =>
-                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
+                    filterOption={productFilterOption}
                     onChange={this.handleMembeNameChange}
                   >
                     {memberNameList &&
                       memberNameList.map(item => (
-                        <Option key={item.id} value={item.id}>
+                        <Option key={item.id} value={item.id + ',' + item.username}>
                           {item.username}
                         </Option>
                       ))}
@@ -112,7 +112,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                     },
                   ],
                 })(
-                  <Radio.Group disabled>
+                  <Radio.Group>
                     <Radio value="0">男</Radio>
                     <Radio value="1">女</Radio>
                   </Radio.Group>,
@@ -186,7 +186,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                       message: '部门不得为空!',
                     },
                   ],
-                })(<Input placeholder="请输入部门" disabled maxLength={50} />)}
+                })(<Input placeholder="请输入部门" maxLength={50} />)}
               </Form.Item>
               <Form.Item label="职位">
                 {getFieldDecorator('job', {
@@ -240,7 +240,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                       validator: this.removetrim,
                     },
                   ],
-                })(<Input placeholder="请输入邮箱" disabled maxLength={50} />)}
+                })(<Input placeholder="请输入邮箱" maxLength={50} />)}
               </Form.Item>
               <Form.Item label="联系电话">
                 {getFieldDecorator('mobile', {
@@ -265,7 +265,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                       validator: this.removetrim,
                     },
                   ],
-                })(<Input placeholder="请输入联系电话" disabled maxLength={14} />)}
+                })(<Input placeholder="请输入联系电话" maxLength={14} />)}
               </Form.Item>
               <Form.Item label="备注">
                 {getFieldDecorator('remark', {
@@ -278,7 +278,7 @@ const CollectionForm = Form.create({ name: 'form_in_modal' })(
                   <TextArea
                     rows={4}
                     allowClear
-                    autoSize={{ minRows: 3, maxRows: 6 }}
+                    autosize={{ minRows: 3, maxRows: 6 }}
                     maxLength="100"
                   />,
                 )}
@@ -306,16 +306,13 @@ class ProMemberModal extends React.Component {
   };
 
   handleCreate = () => {
-    const {
-      data: { memberNameList },
-    } = this.props;
     const { form } = this.formRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      const { username } = memberNameList.find(item => item.id === values.membeCode);
-      this.props.onConfirm({ ...values, membeName: `${values.membeCode},${username}` });
+
+      this.props.onConfirm(values);
       form.resetFields();
       this.setState({ visible: false });
     });

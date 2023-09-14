@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
-import { Form, Radio, Tooltip } from 'antd';
+import { Button, Form, Radio, Tooltip } from 'antd';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { Table } from '@/components';
+import Action, { linkHoc } from '@/utils/hocUtil';
 import List from '@/components/List';
 
 const RadioGroup = Radio.Group;
@@ -19,6 +20,7 @@ const Index = ({
   const [formValues, setFormValues] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   useEffect(() => {
     const basic = {
@@ -82,7 +84,7 @@ const Index = ({
       payload: values,
     });
   };
-  
+
   //重置
   const handleReset = () => {
     const values = {
@@ -97,17 +99,19 @@ const Index = ({
       type: `resource/fetch`,
       payload: values,
     });
-  }
+  };
 
   const putData = (e, d) => {
     const urlType = e.target.value;
     const basic = {
       urlType,
       id: d.id,
-      index_type:
-        formValues.urlType === undefined || formValues.urlType == null ? 0 : formValues.urlType,
     };
 
+    Object.assign(
+      basic,
+      formValues.urlType || formValues.urlType === '0' ? { index_type: formValues.urlType } : {},
+    );
     dispatch({
       type: 'resource/putdata',
       payload: basic,
@@ -192,15 +196,49 @@ const Index = ({
       ],
     },
   ];
+
+  const authHandler = roleType => {
+    if (selectedRowKeys.length <= 0) {
+      message.error('请先选择功能点');
+      return;
+    }
+    dispatch({
+      type: `menu/getAddAuthPointToAdmin`,
+      payload: {
+        roleType: roleType + '',
+        pointType: '2',
+        rolePoint: selectedRowKeys,
+      },
+    });
+  };
+
+  const onSelectChange = rows => {
+    setSelectedRowKeys(rows);
+  };
   return (
     <>
       <List
-          formItemData={formItemData}
-          advancSearch={handleSearch}
-          resetFn={handleReset}
-          loading={listLoading}
-          fuzzySearchBool={false}
-          tableList={(<>
+        formItemData={formItemData}
+        advancSearch={handleSearch}
+        resetFn={handleReset}
+        loading={listLoading}
+        fuzzySearchBool={false}
+        extra={
+          <>
+            <Action code="resource:funAuthAction">
+              <Button type="primary" onClick={() => authHandler(1)}>
+                添加到功能权限
+              </Button>
+            </Action>
+            <Action code="resource:authAuthAction">
+              <Button style={{ marginLeft: '10px' }} onClick={() => authHandler(2)} type="primary">
+                添加到授权权限
+              </Button>
+            </Action>
+          </>
+        }
+        tableList={
+          <>
             <Table
               columns={columns}
               loading={listLoading}
@@ -208,9 +246,12 @@ const Index = ({
               onChange={handleStandardTableChange}
               currentPage={currentPage}
               pagination={paginationProps}
+              rowKey="id"
+              rowSelection={{ selectedRowKeys, onChange: onSelectChange }}
             />
-          </>)}
-        />
+          </>
+        }
+      />
     </>
   );
 };

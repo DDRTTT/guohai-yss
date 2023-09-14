@@ -5,7 +5,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { Button, Card, Col, DatePicker, Form, Radio, Row, Spin, Table } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Radio, Row, Spin } from 'antd';
+import { Table } from '@/components';
 import Moment from 'moment';
 import Action from '@/utils/hocUtil';
 import { getDateStr } from '@/utils/utils';
@@ -169,9 +170,9 @@ export default class operationLog extends Component {
           </Col>
           <Col md={7} sm={24}>
             <Button
+              className={styles.icon}
               type="primary"
               htmlType="submit"
-              style={{ width: 86, height: 26, float: 'right' }}
               onClick={this.jumpPage}
             >
               自由图标
@@ -263,7 +264,7 @@ export default class operationLog extends Component {
     } = this.props;
 
     const ads = saveDimensionDicCode || this.state.dimensionValue;
-    const radioItem = saveDimensionDic.map((item, index) => {
+    const radioItem = saveDimensionDic?.map((item, index) => {
       return (
         <RadioButton key={index} value={item.code}>
           {item.name}
@@ -287,25 +288,22 @@ export default class operationLog extends Component {
   // 模块操作总数量统计
   handleStatislog = item => {
     return (
-      <div
-        style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}
-        onClick={this.handleToDetail}
-      >
+      <div className={styles.statistics} onClick={this.handleToDetail}>
         <div className={styles.cardBox}>
           <p className={styles.title}>总访问量</p>
-          <p className={styles.num}>{item.count}</p>
+          <p className={styles.num}>{item?.count}</p>
         </div>
         <div className={styles.cardBox}>
           <p className={styles.title}>操作服务模块</p>
-          <p className={styles.num}>{item.service}</p>
+          <p className={styles.num}>{item?.service}</p>
         </div>
         <div className={styles.cardBox}>
           <p className={styles.title}>操作人数</p>
-          <p className={styles.num}>{item.userId}</p>
+          <p className={styles.num}>{item?.userId}</p>
         </div>
         <div className={styles.cardBox}>
           <p className={styles.title}>操作类型</p>
-          <p className={styles.num}>{item.type}</p>
+          <p className={styles.num}>{item?.type}</p>
         </div>
       </div>
     );
@@ -418,17 +416,17 @@ export default class operationLog extends Component {
 
     return (
       <div>
-        <Card bordered={false} title="操作日志" style={{ minHeight: 50 }}></Card>
+        <Card className={styles.operationlog} bordered={false} title="操作日志"></Card>
 
         {this.handleStatislog(saveStatislog)}
 
-        <div style={{ marginTop: 24, marginBottom: 24 }}>
+        <div className={styles.box}>
           <Card
             loading={loading}
-            className={styles.salesCard}
+            className={`${styles.salesCard} ${styles.card}`}
             bordered={false}
             bodyStyle={{ padding: 24 }}
-            style={{ marginTop: 24, minHeight: 500 }}
+            // style={{ marginTop: 24, minHeight: 500 }}
           >
             <div>
               维度选择：
@@ -439,16 +437,22 @@ export default class operationLog extends Component {
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Card
                 loading={loading}
-                className={styles.salesCard}
+                className={`${styles.salesCard} ${styles.card}`}
                 bordered={false}
                 title="操作设备"
                 bodyStyle={{ padding: 24 }}
-                style={{ marginTop: 24, minHeight: 500 }}
+                // style={{ marginTop: 24, minHeight: 500 }}
               ></Card>
             </Col>
 
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-              <Card loading={loading} bordered={false} title="服务模块" style={{ marginTop: 24 }}>
+              <Card
+                className={styles.service}
+                loading={loading}
+                bordered={false}
+                title="服务模块"
+                // style={{ marginTop: 24 }}
+              >
                 <Table
                   rowKey={record => record.index}
                   size="small"

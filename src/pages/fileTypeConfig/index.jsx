@@ -2,65 +2,37 @@
 import React, { useEffect, useState, useRef } from 'react';
 import SelfTree from '@/pages/lifeCyclePRD/compoments/SelfTree';
 import moment from 'moment';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { connect } from 'dva';
 import {
   Button,
-  Breadcrumb,
   Card,
-  Col,
   Form,
-  Icon,
   Input,
-  Menu,
   Row,
-  Radio,
   Select,
-  Table,
   message,
-  Checkbox,
-  DatePicker,
   Spin,
   TreeSelect,
-  Layout,
   Modal,
 } from 'antd';
 import { routerRedux } from 'dva/router';
-import Action, { linkHoc } from '@/utils/hocUtil';
 import { getUrlParams } from '@/utils/utils';
-import { cloneDeep, result } from 'lodash';
 import styles from '@/pages/electronicRecord/index.less';
 import PageContainer from '@/components/PageContainers';
 
-const { Search } = Input;
 const FormItem = Form.Item;
 const { confirm } = Modal;
-const { TreeNode } = TreeSelect;
-const { Content } = Layout;
-const { TextArea } = Input;
-//const actionBtns = ['删除', '修改', '添加', '不适用', '审核', '反审核'];
 const routerPath = {
   linkAd: 'electronic/electronicRecord',
 };
 
 const Index = props => {
   const {
-    form: { getFieldsValue, getFieldDecorator, resetFields, setFieldsValue, validateFields },
+    form: { getFieldsValue, getFieldDecorator, setFieldsValue, validateFields },
     dispatch,
-    listLoading,
-    saveManuscriptDetailInfo,
-    saveTreeData,
     saveAllTreeData,
-    saveUpdateTreeData,
   } = props;
 
-  // 多选设置
-  const [checkableFlag, setCheckableFlag] = useState(false);
-  // 拖动设置
-  const [draggableFlag, setDraggableFlag] = useState(false);
-  // 多选控制
-  const [multipleFlag, setMultipleFlag] = useState(false);
   // 子组件传回点击信息
   const [clickData, setClickData] = useState({});
   // 子组件传回check信息
@@ -80,21 +52,11 @@ const Index = props => {
   const [opType, setOpType] = useState('add');
   // 修改时选中的id
   const [id, setId] = useState('');
-  // 不适用弹框
-  const [noSuitVisible, setNoSuitVisible] = useState(false);
-  // 不适用原因
-  const [reason, setReason] = useState('');
   const [code, setCode] = useState('');
-  // 不适用树选择组
-  const [updateTreeList, setUpdateTreeList] = useState('');
-  // 不适用树弹框
-  const [updateSuitVisible, setUpdateSuitVisible] = useState(false);
   // 请求控制阀
   const [flag, setFlag] = useState(true);
   // 档案管理来源
   const [mode, setMode] = useState('1');
-  const [overseasProAreaFlag, setOverseasProAreaFlag] = useState(false);
-  const [otherProTypeFlag, setOtherProTypeFlag] = useState(false);
 
   const treeRef = useRef();
   // 底稿目录管理，详情

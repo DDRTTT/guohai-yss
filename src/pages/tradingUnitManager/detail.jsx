@@ -1,11 +1,52 @@
 import React, { useEffect } from 'react';
-import { Form } from 'antd';
+import { Card, Form } from 'antd';
 import CustomFormItem from '@/components/AdvancSearch/CustomFormItem';
 import { connect } from 'dva';
-import { Card, PageContainers } from '@/components';
-import Gird from '@/components/Gird';
+import { PageContainers } from '@/components';
 
 const defaultConfig = { disabled: true, placeholder: '' };
+// 交易单元管理详情
+const FormComponent = Form.create()(({ detailInfoItem, formItemData, form }) => {
+  const layout = {
+    labelAlign: 'right',
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
+  useEffect(() => {
+    const {
+      settlementMode,
+      trusteeshipId,
+      applyPro,
+      market,
+      unitNum,
+      clearNo,
+      protocolCode,
+      openStatus,
+      operator,
+      iniPwd,
+    } = detailInfoItem;
+    form.setFieldsValue({
+      settlementMode,
+      trusteeshipId,
+      applyPro: applyPro.split(',').map(item => item),
+      market,
+      unitNum,
+      clearNo,
+      protocolCode,
+      openStatus,
+      operator,
+      iniPwd,
+    });
+  }, [detailInfoItem]);
+
+  return (
+    <Card bordered={false}>
+      <Form {...layout}>
+        <CustomFormItem formItemList={formItemData} form={form} />
+      </Form>
+    </Card>
+  );
+});
 
 const Index = ({
   dispatch,
@@ -21,7 +62,7 @@ const Index = ({
       payload: {
         orgType: 'J004_2',
       },
-    })
+    });
     dispatch({
       type: 'tradingUnitManager/getBrokerList',
       payload: {
@@ -42,53 +83,77 @@ const Index = ({
     });
   }, []);
 
-  // 弹窗配置-产品计划排期表-查看基本信息
-  const drawerConfig = item => {
+  const formItemData = item => {
     return [
-      { 
-        label: '结算模式', 
-        value: 'settlementMode', 
-        type: 'select', 
-        option: codeList && codeList.SM001 
-      },{ 
-        label: `${item.settlementMode === 'SM001_1' ? '托管人' : '交易单元所属'}`, 
-        value: 'trusteeshipId', 
-        type: 'select', 
-        option: hostingList, 
-        optionConfig: { name: 'orgName', code: 'id' } 
-      },{
-        label: '适用产品', 
-        value: 'applyPro', 
-        type: 'multiple', 
-        option: codeList && codeList.T004 
-      },{ 
-        label: '交易市场', 
-        value: 'market', 
-        type: 'select', 
-        option: codeList && codeList.T003 
-      },{ 
-        label: '交易单元号', 
-        value: 'unitNum' 
-      },{ 
-        label: '清算编号', 
-        value: 'clearNo' 
-      },{ 
-        label: '协议编码', 
-        value: 'protocolCode' 
-      },{ 
-        label: '开通状态', 
-        value: 'openStatus', 
-        type: 'select', 
-        option: [{ name: '已开通', code: '1' }, { name: '未开通', code: '0' }] 
-      },{ 
-        label: '交易单元操作员号', 
-        value: 'operator', rule: item.market !== 'T003_1' 
-      },{ 
-        label: '初始密码', 
-        value: 'iniPwd', rule: item.market !== 'T003_1' 
+      {
+        name: 'settlementMode',
+        label: '结算模式',
+        type: 'select',
+        config: defaultConfig,
+        option: codeList.SM001,
       },
-    ]
-  }
+      {
+        name: 'trusteeshipId',
+        label: `${item.settlementMode === 'SM001_1' ? '托管人' : '交易单元所属'}`,
+        type: 'select',
+        config: defaultConfig,
+        readSet: { name: 'orgName', code: 'id' },
+        option: hostingList,
+      },
+      {
+        name: 'applyPro',
+        label: '适用产品',
+        type: 'select',
+        config: { ...defaultConfig, mode: 'multiple' },
+        option: codeList.T004,
+      },
+      {
+        name: 'market',
+        label: '交易市场',
+        type: 'select',
+        config: defaultConfig,
+        option: codeList.T003,
+      },
+      {
+        name: 'unitNum',
+        label: '交易单元号',
+        config: defaultConfig,
+      },
+      {
+        name: 'clearNo',
+        label: '清算编号',
+        config: defaultConfig,
+      },
+      {
+        name: 'protocolCode',
+        label: '协议编码',
+        config: defaultConfig,
+      },
+      {
+        name: 'openStatus',
+        label: '开通状态',
+        type: 'select',
+        config: defaultConfig,
+        option: [
+          { name: '已开通', code: '1' },
+          { name: '未开通', code: '0' },
+        ],
+      },
+      {
+        name: 'operator',
+        label: '交易单元操作员号',
+        config: defaultConfig,
+        unRender: item.market !== 'T003_1',
+      },
+      {
+        name: 'iniPwd',
+        label: '初始密码',
+        config: defaultConfig,
+        unRender: item.market !== 'T003_1',
+      },
+    ];
+  };
+
   return (
     <PageContainers
       breadcrumb={[
@@ -106,18 +171,10 @@ const Index = ({
         },
       ]}
     >
-      <div className='detailPage bgcFFF'>
-        <div className="scollWrap scollWrap129 none-scroll-bar">
-          <Card title="详情">
-            {detailInfo &&
-              detailInfo.map((item, index) => (
-                <div style={{marginTop:index === 0 ? "" :'50px'}}>
-                  <Gird key={index} config={drawerConfig(item)} info={item}/>
-                </div>
-              ))}
-          </Card>
-        </div>
-      </div>
+      {detailInfo &&
+        detailInfo.map((item, index) => (
+          <FormComponent key={index} detailInfoItem={item} formItemData={formItemData(item)} />
+        ))}
     </PageContainers>
   );
 };

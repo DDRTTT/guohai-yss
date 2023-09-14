@@ -91,9 +91,9 @@ const model = {
             type: 'memberManagement/saveAuthorizationStrategy',
             payload: strategyCodes,
           });
-          const proCodes = userRole[0]?.proCodes;
-          const proTypes = userRole[0]?.proTypes;
-          const proGroups = userRole[0]?.groups;
+          let proCodes = userRole[0]?.proCodes;
+          let proTypes = userRole[0]?.proTypes;
+          let proGroups = userRole[0]?.groups;
           const projectsDg = projects?.projects ? projects.projects : [];// 底稿系统取值--对标proCodes
           const proTypeDg = projects?.proType ? projects.proType : [];// 底稿系统取值--对标proTypes
           yield put({

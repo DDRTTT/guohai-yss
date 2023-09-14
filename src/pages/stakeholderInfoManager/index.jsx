@@ -7,8 +7,7 @@ import router from 'umi/router';
 import EnrichEditButton from '@/components/AdvancSearch/EnrichEditButton';
 import { getPaginationConfig, isNullObj } from '@/pages/investorReview/func';
 import Action from '@/utils/hocUtil';
-import { uuid } from '@/utils/utils';
-import { Card, Table, CommonSearch } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
 
 // 干系人信息管理
@@ -18,6 +17,7 @@ const Index = props => {
     tableList,
     stakeholdersTypeList,
     orgNameList,
+    searchNameList,
     productEnum,
   } = props;
   // 初始化state
@@ -49,324 +49,345 @@ const Index = props => {
   const [batchList, setBatchList] = useState([]);
   const [batchObj, setBatchObj] = useState({});
 
-  const [columns, setColumns] = useState(
-    // 表格的表头
-    [
-      {
-        key: 'proFname',
-        dataIndex: 'proFname',
-        title: '产品简称',
-        sorter: true,
-        width: 280,
-        ellipsis: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+  const [columns, setColumns] = useState([
+    {
+      key: 'proName',
+      dataIndex: 'proName',
+      title: '产品全称',
+      sorter: true,
+      width: 400,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'proCode',
-        dataIndex: 'proCode',
-        title: '产品代码',
-        ellipsis: true,
-        sorter: true,
-        width: 120,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'proCode',
+      dataIndex: 'proCode',
+      title: '产品代码',
+      sorter: true,
+      width: 120,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'assetType',
-        dataIndex: 'assetType',
-        title: '产品类型',
-        ellipsis: true,
-        sorter: true,
-        width: 150,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'assetType',
+      dataIndex: 'assetType',
+      title: '产品类型',
+      sorter: true,
+      width: 150,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'category',
-        dataIndex: 'category',
-        title: '类别',
-        sorter: true,
-        width: 150,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'category',
+      dataIndex: 'category',
+      title: '类别',
+      sorter: true,
+      width: 150,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'stakeholderType',
-        dataIndex: 'stakeholderType',
-        title: '干系人类别',
-        sorter: true,
-        width: 150,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'stakeholderType',
+      dataIndex: 'stakeholderType',
+      title: '干系人类别',
+      sorter: true,
+      width: 150,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'agencyName',
-        dataIndex: 'agencyName',
-        title: '机构名称',
-        sorter: true,
-        width: 300,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'agencyName',
+      dataIndex: 'agencyName',
+      title: '机构名称',
+      sorter: true,
+      width: 400,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'name',
-        dataIndex: 'name',
-        title: '姓名',
-        sorter: true,
-        width: 120,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'name',
+      dataIndex: 'name',
+      title: '姓名',
+      sorter: true,
+      width: 120,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'startDate',
-        dataIndex: 'startDate',
-        title: '开始任职日期',
-        sorter: true,
-        width: 180,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'startDate',
+      dataIndex: 'startDate',
+      title: '开始任职日期',
+      sorter: true,
+      width: 180,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'departureDate',
-        dataIndex: 'departureDate',
-        title: '离任日期',
-        sorter: true,
-        width: 180,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'departureDate',
+      dataIndex: 'departureDate',
+      title: '离任日期',
+      sorter: true,
+      width: 180,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'status',
-        dataIndex: 'status',
-        title: '状态',
-        sorter: true,
-        width: 100,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
+    },
+    {
+      key: 'status',
+      dataIndex: 'status',
+      title: '状态',
+      sorter: true,
+      width: 100,
+      render: text => {
+        return (
+          <Tooltip title={text}>
+            {text
+              ? text.toString().replace(/null/g, '-')
+              : text === '' || text === undefined
+              ? '-'
+              : 0}
+          </Tooltip>
+        );
       },
-      {
-        key: 'action',
-        dataIndex: 'action',
-        title: '操作',
-        fixed: 'right',
-        align: 'center',
-        render: (val, record) => {
-          const buttonList = [
-            {
-              label: '查看',
-              code: 'show',
-              handler: () => {
-                router.push(
-                  `/productDataManage/stakeholderInfoManager/index/detail?id=${record.id}&proCode=${record.proCode}&type=show`,
-                );
-              },
+    },
+    {
+      key: 'action',
+      dataIndex: 'action',
+      title: '操作',
+      fixed: 'right',
+      render: (val, record) => {
+        const buttonList = [
+          {
+            label: '查看',
+            code: 'show',
+            handler: () => {
+              // fnLink(
+              //   'stakeholderInfoManager:show',
+              //   `?id=${record.id}&proCode=${record.proCode}&type=show`,
+              // );
+              router.push(
+                `/productDataManage/stakeholderInfoManager/index/detail?id=${record.id}&proCode=${record.proCode}&type=show`,
+              );
             },
-            {
-              label: '修改',
-              code: 'modify',
-              handler: () => {
-                router.push(
-                  `/productDataManage/stakeholderInfoManager/index/updateInfo?id=${record.id}&proCode=${record.proCode}&type=modify`,
-                );
-              },
+          },
+          {
+            label: '修改',
+            code: 'modify',
+            // config: { disabled: record.statusCode === 'D001_2' },
+            // unRender: record.statusCode !== 'D001_2',
+            handler: () => {
+              // fnLink(
+              //   'stakeholderInfoManager:show',
+              //   `?id=${record.id}&proCode=${record.proCode}&type=modify`,
+              // );
+              router.push(
+                `/productDataManage/stakeholderInfoManager/index/updateInfo?id=${record.id}&proCode=${record.proCode}&type=modify`,
+              );
             },
-            {
-              label: '审核',
-              code: 'review',
-              config: {
-                disabled: record.statusCode === 'D001_2',
-              },
-              handler: () => {
-                Modal.confirm({
-                  title: '请确认是否审核?',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk: () => {
-                    dispatch({
-                      type: 'stakeholderInfoManager/updateChecked',
-                      payload: {
-                        ids: [record.id],
-                        flag: 0,
-                      },
-                      callback: () => {
-                        message.success('操作成功');
-                        getTableList();
-                      },
-                    });
-                  },
-                });
-              },
+          },
+          {
+            label: '审核',
+            code: 'review',
+            config: {
+              disabled: record.statusCode === 'D001_2',
+              // loading: !!reviewLoading,
             },
-            {
-              label: '反审核',
-              code: 'audit',
-              config: {
-                disabled: record.statusCode === 'D001_1',
-              },
-              handler: () => {
-                Modal.confirm({
-                  title: '请确认是否反审核?',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk: () => {
-                    dispatch({
-                      type: 'stakeholderInfoManager/updateChecked',
-                      payload: {
-                        ids: [record.id],
-                        flag: 3,
-                      },
-                      callback: () => {
-                        message.success('操作成功');
-                        getTableList();
-                      },
-                    });
-                  },
-                });
-              },
+            // unRender: record.statusCode !== 'D001_2',
+            handler: () => {
+              Modal.confirm({
+                title: '请确认是否审核?',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                  dispatch({
+                    type: 'stakeholderInfoManager/updateChecked',
+                    payload: {
+                      ids: [record.id],
+                      flag: 0,
+                    },
+                    callback: () => {
+                      message.success('操作成功');
+                      getTableList();
+                    },
+                  });
+                },
+              });
             },
-            {
-              label: '删除',
-              code: 'delete',
-              config: {
-                disabled: record.statusCode === 'D001_2',
-                // loading: !!deleteLoading,
-              },
-              // unRender: record.statusCode !== 'D001_2',
-              handler: () => {
-                Modal.confirm({
-                  title: '请确认是否删除?',
-                  okText: '确认',
-                  cancelText: '取消',
-                  onOk: () => {
-                    dispatch({
-                      type: 'stakeholderInfoManager/deleteByIds',
-                      payload: {
-                        ids: [record.id],
-                        stakeProduceIds: [record.stakeProduceId],
-                      },
-                      callback: () => {
-                        message.success('删除成功');
-                        getTableList();
-                      },
-                    });
-                  },
-                });
-              },
+          },
+          {
+            label: '反审核',
+            code: 'audit',
+            config: {
+              disabled: record.statusCode === 'D001_1',
+              // loading: !!reviewLoading,
             },
-          ];
-          const pageConfigParam = `?id=${record.id}&proCode=${record.proCode}`;
-          return (
-            <EnrichEditButton
-              buttonList={buttonList}
-              pageConfig={pageConfig}
-              record={record}
-              pageConfigParam={pageConfigParam}
-              pageName="stakeholderInfoManager"
-            />
-          );
-        },
+            // unRender: record.statusCode !== 'D001_1',
+            handler: () => {
+              Modal.confirm({
+                title: '请确认是否反审核?',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                  dispatch({
+                    type: 'stakeholderInfoManager/updateChecked',
+                    payload: {
+                      ids: [record.id],
+                      flag: 3,
+                    },
+                    callback: () => {
+                      message.success('操作成功');
+                      getTableList();
+                    },
+                  });
+                },
+              });
+            },
+          },
+          {
+            label: '删除',
+            code: 'delete',
+            config: {
+              disabled: record.statusCode === 'D001_2',
+              // loading: !!deleteLoading,
+            },
+            // unRender: record.statusCode !== 'D001_2',
+            handler: () => {
+              Modal.confirm({
+                title: '请确认是否删除?',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: () => {
+                  dispatch({
+                    type: 'stakeholderInfoManager/deleteByIds',
+                    payload: {
+                      ids: [record.id],
+                      stakeProduceIds: [record.stakeProduceId],
+                    },
+                    callback: () => {
+                      message.success('删除成功');
+                      getTableList();
+                    },
+                  });
+                },
+              });
+            },
+          },
+        ];
+        const pageConfigParam = `?id=${record.id}&proCode=${record.proCode}`;
+        return (
+          <EnrichEditButton
+            buttonList={buttonList}
+            pageConfig={pageConfig}
+            record={record}
+            pageConfigParam={pageConfigParam}
+            pageName="stakeholderInfoManager"
+          />
+        );
       },
-    ],
-  );
+    },
+  ]);
 
-  const [searchNameList, setSearchNameList] = useState([]);// 高级搜索-姓名下拉数据
+  // 表格的表头
+
+  // /**
+  //  * 类别切换的时候
+  //  * @param {*} code
+  //  */
+  // const handlerCategoryChange = code => {
+  //   dispatch({
+  //     type: 'stakeholderInfoManager/getStakeholdersTypeList',
+  //     payload: {
+  //       flag: code,
+  //     },
+  //   });
+  // };
 
   // 页面按钮跳转配置
   const pageConfig = {
     pathName: 'stakeholderInfoManager',
     dispatch,
   };
+
   /**
    * @description 获取表格数据
    */
@@ -385,6 +406,7 @@ const Index = props => {
       },
     });
   };
+
   /**
    * @description 合并更新 封装后的setState
    * @params {object} newVal 新的对象
@@ -392,6 +414,7 @@ const Index = props => {
   const assign = newVal => {
     setState({ ...state, ...newVal });
   };
+
   // 搜索的区域的配置
   const formItemData = [
     {
@@ -399,7 +422,7 @@ const Index = props => {
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: productEnum,
     },
     // {
@@ -414,7 +437,7 @@ const Index = props => {
         { name: '内部干系人', code: 0 },
         { name: '外部干系人', code: 1 },
       ],
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       // config: {
       //   onChange: handlerCategoryChange,
       // },
@@ -423,14 +446,14 @@ const Index = props => {
       name: 'stakeholderType',
       label: '干系人类型',
       type: 'select',
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: stakeholdersTypeList,
     },
     {
       name: 'agencyName',
       label: '机构名称',
       type: 'select',
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: orgNameList,
       readSet: { name: 'orgName', code: 'id' },
     },
@@ -438,8 +461,8 @@ const Index = props => {
       name: 'name',
       label: '姓名',
       type: 'select',
-      config: { mode: 'multiple' },
-      option: searchNameList,// 修复BUG[ID1006439]干系人信息管理-查询条件按照姓名查询，无查询结果(原因在于姓名下拉选择给的数据不对，需换个接口)
+      config: { mode: 'multiple', maxTagCount: 1 },
+      option: searchNameList,
       readSet: { name: 'name', code: 'id' },
     },
   ];
@@ -455,11 +478,8 @@ const Index = props => {
     dispatch({
       type: 'stakeholderInfoManager/getOrgNameList',
     });
-    // 获取姓名下拉数据
     dispatch({
       type: 'stakeholderInfoManager/getSearchNameList',
-    }).then(res => {
-      setSearchNameList(res);
     });
     dispatch({
       type: 'stakeholderInfoManager/getProductEnumList',
@@ -713,9 +733,9 @@ const Index = props => {
                 current: state.pageNum,
               })}
               onChange={tableChange}
-              rowKey={uuid()}// 后台返回数据有重复的，故不用id做标识
+              rowKey={record => record.id}
               loading={props.tableLoading}
-              scroll={{ x: true }}
+              scroll={{ x: columns.length * 200 + 50 }}
             />
             <EnrichEditButton
               moreBtnStyle={{
@@ -748,6 +768,7 @@ const data = state => {
       tableList,
       stakeholdersTypeList,
       orgNameList,
+      searchNameList,
       productEnum,
     },
     dispatch,
@@ -758,6 +779,7 @@ const data = state => {
     stakeholdersTypeList,
     orgNameList,
     productEnum,
+    searchNameList,
     tableLoading: loading.effects['stakeholderInfoManager/getTableList'],
     reviewLoading: loading.effects['stakeholderInfoManager/updateChecked'],
     deleteLoading: loading.effects['stakeholderInfoManager/deleteByIds'],

@@ -1,0 +1,46 @@
+@import '~antd/es/style/themes/default.less';
+
+.container {
+    background-color: #ffffff;
+    padding: 0 20px;
+    &:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+}
+.header {
+  float: left;
+  height: 48px;
+  position: relative;
+  line-height: 48px;
+  font-size: 16px;
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 17px;
+    width: 3px;
+    height: 16px;
+    background-color: rgb(36, 80, 165);
+  }
+ & > span {
+    position: relative;
+    padding-left: 14px;
+    color: #242633;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.content {
+
+}
+
+.fold{
+  color: #2d77ee;
+  font-size: 12px;
+  margin-left: 20px;
+  cursor: pointer;
+}

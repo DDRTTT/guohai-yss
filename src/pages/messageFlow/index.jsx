@@ -73,11 +73,11 @@ class Agent extends React.Component {
       searchFormData: {},
       columns: [
         {
-          title: '产品简称',
-          dataIndex: 'proFname',
+          title: '产品全称',
+          dataIndex: 'proName',
           sorter: true,
-          width: 220,
-          key: 'proFname',
+          width: 400,
+          key: 'proName',
           ellipsis: {
             showTitle: false,
           },
@@ -87,8 +87,8 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
@@ -97,7 +97,7 @@ class Agent extends React.Component {
           title: '产品代码',
           dataIndex: 'proCode',
           sorter: true,
-          width: 150,
+          width: 200,
           key: 'proCode',
           ellipsis: {
             showTitle: false,
@@ -108,17 +108,59 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
         },
+        // {
+        //   title: '产品类型',
+        //   dataIndex: 'proTypeName',
+        //   sorter: true,
+        //   width: 150,
+        //   key: 'proTypeName',
+        //   ellipsis: {
+        //     showTitle: false,
+        //   },
+        //   render: text => {
+        //     return (
+        //       <Tooltip title={text}>
+        //         {text
+        //           ? text.toString().replace(/null/g, '-')
+        //           : text === '' || text === undefined
+        //           ? '-'
+        //           : 0}
+        //       </Tooltip>
+        //     );
+        //   },
+        // },
+        // {
+        //   title: '投资经理',
+        //   dataIndex: 'investManagerNames',
+        //   sorter: true,
+        //   width: 120,
+        //   key: 'investManagerNames',
+        //   ellipsis: {
+        //     showTitle: false,
+        //   },
+        //   render: text => {
+        //     return (
+        //       <Tooltip title={text}>
+        //         {text
+        //           ? text.toString().replace(/null/g, '-')
+        //           : text === '' || text === undefined
+        //           ? '-'
+        //           : 0}
+        //       </Tooltip>
+        //     );
+        //   },
+        // },
         {
           title: '信披事项',
           dataIndex: 'infoPublishItemName',
           sorter: true,
-          width: 180,
+          width: 120,
           key: 'infoPublishItemName',
           ellipsis: {
             showTitle: false,
@@ -129,8 +171,8 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
@@ -139,7 +181,7 @@ class Agent extends React.Component {
           title: '预计披露日期',
           dataIndex: 'predictPublishDate',
           sorter: true,
-          width: 150,
+          width: 120,
           key: 'predictPublishDate',
           ellipsis: {
             showTitle: false,
@@ -150,8 +192,8 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
@@ -171,8 +213,8 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
@@ -181,7 +223,7 @@ class Agent extends React.Component {
           title: '任务到达时间',
           dataIndex: 'taskTime',
           sorter: true,
-          width: 200,
+          width: 180,
           key: 'taskTime',
           ellipsis: {
             showTitle: false,
@@ -192,11 +234,15 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
+          // className:
+          //   taskTypeCode === 'T001_3' || taskTypeCode === 'T001_5'
+          //     ? styles.notshow
+          //     : '',
         },
         {
           title: '状态',
@@ -213,8 +259,8 @@ class Agent extends React.Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </Tooltip>
             );
           },
@@ -224,7 +270,6 @@ class Agent extends React.Component {
           fixed: 'right',
           key: 'action',
           dataIndex: 'action',
-          align: 'center',
           render: (text, record) => {
             const { taskTypeCode } = this.state;
             return (
@@ -234,15 +279,15 @@ class Agent extends React.Component {
                     style={{
                       display:
                         (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                          record.statusName === '待提交'
+                        record.statusName === '待提交'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'edit');
                     }}
                     type="link"
-                    size="small"
                   >
                     修改
                   </Button>
@@ -252,16 +297,16 @@ class Agent extends React.Component {
                     style={{
                       display:
                         (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                          record.statusName === '待提交' &&
-                          record.fullFlag !== '1'
+                        record.statusName === '待提交' &&
+                        record.fullFlag !== '1'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'copy');
                     }}
                     type="link"
-                    size="small"
                   >
                     复制
                   </Button>
@@ -271,15 +316,15 @@ class Agent extends React.Component {
                     style={{
                       display:
                         (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                          record.statusName === '待提交'
+                        record.statusName === '待提交'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'submit');
                     }}
                     type="link"
-                    size="small"
                   >
                     提交
                   </Button>
@@ -288,12 +333,12 @@ class Agent extends React.Component {
                   <Button
                     style={{
                       display: record.statusName === '待提交' ? 'inline-block' : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'delete');
                     }}
                     type="link"
-                    size="small"
                   >
                     删除
                   </Button>
@@ -303,15 +348,15 @@ class Agent extends React.Component {
                     style={{
                       display:
                         (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                          record.statusName === '流程中'
+                        record.statusName === '流程中'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'handle');
                     }}
                     type="link"
-                    size="small"
                   >
                     办理
                   </Button>
@@ -322,16 +367,16 @@ class Agent extends React.Component {
                       display:
                         ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                           record.statusName === '已结束') ||
-                          taskTypeCode === 'T001_3' ||
-                          taskTypeCode === 'T001_5'
+                        taskTypeCode === 'T001_3' ||
+                        taskTypeCode === 'T001_5'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'view');
                     }}
                     type="link"
-                    size="small"
                   >
                     详情
                   </Button>
@@ -342,16 +387,16 @@ class Agent extends React.Component {
                       display:
                         ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                           record.statusName !== '待提交') ||
-                          taskTypeCode === 'T001_3' ||
-                          taskTypeCode === 'T001_5'
+                        taskTypeCode === 'T001_3' ||
+                        taskTypeCode === 'T001_5'
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'history');
                     }}
                     type="link"
-                    size="small"
                   >
                     流转历史
                   </Button>
@@ -363,12 +408,12 @@ class Agent extends React.Component {
                         record.statusName === '流程中' && record.revoke == 1
                           ? 'inline-block'
                           : 'none',
+                      marginRight: 10,
                     }}
                     onClick={() => {
                       this.groupOperate(record, 'cancel');
                     }}
                     type="link"
-                    size="small"
                   >
                     撤销
                   </Button>
@@ -376,22 +421,21 @@ class Agent extends React.Component {
 
                 {/* <Dropdown overlay={this.HandleGetMenu(val, record)} trigger={['click']}> */}
                 {/* <Action code="messageFlow:more"> */}
-                <Button
+                <a
                   className="ant-dropdown-link"
                   style={{
                     display:
                       (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '流程中'
+                      record.statusName === '流程中'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
-                  type="link"
-                  size="small"
-                // onClick={this.groupOperate(record, 'more')}
+                  // onClick={this.groupOperate(record, 'more')}
                 >
                   {/* 更多 */}
-                  <MoreOperation record={record} fn={this.getTableList} isHideSkip={true} />
-                </Button>
+                  <MoreOperation record={record} fn={this.getTableList} />
+                </a>
                 {/* </Action> */}
                 {/* </Dropdown> */}
               </span>
@@ -494,8 +538,8 @@ class Agent extends React.Component {
           ? formItems.predictPublishDate[0].format('YYYY-MM-DD')
           : '';
       formItems.predictPublishDateEnd =
-        formItems.predictPublishDate && formItems.predictPublishDate.length
-          ? formItems.predictPublishDate[1].format('YYYY-MM-DD')
+        formItems.predictPublishDateEnd && formItems.predictPublishDateEnd.length
+          ? formItems.predictPublishDateEnd[1].format('YYYY-MM-DD')
           : '';
       delete formItems.predictPublishDate;
     }
@@ -542,9 +586,9 @@ class Agent extends React.Component {
    */
   handleBlurSearch = val => {
     const { pageNum, pageSize, taskTypeCode } = this.state;
-    this.setState({ keyWords: val, pageNum: 1 });
+    this.setState({ keyWords: val });
     const params = {
-      pageNum: 1,
+      pageNum,
       pageSize,
       taskTypeCode,
       keyWords: val,
@@ -724,6 +768,7 @@ class Agent extends React.Component {
         }
       });
   };
+
   /**
    * 批量处理接口调用成功以后的回调
    */
@@ -814,8 +859,6 @@ class Agent extends React.Component {
       mode: 'deal',
       id: record.id,
       proCode: record.proCode,
-      processDefinitionKey: 'h31ab659dc914eb08b3df3620785ecc6',// 添加流程key，为了在用印登记的时候，过滤审批人（卢凯）使用
-      infoPublishItem: record.infoPublishItem, // 添加infoPublishItem（信披事项），当信披事项为投资经理变更时，审批人是陈嘉斌；其他的信披事项，仍需要卢凯审批，陈没有权限
     };
     if (mark === 'copy') {
       this.props.fnLink('messageFlow:copy', `?processInstId=${record.processInstanceId}`);
@@ -935,6 +978,7 @@ class Agent extends React.Component {
         disabled: record.disabled,
       }),
     };
+
     const {
       messageFlow: { opts, productDropList, productTypeList, investmentManagerList },
     } = this.props;
@@ -945,7 +989,7 @@ class Agent extends React.Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       // {
@@ -953,7 +997,7 @@ class Agent extends React.Component {
       //   label: '产品类型',
       //   type: 'select',
       //   readSet: { name: 'label', code: 'value' },
-      //   config: { mode: 'tags' },
+      //   config: { mode: 'multiple', maxTagCount: 1 },
       //   option: productTypeList,
       // },
       // {
@@ -961,7 +1005,7 @@ class Agent extends React.Component {
       //   label: '投资经理',
       //   type: 'select',
       //   readSet: { name: 'name', code: 'empNo' },
-      //   config: { mode: 'tags' },
+      //   config: { mode: 'multiple', maxTagCount: 1 },
       //   option: investmentManagerList,
       // },
       {
@@ -969,7 +1013,7 @@ class Agent extends React.Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: opts.S001,
       },
       {
@@ -977,7 +1021,7 @@ class Agent extends React.Component {
         label: '信披事项',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: opts.X011,
       },
       {
@@ -990,7 +1034,7 @@ class Agent extends React.Component {
         label: '披露对象',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: opts.X012,
       },
     ];
@@ -1034,12 +1078,12 @@ class Agent extends React.Component {
                   taskTypeCode === 'T001_3' || taskTypeCode === 'T001_5' ? null : rowSelection
                 }
                 columns={columns}
-                dataSource={tableList?.rows}
+                dataSource={tableList.rows}
                 onChange={this.handleTableChange}
-                scroll={{ x: true }}
+                scroll={{ x: columns.length * 180 }}
                 loading={this.props.loading}
               />
-              {tableList?.rows && tableList?.rows?.length !== 0 && (
+              {tableList.rows && tableList.rows.length !== 0 && (
                 <Row style={{ paddingTop: 20 }}>
                   <MoreOperation
                     batchStyles={{ position: 'relative' }}
@@ -1050,21 +1094,20 @@ class Agent extends React.Component {
                     fn={this.getTableList}
                     type="batch"
                     batchList={batchList}
-                    isHideSkip={true}
                     submitCallback={this.handlerBatchSubmit}
                     successCallback={this.handlerSuccessCallback}
                   />
                   <Pagination
                     style={{ float: 'right' }}
                     showSizeChanger
-                    showQuickJumper={tableList?.total > pageSize}
+                    showQuickJumper={tableList.total > pageSize}
                     pageSizeOptions={['10', '20', '30', '40']}
                     current={pageNum}
                     pageSize={pageSize}
-                    total={tableList?.total}
+                    total={tableList.total}
                     onShowSizeChange={this.sizeChange}
                     onChange={this.sizeChange}
-                    showTotal={() => `共 ${tableList?.total} 条数据`}
+                    showTotal={() => `共 ${tableList.total} 条数据`}
                   />
                 </Row>
               )}

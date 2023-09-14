@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { SetPanelLayout } from './strategyComponent';
 import { cloneDeep } from 'lodash';
 import CustomFormItem from '@/components/AdvancSearch/CustomFormItem';
+
 const setPanelStyles = require('./setPanel.less');
 const { confirm } = Modal;
 
@@ -156,6 +157,7 @@ class calendarSetPanel extends React.Component {
       },
     },
   ];
+
   /**
    * 新增日历策略
    */
@@ -197,6 +199,7 @@ class calendarSetPanel extends React.Component {
       });
     });
   };
+
   render() {
     const { calendarSetList, currentTitle, form, codeList, calendarSetListLoading } = this.props;
     const { modalVisible, modalTitle, initData } = this.state;
@@ -296,6 +299,7 @@ class calendarSetPanel extends React.Component {
     );
   }
 }
+
 const Index = state => {
   const {
     dispatch,

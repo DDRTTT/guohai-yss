@@ -142,6 +142,10 @@ const model = {
     // 保存修改密码
     *PasswordFun({ payload }, { call, put }) {
       const response = yield call(revisePassword, payload);
+      if (response.status == 500) {
+        message.error(`请按规则修改密码（${response.message}）`);
+        return;
+      }
       if (response.data.status === '200') {
         message.success('保存成功');
         message.success('即将跳转到登录页面');

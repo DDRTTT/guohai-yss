@@ -25,11 +25,6 @@ export const getTableAPI = data => {
   );
 };
 
-// 审核/反审核
-export const auditAPI = data => {
-  return request.post(`${flow}/baseAccount/review/idList`, { data });
-};
-
 // 导出
 export const handleExportAPI = data => {
   return request(`${flow}/baseAccount/export/accountList`, {

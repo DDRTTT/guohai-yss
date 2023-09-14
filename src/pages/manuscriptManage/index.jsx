@@ -12,12 +12,11 @@ import {
   Row,
   Radio,
   Select,
-  Table,
   DatePicker,
   Layout,
   Breadcrumb,
-  Tooltip,
 } from 'antd';
+import { Table } from '@/components';
 import { routerRedux } from 'dva/router';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import { handleTableCss } from '@/pages/manuscriptBasic/func.js';
@@ -292,12 +291,9 @@ const Index = ({
       key: 'proCodeName',
       sorter: true,
       width: 200,
-      ellipsis: true,
-      render: text => (
-        <Tooltip title={text}>
-          <span>{text}</span>
-        </Tooltip>
-      ),
+      render: text => {
+        return handleTableCss(text);
+      },
     },
     {
       title: mode === 'project' ? '项目编码' : '系列编码',

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import {
+  Table,
   Form,
   Select,
   Button,
@@ -15,8 +16,6 @@ import {
   message
 } from 'antd';
 import Action from '@/utils/hocUtil';
-import { Table} from '@/components';
-import List from '@/components/List';
 
 class TemplateClauseManageCheck extends Component {
 
@@ -75,17 +74,20 @@ class TemplateClauseManageCheck extends Component {
     this.setState({startTime, endTime})
   };
 
-  handleSearch = formData =>{
-    const {time, fname, flabelName} = formData || {}
-    const startTime = time && time[0] ? time[0].format('YYYY-MM-DD') : '';
-    const endTime = time && time[1] ? time[1].format('YYYY-MM-DD') : '';
-    this.setState({isSearch: true,startTime,endTime});
-    const {id, limit, page} = this.state;
-    const searchValues = {startTime, endTime,fname, flabelName};
-    const data = {id, ...searchValues};
-    this.setState({searchValues});
-    this.getTableList(page, limit, data);
-  }
+  handleSearch = (e) => {
+    const { form: { validateFields } } = this.props;
+    this.setState({isSearch: true});
+    e.preventDefault();
+    validateFields( (err, values) => {
+      if(!err){
+        const {id, limit, page, startTime, endTime} = this.state;
+        const searchValues = {startTime, endTime, ...values};
+        const data = {id, ...searchValues};
+        this.setState({searchValues});
+        this.getTableList(page, limit, data);
+      }
+    })
+  };
 
   // 获取表格数据
   getTableList = (page, pageSize, data) => {
@@ -181,57 +183,90 @@ class TemplateClauseManageCheck extends Component {
         sm: { span: 14 },
       },
     };
-  const formItemData = [
-    {
-      name: 'time',
-      label: '日期',
-      type: 'RangePicker',
-    },
-    {
-      name: 'fname',
-      label: '条款项',
-      type: 'input',
-    },
-    {
-      name: 'flabelName',
-      label: '文档标签',
-      type: 'select',
-      readSet: { name: 'name', code: 'name' },
-      option: labelList,
-    },
-  ];
+
     return (
       <>
-        <List 
-          title={false}
-          formItemData={formItemData}
-          advancSearch={this.handleSearch}
-          searchInputWidth="300"
-          resetFn={() => {
-            proCodeList.current = [];
-            accountName.current = '';
-            handleGetTableDataAPI(params);
-          }}
-          fuzzySearchBool={false}
-          tableList={(
-            <Table
-              rowKey="id"
-              dataSource={dataSource2}
-              columns={columns}
-              scroll={{x: 1000}}
-              pagination={{
-                onChange: this.changePage,
-                onShowSizeChange: this.changePageSize,
-                total: total2,
-                pageSize: limit,
-                current: page,
-                showTotal: this.showTotal,
-                showSizeChanger: true,
-                showQuickJumper: true
-              }}
-            />
-          )}
-        />
+        <Card bordered={false}>
+          <Row>
+            <Col md={20} sm={20}>
+              <Breadcrumb>
+                <Breadcrumb.Item>
+                  <span>智能撰写</span>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>
+                {/* 路径保留 electronic！ 不是electronicRecord!! */}
+                  <Link to={`/electronic/templateClauseManage`}>
+                    模板要素配置
+                  </Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>
+                  <span>查看</span>
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </Col>
+          </Row>
+        </Card>
+        <Card style={{marginTop: '10px'}}>
+          <Form {...formItemLayout} style={{marginBottom: '-16px'}}>
+            <Row type="flex" justify="space-between">
+              <Col span={8}>
+                <Form.Item label="日期">
+                  <RangePicker format={dateFormat} onChange={this.getRangeDate}/>
+                </Form.Item>
+              </Col>
+              <Col span={7}>
+                <Form.Item label="条款项">
+                  {getFieldDecorator('fname')(
+                    <Input />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={7}>
+                <Form.Item label="文档标签">
+                {/* flabelName不要修改！！ */}
+                  {getFieldDecorator('flabelName')(
+                    <Select onChange={this.selectLabel} allowClear>
+                      {
+                        labelList.map(item => {// value={item.name}不要修改！！
+                          return (
+                            <Select.Option value={item.name} key={item.code}>
+                              {item.name}
+                            </Select.Option>
+                          )
+                        })
+                      }
+                    </Select>,
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={2} style={{textAlign: 'right'}}>
+                <Form.Item>
+                  <Action code="templateClauseManage:query">
+                    <Button type="primary" onClick={this.handleSearch}>
+                      查询
+                    </Button>
+                  </Action>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <Table
+            rowKey="id"
+            dataSource={dataSource2}
+            columns={columns}
+            scroll={{x: 1000}}
+            pagination={{
+              onChange: this.changePage,
+              onShowSizeChange: this.changePageSize,
+              total: total2,
+              pageSize: limit,
+              current: page,
+              showTotal: this.showTotal,
+              showSizeChanger: true,
+              showQuickJumper: true
+            }}
+          />
+        </Card>
       </>
     );
   }

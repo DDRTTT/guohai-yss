@@ -9,30 +9,7 @@ import {
   submitWpDictDeliverOosApi,
   submitWpFileUploadWithoutDictApi,
   getProcodeInfoAPI,
-  getWpDictDeliverPreviewApi,
-  getWpFileUploadPreviewApi,
-  getWpDictDeliverOosPreviewApi,
-  getWpFileUploadWithoutDictPreviewApi,
 } from '@/services/manuscriptManagement';
-import { cloneDeep } from 'lodash';
-
-function handleNewTreeData(data) {
-  const dfs = function(arr, parentId = '') {
-    for (let i = 0; i < arr.length; i++) {
-      const id = parentId ? `${parentId}-${i}` : `${i}`;
-      arr[i].key = id;
-      arr[i].value = id;
-      arr[i].title = arr[i].name;
-      arr[i].children = arr[i].child;
-      delete arr[i].child;
-      if (arr[i].children) {
-        dfs(arr[i].children, id);
-      }
-    }
-  };
-  dfs(data, '');
-  return data;
-}
 
 const model = {
   namespace: 'manuscriptManagement',
@@ -44,13 +21,6 @@ const model = {
     proCode: [], // 项目编码
     awpProType: [], // 项目类型字典
     proDept: [], // 所属部门
-    previewInfo: {
-      param: {
-        apiParam: {},
-      },
-      wpDict: [],
-      pathMap: [],
-    },
   },
   effects: {
     // 查询项目基本信息列表API
@@ -98,7 +68,7 @@ const model = {
     // 获取项目系列编码
     *getProcodeInfoReq({ payload }, { put, call }) {
       const res = yield call(getProcodeInfoAPI, payload);
-      if (res?.status === 200) {
+      if (res && res.status === 200) {
         yield put({
           type: 'updateProcodeInfo',
           payload: {
@@ -110,52 +80,46 @@ const model = {
       }
     },
     // 目录报送
-    *submitWpDictDeliverReq({ payload }, { call }) {
-      return yield call(submitWpDictDeliverApi, payload);
+    *submitWpDictDeliverReq({ payload, callback }, { put, call }) {
+      const res = yield call(submitWpDictDeliverApi, payload);
+      if (res && res.status === 200) {
+        callback && callback(res);
+      } else {
+        message.error(res.message);
+      }
     },
     // 人员报送
-    *submitWpItemUpdateReq({ payload }, { call }) {
-      return yield call(submitWpItemUpdateApi, payload);
+    *submitWpItemUpdateReq({ payload, callback }, { put, call }) {
+      const res = yield call(submitWpItemUpdateApi, payload);
+      if (res && res.status === 200) {
+        callback && callback(res);
+      } else {
+        message.error(res.message);
+      }
     },
     // 文件报送提交文件
-    *submitFileReq({ payload }, { call }) {
-      return yield call(submitFileApi, payload);
+    *submitFileReq({ payload, callback }, { call, put }) {
+      const res = yield call(submitFileApi, payload);
+      if (res && res.status === 200) {
+        callback && callback(res);
+      } else {
+        message.error(res.message);
+      }
     },
     // 底稿范围外项目报送
-    *submitWpDictDeliverOosReq({ payload }, { call }) {
-      return yield call(submitWpDictDeliverOosApi, payload);
+    *submitWpDictDeliverOosReq({ payload, callback }, { call, put }) {
+      const res = yield call(submitWpDictDeliverOosApi, payload);
+      if (res && res.status === 200) {
+        callback && callback(res);
+      } else {
+        message.error(res.message);
+      }
     },
     // 底稿范围外文件报送
-    *submitWpFileUploadWithoutDictReq({ payload }, { call }) {
-      return yield call(submitWpFileUploadWithoutDictApi, payload);
-    },
-
-    // 0：项目报送、1：文件报送、2：底稿范围外项目报送、3：底稿范围外文件报送
-    *getReportPreviewReq({ payload }, { call, put }) {
-      const map = {
-        0: getWpDictDeliverPreviewApi,
-        1: getWpFileUploadPreviewApi,
-        2: getWpDictDeliverOosPreviewApi,
-        3: getWpFileUploadWithoutDictPreviewApi,
-      };
-      const params = {
-        proCode: payload.proCode,
-        projectState: payload.projectState,
-      };
-      const res = yield call(map[payload.reportTypeKey], params);
-      if (res?.status === 200) {
-        if (res.data.wpDict && res.data.wpDict.length) {
-          res.data.wpDict = handleNewTreeData(cloneDeep(res.data.wpDict));
-        }
-        if (res.data.pathMap && res.data.pathMap.length) {
-          res.data.pathMap = handleNewTreeData(cloneDeep(res.data.pathMap));
-        }
-        yield put({
-          type: 'updatePreviewInfo',
-          payload: {
-            previewInfo: res.data || {},
-          },
-        });
+    *submitWpFileUploadWithoutDictReq({ payload, callback }, { call, put }) {
+      const res = yield call(submitWpFileUploadWithoutDictApi, payload);
+      if (res && res.status === 200) {
+        callback && callback(res);
       } else {
         message.error(res.message);
       }
@@ -190,13 +154,6 @@ const model = {
       return {
         ...state,
         proCode: payload.data,
-      };
-    },
-
-    updatePreviewInfo(state, { payload }) {
-      return {
-        ...state,
-        previewInfo: payload.previewInfo,
       };
     },
   },

@@ -390,90 +390,75 @@ class SalesOrgManagement extends Component {
         render: (_, record) => {
           return (
             <span>
-              <Button type="link" size="small" onClick={() => this.detailInfo(record)}>
+              <a onClick={() => this.detailInfo(record)} className={styles.rightBtn}>
                 查看
-              </Button>
+              </a>
               {record.checked === 'D001_1' ? (
                 <Action code="salesOrgManagement:update">
-                  <Button
-                    type="link"
-                    size="small"
+                  <a
                     onClick={() => {
                       this.updateInfo(record);
                     }}
+                    className={styles.rightBtn}
                   >
                     修改
-                  </Button>
+                  </a>
                 </Action>
               ) : (
-                <Button disabled type="link" size="small">
-                  修改
-                </Button>
+                <a className={styles.disabledBtn}>修改</a>
               )}
               {record.checked === 'D001_1' ? (
                 <Action code="salesOrgManagement:examine">
-                  <Button
-                    type="link"
-                    size="small"
+                  <a
                     onClick={() => {
                       this.examineInfo(record, '0');
                     }}
+                    className={styles.rightBtn}
                   >
                     审核
-                  </Button>
+                  </a>
                 </Action>
               ) : (
-                <Button disabled type="link" size="small">
-                  审核
-                </Button>
+                <a className={styles.disabledBtn}>审核</a>
               )}
               {record.checked === 'D001_2' ? (
                 <Action code="salesOrgManagement:examine">
-                  <Button
-                    type="link"
-                    size="small"
+                  <a
                     onClick={() => {
                       this.examineInfo(record, '1');
                     }}
+                    className={styles.rightBtn}
                   >
                     反审核
-                  </Button>
+                  </a>
                 </Action>
               ) : (
-                <Button disabled type="link" size="small">
-                  反审核
-                </Button>
+                <a className={styles.disabledBtn}>反审核</a>
               )}
               {record.checked === 'D001_1' ? (
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   onClick={() => {
                     this.delInfo(record);
                   }}
+                  className={styles.rightBtn}
                 >
                   删除
-                </Button>
+                </a>
               ) : (
-                <Button disabled type="link" size="small">
-                  删除
-                </Button>
+                <a className={styles.disabledBtn}>删除</a>
               )}
               {(record.sellerType === 'X010' && record.checked === 'D001_1') ||
               record.sellerType === 'X002' ? (
-                <Button disabled type="link" size="small">
-                  新增协议
-                </Button>
+                <a className={styles.disabledBtn}>新增协议</a>
               ) : (
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   onClick={() => {
                     this.addInfo(record);
                   }}
+                  className={styles.rightBtn}
                 >
                   新增协议
-                </Button>
+                </a>
               )}
             </span>
           );
@@ -504,10 +489,6 @@ class SalesOrgManagement extends Component {
       },
     });
   }
-
-  callBackHandler = value => {
-    this.setState({ columns: value });
-  };
 
   render() {
     const {
@@ -614,26 +595,18 @@ class SalesOrgManagement extends Component {
         label: '销售商类型',
         type: 'select',
         option: sellerList,
-        config: { mode: 'multiple' },
-        readSet: { name: 'name', code: 'code' },
       },
       {
         name: 'channelTypeList',
         label: '渠道类型',
         type: 'select',
         option: c,
-        config: { mode: 'multiple' },
-        readSet: { name: 'name', code: 'code' },
       },
     ];
 
     return (
       <>
-        <List
-          pageCode="salesOrgManagement"
-          dynamicHeaderCallback={this.callBackHandler}
-          columns={columns}
-          taskTypeCode={null}
+        <List 
           title="销售机构管理"
           formItemData={formItemData}
           advancSearch={formData => {
@@ -641,7 +614,7 @@ class SalesOrgManagement extends Component {
             this.searchBtn(formData);
           }}
           resetFn={() => {
-            this.setState({ formData: {}, oField: '', direct: '', keyWords: '' });
+            this.setState({ formData:{}, oField:"", direct: "", keyWords: '' });
             this.searchBtn();
           }}
           searchInputWidth="300"
@@ -650,32 +623,31 @@ class SalesOrgManagement extends Component {
           extra={
             <Action code="salesOrgManagement:add">
               <div style={{ textAlign: 'right' }}>
-                <div className={styles.addBtn} onClick={this.openPage}>
-                  新增
-                </div>
+                <Button type="primary" onClick={this.openPage}>新增</Button>
               </div>
             </Action>
           }
           tableList={
             <>
-              {baseTable()}
-              <Modal
-                title="审核"
-                width={540}
-                visible={isShowModal}
-                onCancel={() => {
-                  this.setState({ isShowModal: false });
-                }}
-              >
-                <>
-                  <Row>
-                    <Col offset={10} span={5}>
-                      审核后数据状态变为“已生效”，确定审核该信息吗？
-                    </Col>
-                  </Row>
-                </>
-              </Modal>
+            {baseTable()}
+            <Modal
+              title="审核"
+              width={540}
+              visible={isShowModal}
+              onCancel={() => {
+                this.setState({ isShowModal: false });
+              }}
+            >
+              <>
+                <Row>
+                  <Col offset={10} span={5}>
+                    审核后数据状态变为“已生效”，确定审核该信息吗？
+                  </Col>
+                </Row>
+              </>
+            </Modal>
             </>
+            
           }
         />
         {/* <CommonSearch

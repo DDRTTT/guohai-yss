@@ -1,0 +1,229 @@
+@import "~antd/lib/style/themes/default.less";
+@import "./../../../utils/utils.less";
+
+.public {
+  :global {
+    font-size: 14px;
+    .ant-card-head {
+      height: 50px;
+    }
+    .ant-card-head-title {
+      font-size: 14px;
+    }
+    .ant-card-wider-padding .ant-card-head {
+      padding: 0 20px;
+    }
+    .ant-card-extra {
+      padding: 11px 0;
+      button {
+        height: 28px;
+        width: 80px;
+      }
+    }
+    .ant-card-body {
+      padding: 0 10px;
+    }
+    .ant-input {
+      height: 30px;
+    }
+    .ant-col-md-2 {
+      right: -10%;
+    }
+    th {
+      background: #e2edff;
+    }
+    .ant-table-pagination.ant-pagination {
+      margin-right: 20px;
+    }
+  }
+  .addPublic {
+    padding: 30px 20px;
+    .addTitle {
+      font-size: 18px;
+      margin-bottom: 14px;
+      color: #000;
+    }
+    .addSubtitle {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+  .listPublic {
+    width: '100%';
+    margin-top: 20px;
+    padding: 30px 20px;
+    .publicImg {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+    }
+    .publicInfo {
+      float: left;
+      margin-left: 10px;
+      p:nth-child(1) {
+        font-size: 14px;
+        color: #333;
+      }
+      p:nth-child(2) {
+        font-size: 14px;
+        color: #999;
+      }
+    }
+    .btnGroup {
+      float: right;
+      margin-top: 12px;
+      button {
+        margin-right: 16px;
+        width: 86px;
+        height: 28px;
+      }
+    }
+  }
+  .page {
+    margin-top: 20px;
+    text-align: center;
+  }
+}
+
+//公众号操作
+.publicDo {
+  .orgBtn {
+    button {
+      width: 88px;
+      height: 28px;
+      background-color: #3384d5;
+      border-radius: 4px;
+      outline: none;
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+    }
+    button :hover {
+      background-color: #3384d5;
+    }
+  }
+}
+
+//公众号图片上传
+.uploadPublicImg {
+  button {
+    width: 88px;
+    height: 28px;
+    background-color: #3384d5;
+    border-radius: 4px;
+    outline: none;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+  }
+  .iconUser {
+    text-align: center;
+    height: 100px;
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50px;
+      border: 1px solid #c3c9d2;
+      background: rgba(0, 0, 0, 0.15);
+    }
+  }
+  .UploadBtn {
+    display: block;
+    div {
+      line-height: 16px;
+    }
+    :global {
+      .ant-upload-list, .ant-upload-list-item {
+        display: none;
+      }
+    }
+  }
+  .sliderCircle {
+    width: 220px;
+    min-width: 0;
+    :global {
+      .ant-slider-handle, .ant-tooltip-open {
+        min-width: 10px;
+      }
+    }
+  }
+  .cuttingBtn {
+    button {
+      margin-right: 10px;
+    }
+  }
+}
+
+//菜单管理
+.menuDo {
+  .menuTitle {
+    padding: 30px 20px;
+    .menuTips {
+      float: left;
+      p {
+        font-size: 14px;
+        line-height: 26px;
+        color: #333;
+        span {
+          color: red;
+        }
+      }
+    }
+    .menuBtn {
+      float: right;
+      margin-top: 30px;
+      button {
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+//弹出框底线样式
+.popLine {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+//用户列表
+.userList {
+  .addButton {
+    width: 80px;
+    height: 28px;
+    position: absolute;
+    right: 34px;
+    z-index: 10;
+  }
+}
+
+.modal1 {
+  .wechatImg {
+    float: left;
+    img {
+      margin-left: 50px;
+      width: 60px;
+      height: 60px;
+      background: #0ea6b3;
+    }
+  }
+  .basicInfo1 {
+    float: left;
+    margin-left: 14px;
+    .titleNname {
+      font-size: 20px;
+      color: #333;
+    }
+  }
+  .basicInfo2 {
+    //float: right;
+    margin-right: 50px;
+  }
+  p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+    span {
+      margin-right: 6px;
+    }
+  }
+}

@@ -1,8 +1,10 @@
-import { routerRedux } from 'dva/router';
-import { fnLink } from '@/utils/hocUtil';
-import { revoke } from '@/services/investorReview';
-import { message, Modal, Tooltip } from 'antd';
-import { handleShowTransferHistory } from '@/utils/transferHistory';
+import React, {useState} from 'react';
+import {routerRedux} from 'dva/router';
+import {ActionBool, fnLink} from '@/utils/hocUtil';
+import {revoke} from '@/services/investorReview';
+import {Button, Dropdown, Menu, message, Modal, Tag, Tooltip} from 'antd';
+import {handleShowTransferHistory} from '@/utils/transferHistory';
+import {download} from '@/utils/download';
 
 /**
  * @description 根据不同的状态获取不同的编辑按钮
@@ -165,6 +167,7 @@ export const handleEdit = (code, record, pageConfig, pageConfigParam) => {
             mode: 'deal',
             id: record.id,
             proCode: record.proCode,
+            processDefinitionKey: record.processDefinitionKey ? record.processDefinitionKey : '',
           },
         }),
       );
@@ -223,8 +226,9 @@ export const isNullObj = obj => {
  * @param {Array} arr column数组
  * @param {String} key 删除的key
  * @param {Object} obj 要添加的key
+ * @param indexID
  */
-export const hideColumn = (tabKey, conditions, arr, key, obj) => {
+export const hideColumn = (tabKey, conditions, arr, key, obj, indexID) => {
   // 已办理和我发起不显示任务到达时间
   const hideTaskTime = conditions;
   const index = arr.findIndex(item => item.dataIndex == key);
@@ -233,6 +237,27 @@ export const hideColumn = (tabKey, conditions, arr, key, obj) => {
   } else if (!~index && !hideTaskTime.includes(tabKey)) {
     arr.splice(arr.length - 1, 0, obj);
   }
+  //indeID=验资页面
+  if (indexID == 'g49d943f196f4001add6c3b1c2ea5e6b'){
+    let numBerr,val
+    if(tabKey=='T001_4'){
+      arr.forEach((v,i)=>{
+        if(v.dataIndex=="taskArriveTime"){numBerr=i}
+      })
+      numBerr?arr.splice(numBerr, 1):''
+    }else
+    if(tabKey=='T001_1'){
+      arr.forEach((v,i)=>{
+        if(v.dataIndex=="createTime"){numBerr=i}
+      })
+      numBerr?arr.splice(numBerr, 1):''
+    }else {
+      arr.forEach((v,i)=>{
+        if(v.title=="任务到达时间"){numBerr=i}
+      })
+      numBerr?arr.splice(numBerr, 1):''
+    }
+  }
 };
 
 /**
@@ -240,22 +265,23 @@ export const hideColumn = (tabKey, conditions, arr, key, obj) => {
  * @param tabkey
  * @param {Array} arr column数组
  * @param dataIndex
+ * @param indexID
  */
-export const hideTaskTime = (tabkey, arr, dataIndex) => {
+export const hideTaskTime = (tabkey, arr, dataIndex, indexID) => {
   hideColumn(tabkey, ['T001_3', 'T001_5'], arr, dataIndex, {
     key: dataIndex,
     dataIndex,
     title: '任务到达时间',
     ...tableRowConfig,
-  });
+  },indexID);
 };
 
 /**
  *  一个机智的boy写的一个机智的函数
  *  给表格加tooltip用的公用的方法
- * */
+ **/
 
-export const eutrapelia = label => {
+export const eutrapelia = (label, record) => {
   return (
     <Tooltip title={label} placement="topLeft">
       {label
@@ -277,8 +303,224 @@ export const tableRowWidth = 200;
  * 真他娘的是个人才
  */
 export const tableRowConfig = {
-  sorter: true,
+  sorter: false,
   ellipsis: true,
-  width: tableRowWidth,
-  render: eutrapelia,
+  width: 200,
+  render: (label, record) => {
+    return (
+      <Tooltip title={label} placement="topLeft">
+        {label
+          ? label.toString().replace(/null/g, '-')
+          : label === '' || label === undefined || label === null
+            ? '-'
+            : 0}
+      </Tooltip>
+    )
+  }
+}
+
+export const listcolor = {
+  sorter: false,
+  ellipsis: true,
+  width: 100,
+  align: 'center',
+  render: (label, record) => {
+    let color
+    if (label?.includes('已')) color = 'green';
+    if (label?.includes('未')) color = 'volcano';
+    if (label?.includes('是')||label==1) color = 'geekblue';
+    if (label?.includes('否')||label==0) color = 'volcano';
+    return (
+      label?.includes(',')?
+        (label?.split(',').map((v,i)=>
+            <Tooltip title={v} key={i} placement="topLeft" >
+              <Tag color={color||''} style={{margin:'2px'}}>
+                {v||'-'}
+              </Tag>
+            </Tooltip>
+        )):
+          label?
+            <Tooltip title={ label==1?'是':label==0?'否':label}  placement="topLeft">
+              <Tag color={color||''}>
+                { label==1?'是':
+                  label==0?'否':
+                    (label === '' || label === undefined || label === null)?'-':
+                      label}
+              </Tag>
+            </Tooltip>
+            :'-'
+    );
+  }
 };
+
+/**
+ * select下拉框
+ * 前台进行模糊匹配
+ * **/
+export const handleFilterOption = (input, option) => {
+  return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+
+/**
+ * 解决antd 3x版本 页码分页bug
+ * 分页页码快速跳转失焦input内容不清空
+ * 4x版本不存在此问题
+ * **/
+export const handleClearQuickJumperValue = () => {
+  setTimeout(() => {
+    const inputDom = document.querySelector('.ant-pagination-options-quick-jumper input');
+    if (inputDom) inputDom.value = '';
+  }, 400);
+};
+
+/**
+ * form表单提交时 格式化RangePicker格式日期
+ * data: form表单获取到值
+ * formatStr：后台所需的日期类型
+ * 默认年月日 形如：startTime:["2021-01-07", "2021-01-10"]
+ * **/
+export const rangPickerFormat = (data, formatStr = 'YYYY-MM-DD') => {
+  return data ? data.map(item => item.format(formatStr)) : [];
+};
+
+/**
+ * form表单提交时 格式化DatePicker格式日期
+ * data: form表单获取到值
+ * formatStr：后台所需的日期类型
+ * 默认年月日 形如：startTime:"2021-01-07"
+ * **/
+export const datePickerFormat = (data, formatStr = 'YYYY-MM-DD') => {
+  return data ? data.format(formatStr) : '';
+};
+
+/**
+ *去空格
+ * * */
+export const removeSpaces = (values) => {//
+  for (let i in values) {
+    if(typeof values[i]==="string"){
+      values[i] = values[i].replace(/\s/g, "")
+    }else if(values[i]==undefined){
+      values[i]=''
+    }
+  }
+}
+//升序降序
+export function directionFun(sorter){
+  let obj
+  if (sorter === 'ascend') {
+    obj='asc'// 升序
+  } else if (sorter === 'descend') {
+    obj='desc'// 降序
+  } else {
+    obj=''// 默认
+  }
+  return JSON.parse(JSON.stringify(obj));
+}
+//模板下载
+export function templateDownload(url,name){
+  const [loading,setLoading]=useState(false)
+  const handleExport = (value) => {
+    download(url, {
+      body:{},
+      name: name,
+      method: 'GET',
+    });
+    setLoading(true)
+    setTimeout(function () {
+      setLoading(false)
+    }, 3000)
+  };
+  return(<>
+    <Tooltip title={'下载模板'} placement="topLeft">
+      <Button icon="download" loading={loading} onClick={()=>{handleExport()}}/>
+    </Tooltip>
+
+  </>)
+}
+
+/**
+ * 获取当前url参数
+ */
+export const getUrlParam = () => {
+  const url = window.location.href
+  if (url){
+    const paramArr = url.slice(url.indexOf("?") + 1).split("&");
+    const params = {};
+    paramArr?.map((param) => {
+      const [key, val] = param.split("=");
+      params[key] = decodeURIComponent(val);
+    });
+    return params
+  }
+};
+/**
+ * 批量操作
+ * * @returns {*} config
+ * @param selectedRows {Array}
+ * @param DeleteFun {删除}
+ * @param checking {审批}
+ * @param antiChecking {反审核}
+ */
+export function BatchOperation(props){
+  const {selectedRows,DeleteFun,checking,antiChecking,action}=props
+  return(
+    <div className='bottom-list'>
+      <Dropdown
+        placement="bottomRight"
+        disabled={selectedRows?.length<2||(!DeleteFun&&!checking&&!antiChecking)}
+        overlay={
+          !action?
+          <Menu>
+            {DeleteFun?
+              <Menu.Item key="2">
+                <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{DeleteFun(selectedRows)}}>
+                  批量删除
+                </Button>
+              </Menu.Item>:''
+            }
+            {checking? <Menu.Item key="3">
+              <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{checking(selectedRows)}}>
+                批量审核/审批
+              </Button>
+            </Menu.Item>:''
+            }
+            {antiChecking? <Menu.Item key="4">
+              <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{antiChecking(selectedRows)}}>
+                批量反审核/反审批
+              </Button>
+            </Menu.Item>:''
+            }
+          </Menu>:
+            <Menu>
+              {DeleteFun&&ActionBool(action.DeleteFun)?
+                <Menu.Item key="2">
+                  <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{DeleteFun(selectedRows)}}>
+                    批量删除
+                  </Button>
+                </Menu.Item>:''
+              }
+              {checking&&ActionBool(action.checking)? <Menu.Item key="3">
+                <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{checking(selectedRows)}}>
+                  批量审核/审批
+                </Button>
+              </Menu.Item>:''
+              }
+              {antiChecking&&ActionBool(action.antiChecking)? <Menu.Item key="4">
+                <Button size="small" type="link" style={{color:'#666',width:'100%'}} onClick={() =>{antiChecking(selectedRows)}}>
+                  批量反审核/反审批
+                </Button>
+              </Menu.Item>:''
+              }
+            </Menu>
+        }
+      >
+        <Button>批量操作 {selectedRows?.length?`已勾选${selectedRows?.length}个`:''}</Button>
+      </Dropdown>
+    </div>
+  )
+}
+
+
+
+

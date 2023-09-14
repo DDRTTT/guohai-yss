@@ -1,9 +1,10 @@
 /**
  * 产品看板-查看产品-产品数据-清盘信息
  */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Table, Button, Spin, Row, Col } from 'antd';
-import { connect, routerRedux } from 'dva';
+import React, { useContext } from 'react';
+import { Row, Col } from 'antd';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
 import styles from './index.less';
@@ -11,11 +12,10 @@ import { pagination } from './baseFunc';
 import { tableRowConfig } from '@/pages/investorReview/func';
 
 const ProductMessageLiquidation = ({
-  dispatch,
   listLoading,
   productBillboard: { productOverviewMessage },
 }) => {
-  const { proCodeArguments, codeListData, codeListCodeData, proDictsObj } = useContext(MyContext); // 子组件接受的数据
+  const { codeListData, codeListCodeData } = useContext(MyContext); // 子组件接受的数据
 
   // 表头数据(清盘信息)
   const liquidationColumns = [

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Card,
   Col,
   Collapse,
   Divider,
@@ -14,6 +15,7 @@ import {
   Tabs,
   Tooltip,
 } from 'antd';
+import { Table } from '@/components';
 import { connect } from 'dva';
 import { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
@@ -21,8 +23,7 @@ import router from 'umi/router';
 import styles from './index.less';
 import { downloadNoToken, filePreview } from '@/utils/download';
 import { handleChangeLabel } from '@/pages/productBillboard/baseFunc';
-import { Card, PageContainers, Table } from '@/components';
-import Gird from '@/components/Gird';
+import { PageContainers } from '@/components';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -251,6 +252,7 @@ class RegistrationForm extends Component {
     } = this.state;
     const { salesOrgInfoElement, sellerAccountInfoParamList } = productDataInfo;
     const { product, rateCategories, sellerAccount } = viewDetailsdata;
+
     const baseTable = () => {
       const columns = [
         // {
@@ -450,7 +452,7 @@ class RegistrationForm extends Component {
           },
         },
       ];
-      return <Table bordered columns={columns} dataSource={sellerAccountInfoParamList || []} 
+      return <Table bordered columns={columns} dataSource={sellerAccountInfoParamList || []}
         rowClassName={(record, index) => {
           let className = '';
           if (index % 2 === 1) className = 'bgcFBFCFF';
@@ -753,61 +755,6 @@ class RegistrationForm extends Component {
       },
     ];
 
-    // 销售机构信息 - 账户信息详情配置
-    const drawerConfigForAccount = [
-      { label: '销售机构名称', value: 'sellerNameFull' },
-      { label: '销售机构简称', value: 'sellerName' },
-      { label: '销售商代码', value: 'sellerCode' },
-      { 
-        label: '销售商类型', 
-        value: 'sellerType', 
-        type: 'select', 
-        option: sellerList, 
-      },{ 
-        label: '渠道类型', 
-        value: 'channelType', 
-        type: 'select', 
-        option: channelList, 
-      },{ 
-        label: '中登结算地点', 
-        value: 'zdSettlePlace', 
-        type: 'select', 
-        option: zdSettleList, 
-      },
-      { label: '客服电话', value: 'customerPhone' },
-      { label: '网址', value: 'website' },
-      { label: '备注', value: 'remarks', proportion:true },
-    ]
-    // 销售机构信息 - 协议信息详情配置
-    const drawerConfigForAgreement = {
-      details:[
-        { label: '协议名称', value: 'contractName' },
-        { label: '生效日期', value: 'effectiveDate' },
-        { label: '注销日期', value: 'cancellDate' },
-        { label: '备注', value: 'remarks', proportion:true },
-      ],
-      serviceChargeForSale:[
-        { 
-          label: '付费频率', 
-          value: 'salePayRate', 
-          type: 'select', 
-          option: rateMonList, 
-        },
-        { label: '支付条款', value: 'salePayClause' },
-      ],
-      serviceChargeForCustomer: [
-        { 
-          label: '付费频率', 
-          value: 'customerPayRate', 
-          type: 'select', 
-          option: rateMonList, 
-        },
-        { label: '客户维护费条款', value: 'customerPayClause' },
-      ],
-      discount:[
-        { label: '优惠信息', value: 'preferentialInfo' },
-      ]
-    }
     return (
       <PageContainers
         breadcrumb={[
@@ -826,8 +773,10 @@ class RegistrationForm extends Component {
         ]}
         footer={
           <Tabs
-            defaultActiveKey={this.state.tabKey}
+            defaultActiveKey="account"
             onChange={this.handleChangeTabKey}
+            // tabBarStyle={{ background: '#fff' }}
+            // animated={false}
           >
             <TabPane tab="账户信息" key="account" />
             <TabPane tab="协议信息" key="agreement" />
@@ -835,34 +784,171 @@ class RegistrationForm extends Component {
           </Tabs>
         }
       >
-        {tabKey === 'account' && (
-            <>
-              <Card title="销售机构信息"><Gird config={drawerConfigForAccount} info={salesOrgInfoElement}/></Card>
-              <Card title={<>
-                账户信息
-                <Tooltip title="账户业务类型：资管清算岗在使用销售商往来账户信息时需要有明确的业务类型，销售机构维护时必须明确“申购付款账户”、“认购退款收款账户”、“赎回分红款收款账户”、“销售服务费收款账户”这四类业务类型">
-                  <Icon style={{ marginLeft: '10px' }} type="info-circle" />
-                </Tooltip>
-              </>}
-              className="margin_t16"
-              >{baseTable()}</Card>
-            </>
+        <Card>
+          {tabKey === 'account' && (
+            <div key="account" className={styles.detailsFormItem}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col md={10}>
+                  <span style={{ color: '#252B3A', fontSize: 16 }}>销售机构信息</span>
+                </Col>
+              </Row>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col span={2} />
+                <Col span={2}>销售机构名称:</Col>
+                <Col span={4}>{salesOrgInfoElement.sellerNameFull} </Col>
+                <Col span={1} />
+                <Col span={2}>销售机构简称:</Col>
+                <Col span={4}>{salesOrgInfoElement.sellerName} </Col>
+                <Col span={1} />
+                <Col span={2}>销售商代码:</Col>
+                <Col span={4}> {salesOrgInfoElement.sellerCode} </Col>
+                <Col span={3} />
+              </Row>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col span={2} />
+                <Col span={2}>销售商类型:</Col>
+                <Col span={4}>
+                  <Radio.Group
+                    disabled
+                    value={salesOrgInfoElement.sellerType}
+                    onChange={this.onRadioChange}
+                  >
+                    {sellerList &&
+                      sellerList.length > 0 &&
+                      sellerList.map(item => (
+                        <Radio key={item.code} value={item.code}>
+                          {item.name}
+                        </Radio>
+                      ))}
+                  </Radio.Group>
+                </Col>
+                <Col span={1} />
+
+                <Col span={2}>渠道类型:</Col>
+                <Col span={4}>
+                  <Select allowClear disabled value={salesOrgInfoElement.channelType}>
+                    {channelList &&
+                      channelList.length > 0 &&
+                      channelList.map(item => (
+                        <Option key={item.code} value={item.code}>
+                          {item.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Col>
+                <Col span={1} />
+
+                <Col span={2}>中登结算地点:</Col>
+                <Col span={4}>
+                  <Radio.Group disabled value={salesOrgInfoElement.zdSettlePlace}>
+                    {zdSettleList &&
+                      zdSettleList.length > 0 &&
+                      zdSettleList.map(item => (
+                        <Radio key={item.code} value={item.code}>
+                          {item.name}
+                        </Radio>
+                      ))}
+                  </Radio.Group>
+                </Col>
+                <Col span={3} />
+              </Row>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col span={2} />
+                <Col span={2}>客服电话:</Col>
+                <Col span={4}> {salesOrgInfoElement.customerPhone} </Col>
+                <Col span={1} />
+                <Col span={2}>网址:</Col>
+                <Col span={4}> {salesOrgInfoElement.website} </Col>
+              </Row>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col span={2} />
+                <Col span={2}>备注：</Col>
+                <Col span={4}>{salesOrgInfoElement.remarks} </Col>
+              </Row>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.bottomBtn}>
+                <Col md={10}>
+                  <span style={{ color: '#252B3A', fontSize: 16 }}>账户信息</span>
+                  <Tooltip title="账户业务类型：资管清算岗在使用销售商往来账户信息时需要有明确的业务类型，销售机构维护时必须明确“申购付款账户”、“认购退款收款账户”、“赎回分红款收款账户”、“销售服务费收款账户”这四类业务类型">
+                    <Icon style={{ marginLeft: '10px' }} type="info-circle" />
+                  </Tooltip>
+                </Col>
+              </Row>
+              {baseTable()}
+            </div>
           )}
           {tabKey === 'agreement' && (
             <div key="agreement" className={styles.detailsFormItem}>
               <Collapse accordion>
                 {collapseData.map((item, index) => (
                   <Panel header={`协议信息${index + 1}`} key={item.id}>
-                    <>
-                      <Gird config={drawerConfigForAgreement.details} info={item}/>
-                      <h1 className={'font-w600'}>销售服务费</h1>
-                      <Gird config={drawerConfigForAgreement.serviceChargeForSale} info={item}/>
-                      <h1 className={'font-w600'}>客户服务费</h1>
-                      <Gird config={drawerConfigForAgreement.serviceChargeForCustomer} info={item}/>
-                      <h1 className={'font-w600'}>优惠信息</h1>
-                      <Gird config={drawerConfigForAgreement.discount} info={item}/>
-                      <h1 className={'font-w600'}>相关文档</h1>
-                    </>
+                    <Row>
+                      <Col span={9}>
+                        <Row>
+                          <Col span={8}>协议名称:</Col>
+                          <Col span={16}>{item.contractName}</Col>
+                        </Row>
+                      </Col>
+                      <Col span={9}>
+                        <Row>
+                          <Col span={8}>生效日期:</Col>
+                          <Col span={16}>{item.effectiveDate}</Col>
+                        </Row>
+                      </Col>
+                      <Col span={6}>
+                        <Row>
+                          <Col span={8}>注销日期:</Col>
+                          <Col span={16}>{item.cancellDate}</Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={3}>备注:</Col>
+                      <Col span={21}>{item.remarks}</Col>
+                    </Row>
+                    <div className={styles.detailsAgreementTitle}>销售服务费</div>
+                    <Row>
+                      <Col span={3}>付费频率:</Col>
+                      <Col span={21}>
+                        <Radio.Group disabled value={item.salePayRate}>
+                          {rateMonList &&
+                            rateMonList.length > 0 &&
+                            rateMonList.map(data => (
+                              <Radio key={data.code} value={data.code}>
+                                {data.name}
+                              </Radio>
+                            ))}
+                        </Radio.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={3}>支付条款:</Col>
+                      <Col span={21}>{item.salePayClause}</Col>
+                    </Row>
+                    <div className={styles.detailsAgreementTitle}>客户服务费</div>
+                    <Row>
+                      <Col span={3}>付费频率:</Col>
+                      <Col span={21}>
+                        <Radio.Group disabled value={item.customerPayRate}>
+                          {rateMonList &&
+                            rateMonList.length > 0 &&
+                            rateMonList.map(data => (
+                              <Radio key={data.code} value={data.code}>
+                                {data.name}
+                              </Radio>
+                            ))}
+                        </Radio.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={3}>客户维护费条款:</Col>
+                      <Col span={21}>{item.customerPayClause} </Col>
+                    </Row>
+                    <div className={styles.detailsAgreementTitle}>优惠信息</div>
+                    <Row>
+                      <Col span={3}>优惠信息:</Col>
+                      <Col span={21}>{item.preferentialInfo} </Col>
+                    </Row>
+                    <div className={styles.detailsAgreementTitle}>相关文档</div>
                     <Table
                       columns={fileColums || []}
                       dataSource={item.businessArchives}
@@ -875,9 +961,14 @@ class RegistrationForm extends Component {
           )}
           {tabKey === 'product' && (
             <div key="product">
-              <Card title="产品信息">
-                <Table columns={productColumns} dataSource={productdata} pagination={false} />
-                {productdata && productdata.length !== 0 ? (
+              <Table bordered columns={productColumns} dataSource={productdata} pagination={false}
+                rowClassName={(record, index) => {
+                  let className = '';
+                  if (index % 2 === 1) className = 'bgcFBFCFF';
+                  return className;
+                }}
+              />
+              {productdata && productdata.length !== 0 ? (
                 <Row style={{ paddingTop: 20 }}>
                   <Pagination
                     style={{ float: 'right' }}
@@ -891,18 +982,12 @@ class RegistrationForm extends Component {
                     showTotal={total => `共 ${total} 条数据`}
                   />
                 </Row>
-                ) : (
-                  ''
-                )}
-              </Card>
+              ) : (
+                ''
+              )}
             </div>
           )}
-        {/* <Card className={'margin_t16'} title={<>
-          账户信息
-          <Tooltip title="账户业务类型：资管清算岗在使用销售商往来账户信息时需要有明确的业务类型，销售机构维护时必须明确“申购付款账户”、“认购退款收款账户”、“赎回分红款收款账户”、“销售服务费收款账户”这四类业务类型">
-            <Icon style={{ marginLeft: '10px' }} type="info-circle" />
-          </Tooltip>
-        </>}>{baseTable()}</Card> */}
+        </Card>
         <Modal
           title="详情"
           visible={this.state.modalVisible}

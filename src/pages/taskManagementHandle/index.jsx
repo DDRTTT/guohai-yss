@@ -3,18 +3,15 @@
  * Create on 2020/9/14.
  */
 import React, { Component } from 'react';
-import { Form, Table, Button, Input, Row, Col, Select, DatePicker, Icon, Breadcrumb } from 'antd';
+import { Form, Button, Input } from 'antd';
 
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import HandleList from '../../components/projectManagement/handleList';
 import style from './index.less';
-import { setSession } from '@/utils/session';
 import router from 'umi/router';
 import { DownOutlined, SearchOutlined } from '@ant-design/icons';
-import styles from '@/pages/taskManagementDeal/index.less';
 
-const { Search } = Input;
 @Form.create()
 class Index extends Component {
   state = {

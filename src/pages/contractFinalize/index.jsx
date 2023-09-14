@@ -51,11 +51,11 @@ class Agent extends Component {
     // table 表头
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        width: 220,
+        title: '产品全称',
+        dataIndex: 'proName',
+        width: 400,
         sorter: true,
-        ellipsis: true,
+        // render: columnTooltip,
         render: proName => {
           return (
             <Tooltip title={proName}>
@@ -63,13 +63,13 @@ class Agent extends Component {
             </Tooltip>
           );
         },
+        ellipsis: true,
       },
       {
         title: '产品代码',
         dataIndex: 'proCode',
         sorter: true,
-        ellipsis: true,
-        width: 150,
+        // render: columnTooltip,
         render: proCode => {
           return (
             <Tooltip title={proCode}>
@@ -77,6 +77,7 @@ class Agent extends Component {
             </Tooltip>
           );
         },
+        ellipsis: true,
       },
       {
         title: '产品类型',
@@ -95,6 +96,7 @@ class Agent extends Component {
         title: '投资经理',
         dataIndex: 'investmentManager',
         sorter: true,
+        // render: columnTooltip,
         render: investmentManager => {
           return (
             <Tooltip title={investmentManager}>
@@ -108,6 +110,7 @@ class Agent extends Component {
         title: '托管人',
         dataIndex: 'proTrusBank',
         sorter: true,
+        // render: columnTooltip,
         render: proTrusBank => {
           return (
             <Tooltip title={proTrusBank}>
@@ -149,7 +152,6 @@ class Agent extends Component {
         key: 'action',
         dataIndex: 'action',
         width: 250,
-        align: 'center',
         render: (text, record) => {
           // 待提交 S001_1   流程中S001_2  已结束 S001_3
           // 代办 T001_1 未提交 T001_3
@@ -213,7 +215,7 @@ class Agent extends Component {
                     )}
                     <MoreOperation
                       record={record}
-                      fn={() => this.handleGetTableList(this.state.params)}
+                      fn={this.handleGetTableList}
                       opertations={{ tabs: this.state.params.taskType, status: record.operStatus }}
                     />
                   </>
@@ -422,8 +424,6 @@ class Agent extends Component {
    */
   handleBlurSearch = val => {
     this.state.params.keyWords = val;
-    this.state.params.pageNum = 1;
-    this.state.params.pageSize = 10;
     this.handleGetTableList(this.state.params);
   };
 
@@ -447,8 +447,6 @@ class Agent extends Component {
       {
         params: {
           ...this.state.params,
-          pageNum: 1,
-          pageSize: 10,
           ...formValues,
         },
       },
@@ -642,6 +640,7 @@ class Agent extends Component {
     }
     return content;
   }
+
   showDeleteConfirm(record) {
     const { confirm } = Modal;
     const ts = this;
@@ -654,6 +653,7 @@ class Agent extends Component {
       },
     });
   }
+
   showRevokeConfirm(record) {
     const { confirm } = Modal;
     const ts = this;
@@ -746,7 +746,7 @@ class Agent extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productName,
       },
       {
@@ -754,7 +754,7 @@ class Agent extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productType,
       },
       {
@@ -762,7 +762,7 @@ class Agent extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investmentManagerDropList,
       },
       {
@@ -770,7 +770,7 @@ class Agent extends Component {
         label: '托管人',
         type: 'select',
         readSet: { name: 'orgName', code: 'id' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: trustee,
       },
       {
@@ -778,7 +778,7 @@ class Agent extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: opts.S001,
       },
     ];
@@ -821,7 +821,7 @@ class Agent extends Component {
                 rowSelection={rowSelection}
                 columns={columns}
                 dataSource={tableList.rows}
-                scroll={{ x: true }}
+                scroll={{ x: 1640 }}
                 onChange={this.sortChange}
                 loading={loading}
               />
@@ -835,7 +835,7 @@ class Agent extends Component {
                           tabs: taskType,
                           statusKey: 'operStatus',
                         }}
-                        fn={() => this.handleGetTableList(this.state.params)}
+                        fn={this.handleGetTableList}
                         type="batch"
                         batchList={batchList}
                         submitCallback={this.handlerBatchSubmit}

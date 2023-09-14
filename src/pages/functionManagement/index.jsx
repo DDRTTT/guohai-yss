@@ -171,11 +171,11 @@ const Index = ({
           <span>
             <a onClick={() => toDetailPage(record)}>查看</a>
           </span>
-          <span style={{ margin: 5, display: record.checked === 0 ? '' : 'none' }}>
+          <span className={record.checked === 0 ?styles.operateStyle1:styles.operateStyle2}>
             <a onClick={() => modify(record)}>修改</a>
           </span>
           <Action key="functionManagement:check" code="functionManagement:check">
-            <span style={{ margin: 5 }}>
+            <span className={styles.operateStyle1}>
               <a onClick={() => dispatchCheck(record.id, +!record.checked)}>
                 {record.checked === 0 ? '审核' : '反审核'}
               </a>
@@ -183,7 +183,7 @@ const Index = ({
           </Action>
           {record.checked === 0 && (
             <Action key="functionManagement:delete" code="functionManagement:delete">
-              <span style={{ margin: 5 }}>
+              <span className={styles.operateStyle1}>
                 <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.id)}>
                   <a>删除</a>
                 </Popconfirm>
@@ -219,6 +219,7 @@ const Index = ({
     showQuickJumper: true,
     total: tableList.total,
     current: currentPage,
+    pageSize: pageSize,
     showTotal: total => `共 ${total} 条`,
   };
   const formItemData = [
@@ -290,7 +291,7 @@ const Index = ({
               pagination={paginationProps}
               scroll={{ x: columns.length * 150 + 500 }}
             />
-            <div style={{ marginTop: -45 }}>
+            <div className={styles.tableStyle}>
               <Action key="memberManagement:delete" code="memberManagement:delete">
                 <Dropdown
                   overlay={
@@ -314,7 +315,7 @@ const Index = ({
                   }
                   placement="topLeft"
                 >
-                  <Button style={{ marginRight: 10, width: 100, height: 26 }}>
+                  <Button className={styles.batchBtn}>
                     批量操作
                     <Icon type="up" />
                   </Button>

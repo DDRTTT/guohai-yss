@@ -232,9 +232,9 @@ export default class freeChart extends Component {
       let aaa;
       let bbb;
       let ccc;
-      if (saveGroup[0].groupName && !isEmptyObject(items)) {
+      if (saveGroup && saveGroup[0] && saveGroup[0].groupName && !isEmptyObject(items)) {
         aaa = items[saveGroup[0].groupName].buckets.map((item, index) => {
-          if (saveGroup[1].groupName && item[saveGroup[1].groupName]) {
+          if (saveGroup[1] && ssaveGroup[1].groupName && item[saveGroup[1].groupName]) {
             const items = item[saveGroup[1].groupName].buckets;
             bbb = items.map((itemz, index) => {
               if (
@@ -308,7 +308,7 @@ export default class freeChart extends Component {
         <tr>
           <thead style={{ textAlign: 'center' }}>
             <tr style={{ background: '#f2f2f2' }}>
-              {saveGroup[0] && saveGroup[0].groupName ? (
+              {saveGroup && saveGroup[0] && saveGroup[0].groupName ? (
                 <td width="200" style={{ border: '1px solid #CCC', borderRight: 'none' }}>
                   {saveGroup[0].groupName}
                 </td>
@@ -316,23 +316,23 @@ export default class freeChart extends Component {
                 ''
               )}
               <tr>
-                {saveGroup[1] && saveGroup[1].groupName ? (
+                {saveGroup && saveGroup[1] && saveGroup[1].groupName ? (
                   <td width="200" style={{ border: '1px solid #CCC', borderRight: 'none' }}>
                     {saveGroup[1].groupName}
                   </td>
                 ) : (
                   ''
                 )}
-                {saveGroup[2] && saveGroup[2].groupName ? (
+                {saveGroup && saveGroup[2] && saveGroup[2].groupName ? (
                   <td width="200" style={{ border: '1px solid #CCC', borderRight: 'none' }}>
                     {saveGroup[2].groupName}
                   </td>
                 ) : (
                   ''
                 )}
-                {(saveGroup[0] && saveGroup[0].groupName) ||
-                (saveGroup[1] && saveGroup[1].groupName) ||
-                (saveGroup[2] && saveGroup[2].groupName) ? (
+                {(saveGroup && saveGroup[0] && saveGroup[0].groupName) ||
+                (saveGroup && saveGroup[1] && saveGroup[1].groupName) ||
+                (saveGroup && saveGroup[2] && saveGroup[2].groupName) ? (
                   <td width="50" style={{ border: '1px solid #CCC' }}>
                     数量
                   </td>

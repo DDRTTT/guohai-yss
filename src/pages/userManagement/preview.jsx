@@ -212,7 +212,7 @@ const Preview = ({
             key={tag.id}
             checked={selectTags.indexOf(tag.id) > -1}
             onChange={checked => fn(tag.id, checked)}
-            style={{ fontSize: 14, cursor: 'pointer' }}
+            className={styles.handleTagStyle}
           >
             {tag.name}
           </CheckableTag>
@@ -246,7 +246,7 @@ const Preview = ({
           <Radio.Group
             onChange={e => ownershipSystemChange(e.target.value)}
             value={selectOwnershipSystem}
-            style={{ marginLeft: 20 }}
+            className={styles.radioStyle}
           >
             {ownershipSystem.map(item => {
               return (
@@ -257,15 +257,15 @@ const Preview = ({
             })}
           </Radio.Group>
         </Col>
-        <Col span={24} offset={2} style={{ marginTop: 24 }}>
+        <Col span={24} offset={2} className={styles.col1Style}>
           <label>所属角色:</label>
-          <div style={{ marginLeft: 20, display: 'inline-block' }}>
+          <div className={styles.colDiv}>
             {handleTag(roleBySys, roleComByUser, handleRoleChange, selectRoleTags)}
           </div>
         </Col>
 
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ marginTop: 24 }}>
+          <Tabs tabPosition="left" className={styles.col1Style}>
             <TabPane tab="功能组件" key="1">
               已关联功能组件 :{handleTag(tags, functions, handleTagChange, selectTags)}
               <AuthTree
@@ -276,7 +276,7 @@ const Preview = ({
                 disabled={disabled}
               />
             </TabPane>
-            <TabPane tab="岗位组件" key="2">
+            {/* <TabPane tab="岗位组件" key="2">
               已关联岗位组件 :
               {handleTag(positionsList, positions, handleTagChange1, selectPositionTags)}
               <PositionsAuthTree
@@ -286,10 +286,10 @@ const Preview = ({
                 fetchGetAuthTreeLoading={fetchGetPositionsTreeLoading}
                 disabled={disabled}
               />
-            </TabPane>
-            <TabPane tab="数据策略组件" key="3">
+            </TabPane> */}
+            {/* <TabPane tab="数据策略组件" key="3">
               <CheckboxGroup options={authorizationStrategy} value={dataStrategies} />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </Col>
       </Row>
@@ -302,7 +302,7 @@ const Preview = ({
           <Radio.Group
             onChange={e => ownershipSystemChange(e.target.value)}
             value={selectOwnershipSystem}
-            style={{ marginLeft: 20 }}
+            className={styles.radioStyle}
           >
             {ownershipSystem.map(item => {
               return (
@@ -313,15 +313,15 @@ const Preview = ({
             })}
           </Radio.Group>
         </Col>
-        <Col span={24} offset={2} style={{ marginTop: 24 }}>
+        <Col span={24} offset={2} className={styles.col1Style}>
           <label>所属角色:</label>
-          <div style={{ marginLeft: 20, display: 'inline-block' }}>
+          <div className={styles.colDiv}>
             {handleTag(roleBySys, roleComByUser, handleRoleChange, selectRoleTags)}
           </div>
         </Col>
 
         <Col span={24}>
-          <Tabs tabPosition="left" style={{ marginTop: 24 }}>
+          <Tabs tabPosition="left" className={styles.col1Style}>
             <TabPane tab="功能组件" key="1">
               已关联功能组件:{handleTag(tags, functions, handleTagChange, selectTags)}
               <AuthTree
@@ -332,7 +332,7 @@ const Preview = ({
                 disabled={disabled}
               />
             </TabPane>
-            <TabPane tab="岗位组件" key="2">
+            {/* <TabPane tab="岗位组件" key="2">
               已关联岗位组件:
               {handleTag(positionsList, positions, handleTagChange1, selectPositionTags)}
               <PositionsAuthTree
@@ -342,10 +342,10 @@ const Preview = ({
                 fetchGetAuthTreeLoading={fetchGetPositionsTreeLoading}
                 disabled={disabled}
               />
-            </TabPane>
-            <TabPane tab="数据策略组件" key="3">
+            </TabPane> */}
+            {/* <TabPane tab="数据策略组件" key="3">
               <CheckboxGroup options={authorizationStrategy} value={dataStrategies} />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </Col>
       </Row>

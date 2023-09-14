@@ -1,4 +1,4 @@
-import { IConfig, IPlugin } from 'umi-types';
+import {IConfig, IPlugin} from 'umi-types';
 import slash from 'slash2';
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 import routerConfig from './router.config';
@@ -64,6 +64,10 @@ export default {
   ignoreMomentLocale: true,
   lessLoaderOptions: {
     javascriptEnabled: true,
+    // modifyVars: {
+    //   "@primary-color": "#2450A5",
+    //   "@ant-prefix": "ant4"
+    // }
   },
   disableRedirectHoist: true,
   cssLoaderOptions: {
@@ -97,6 +101,27 @@ export default {
       return localName;
     },
   },
+  // extraBabelPlugins: [
+  //   // 引入AntD3样式
+  //   [
+  //     'import',
+  //     {
+  //       libraryName: 'antd',
+  //       libraryDirectory: 'es',
+  //       style: true,
+  //     },
+  //   ],
+  //   // 引入AntD4样式
+  //   [
+  //     'import',
+  //     {
+  //       libraryName: 'antd4',
+  //       libraryDirectory: 'es',
+  //       style: true,
+  //     },
+  //     'import-antd4', // 用了两次 babel-plugin-import，加个key，防止babel报错
+  //   ]
+  // ],
   manifest: {
     basePath: '/',
   },

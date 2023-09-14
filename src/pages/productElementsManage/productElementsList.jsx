@@ -1154,7 +1154,7 @@ class Index extends Component {
       },
     ];
 
-    // 产品要素-表结构 Columns 
+    // 产品要素-表结构 Columns
     const structureColumns = [
       {
         title: '序号',
@@ -1715,8 +1715,8 @@ class Index extends Component {
 
     // 表头按钮相关
     const operations = (
-      <div style={{ marginTop: '-6px' }}>
-        <Button style={{ marginRight: 8 }} onClick={this.emigration}>
+      <div className={styles.listBtnStyle}>
+        <Button className={styles.listBtns} onClick={this.emigration}>
           迁出
         </Button>
         <Upload
@@ -1727,7 +1727,7 @@ class Index extends Component {
           showUploadList={false}
         >
           <Button
-            style={{ marginRight: 8 }}
+            className={styles.listBtns}
             loading={uploadBtnLoadingForMove}
             disabled={uploadBtnLoadingForMove}
           >
@@ -1737,14 +1737,14 @@ class Index extends Component {
 
         {activeKey === 'structure' && (
           <Button
-            style={{ marginRight: 8 }}
+            className={styles.listBtns}
             onClick={() => this.setState({ visibleForselectMatching: true })}
           >
             一键匹配
           </Button>
         )}
         <Dropdown overlay={menu}>
-          <Button style={{ marginRight: 8 }}>
+          <Button className={styles.listBtns}>
             导出 <DownOutlined />
           </Button>
         </Dropdown>
@@ -1755,13 +1755,14 @@ class Index extends Component {
           beforeUpload={this.beforeUpload}
           showUploadList={false}
         >
-          <Button loading={uploadBtnLoading} disabled={uploadBtnLoading} style={{ marginRight: 8 }}>
+          <Button loading={uploadBtnLoading} disabled={uploadBtnLoading}
+                  className={styles.listBtns}>
             导入
           </Button>
         </Upload>
         <Button
           type="primary"
-          style={{ marginRight: 8 }}
+          className={styles.listBtns}
           onClick={() => this.jumpAdd({ flag: `businessAdd` })}
         >
           新增
@@ -2030,7 +2031,7 @@ class Index extends Component {
           title={
             <span>
               产品要素关联管理
-              <span style={{ marginLeft: 40, fontSize: 12, color: '#8A8E99' }}>
+              <span className={styles.listTitle}>
                 请选择产品要素结构信息进行关联！
               </span>
             </span>
@@ -2045,14 +2046,14 @@ class Index extends Component {
           zIndex={1001}
         >
           {isForm ? (
-            <Row style={{ marginBottom: 10 }}>
+            <Row className={styles.listRow}>
               <Col span={16}>
                 <Search
-                  style={{ height: 32, width: 250 }}
+                  className={styles.listSearch}
                   placeholder="请输入"
                   onSearch={val => this.relationSearch(val)}
                 />
-                <span style={{ marginLeft: 23 }}>
+                <span className={styles.listSpan}>
                   <a onClick={this.handleOpenConditions} type="text">
                     其他查询条件
                     <Icon type="down" />
@@ -2061,7 +2062,7 @@ class Index extends Component {
               </Col>
             </Row>
           ) : (
-            <Form {...layout} style={{ marginBottom: 10 }}>
+            <Form {...layout} className={styles.listRow}>
               <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                 <Col md={6}>
                   <Form.Item label="归属机构:" {...formItemLayout}>
@@ -2107,15 +2108,15 @@ class Index extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col style={{ float: 'right' }}>
+                <Col className={styles.listCol}>
                   <span>
                     <Button type="primary" onClick={this.conditionsSearch}>
                       查询
                     </Button>
-                    <Button style={{ marginLeft: 10 }} onClick={this.resetFormEle}>
+                    <Button className={styles.listColBtn} onClick={this.resetFormEle}>
                       重置
                     </Button>
-                    <a style={{ marginLeft: 23 }} onClick={this.handleOpenConditions}>
+                    <a className={styles.listCola} onClick={this.handleOpenConditions}>
                       收起
                       <Icon type="up" />
                     </a>
@@ -2134,16 +2135,16 @@ class Index extends Component {
             rowSelection={relationRowSelection}
             scroll={{ x: relationColumns.length * 200 - 140, y: 500 }}
           />
-          <div style={{ marginBottom: 10, marginTop: 20 }}>
+          <div className={styles.tableStyle}>
             <Row>
-              <Col span={24} style={{ marginBottom: 10 }} style={{ textAlign: 'right' }}>
-                <span style={{ marginRight: 10 }}>共{relationListData.length}条数据</span>
-                <Button style={{ marginRight: 8 }} onClick={this.relationCancel}>
+              <Col span={24} className={styles.tableColStyle}>
+                <span className={styles.spanStyle} >共{relationListData.length}条数据</span>
+                <Button className={styles.btnStyle} onClick={this.relationCancel}>
                   取消
                 </Button>
                 <Button
                   type="primary"
-                  style={{ marginRight: 8 }}
+                  className={styles.btnStyle}
                   disabled={!relationBtn}
                   loading={loading}
                   onClick={this.matchCheck}
@@ -2166,11 +2167,11 @@ class Index extends Component {
           footer={null}
         >
           <Row>
-            <Col md={6} style={{ marginBottom: 20 }}>
-              <span style={{ color: '#8A8E99' }}>
-                数据匹配成功<span style={{ margin: '0 8px', color: '#50D4AB' }}>{mateSuccess}</span>
+            <Col md={6} className={styles.listCol1}>
+              <span className={styles.span}>
+                数据匹配成功<span className={styles.sub1span}>{mateSuccess}</span>
                 条，失败
-                <span style={{ margin: '0 8px', color: '#F66F6A' }}>{mateFail}</span>条
+                <span className={styles.sub2span}>{mateFail}</span>条
               </span>
             </Col>
           </Row>
@@ -2182,15 +2183,15 @@ class Index extends Component {
             pagination={false}
             scroll={{ x: mateColumns.length * 200 - 500, y: 500 }}
           />
-          <div style={{ marginBottom: 10, marginTop: 20 }}>
+          <div className={styles.tableDiv}>
             <Row>
-              <Col span={24} style={{ marginBottom: 10 }} style={{ textAlign: 'right' }}>
-                <span style={{ marginRight: 10 }}>共{listForMate.length}条数据</span>
-                <Button style={{ marginRight: 8 }} onClick={this.mateCancel}>
+              <Col span={24} className={styles.col}>
+                <span className={styles.colSpan}>共{listForMate.length}条数据</span>
+                <Button className={styles.colBtn} onClick={this.mateCancel}>
                   取消
                 </Button>
                 <Button
-                  style={{ marginRight: 8 }}
+                  className={styles.colBtn}
                   onClick={() =>
                     this.setState({ mateVisible: false, visibleForselectMatching: true })
                   }
@@ -2199,7 +2200,7 @@ class Index extends Component {
                 </Button>
                 <Button
                   type="primary"
-                  style={{ marginRight: 8 }}
+                  className={styles.colBtn}
                   loading={loading}
                   onClick={this.oneKeyMatch}
                 >

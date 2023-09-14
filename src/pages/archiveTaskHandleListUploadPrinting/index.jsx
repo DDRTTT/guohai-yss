@@ -1,3 +1,7 @@
+/**
+ * 项目任务管理--用印文件归档
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Action, { linkHoc } from '@/utils/hocUtil';
@@ -580,7 +584,7 @@ class Agent extends Component {
 
         const { useSealFileMap = {} } = data;
         const uploadFileInfoArr = Array.from(uploadFileInfo);
-        const needUploadFileList = [];
+        let needUploadFileList = [];
         Object.keys(useSealFileMap).forEach(key => {
           uploadFileInfoArr.forEach(item => {
             if (useSealFileMap[key].fileName === item.name) {

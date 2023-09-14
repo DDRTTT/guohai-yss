@@ -27,6 +27,7 @@ const { confirm } = Modal;
 const ButtonGroup = Button.Group;
 
 const codeList = 'A002,DQ001,S001';
+
 @Form.create()
 class RegularReports extends Component {
   state = {
@@ -73,291 +74,205 @@ class RegularReports extends Component {
       </ul>
     ),
     fieldsValue: {},
+
+    // 表头数据(有时间)
     columns: [
       {
-        key: 'proFname',
-        title: '产品简称',
-        dataIndex: 'proFname',
+        title: '托管行',
+        dataIndex: 'proTrusBank',
+        key: 'proTrusBank',
         sorter: true,
-        width: 250,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
         render: text => {
           return (
             <Tooltip title={text}>
-              <span>{text || '-'}</span>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                ? '-'
+                : 0}
             </Tooltip>
           );
         },
       },
       {
-        key: 'proCode',
-        title: '产品代码',
-        dataIndex: 'proCode',
+        title: '标题',
+        dataIndex: 'titleMarketingUnit',
+        key: 'titleMarketingUnit',
         sorter: true,
-        width: 150,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: proCode => {
+        width: 400,
+        render: text => {
           return (
-            <Tooltip title={proCode}>
-              <span>{proCode || '-'}</span>
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                ? '-'
+                : 0}
             </Tooltip>
           );
         },
+        ellipsis: true,
       },
       {
-        key: 'proTypeName',
-        title: '产品类型',
-        dataIndex: 'proTypeName',
-        sorter: true,
-        width: 150,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: proTypeName => {
-          return (
-            <Tooltip title={proTypeName}>
-              <span>{proTypeName || '-'}</span>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'reportTypeName',
-        title: '报告类型',
-        dataIndex: 'reportTypeName',
-        sorter: true,
-        width: 200,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: reportTypeName => {
-          return (
-            <Tooltip title={reportTypeName}>
-              <span>{reportTypeName || '-'}</span>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'reportPeriod',
-        title: '报告期',
-        dataIndex: 'reportPeriod',
-        sorter: true,
-        width: 200,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: reportPeriod => {
-          return (
-            <Tooltip title={reportPeriod}>
-              <span>{reportPeriod || '-'}</span>
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'taskArriveTime',
         title: '任务到达时间',
-        dataIndex: 'taskArriveTime',
+        dataIndex: 'taskTime',
+        key: 'taskTime',
         sorter: true,
-        width: 200,
+        width: 180,
         ellipsis: {
           showTitle: false,
         },
-        render: taskArriveTime => {
+        render: text => {
           return (
-            <Tooltip title={taskArriveTime}>
-              <span>{taskArriveTime || '-'}</span>
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                ? '-'
+                : 0}
             </Tooltip>
           );
         },
       },
       {
-        key: 'statusName',
         title: '状态',
-        dataIndex: 'statusName',
+        dataIndex: 'status',
+        key: 'status',
         sorter: true,
-        width: 150,
+        width: 120,
         ellipsis: {
           showTitle: false,
         },
-        render: statusName => {
+        render: text => {
           return (
-            <Tooltip title={statusName}>
-              <span>{statusName || '-'}</span>
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                ? '-'
+                : 0}
             </Tooltip>
           );
         },
       },
       {
-        key: 'id',
-        dataIndex: 'id',
         title: '操作',
-        align: 'center',
+        key: 'action',
+        dataIndex: 'action',
         fixed: 'right',
-        render: (text, record) => {
-          return (
-            <span>
-              <Action code="regularReports:update">
-                <a
-                  style={{
-                    display:
-                      (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'update');
-                  }}
-                >
-                  修改
-                </a>
-              </Action>
-              <Action code="regularReports:copy">
-                <a
-                  style={{
-                    display:
-                      (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'copy');
-                  }}
-                >
-                  复制
-                </a>
-              </Action>
-              <Action code="regularReports:commit">
-                <a
-                  style={{
-                    display:
-                      (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '待提交'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'commit');
-                  }}
-                >
-                  提交
-                </a>
-              </Action>
-              <Action code="regularReports:delete">
-                <a
-                  style={{
-                    display: record.statusName === '待提交' ? 'inline-block' : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'delete');
-                  }}
-                >
-                  删除
-                </a>
-              </Action>
-              <Action code="regularReports:check">
-                <a
-                  style={{
-                    display:
-                      (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '流程中'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'check');
-                  }}
-                >
-                  办理
-                </a>
-              </Action>
-              <Action code="regularReports:detail">
-                <a
-                  style={{
-                    display:
-                      ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName === '已结束') ||
-                        taskTypeCode === 'T001_3' ||
-                        taskTypeCode === 'T001_5'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'detail');
-                  }}
-                >
-                  详情
-                </a>
-              </Action>
-              <Action code="regularReports:history">
-                <a
-                  style={{
-                    display:
-                      ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                        record.statusName !== '待提交') ||
-                        taskTypeCode === 'T001_3' ||
-                        taskTypeCode === 'T001_5'
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'history');
-                  }}
-                >
-                  流转历史
-                </a>
-              </Action>
-              <Action code="regularReports:revoke">
-                <a
-                  style={{
-                    display:
-                      record.statusName === '流程中' && record.revoke == 1
-                        ? 'inline-block'
-                        : 'none',
-                    marginRight: 10,
-                  }}
-                  onClick={() => {
-                    this.groupOperate(record, 'revoke');
-                  }}
-                >
-                  撤销
-                </a>
-              </Action>
-              {/* <Dropdown overlay={this.HandleGetMenu(val, record)} trigger={['click']}> */}
-              {/* <Action code="regularReports:more"> */}
-              <a
-                className="ant-dropdown-link"
-                style={{
-                  display:
-                    (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
-                      record.statusName === '流程中'
-                      ? 'inline-block'
-                      : 'none',
-                  marginRight: 10,
-                }}
-              // onClick={this.groupOperate(record, 'more')}
-              >
-                {/* 更多 */}
-                <MoreOperation record={record} fn={this.getTableList} />
-              </a>
-              {/* </Action> */}
-              {/* </Dropdown> */}
-            </span>
-          );
+        render: (_, record) => {
+          switch (taskTypeCodeData.current) {
+            case 'T001_1':
+              switch (record.status) {
+                case '待提交':
+                  return (
+                    <div>
+                      {handleAddButtonUpdate(record)}
+                      {handleAddButtonCopy(record)}
+                      {handleAddButtonCommit(record)}
+                      {handleAddButtonDelete(record)}
+                    </div>
+                  );
+                case '流程中':
+                  if (record.revoke.toString() === '1') {
+                    return (
+                      <div>
+                        {handleAddButtonCheck(record)}
+                        {handleAddButtonTransferHistory(record)}
+                        {handleAddButtonBackOut(record)}
+                        <span style={{ paddingLeft: '-5px' }}>
+                          <MoreOperation record={record} fn={handleGetListData} />
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div>
+                      {handleAddButtonCheck(record)}
+                      {handleAddButtonTransferHistory(record)}
+                      <span style={{ paddingLeft: '-5px' }}>
+                        <MoreOperation record={record} fn={handleGetListData} />
+                      </span>
+                    </div>
+                  );
+
+                default:
+                  return '';
+              }
+            case 'T001_3':
+              switch (record.status) {
+                case '流程中':
+                  if (record.revoke.toString() === '1') {
+                    return (
+                      <div>
+                        {handleAddButtonDetails(record)}
+                        {handleAddButtonTransferHistory(record)}
+                        {handleAddButtonBackOut(record)}
+                      </div>
+                    );
+                  }
+                  return (
+                    <div>
+                      {handleAddButtonDetails(record)}
+                      {handleAddButtonTransferHistory(record)}
+                    </div>
+                  );
+
+                case '已结束':
+                  return (
+                    <div>
+                      {handleAddButtonDetails(record)}
+                      {handleAddButtonTransferHistory(record)}
+                    </div>
+                  );
+                default:
+                  return '';
+              }
+            case 'T001_4':
+              return (
+                <div>
+                  {handleAddButtonUpdate(record)}
+                  {handleAddButtonCopy(record)}
+                  {handleAddButtonCommit(record)}
+                  {handleAddButtonDelete(record)}
+                </div>
+              );
+            case 'T001_5':
+              switch (record.status) {
+                case '流程中':
+                  if (record.revoke.toString() === '1') {
+                    return (
+                      <div>
+                        {handleAddButtonDetails(record)}
+                        {handleAddButtonTransferHistory(record)}
+                        {handleAddButtonBackOut(record)}
+                      </div>
+                    );
+                  }
+                  return (
+                    <div>
+                      {handleAddButtonDetails(record)}
+                      {handleAddButtonTransferHistory(record)}
+                    </div>
+                  );
+
+                case '已结束':
+                  return (
+                    <div>
+                      {handleAddButtonDetails(record)}
+                      {handleAddButtonTransferHistory(record)}
+                    </div>
+                  );
+                default:
+                  return '';
+              }
+            default:
+              return '';
+          }
         },
       },
     ],
@@ -679,6 +594,7 @@ class RegularReports extends Component {
       },
     });
   };
+
   /**
    * @method 新增发起流程
    */
@@ -727,6 +643,7 @@ class RegularReports extends Component {
         }
       });
   };
+
   /**
    * 批量处理接口调用成功以后的回调
    */
@@ -884,7 +801,7 @@ class RegularReports extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -892,7 +809,7 @@ class RegularReports extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productTypeList,
       },
       {
@@ -900,7 +817,7 @@ class RegularReports extends Component {
         label: '报告类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: reportTypeList,
       },
       {
@@ -913,7 +830,7 @@ class RegularReports extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

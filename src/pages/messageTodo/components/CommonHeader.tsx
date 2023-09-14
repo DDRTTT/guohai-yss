@@ -268,7 +268,7 @@ const CommonHeader = ({ form: { getFieldDecorator } }) => {
             <Radio.Group value={listOrCard} onChange={e => setListOrCard(e.target.value)}>
               {listOrCard === 'card' && [
                 <Radio.Button value="card" className={styles.sButton}>
-                  {MessageTodoCardIcon('#5e7ce0', '#fff')}
+                  {MessageTodoCardIcon('#2450A5', '#fff')}
                 </Radio.Button>,
                 <Radio.Button value="list" className={styles.selectedButton}>
                   {MessageTodoListIcon('#fff', '#575d6c')}
@@ -280,7 +280,7 @@ const CommonHeader = ({ form: { getFieldDecorator } }) => {
                   {MessageTodoCardIcon('#fff', '#575d6c')}
                 </Radio.Button>,
                 <Radio.Button value="list" className={styles.sButton}>
-                  {MessageTodoListIcon('#5e7ce0', '#fff')}
+                  {MessageTodoListIcon('#2450A5', '#fff')}
                 </Radio.Button>,
               ]}
             </Radio.Group>

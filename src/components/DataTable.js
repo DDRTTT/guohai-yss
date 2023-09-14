@@ -56,12 +56,16 @@ class DataTable extends PureComponent {
     return (
       <div className={styles.operators}>
         {buttons.map(item => {
-          return (
+          return item.code ? (
             <Action key={item.code} code={`${menuCode}:${item.code}`}>
               <Button type={item.type || 'primary'} key={item.text} onClick={item.onClick}>
                 {item.text}
               </Button>
             </Action>
+          ) : (
+            <Button type={item.type || 'primary'} key={item.text} onClick={item.onClick}>
+              {item.text}
+            </Button>
           );
         })}
       </div>

@@ -1,16 +1,12 @@
 /**
  * 产品看板-查看产品-产品数据-下属产品
  */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Table, Button, Spin } from 'antd';
-import { connect, routerRedux } from 'dva';
+import React, { useContext } from 'react';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
 import styles from './index.less';
-import {
-  handleChangeNumberToFloat,
-  handleChangeThousands,
-} from '@/pages/productBillboard/baseFunc';
 import { tableRowConfig } from '@/pages/investorReview/func';
 
 const ProductMessageProGrade = ({
@@ -18,7 +14,7 @@ const ProductMessageProGrade = ({
   listLoading,
   productBillboard: { productOverviewMessage },
 }) => {
-  const { proCodeArguments, codeListData, codeListCodeData, proDictsObj } = useContext(MyContext); // 子组件接受的数据
+  const { codeListData, codeListCodeData } = useContext(MyContext); // 子组件接受的数据
 
   // 表头数据(下属产品)
   const proGradeColumns = [

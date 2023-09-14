@@ -13,31 +13,31 @@ const { confirm } = Modal;
 const { TabPane } = Tabs;
 
 const Index = ({
-                 dispatch,
-                 listLoading,
-                 getReadsFuncLoading,
-                 form: { setFieldsValue },
-                 messageReminding: {
-                   productTableInfo,
-                   mPageNum,
-                   mTaskTypeCode,
-                   mPageSize,
-                   mType,
-                   mCeateTime,
-                   mIsHandle,
-                   mMsgTitle,
-                   mOnAndOff,
-                   mShowSearch,
-                   mMsgProCodeList,
-                   mProcessPageSize,
-                   mProcessPageNum,
-                 },
-                 currentUser: { id: userId },
-                 processMailTotal,
-                 processMail,
-                 queryMailLoading,
-                 productEnum = [],
-               }) => {
+  dispatch,
+  listLoading,
+  getReadsFuncLoading,
+  form: { setFieldsValue },
+  messageReminding: {
+    productTableInfo,
+    mPageNum,
+    mTaskTypeCode,
+    mPageSize,
+    mType,
+    mCeateTime,
+    mIsHandle,
+    mMsgTitle,
+    mOnAndOff,
+    mShowSearch,
+    mMsgProCodeList,
+    mProcessPageSize,
+    mProcessPageNum,
+  },
+  currentUser: { id: userId },
+  processMailTotal,
+  processMail,
+  queryMailLoading,
+  productEnum = [],
+}) => {
   const [onAndOff, setOnAndOff] = useState(mOnAndOff); // 高级搜索框显示隐藏控制
   const [showSearch, setShowSearch] = useState(mShowSearch); // 高级搜索框显示隐藏控制
   const total = useRef(0); // 总数据条数
@@ -179,7 +179,8 @@ const Index = ({
       render: (_, record) => {
         return (
           <>
-            <Button type="link" size="small"
+            <a
+              style={{ marginLeft: '10px' }}
               onClick={() => {
                 const temp = {
                   title: '流程消息',
@@ -192,7 +193,7 @@ const Index = ({
               }}
             >
               查看
-            </Button>
+            </a>
             {/*            <Button type="link" onClick={() => handleGetRead(record.id)}>
               已读
             </Button> */}
@@ -243,9 +244,8 @@ const Index = ({
     {
       title: '是否不再提醒',
       dataIndex: 'remindState',
-      width: 140,
       render: val => {
-        return val == 3 ? <div className="success">是</div> : <div className="error">否</div>;
+        return val == 3 ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>;
       },
     },
     {
@@ -255,23 +255,24 @@ const Index = ({
       render: (_, record) => {
         return (
           <>
-            <Button type="link" size="small"
+            <a
+              style={{ marginLeft: '10px' }}
               onClick={() => {
                 handleCheck(record);
               }}
             >
               查看
-            </Button>
+            </a>
             {/*            <Button type="link" onClick={() => handleGetRead(record.id)}>
               已读
             </Button> */}
-            <Button type="link" size="small" onClick={() => handleCanShares(record.id)}>
+            <a style={{ marginLeft: '10px' }} onClick={() => handleCanShares(record.id)}>
               删除
-            </Button>
+            </a>
             {record.remindState == 3 && (
-              <Button type="link" size="small" onClick={() => restoreToRemind(record.id)}>
+              <a style={{ marginLeft: '10px' }} onClick={() => restoreToRemind(record.id)}>
                 恢复提醒
-              </Button>
+              </a>
             )}
           </>
         );
@@ -345,7 +346,6 @@ const Index = ({
       setMsgTitle(fieldsValue.title);
     }
     setTriggerTime(new Date());
-
   };
 
   const handleReset = () => {
@@ -358,13 +358,13 @@ const Index = ({
     setMsgProCodeList([]);
     setMsgTitle('');
     setTriggerTime(new Date());
-  }
+  };
 
   // 表格按钮(查看)
   const handleCheck = data => {
     sessionStorage.setItem('messageData', JSON.stringify(data));
     sessionStorage.setItem('messagePath', '事项消息');
-    router.push(`/messageReminding/matterMessage/detail?id=${data.id}&messageType=${taskTypeCode}`);
+    router.push(`/messageReminding/detail?id=${data.id}&messageType=${taskTypeCode}`);
   };
 
   // 按钮事件(已读)
@@ -541,45 +541,46 @@ const Index = ({
       label: '产品名称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: productEnum,
     },
   ];
   return (
     <>
       <List
-         formItemData={formItemData}
-         advancSearch={handlerSearch}
-         resetFn={handleReset}
-         searchInputWidth="300"
-          fuzzySearchBool={false}
-          extra={
-            <div className={styles.tabExtraDiv}>
-              {taskTypeCode === 'lifecycle' && (
-                <Button onClick={() => handleCanShares()} disabled={!multiNum}>
-                  删除
-                </Button>
-              )}
-              <Button
-                disabled={!multiNum}
-                onClick={() => {
-                  restoreToRemind(multi);
-                }}
-              >
-                恢复提醒
+        formItemData={formItemData}
+        advancSearch={handlerSearch}
+        resetFn={handleReset}
+        searchInputWidth="300"
+        fuzzySearchBool={false}
+        extra={
+          <div className={styles.tabExtraDiv}>
+            {taskTypeCode === 'lifecycle' && (
+              <Button onClick={() => handleCanShares()} disabled={!multiNum}>
+                删除
               </Button>
-              <Button loading={getReadsFuncLoading} onClick={handleRead} disabled={!multiNum}>
-                标记已读
-              </Button>
-              <Button type="primary" onClick={handleReadAll}>
-                全部已读
-              </Button>
-            </div>
-          }
-          tableList={(<>
-            {taskTypeCode === 'lifecycle' && 
-            <>
-              <Table
+            )}
+            <Button
+              disabled={!multiNum}
+              onClick={() => {
+                restoreToRemind(multi);
+              }}
+            >
+              恢复提醒
+            </Button>
+            <Button loading={getReadsFuncLoading} onClick={handleRead} disabled={!multiNum}>
+              标记已读
+            </Button>
+            <Button type="primary" onClick={handleReadAll}>
+              全部已读
+            </Button>
+          </div>
+        }
+        tableList={
+          <>
+            {taskTypeCode === 'lifecycle' && (
+              <>
+                <Table
                   pagination={pages} // 分页栏
                   rowSelection={rowSelection}
                   loading={listLoading} // 加载中效果
@@ -589,21 +590,25 @@ const Index = ({
                   onChange={handleChangePages}
                   scroll={{ x: true }}
                 />
-            </>}
-            {taskTypeCode === 'process' && <>
-              <Table
-                pagination={processPages} // 分页栏
-                rowSelection={rowSelection}
-                loading={queryMailLoading} // 加载中效果
-                rowKey={record => record.id} // key值
-                dataSource={processMail} // 表数据源
-                columns={processColumns} // 表头数据
-                onChange={processHandleChangePages}
-                scroll={{ x: true }}
-              />
-            </>}
-          </>)}
-        />
+              </>
+            )}
+            {taskTypeCode === 'process' && (
+              <>
+                <Table
+                  pagination={processPages} // 分页栏
+                  rowSelection={rowSelection}
+                  loading={queryMailLoading} // 加载中效果
+                  rowKey={record => record.id} // key值
+                  dataSource={processMail} // 表数据源
+                  columns={processColumns} // 表头数据
+                  onChange={processHandleChangePages}
+                  scroll={{ x: true }}
+                />
+              </>
+            )}
+          </>
+        }
+      />
     </>
   );
 };
@@ -612,11 +617,11 @@ const WrappedIndexForm = errorBoundary(
   Form.create()(
     connect(
       ({
-         messageReminding,
-         loading,
-         operatingCalendar: { productEnum },
-         user: { processMail, processMailTotal, currentUser },
-       }) => ({
+        messageReminding,
+        loading,
+        operatingCalendar: { productEnum },
+        user: { processMail, processMailTotal, currentUser },
+      }) => ({
         messageReminding,
         listLoading: loading.effects['messageReminding/getProductInfoTableFunc'],
         asReadLoading: loading.effects['messageReminding/handleAsRead'],

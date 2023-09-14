@@ -6,7 +6,7 @@ html,
 body,
 #root {
   height: 100%;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .colorWeak {
@@ -26,11 +26,13 @@ ol {
   .ant-table {
     width: 100%;
     overflow-x: auto;
+
     &-thead > tr,
     &-tbody > tr {
       > th,
       > td {
         white-space: pre;
+
         > span {
           display: block;
         }
@@ -62,11 +64,12 @@ ol {
   position: relative;
   display: flex;
   height: 100%;
+
   .visobox-left {
     width: 300px;
     padding: 8px;
-    background: #fff;
   }
+
   .flowNodeList {
     height: 128px;
     overflow-y: scroll;
@@ -79,7 +82,6 @@ ol {
   right: 10px;
   z-index: 100;
   padding: 10px;
-  background-color: #eee;
   border: 1px solid #ddd;
 }
 
@@ -93,20 +95,22 @@ ol {
   color: #eee;
   font-size: 12px;
   text-align: center;
-  background-color: rgb(14, 158, 184);
   border: 1px solid #ddd;
   border-radius: 5px;
 }
+
 #visobox-left .operate-item {
   margin-bottom: 8px;
   text-align: center;
 }
+
 #visobox-left .flowNodeItem {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 #visobox-left .flowNodeItem::after {
   flex: auto;
   content: '';
@@ -114,8 +118,8 @@ ol {
 
 #visobox-left .flowNodeTitle {
   line-height: 32px;
-  background: #f0f2f5;
 }
+
 #operate .operate-item button {
   width: 100%;
 }
@@ -140,7 +144,6 @@ ol {
   color: #333;
   font-size: 12px;
   line-height: 15px;
-  background-color: #fff;
   opacity: 0.8;
 }
 
@@ -154,7 +157,6 @@ ol {
   height: 80px;
   color: #eee;
   font-size: 12px;
-  background-color: rgb(9, 116, 116);
   border: 2px solid #40affe;
   cursor: pointer;
 
@@ -183,12 +185,14 @@ ol {
   border: none;
   border-radius: 0;
 }
+
 #diagramContainer .ant-select .ant-select-selection {
   width: 100%;
   height: 100%;
   background: none;
   border: none;
 }
+
 #diagramContainer .ant-select .ant-select-selection__rendered {
   display: flex;
   align-items: center;
@@ -197,11 +201,13 @@ ol {
   height: 100%;
   margin: 0;
 }
+
 #diagramContainer .ant-select .ant-select-selection-selected-value {
   float: none;
   padding-right: 0;
   font-size: 12px;
 }
+
 #diagramContainer .ant-select .ant-select-arrow {
   display: none;
 }
@@ -220,6 +226,7 @@ ol {
   line-height: 20px;
   cursor: pointer;
 }
+
 #diagramContainer .viso-commonIcon {
   position: absolute;
   left: 0;
@@ -236,6 +243,7 @@ ol {
   bottom: 0;
   background: url(./assets/flow/add.png) no-repeat center center;
 }
+
 #diagramContainer .viso-cut {
   top: 0;
   background: url(./assets/flow/cut.png) no-repeat center center;
@@ -248,30 +256,27 @@ ol {
 #diagramContainer .viso-start {
   width: 80px;
   height: 30px;
-  background-color: orange;
   border-radius: 10px;
 }
+
 #diagramContainer .viso-start .viso-input {
-  background-color: orange;
 }
 
 #diagramContainer .viso-end {
   width: 80px;
   height: 30px;
-  background-color: green;
   border-radius: 10px;
 }
+
 #diagramContainer .viso-end .viso-input {
-  background-color: green;
 }
 
 #diagramContainer .viso-task {
   width: 100px;
   height: 50px;
-  background-color: rgb(9, 116, 116);
 }
+
 #diagramContainer .viso-task .viso-input {
-  background-color: rgb(9, 116, 116);
 }
 
 #diagramContainer .viso-gateway-exclusive {
@@ -293,14 +298,14 @@ ol {
 }
 
 #diagramContainer .diagram-item.select {
-  background-color: rgb(20, 85, 85);
 }
+
 .visobox-right {
   width: 220px;
   padding: 8px;
-  background: #fff;
   border-left: 1px solid #ccc;
 }
+
 .right-types {
   margin-bottom: 8px;
   color: #08979c;
@@ -314,21 +319,17 @@ ol {
   z-index: 1;
   width: 99% !important;
   height: 200px;
-  background: #08979c;
   opacity: 0.5;
 }
 
 .drag-item-type2,
 #diagramContainer .viso-item-type2 {
   color: #333;
-
-  /* background-color: rgb(220, 107, 107); */
-  background-color: rgb(107, 171, 220);
 }
+
 .drag-item-type3,
 #diagramContainer .viso-item-type3 {
   color: #333;
-  background-color: rgb(107, 171, 220);
 }
 
 .right-types-item {
@@ -339,12 +340,127 @@ ol {
   flex: 1;
   overflow: auto;
 }
+
 #diagramContainer .jtk-connector-outline,
 .jtk-connector,
 .jtk-endpoint-anchor {
   z-index: 100;
 }
-
-.ant-radio-group-wrapper .ant-radio-group {
-  display: none;
+body .ant-layout {
+  background-color: #f2f5fc;
 }
+//Ant design 修改table滚动条样式
+//.ant-table-body{
+//  &::-webkit-scrollbar {
+//    height: 10px;
+//  }
+//  &::-webkit-scrollbar-thumb {
+//    border-radius: 5px;
+//    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+//    background: #5E7CE0;
+//  }
+//  &::-webkit-scrollbar-track {
+//    -webkit-box-shadow: none;
+//    border-radius: 0;
+//    background: rgba(0, 4, 40, 0.06);
+//  }
+//}
+//
+.ant-card-body .bottom-list{
+  padding-left: 20px;
+  margin-top: -50px;
+}
+body .ant-btn:hover, body .ant-btn:focus {
+  border-color: #8aa4ed;
+}
+body{
+  .ant-table-column-title{
+    white-space: nowrap;
+    z-index: 1;
+    flex: 1 1;
+  }
+  .ant-btn-icon-only {
+    font-size: 14px!important;
+  }
+  .ant-table-pagination.ant-pagination {
+    margin: 16px !important;
+  }
+  .ant-radio-inner::after {
+    margin-top: 0;
+    margin-left: 0;
+  }
+  .ant-radio{
+    top:0;
+  }
+  .ant-btn {
+    line-height: 1.5715;
+    border-radius:2px;
+  }
+  .ant-checkbox-wrapper::after {
+    overflow: inherit;
+  }
+
+  .ant-table-column-sorter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0px;
+  }
+  .ant-breadcrumb-separator {
+    margin: 0 4px;
+  }
+  .ant-table-thead > tr > th  .ant-table-column-sorter-inner {
+    display: inline-block;
+  }
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full {
+    margin-top: 0.35em;
+    margin-left: 4px;
+  }
+  .ant-tree-checkbox {
+    top: 0.35em;
+  }
+  .ant-upload-list-text .ant-upload-list-item-name, .ant-upload-list-picture .ant-upload-list-item-name {
+    padding: 0 16px;
+  }
+  .ant-upload-list-text .ant-upload-list-item-card-actions, .ant-upload-list-picture .ant-upload-list-item-card-actions {
+    position: absolute;
+  }
+  .antd-pro-layouts-basic-layout-content .ant-layout-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: fixed;
+    height: 58px;
+    line-height: 58px;
+    width: 100%;
+    z-index: 100;
+    right: 0px;
+  }
+  .ant-layout.ant-layout-has-sider > .ant-layout, .ant-layout.ant-layout-has-sider > .ant-layout-content {
+    padding-top: 58px;
+  }
+  #collDiv{
+    display: none;
+  }
+  .ant-input-affix-wrapper {
+    float: none;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    min-width: 0;
+    color: #000000d9;
+    font-size: 14px;
+    height: 32px;
+    line-height: 1.5715;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 2px;
+    transition: all .3s;
+    padding: 0 11px ;
+  }
+  .ant-input {
+    line-height:1.5715;
+    height: auto;
+  }
+}
+

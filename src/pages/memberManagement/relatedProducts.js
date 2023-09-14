@@ -138,7 +138,7 @@ export default class relatedProducts extends Component {
 
     unique(uniqueArr);
     const arr = uniqueArr
-      .filter(item => item.sysId === 0 || item.sysId === 1 || item.sysId === 8 || item.sysId === 10)
+      .filter(item => item.sysId === 0 || item.sysId === 1)
       .map((item, index) => {
         const { groups } = item;
         const groupLen = groups.length;

@@ -57,15 +57,15 @@ const handleAddTag = val => {
   switch (val) {
     case '已完成':
       return (
-        <div className="success" style={{ marginRight: '30px' }}>
+        <Tag color="green" style={{ marginRight: '30px' }}>
           已完成
-        </div>
+        </Tag>
       );
     case '未完成':
       return (
-        <div className="error" style={{ marginRight: '30px' }}>
+        <Tag color="red" style={{ marginRight: '30px' }}>
           未完成
-        </div>
+        </Tag>
       );
 
     default:

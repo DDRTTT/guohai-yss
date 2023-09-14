@@ -47,6 +47,10 @@ export function download(url, options = '') {
         const para = getParameters(result);
         fileName = decodeURI(window.atob(para.get('fileName')));
       }
+      // 切割出文件名
+      const fileNameEncode = res.headers.get('content-disposition').split('filename=')[1]
+      // 解码
+      fileName = decodeURIComponent(fileNameEncode)
       return res.blob();
     })
     .then(blob => {
@@ -59,6 +63,7 @@ export function download(url, options = '') {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+        message.success('请求成功 开始下载')
       } catch (e) {
         message.error('下载服务异常，请稍后再试!');
         throw e;
@@ -234,7 +239,44 @@ export function filePreviewWithBlobUrl(url, cb) {
       throw error;
     });
 }
+export function actionDownload (href, filename) {
+  const aLink = document.createElement('a');
+  aLink.href = href;
+  aLink.style.display = 'none';
+  if (filename) {
+    aLink.setAttribute('download', filename);
+  } else {
+    aLink.download = '';
+  }
 
+  let event;
+  if (window.MouseEvent) {
+    event = new MouseEvent('click');
+    message.success(`下载成功`)
+  } else {
+    event = document.createEvent('MouseEvent');
+    event.initMouseEvent(
+      'click',
+      true,
+      false,
+      window,
+      0,
+      0,
+      0,
+      0,
+      0,
+      false,
+      false,
+      false,
+      false,
+      0,
+      null
+    );
+  }
+  aLink.dispatchEvent(event);
+  URL.revokeObjectURL(aLink.href);
+  return Promise.resolve()
+}
 /**
  * json导出txt
  * @param {any} data JSON结构

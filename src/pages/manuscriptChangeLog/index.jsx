@@ -1,3 +1,7 @@
+/**
+ * 项目管理--操作日志 底稿日志查询页面
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -38,6 +42,7 @@ const initParams = {
 class Agent extends Component {
   state = {
     KeyWordsInputRef: null,
+    sortedInfo: null,
     params: {
       ...initParams,
     },
@@ -203,6 +208,9 @@ class Agent extends Component {
   sortChange(order, field, sorter) {
     const { params } = this.state;
     params.field = sorter.field;
+    this.setState({
+      sortedInfo: sorter,
+    });
     switch (sorter.order) {
       case 'ascend':
         params.direction = 'ASC';
@@ -239,6 +247,15 @@ class Agent extends Component {
   }
 
   /**
+   * @method clearSortedInfo 清除表格列排序状态
+   */
+  clearSortedInfo() {
+    this.setState({
+      sortedInfo: null,
+    });
+  }
+
+  /**
    * @method handleSearchBtn 详细搜索
    */
   handleSearchBtn(e) {
@@ -261,6 +278,7 @@ class Agent extends Component {
 
       //刷新列表数据
       this.handleGetTableList(this.state.params);
+      this.clearSortedInfo();
     });
   }
 
@@ -280,7 +298,7 @@ class Agent extends Component {
       params: { type },
     } = this.state;
     return (
-      <Card bordered={ false }>
+      <Card bordered={false}>
         <Row type="flex" align="middle" justify="space-between">
           <Col>
             <Breadcrumb>
@@ -290,16 +308,16 @@ class Agent extends Component {
           </Col>
           <Col>
             <Search
-              placeholder={ `请输入${type === 1 ? '项目' : '系列'}名称/编码` }
-              onSearch={ value => this.handleBlurSearch(value) }
-              ref={ this.setKeyWordsInputRef }
-              style={ {
+              placeholder={`请输入${type === 1 ? '项目' : '系列'}名称/编码`}
+              onSearch={value => this.handleBlurSearch(value)}
+              ref={this.setKeyWordsInputRef}
+              style={{
                 width: 210,
                 marginRight: 23,
                 height: 32,
-              } }
+              }}
             />
-            <Button onClick={ () => this.handleOpenConditions() } type="link">
+            <Button onClick={() => this.handleOpenConditions()} type="link">
               展开搜索
               <Icon type="down" />
             </Button>
@@ -328,14 +346,14 @@ class Agent extends Component {
       params: { type },
     } = this.state;
     return (
-      <Card bordered={ false }>
+      <Card bordered={false}>
         <Form>
           <Row
-            gutter={ {
+            gutter={{
               md: 8,
               lg: 24,
               xl: 48,
-            } }
+            }}
           >
             <Col>
               <Breadcrumb>
@@ -343,84 +361,84 @@ class Agent extends Component {
                 <Breadcrumb.Item>底稿日志查询</Breadcrumb.Item>
               </Breadcrumb>
             </Col>
-            <Col span={ 6 }>
-              <Form.Item label={ `${type === 1 ? '项目' : '系列'}名称` } { ...formItemLayout }>
-                { getFieldDecorator('proCode')(
+            <Col span={6}>
+              <Form.Item label={`${type === 1 ? '项目' : '系列'}名称`} {...formItemLayout}>
+                {getFieldDecorator('proCode')(
                   <Select
-                    placeholder={ `请选择${type === 1 ? '项目' : '系列'}名称` }
+                    placeholder={`请选择${type === 1 ? '项目' : '系列'}名称`}
                     mode="multiple"
                     showArrow
                     allowClear
-                    filterOption={ this.handleFilterOption }
+                    filterOption={this.handleFilterOption}
                   >
-                    { proCode &&
+                    {proCode &&
                       proCode.map(item => (
-                        <Select.Option key={ item.code } title={ item.name }>
-                          { item.name }
+                        <Select.Option key={item.code} title={item.name}>
+                          {item.name}
                         </Select.Option>
-                      )) }
+                      ))}
                   </Select>,
-                ) }
+                )}
               </Form.Item>
             </Col>
-            <Col span={ 6 }>
-              <Form.Item label="项目类型" { ...formItemLayout }>
-                { getFieldDecorator('proType')(
+            <Col span={6}>
+              <Form.Item label="项目类型" {...formItemLayout}>
+                {getFieldDecorator('proType')(
                   <Select
                     placeholder="请选择项目类型"
                     mode="multiple"
                     showArrow
                     allowClear
-                    filterOption={ this.handleFilterOption }
+                    filterOption={this.handleFilterOption}
                   >
-                    { awpProType &&
+                    {awpProType &&
                       awpProType.map(item => (
-                        <Select.Option key={ item.code } title={ item.name }>
-                          { item.name }
+                        <Select.Option key={item.code} title={item.name}>
+                          {item.name}
                         </Select.Option>
-                      )) }
+                      ))}
                   </Select>,
-                ) }
+                )}
               </Form.Item>
             </Col>
-            <Col span={ 6 }>
-              <Form.Item label="所属部门" { ...formItemLayout }>
-                { getFieldDecorator('proDept')(
+            <Col span={6}>
+              <Form.Item label="所属部门" {...formItemLayout}>
+                {getFieldDecorator('proDept')(
                   <Select
                     placeholder="请选择所属部门"
                     mode="multiple"
                     showArrow
                     allowClear
-                    filterOption={ this.handleFilterOption }
+                    filterOption={this.handleFilterOption}
                   >
-                    { proDept &&
+                    {proDept &&
                       proDept.map(item => (
-                        <Select.Option key={ item.code } title={ item.name }>
-                          { item.name }
+                        <Select.Option key={item.code} title={item.name}>
+                          {item.name}
                         </Select.Option>
-                      )) }
+                      ))}
                   </Select>,
-                ) }
+                )}
               </Form.Item>
             </Col>
-            <Col span={ 6 } className={ styles.FormDatePicker }>
-              <Form.Item label="开始日期：" { ...formItemLayout }>
-                { getFieldDecorator('proCDateMin')(<DatePicker />) }
+            <Col span={6} className={styles.FormDatePicker}>
+              <Form.Item label="开始日期：" {...formItemLayout}>
+                {getFieldDecorator('proCDateMin')(<DatePicker />)}
               </Form.Item>
             </Col>
-            <Col span={ 6 } className={ styles.FormDatePicker }>
-              <Form.Item label="结束日期：" { ...formItemLayout }>
-                { getFieldDecorator('proCDateMax')(<DatePicker />) }
+            <Col span={6} className={styles.FormDatePicker}>
+              <Form.Item label="结束日期：" {...formItemLayout}>
+                {getFieldDecorator('proCDateMax')(<DatePicker />)}
               </Form.Item>
             </Col>
-            <Col md={ 6 } style={ { float: 'right', textAlign: 'right', paddingTop: 5 } }>
-              <Button type="primary" onClick={ () => this.handleSearchBtn() }>
+            <Col md={6} style={{ float: 'right', textAlign: 'right', paddingTop: 5 }}>
+              <Button type="primary" onClick={() => this.handleSearchBtn()}>
                 查询
               </Button>
-              <Button style={ { marginLeft: 10 } } onClick={ () => this.handleClearVal() }>
+              <Button style={{ marginLeft: 10 }} onClick={() => this.handleClearVal()}>
                 重置
               </Button>
-              <Button onClick={ () => this.handleOpenConditions() } type="link">
+              <Button onClick={() => this.handleOpenConditions()} type="link">
                 收起
                 <Icon type="up" />
               </Button>
@@ -435,6 +453,8 @@ class Agent extends Component {
     const {
       params: { type, pageSize, pageNum },
     } = this.state;
+    let { sortedInfo } = this.state;
+    sortedInfo = sortedInfo || {};
     let columns = null;
     if (type === 1) {
       columns = [
@@ -443,14 +463,17 @@ class Agent extends Component {
           title: '项目名称',
           dataIndex: 'proName',
           sorter: true,
+          align: 'center',
           width: 300,
+          fixed: 'left',
+          sortOrder: sortedInfo.columnKey === 'proName' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proName }>
-                <span>{ record.proName }</span>
+              <Tooltip placement="topLeft" title={record.proName}>
+                <span>{record.proName}</span>
               </Tooltip>
             );
           },
@@ -460,13 +483,15 @@ class Agent extends Component {
           title: '项目编码',
           dataIndex: 'proCode',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proCode' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proCode }>
-                <span>{ record.proCode }</span>
+              <Tooltip placement="topLeft" title={record.proCode}>
+                <span>{record.proCode}</span>
               </Tooltip>
             );
           },
@@ -476,23 +501,27 @@ class Agent extends Component {
           title: '项目简称',
           dataIndex: 'proShortName',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proShortName' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proShortName }>
-                <span>{ record.proShortName }</span>
+              <Tooltip placement="topLeft" title={record.proShortName}>
+                <span>{record.proShortName}</span>
               </Tooltip>
             );
           },
         },
         {
           key: 'projectState',
-          title: '项目阶段',
+          title: '状态',
           dataIndex: 'projectState',
           sorter: true,
-          render: (text, record) => <Tag>{ record.projectStateName }</Tag>,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'projectState' && sortedInfo.order,
+          render: (text, record) => <Tag>{record.projectStateName}</Tag>,
         },
         {
           key: 'proType',
@@ -500,13 +529,15 @@ class Agent extends Component {
           width: 188,
           dataIndex: 'proType',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proType' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proTypeName }>
-                <span>{ record.proTypeName }</span>
+              <Tooltip placement="topLeft" title={record.proTypeName}>
+                <span>{record.proTypeName}</span>
               </Tooltip>
             );
           },
@@ -516,6 +547,8 @@ class Agent extends Component {
           title: '项目区域',
           dataIndex: 'proArea',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proArea' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
@@ -523,10 +556,10 @@ class Agent extends Component {
             return (
               <Tooltip
                 placement="topLeft"
-                title={ record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName }
+                title={record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName}
               >
                 <span>
-                  { record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName }
+                  {record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName}
                 </span>
               </Tooltip>
             );
@@ -537,13 +570,15 @@ class Agent extends Component {
           title: '所属部门',
           dataIndex: 'proDept',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proDept' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proDept }>
-                <span>{ record.proDept }</span>
+              <Tooltip placement="topLeft" title={record.proDept}>
+                <span>{record.proDept}</span>
               </Tooltip>
             );
           },
@@ -553,33 +588,41 @@ class Agent extends Component {
           title: '开始日期',
           dataIndex: 'proCDate',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proCDate' && sortedInfo.order,
         },
         {
           key: 'proBusType',
           title: '项目分类',
           dataIndex: 'proBusType',
           sorter: true,
-          render: text => <span>{ text === '1' ? '管理人项目' : '非管理人项目' }</span>,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proBusType' && sortedInfo.order,
+          render: text => <span>{text === '1' ? '管理人项目' : '非管理人项目'}</span>,
         },
         {
           key: 'biddingFlag',
           title: '是否招投标',
           dataIndex: 'biddingFlag',
           sorter: true,
-          render: text => <span>{ text === 1 ? '是' : '否' }</span>,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'biddingFlag' && sortedInfo.order,
+          render: text => <span>{text === 1 ? '是' : '否'}</span>,
         },
         {
           key: 'customerName',
           title: '客户名称',
           dataIndex: 'customerName',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'customerName' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.customerName }>
-                <span>{ record.customerName }</span>
+              <Tooltip placement="topLeft" title={record.customerName}>
+                <span>{record.customerName}</span>
               </Tooltip>
             );
           },
@@ -589,11 +632,9 @@ class Agent extends Component {
           title: '客户类型',
           dataIndex: 'customerType',
           sorter: true,
-          render: text => (
-            <Tooltip placement="topLeft" title={ text }>
-              <span>{ text }</span>
-            </Tooltip>
-          ),
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'customerType' && sortedInfo.order,
+          render: text => <span>{text === '1' ? '机构' : '自然人'}</span>,
         },
         {
           key: 'createTime',
@@ -601,30 +642,35 @@ class Agent extends Component {
           width: 180,
           dataIndex: 'createTime',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
         },
         {
           key: 'creatorId',
           title: '创建人',
           dataIndex: 'creatorId',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'creatorId' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.creatorName }>
-                <span>{ record.creatorName }</span>
+              <Tooltip placement="topLeft" title={record.creatorName}>
+                <span>{record.creatorName}</span>
               </Tooltip>
             );
           },
         },
         {
           title: '操作',
+          align: 'center',
           width: 80,
           fixed: 'right',
           render: (text, record) => (
             <Action code="manuscriptManagementOperationLogIndex:viewPage">
-              <Button type="link" onClick={ () => this.handleLookDetail(record, 1) }>
+              <Button type="link" onClick={() => this.handleLookDetail(record, 1)}>
                 查看
               </Button>
             </Action>
@@ -639,14 +685,17 @@ class Agent extends Component {
           title: '系列名称',
           dataIndex: 'proName',
           sorter: true,
+          align: 'center',
           width: 300,
+          fixed: 'left',
+          sortOrder: sortedInfo.columnKey === 'proName' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proName }>
-                <span>{ record.proName }</span>
+              <Tooltip placement="topLeft" title={record.proName}>
+                <span>{record.proName}</span>
               </Tooltip>
             );
           },
@@ -656,13 +705,15 @@ class Agent extends Component {
           title: '系列编码',
           dataIndex: 'proCode',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proCode' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proCode }>
-                <span>{ record.proCode }</span>
+              <Tooltip placement="topLeft" title={record.proCode}>
+                <span>{record.proCode}</span>
               </Tooltip>
             );
           },
@@ -673,29 +724,35 @@ class Agent extends Component {
           width: 188,
           dataIndex: 'proType',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proType' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proTypeName }>
-                <span>{ record.proTypeName }</span>
+              <Tooltip placement="topLeft" title={record.proTypeName}>
+                <span>{record.proTypeName}</span>
               </Tooltip>
             );
           },
         },
         {
           key: 'projectState',
-          title: '项目阶段',
+          title: '状态',
           dataIndex: 'projectState',
           sorter: true,
-          render: (text, record) => <Tag>{ record.projectStateName }</Tag>,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'projectState' && sortedInfo.order,
+          render: (text, record) => <Tag>{record.projectStateName}</Tag>,
         },
         {
           key: 'proArea',
           title: '项目区域',
           dataIndex: 'proArea',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proArea' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
@@ -703,10 +760,10 @@ class Agent extends Component {
             return (
               <Tooltip
                 placement="topLeft"
-                title={ record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName }
+                title={record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName}
               >
                 <span>
-                  { record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName }
+                  {record.proAreaName === '境外' ? record.overseasProArea : record.proAreaName}
                 </span>
               </Tooltip>
             );
@@ -717,13 +774,15 @@ class Agent extends Component {
           title: '所属部门',
           dataIndex: 'proDept',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'proDept' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.proDept }>
-                <span>{ record.proDept }</span>
+              <Tooltip placement="topLeft" title={record.proDept}>
+                <span>{record.proDept}</span>
               </Tooltip>
             );
           },
@@ -733,13 +792,15 @@ class Agent extends Component {
           title: '客户名称',
           dataIndex: 'customerName',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'customerName' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.customerName }>
-                <span>{ record.customerName }</span>
+              <Tooltip placement="topLeft" title={record.customerName}>
+                <span>{record.customerName}</span>
               </Tooltip>
             );
           },
@@ -749,11 +810,9 @@ class Agent extends Component {
           title: '客户类型',
           dataIndex: 'customerType',
           sorter: true,
-          render: text => (
-            <Tooltip placement="topLeft" title={ text }>
-              <span>{ text }</span>
-            </Tooltip>
-          ),
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'customerType' && sortedInfo.order,
+          render: text => <span>{text === '1' ? '机构' : '自然人'}</span>,
         },
         {
           key: 'createTime',
@@ -761,19 +820,23 @@ class Agent extends Component {
           width: 180,
           dataIndex: 'createTime',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
         },
         {
           key: 'creatorId',
           title: '创建人',
           dataIndex: 'creatorId',
           sorter: true,
+          align: 'center',
+          sortOrder: sortedInfo.columnKey === 'creatorId' && sortedInfo.order,
           ellipsis: {
             showTitle: false,
           },
           render: (text, record) => {
             return (
-              <Tooltip placement="topLeft" title={ record.creatorName }>
-                <span>{ record.creatorName }</span>
+              <Tooltip placement="topLeft" title={record.creatorName}>
+                <span>{record.creatorName}</span>
               </Tooltip>
             );
           },
@@ -782,9 +845,10 @@ class Agent extends Component {
           title: '操作',
           width: 80,
           fixed: 'right',
+          align: 'center',
           render: (text, record) => (
             <Action code="manuscriptManagementOperationLogIndex:viewPage">
-              <Button type="link" onClick={ () => this.handleLookDetail(record, 1) }>
+              <Button type="link" onClick={() => this.handleLookDetail(record, 1)}>
                 查看
               </Button>
             </Action>
@@ -797,30 +861,30 @@ class Agent extends Component {
       manuscriptManagement: { tableList },
     } = this.props;
     return (
-      <div className={ styles.manuscriptManagement }>
-        { this.state.isForm ? this.SearchHtml() : this.detailsSearchHtml() }
-        <Card style={ { marginTop: '12px' } } bordered={ false } className={ styles.content }>
-          <Row style={ { marginBottom: '20px' } }>
-            <Col span={ 8 }>
+      <div className={styles.manuscriptManagement}>
+        {this.state.isForm ? this.SearchHtml() : this.detailsSearchHtml()}
+        <Card style={{ marginTop: '12px' }} bordered={false} className={styles.content}>
+          <Row style={{ marginBottom: '20px' }}>
+            <Col span={8}>
               <Radio.Group
-                defaultValue={ type }
-                value={ type }
-                onChange={ e => this.handleRadioChange(e) }
+                defaultValue={type}
+                value={type}
+                onChange={e => this.handleRadioChange(e)}
                 buttonStyle="solid"
               >
                 <Action code="manuscriptManagementOperationLogIndex:relatedLogs">
-                  <Radio.Button value={ 1 }>项目日志</Radio.Button>
+                  <Radio.Button value={1}>项目日志</Radio.Button>
                 </Action>
                 <Action code="manuscriptManagementOperationLogIndex:relatedLogs">
-                  <Radio.Button value={ 0 }>系列日志</Radio.Button>
+                  <Radio.Button value={0}>系列日志</Radio.Button>
                 </Action>
               </Radio.Group>
             </Col>
-            <Col span={ 8 } offset={ 8 } style={ { textAlign: 'right' } }>
+            <Col span={8} offset={8} style={{ textAlign: 'right' }}>
               <Action code="manuscriptManagementOperationLogIndex:viewPage">
                 <Button
                   type="primary"
-                  onClick={ () => this.handleLookDetail({ proCode: null, type: 2 }, 2) }
+                  onClick={() => this.handleLookDetail({ proCode: null, type: 2 }, 2)}
                 >
                   非项目相关日志
                 </Button>
@@ -828,39 +892,39 @@ class Agent extends Component {
             </Col>
           </Row>
           <Table
-            rowKey={ record => record.proCode }
-            columns={ columns }
-            dataSource={ tableList.rows }
-            scroll={ { x: columns.length * 150 + 350 } }
-            onChange={ (order, field, sorter) => this.sortChange(order, field, sorter) }
-            loading={ loading }
-            pagination={ false }
+            rowKey={record => record.proCode}
+            columns={columns}
+            dataSource={tableList.rows}
+            scroll={{ x: columns.length * 150 + 350 }}
+            onChange={(order, field, sorter) => this.sortChange(order, field, sorter)}
+            loading={loading}
+            pagination={false}
           />
-          { tableList.total != 0 ? (
+          {tableList.total != 0 ? (
             <div
-              style={ {
+              style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 marginTop: 20,
-              } }
+              }}
             >
               <Pagination
                 ref="pagination"
-                style={ {
+                style={{
                   textAlign: 'right',
-                } }
-                current={ pageNum }
-                pageSize={ pageSize }
-                onChange={ this.handleSetPage }
-                onShowSizeChange={ this.handleSetPage }
-                total={ tableList.total }
-                showTotal={ () => `共 ${tableList.total} 条数据` }
+                }}
+                current={pageNum}
+                pageSize={pageSize}
+                onChange={this.handleSetPage}
+                onShowSizeChange={this.handleSetPage}
+                total={tableList.total}
+                showTotal={() => `共 ${tableList.total} 条数据`}
                 showSizeChanger
-                showQuickJumper={ tableList.total > pageSize }
+                showQuickJumper={tableList.total > pageSize}
               />
             </div>
-          ) : null }
+          ) : null}
         </Card>
       </div>
     );

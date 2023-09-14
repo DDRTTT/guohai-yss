@@ -12,6 +12,7 @@ import {
   updateAllRead,
   updateOneRead,
   updateSomeRead,
+  GET_PROJECT_INFO_API,
 } from '@/services/user';
 import { getMenu, getUserInfo, setMenu, setSession, setUserInfo } from '@/utils/session';
 import { message } from 'antd';
@@ -30,6 +31,11 @@ export default {
     // 流程引擎的未读消息
     processMail: [],
     processMailTotal: 0,
+    SAVE_PROJECT_INFO: {
+      innerLogo: '',
+      loginLogo: '',
+      loginTitle: '',
+    },
   },
 
   effects: {
@@ -39,7 +45,6 @@ export default {
       if (res && res.status === 200) {
         return res.data;
       }
-      return false;
     },
 
     // 流程引擎单条消息已读
@@ -82,9 +87,9 @@ export default {
           payload: response.data.total,
         });
         return response.data.rows;
+      } else {
+        message.warn('操作失败');
       }
-      message.warn('操作失败');
-      return false;
     },
 
     // 收到消息以后的反馈接口
@@ -92,9 +97,10 @@ export default {
       const response = yield call(feedback, payload);
       if (response && response.status === 200) {
         return true;
+      } else {
+        message.warn('操作失败');
+        return false;
       }
-      message.warn('操作失败');
-      return false;
     },
 
     // 消息列表初始化接口
@@ -102,9 +108,9 @@ export default {
       const response = yield call(msgInit, payload);
       if (response && response.status === 200 && response.data) {
         return response.data;
+      } else {
+        // message.warn('操作失败');
       }
-      message.warn('操作失败');
-      return false;
     },
 
     *fetch(_, { call, put }) {
@@ -124,9 +130,9 @@ export default {
         });
         if (response.data[0] && response.data[0].usercode)
           setSession('SingleId', response.data[0].usercode);
-        setSession('loginOrgId', response.data[0].orgId);// 当前登录人的归属机构
-        setSession('loginId', response.data[0].id);// 当前登录人id，超级管理员 id 为1
-        yield call(setUserInfo, JSON.stringify(response.data[0]));
+        setSession('loginOrgId', response.data[0].orgId); // 当前登录人的归属机构
+        setSession('loginId', response.data[0].id); // 当前登录人id，超级管理员 id 为1
+        yield call(setUserInfo, JSON.stringify(response.data[0])); // 本地缓存 USER_INFO
       }
     },
 
@@ -141,22 +147,17 @@ export default {
         });
         message.success('操作成功');
       } else {
-        if (response.message) {
-          message.warn(response.message);
-        } else {
-          message.warn('操作失败');
-        }
+        message.warn('操作失败');
       }
     },
 
     // 获取未读消息数量
-    *handleGetCountUnread(_, { call }) {
-      const response = yield call(getCountUnreadAPI);
-      if (response && response.status === 200 && response.data) {
-        return response.data;
-      }
-      return false;
-    },
+    // *handleGetCountUnread(_, { call }) {
+    //   const response = yield call(getCountUnreadAPI);
+    //   if (response && response.status === 200 && response.data) {
+    //     return response.data;
+    //   }
+    // },
 
     // 消息列表查询
     *handleGetUnreadMsgList({ payload }, { call, put }) {
@@ -172,7 +173,6 @@ export default {
         });
         return response.data;
       }
-      return false;
     },
 
     *handleGetMenu({ payload, callBack }, { call, put, select }) {
@@ -200,6 +200,17 @@ export default {
         }
       }
       if (callBack) callBack();
+    },
+
+    *GET_PROJECT_INFO_FETCH(_, { call, put }) {
+      const res = yield call(GET_PROJECT_INFO_API);
+      if (res && res.status === 200) {
+        const info = res.data;
+        yield put({
+          type: 'SAVE_PROJECT_INFO',
+          payload: info,
+        });
+      }
     },
   },
 
@@ -269,6 +280,13 @@ export default {
           notifyCount: action.payload.totalCount,
           unreadCount: action.payload.unreadCount,
         },
+      };
+    },
+
+    SAVE_PROJECT_INFO(state, { payload }) {
+      return {
+        ...state,
+        SAVE_PROJECT_INFO: payload,
       };
     },
   },

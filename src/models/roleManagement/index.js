@@ -401,20 +401,6 @@ export default {
       }
     },
 
-    // 底稿-条件查询产品-分页-返回数据：pages中需要对底稿数据做实时处理
-    *getDGProducts({ payload }, { put, call }) {
-      const res = yield call(GET_DG_PRO_PAGINATION_FUN, payload);
-      if (res && res.status === 200) {
-        return res.data;
-      } else {
-        if (res.message) {
-          message.warn(res.message);
-          return;
-        }
-        message.warn('产品数据请求失败，请稍后重试')
-      }
-    },
-
     // 底稿-条件查询产品-分页-弹框使用
     *GET_DG_PRO_PAGINATION2_FETCH({ payload }, { put, call }) {
       const res = yield call(GET_DG_PRO_PAGINATION_FUN, payload);
@@ -490,20 +476,6 @@ export default {
           type: 'SAVE_ALL_PRO_CODE',
           payload: res?.data ?? [],
         });
-      }
-    },
-
-    // 根据产品类型proTypeList、分组类型groupList、查询条件proCondition，获取对应proCode
-    *getProCodeByConditions({ payload }, { put, call }) {
-      const res = yield call(GET_ALL_PRO_CODE_FUN, payload);
-      if (res && res.status === 200) {
-        return res;
-      } else {
-        if (res.message) {
-          message.warn(res.message);
-        } else {
-          message.warn('获取产品编码失败，请稍后重试')
-        }
       }
     },
 

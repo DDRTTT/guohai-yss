@@ -28,7 +28,6 @@ import { errorBoundary } from '@/layouts/ErrorBoundary';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import PublishModal from '../projectInfoManger/PublishModal';
 import ApplyModal from '../seriesManage/ApplyModal';
-import SetUpTimeModal from './components/SetUpTimeModal';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -307,7 +306,8 @@ class ProjectAndSeriesQuery extends Component {
       );
     } else {
       router.push(
-        `/projectManagement/addProjectSeries?proCode=${record.proCode
+        `/projectManagement/addProjectSeries?proCode=${
+          record.proCode
         }&dis=${true}&radioType=series`,
       );
     }
@@ -365,8 +365,8 @@ class ProjectAndSeriesQuery extends Component {
         },
         render: proName => {
           return (
-            <Tooltip placement="topLeft" title={ proName }>
-              <span>{ proName }</span>
+            <Tooltip placement="topLeft" title={proName}>
+              <span>{proName}</span>
             </Tooltip>
           );
         },
@@ -376,14 +376,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目编码',
         dataIndex: 'proCode',
         sorter: true,
+        align: 'center',
         width: 140,
         ellipsis: {
           showTitle: false,
         },
         render: proCode => {
           return (
-            <Tooltip placement="topLeft" title={ proCode }>
-              <span>{ proCode }</span>
+            <Tooltip placement="topLeft" title={proCode}>
+              <span>{proCode}</span>
             </Tooltip>
           );
         },
@@ -393,14 +394,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目简称',
         dataIndex: 'proShortName',
         sorter: true,
+        align: 'center',
         width: 180,
         ellipsis: {
           showTitle: false,
         },
         render: proShortName => {
           return (
-            <Tooltip placement="topLeft" title={ proShortName }>
-              <span>{ proShortName }</span>
+            <Tooltip placement="topLeft" title={proShortName}>
+              <span>{proShortName}</span>
             </Tooltip>
           );
         },
@@ -409,10 +411,11 @@ class ProjectAndSeriesQuery extends Component {
         key: 'checked',
         title: '状态',
         dataIndex: 'checked',
+        align: 'center',
         sorter: true,
         width: 100,
         render: checked => {
-          return <Tag>{ checked ? '已生效' : '未生效' }</Tag>;
+          return <Tag>{checked ? '已生效' : '未生效'}</Tag>;
         },
       },
       {
@@ -420,9 +423,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '系列编码',
         dataIndex: 'seriesCode',
         sorter: true,
+        align: 'center',
         width: 140,
         render: seriesCode => {
-          return <span>{ seriesCode }</span>;
+          return <span>{seriesCode}</span>;
         },
       },
       {
@@ -430,14 +434,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '系列名称',
         dataIndex: 'seriesName',
         sorter: true,
+        align: 'center',
         width: 200,
         ellipsis: {
           showTitle: false,
         },
         render: seriesName => {
           return (
-            <Tooltip placement="topLeft" title={ seriesName }>
-              <span>{ seriesName }</span>
+            <Tooltip placement="topLeft" title={seriesName}>
+              <span>{seriesName}</span>
             </Tooltip>
           );
         },
@@ -447,14 +452,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目类型',
         dataIndex: 'proType',
         sorter: true,
+        align: 'center',
         width: 200,
         ellipsis: {
           showTitle: false,
         },
         render: (proType, record) => {
           return (
-            <Tooltip placement="topLeft" title={ record.proTypeName }>
-              <span>{ record.proTypeName }</span>
+            <Tooltip placement="topLeft" title={record.proTypeName}>
+              <span>{record.proTypeName}</span>
             </Tooltip>
           );
         },
@@ -464,6 +470,7 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目区域',
         dataIndex: 'proArea',
         sorter: true,
+        align: 'center',
         width: 200,
         ellipsis: {
           showTitle: false,
@@ -472,9 +479,9 @@ class ProjectAndSeriesQuery extends Component {
           return (
             <Tooltip
               placement="topLeft"
-              title={ proArea === '900000' ? record.overseasProArea : record.proAreaName }
+              title={proArea === '900000' ? record.overseasProArea : record.proAreaName}
             >
-              <span>{ proArea === '900000' ? record.overseasProArea : record.proAreaName }</span>
+              <span>{proArea === '900000' ? record.overseasProArea : record.proAreaName}</span>
             </Tooltip>
           );
         },
@@ -484,14 +491,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '所属部门',
         dataIndex: 'proDept',
         sorter: true,
+        align: 'center',
         width: 200,
         ellipsis: {
           showTitle: false,
         },
         render: proDept => {
           return (
-            <Tooltip placement="topLeft" title={ proDept }>
-              <span>{ proDept }</span>
+            <Tooltip placement="topLeft" title={proDept}>
+              <span>{proDept}</span>
             </Tooltip>
           );
         },
@@ -501,9 +509,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '开始日期',
         dataIndex: 'proCDate',
         sorter: true,
+        align: 'center',
         width: 160,
         render: proCDate => {
-          return <span>{ this.deFormatDate(proCDate) }</span>;
+          return <span>{this.deFormatDate(proCDate)}</span>;
         },
       },
       {
@@ -511,9 +520,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目阶段',
         dataIndex: 'projectState',
         sorter: true,
+        align: 'center',
         width: 200,
         render: (projectState, record) => {
-          return <span>{ record.projectStateName }</span>;
+          return <span>{record.projectStateName}</span>;
         },
       },
       {
@@ -521,9 +531,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目分类',
         dataIndex: 'proBusType',
         sorter: true,
+        align: 'center',
         width: 160,
         render: proBusType => {
-          return <span>{ proBusType === '1' ? '管理人项目' : '非管理人项目' }</span>;
+          return <span>{proBusType === '1' ? '管理人项目' : '非管理人项目'}</span>;
         },
       },
       {
@@ -533,7 +544,7 @@ class ProjectAndSeriesQuery extends Component {
         sorter: true,
         width: 160,
         render: biddingFlag => {
-          return <span>{ biddingFlag === 1 ? '是' : '否' }</span>;
+          return <span>{biddingFlag === 1 ? '是' : '否'}</span>;
         },
       },
       {
@@ -541,14 +552,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '客户名称',
         dataIndex: 'customerName',
         sorter: true,
+        align: 'center',
         width: 170,
         ellipsis: {
           showTitle: false,
         },
         render: customerName => {
           return (
-            <Tooltip placement="topLeft" title={ customerName }>
-              <span>{ customerName }</span>
+            <Tooltip placement="topLeft" title={customerName}>
+              <span>{customerName}</span>
             </Tooltip>
           );
         },
@@ -558,13 +570,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '客户类型',
         dataIndex: 'customerType',
         sorter: true,
+        align: 'center',
         width: 130,
         render: customerType => {
-          return (
-            <Tooltip placement="topLeft" title={ customerType }>
-              <span>{ customerType }</span>
-            </Tooltip>
-          );
+          return <span>{customerType === '1' ? '机构' : '自然人'}</span>;
         },
       },
       {
@@ -572,15 +581,17 @@ class ProjectAndSeriesQuery extends Component {
         title: '创建时间',
         dataIndex: 'createTime',
         sorter: true,
+        align: 'center',
         width: 160,
         render: createTime => {
-          return <span>{ createTime }</span>;
+          return <span>{createTime}</span>;
         },
       },
       {
         key: 'creatorId',
         title: '创建人',
         dataIndex: 'creatorId',
+        align: 'center',
         sorter: true,
         width: 150,
         ellipsis: {
@@ -588,8 +599,8 @@ class ProjectAndSeriesQuery extends Component {
         },
         render: (creatorId, record) => {
           return (
-            <Tooltip placement="topLeft" title={ record.creatorName }>
-              <span>{ record.creatorName }</span>
+            <Tooltip placement="topLeft" title={record.creatorName}>
+              <span>{record.creatorName}</span>
             </Tooltip>
           );
         },
@@ -599,21 +610,23 @@ class ProjectAndSeriesQuery extends Component {
         title: '终止状态',
         dataIndex: 'terminationStateName',
         sorter: true,
+        align: 'center',
         width: 110,
-        render: text => <Tag>{ text }</Tag>,
+        render: text => <Tag>{text}</Tag>,
       },
       {
         key: 'terminationReason',
         title: '终止原因',
         dataIndex: 'terminationReason',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
         width: 200,
         render: terminationReason => {
           return (
-            <Tooltip placement="topLeft" title={ terminationReason }>
-              <span>{ terminationReason }</span>
+            <Tooltip placement="topLeft" title={terminationReason}>
+              <span>{terminationReason}</span>
             </Tooltip>
           );
         },
@@ -623,9 +636,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '终止时间',
         dataIndex: 'terminationDate',
         sorter: true,
+        align: 'center',
         width: 160,
         render: terminationDate => {
-          return <span>{ this.deFormatDate(terminationDate) }</span>;
+          return <span>{this.deFormatDate(terminationDate)}</span>;
         },
       },
       {
@@ -633,15 +647,18 @@ class ProjectAndSeriesQuery extends Component {
         title: '操作人',
         dataIndex: 'terminationId',
         sorter: true,
+        align: 'center',
         width: 170,
         render: (terminationId, record) => {
-          return <span>{ record.terminationName }</span>;
+          return <span>{record.terminationName}</span>;
         },
       },
       {
         key: 'id',
         dataIndex: 'id',
         title: '操作',
+        width: 252,
+        align: 'center',
         fixed: 'right',
         render: (text, record) => {
           const {
@@ -651,79 +668,59 @@ class ProjectAndSeriesQuery extends Component {
           return (
             <>
               <Action code="projectAndSeriesQuery:look">
-                <Button onClick={ () => this.watchDetail(record) } type="link" size="small">
+                <Button onClick={() => this.watchDetail(record)} type="link" size="small">
                   查看
                 </Button>
               </Action>
-              { record.checked === 1 && record.isTermination === 0 && record.update ? (
-                <Action code="projectAndSeriesQuery:update">
-                  <Button onClick={ () => this.updateData(record) } type="link" size="small">
-                    变更
-                  </Button>
-                </Action>
-              ) : null }
+              <Action code="projectAndSeriesQuery:update">
+                <Button
+                  style={{ display: record.update ? 'inline-block' : 'none' }}
+                  onClick={() => this.updateData(record)}
+                  type="link"
+                  size="small"
+                >
+                  变更
+                </Button>
+              </Action>
               <Action code="projectAndSeriesQuery:apply">
-                { record && record.report === 1 ? (
+                {record && record.report === 1 ? (
                   <ApplyModal
-                    onConfirm={ () => {
+                    onConfirm={() => {
                       this.getTableList();
-                    } }
-                    dispatch={ dispatch }
-                    proCode={ record.proCode }
-                    data={ {
+                    }}
+                    dispatch={dispatch}
+                    proCode={record.proCode}
+                    data={{
                       productFilterOption: this.productFilterOption,
                       tradingPlacesList,
-                    } }
-                    seriesCode={record.seriesCode}
+                    }}
                   />
-                ) : null }
+                ) : null}
               </Action>
-              { record && record.publish === 1 ? (
-                <>
-                  <Action code="projectAndSeriesQuery:issue">
-                    <PublishModal
-                      onConfirm={ () => {
-                        this.getTableList();
-                      } }
-                      dispatch={ dispatch }
-                      proCode={ record.proCode }
-                    />
-                  </Action>
-                  <Action code="projectAndSeriesQuery:setUpTimeQuery">
-                    <Button
-                      type="link"
-                      size="small"
-                      onClick={ () => this.handleSetUpTimeShow(record) }
-                    >成立日期</Button>
-                  </Action>
-                </>
-              ) : null }
+              <Action code="projectAndSeriesQuery:issue">
+                {record && record.publish === 1 ? (
+                  <PublishModal
+                    onConfirm={() => {
+                      this.getTableList();
+                    }}
+                    dispatch={dispatch}
+                    proCode={record.proCode}
+                  />
+                ) : null}
+              </Action>
               <Action code="projectAndSeriesQuery:stop">
                 <Button
-                  style={ {
+                  style={{
                     display:
                       record.checked === 1 && record.isTermination === 0 ? 'inline-block' : 'none',
-                  } }
-                  onClick={ () => this.projectStop(record) }
+                  }}
+                  onClick={() => this.projectStop(record)}
                   type="link"
                   size="small"
                 >
                   终止
                 </Button>
               </Action>
-              { record.checked === 1 && record.isTermination === 0 ? (
-                <Action code="projectAndSeriesQuery:querySeriesArchivedFile">
-                  { record.seriesCode ? (
-                    <Button
-                      onClick={ () => this.jumpToSeriesExtends(record) }
-                      type="link"
-                      size="small"
-                    >
-                      编辑继承
-                    </Button>
-                  ) : null }
-                </Action>
-              ) : null }
             </>
           );
         },
@@ -734,6 +731,7 @@ class ProjectAndSeriesQuery extends Component {
         key: 'proName',
         title: '系列名称',
         dataIndex: 'proName',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
@@ -741,8 +739,8 @@ class ProjectAndSeriesQuery extends Component {
         width: 300,
         render: proName => {
           return (
-            <Tooltip placement="topLeft" title={ proName }>
-              <span>{ proName }</span>
+            <Tooltip placement="topLeft" title={proName}>
+              <span>{proName}</span>
             </Tooltip>
           );
         },
@@ -752,9 +750,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '系列编码',
         dataIndex: 'proCode',
         sorter: true,
+        align: 'center',
         width: 140,
         render: proCode => {
-          return <span>{ proCode }</span>;
+          return <span>{proCode}</span>;
         },
       },
       {
@@ -762,14 +761,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目类型',
         dataIndex: 'proType',
         sorter: true,
+        align: 'center',
         width: 200,
         ellipsis: {
           showTitle: false,
         },
         render: (proType, record) => {
           return (
-            <Tooltip placement="topLeft" title={ record.proTypeName }>
-              <span>{ record.proTypeName }</span>
+            <Tooltip placement="topLeft" title={record.proTypeName}>
+              <span>{record.proTypeName}</span>
             </Tooltip>
           );
         },
@@ -778,6 +778,7 @@ class ProjectAndSeriesQuery extends Component {
         key: 'checked',
         title: '状态',
         dataIndex: 'checked',
+        align: 'center',
         sorter: true,
         width: 100,
         render: checked => {
@@ -788,6 +789,7 @@ class ProjectAndSeriesQuery extends Component {
         key: 'proArea',
         title: '项目区域',
         dataIndex: 'proArea',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
@@ -797,9 +799,9 @@ class ProjectAndSeriesQuery extends Component {
           return (
             <Tooltip
               placement="topLeft"
-              title={ proArea === '900000' ? record.overseasProArea : record.proAreaName }
+              title={proArea === '900000' ? record.overseasProArea : record.proAreaName}
             >
-              <span>{ proArea === '900000' ? record.overseasProArea : record.proAreaName }</span>
+              <span>{proArea === '900000' ? record.overseasProArea : record.proAreaName}</span>
             </Tooltip>
           );
         },
@@ -809,15 +811,17 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目阶段',
         dataIndex: 'projectState',
         sorter: true,
+        align: 'center',
         width: 200,
         render: (projectState, record) => {
-          return <span>{ record.projectStateName }</span>;
+          return <span>{record.projectStateName}</span>;
         },
       },
       {
         key: 'proDept',
         title: '所属部门',
         dataIndex: 'proDept',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
@@ -825,8 +829,8 @@ class ProjectAndSeriesQuery extends Component {
         width: 200,
         render: proDept => {
           return (
-            <Tooltip placement="topLeft" title={ proDept }>
-              <span>{ proDept }</span>
+            <Tooltip placement="topLeft" title={proDept}>
+              <span>{proDept}</span>
             </Tooltip>
           );
         },
@@ -839,11 +843,12 @@ class ProjectAndSeriesQuery extends Component {
           showTitle: false,
         },
         sorter: true,
+        align: 'center',
         width: 170,
         render: customerName => {
           return (
-            <Tooltip placement="topLeft" title={ customerName }>
-              <span>{ customerName }</span>
+            <Tooltip placement="topLeft" title={customerName}>
+              <span>{customerName}</span>
             </Tooltip>
           );
         },
@@ -853,13 +858,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '客户类型',
         dataIndex: 'customerType',
         sorter: true,
+        align: 'center',
         width: 130,
         render: customerType => {
-          return (
-            <Tooltip placement="topLeft" title={ customerType }>
-              <span>{ customerType }</span>
-            </Tooltip>
-          );
+          return <span>{customerType === '1' ? '机构' : '自然人'}</span>;
         },
       },
       {
@@ -867,9 +869,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目数量',
         dataIndex: 'productNum',
         sorter: true,
+        align: 'center',
         width: 120,
         render: productNum => {
-          return <span>{ productNum }</span>;
+          return <span>{productNum}</span>;
         },
       },
       {
@@ -877,9 +880,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '创建时间',
         dataIndex: 'createTime',
         sorter: true,
+        align: 'center',
         width: 160,
         render: createTime => {
-          return <span>{ createTime }</span>;
+          return <span>{createTime}</span>;
         },
       },
       {
@@ -887,9 +891,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '创建人',
         dataIndex: 'creatorId',
         sorter: true,
+        align: 'center',
         width: 150,
         render: (creatorId, record) => {
-          return <span>{ record.creatorName }</span>;
+          return <span>{record.creatorName}</span>;
         },
       },
       {
@@ -897,21 +902,23 @@ class ProjectAndSeriesQuery extends Component {
         title: '终止状态',
         dataIndex: 'terminationStateName',
         sorter: true,
+        align: 'center',
         width: 110,
-        render: text => <Tag>{ text }</Tag>,
+        render: text => <Tag>{text}</Tag>,
       },
       {
         key: 'terminationReason',
         title: '终止原因',
         dataIndex: 'terminationReason',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
         width: 200,
         render: terminationReason => {
           return (
-            <Tooltip placement="topLeft" title={ terminationReason }>
-              <span>{ terminationReason }</span>
+            <Tooltip placement="topLeft" title={terminationReason}>
+              <span>{terminationReason}</span>
             </Tooltip>
           );
         },
@@ -921,9 +928,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '终止时间',
         dataIndex: 'terminationDate',
         sorter: true,
+        align: 'center',
         width: 160,
         render: terminationDate => {
-          return <span>{ this.deFormatDate(terminationDate) }</span>;
+          return <span>{this.deFormatDate(terminationDate)}</span>;
         },
       },
       {
@@ -931,16 +939,18 @@ class ProjectAndSeriesQuery extends Component {
         title: '操作人',
         dataIndex: 'terminationId',
         sorter: true,
+        align: 'center',
         width: 170,
         render: (terminationId, record) => {
-          return <span>{ record.terminationName }</span>;
+          return <span>{record.terminationName}</span>;
         },
       },
       {
         key: 'id',
         dataIndex: 'id',
         title: '操作',
-        // width: 208,
+        width: 208,
+        align: 'center',
         fixed: 'right',
         render: (text, record) => {
           const {
@@ -949,40 +959,48 @@ class ProjectAndSeriesQuery extends Component {
           } = this.props;
           return (
             <>
+              {record.checked === 1 ? (
+                <Button onClick={() => this.jumpToSeriesExtends(record)} type="link" size="small">
+                  编辑继承
+                </Button>
+              ) : null}
               <Action code="projectAndSeriesQuery:look">
-                <Button onClick={ () => this.watchDetail(record) } type="link" size="small">
+                <Button onClick={() => this.watchDetail(record)} type="link" size="small">
                   查看
                 </Button>
               </Action>
-              { record.checked === 1 && record.isTermination === 0 && record.update ? (
-                <Action code="projectAndSeriesQuery:update">
-                  <Button onClick={ () => this.updateData(record) } type="link" size="small">
-                    变更
-                  </Button>
-                </Action>
-              ) : null }
+              <Action code="projectAndSeriesQuery:update">
+                <Button
+                  style={{ display: record.update ? 'inline-block' : 'none' }}
+                  onClick={() => this.updateData(record)}
+                  type="link"
+                  size="small"
+                >
+                  变更
+                </Button>
+              </Action>
               <Action code="projectAndSeriesQuery:apply">
-                { record && record.report === 1 ? (
+                {record && record.report === 1 ? (
                   <ApplyModal
-                    onConfirm={ () => {
+                    onConfirm={() => {
                       this.getTableList();
-                    } }
-                    dispatch={ dispatch }
-                    proCode={ record.proCode }
-                    data={ {
+                    }}
+                    dispatch={dispatch}
+                    proCode={record.proCode}
+                    data={{
                       productFilterOption: this.productFilterOption,
                       tradingPlacesList,
-                    } }
+                    }}
                   />
-                ) : null }
+                ) : null}
               </Action>
               <Action code="projectAndSeriesQuery:stop">
                 <Button
-                  style={ {
+                  style={{
                     display:
                       record.checked === 1 && record.isTermination === 0 ? 'inline-block' : 'none',
-                  } }
-                  onClick={ () => this.projectStop(record) }
+                  }}
+                  onClick={() => this.projectStop(record)}
                   type="link"
                   size="small"
                 >
@@ -999,6 +1017,7 @@ class ProjectAndSeriesQuery extends Component {
         key: 'proName',
         title: '项目名称',
         dataIndex: 'proName',
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
@@ -1006,8 +1025,8 @@ class ProjectAndSeriesQuery extends Component {
         width: 200,
         render: proName => {
           return (
-            <Tooltip placement="topLeft" title={ proName }>
-              <span>{ proName }</span>
+            <Tooltip placement="topLeft" title={proName}>
+              <span>{proName}</span>
             </Tooltip>
           );
         },
@@ -1016,10 +1035,11 @@ class ProjectAndSeriesQuery extends Component {
         key: 'proCode',
         title: '项目编码',
         dataIndex: 'proCode',
+        align: 'center',
         sorter: true,
         width: 160,
         render: proCode => {
-          return <span>{ proCode }</span>;
+          return <span>{proCode}</span>;
         },
       },
       {
@@ -1027,14 +1047,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目简称',
         dataIndex: 'proShortName',
         sorter: true,
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
         width: 180,
         render: proShortName => {
           return (
-            <Tooltip placement="topLeft" title={ proShortName }>
-              <span>{ proShortName }</span>
+            <Tooltip placement="topLeft" title={proShortName}>
+              <span>{proShortName}</span>
             </Tooltip>
           );
         },
@@ -1044,9 +1065,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目类型',
         dataIndex: 'proType',
         sorter: true,
+        align: 'center',
         width: 240,
         render: (proType, record) => {
-          return <span>{ record.proTypeName }</span>;
+          return <span>{record.proTypeName}</span>;
         },
       },
       {
@@ -1054,6 +1076,7 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目区域',
         dataIndex: 'proArea',
         sorter: true,
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
@@ -1062,9 +1085,9 @@ class ProjectAndSeriesQuery extends Component {
           return (
             <Tooltip
               placement="topLeft"
-              title={ proArea === '900000' ? record.overseasProArea : record.proAreaName }
+              title={proArea === '900000' ? record.overseasProArea : record.proAreaName}
             >
-              <span>{ proArea === '900000' ? record.overseasProArea : record.proAreaName }</span>
+              <span>{proArea === '900000' ? record.overseasProArea : record.proAreaName}</span>
             </Tooltip>
           );
         },
@@ -1074,14 +1097,15 @@ class ProjectAndSeriesQuery extends Component {
         title: '所属部门',
         dataIndex: 'proDept',
         sorter: true,
+        align: 'center',
         ellipsis: {
           showTitle: false,
         },
         width: 200,
         render: proDept => {
           return (
-            <Tooltip placement="topLeft" title={ proDept }>
-              <span>{ proDept }</span>
+            <Tooltip placement="topLeft" title={proDept}>
+              <span>{proDept}</span>
             </Tooltip>
           );
         },
@@ -1091,9 +1115,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '项目阶段',
         dataIndex: 'projectStateName',
         sorter: true,
+        align: 'center',
         width: 160,
         render: projectStateName => {
-          return <span>{ projectStateName }</span>;
+          return <span>{projectStateName}</span>;
         },
       },
       {
@@ -1101,9 +1126,10 @@ class ProjectAndSeriesQuery extends Component {
         title: '状态',
         dataIndex: 'checked',
         sorter: true,
+        align: 'center',
         width: 100,
         render: checked => {
-          return <span>{ checked ? '已审核' : '未审核' }</span>;
+          return <span>{checked ? '已审核' : '未审核'}</span>;
         },
       },
     ],
@@ -1114,28 +1140,24 @@ class ProjectAndSeriesQuery extends Component {
         subLoading,
       } = this.props;
       return (
-        <Card style={ { width: '1680px' } }>
+        <Card style={{ width: '1680px' }}>
           <Table
-            rowKey={ (r, i) => i }
-            columns={ expandedColumns }
-            dataSource={ allSubTableListObj[`seriesCode_${record.proCode}`] }
-            pagination={ false }
-            loading={ subLoading }
+            rowKey={record => record.proCode}
+            columns={expandedColumns}
+            dataSource={allSubTableListObj[`seriesCode_${record.proCode}`]}
+            pagination={false}
+            loading={subLoading}
           />
         </Card>
       );
     },
-    setUpTimeVisible: false,
-    setUpTimeLoading: false,
-    curSetUpTimeProCode: null,
   };
 
-  jumpToSeriesExtends = ({ proCode, seriesCode }) => {
+  jumpToSeriesExtends = ({ proCode }) => {
     router.push({
       pathname: '/projectManagement/projectAndSeriesQueryExtends',
       query: {
         proCode,
-        seriesCode,
       },
     });
   };
@@ -1233,62 +1255,9 @@ class ProjectAndSeriesQuery extends Component {
     return null;
   };
 
-  handleSetUpTimeShow = ({ proCode }) => {
-    this.setState({
-      curSetUpTimeProCode: proCode,
-      setUpTimeVisible: true,
-    });
-    this.props.dispatch({
-      type: 'projectInfoManger/getProSetUpTimeInfoReq',
-      payload: {
-        proCode,
-      },
-    });
-  }
-
-  handleSetUpTimeCancel = () => {
-    this.setState({
-      setUpTimeVisible: false
-    });
-  }
-
-  handleSetUpTimeCreate = () => {
-    const { form } = this.formRef.props;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      const payload = {
-        proCode: this.state.curSetUpTimeProCode,
-      }
-      if (values.setUpTime) {
-        payload.setUpTime = moment(values.setUpTime).format('YYYY-MM-DD 00:00:00');
-      }
-
-      this.setState({ setUpTimeLoading: true });
-      this.props.dispatch({
-        type: 'projectInfoManger/updateDelSaveProSetUpTimeInfoReq',
-        payload,
-      }).then(res => {
-        if (res && res.status === 200) {
-          form.resetFields();
-          message.success('提交成功');
-        } else {
-          message.error(res.message);
-        }
-        this.setState({ setUpTimeVisible: false, setUpTimeLoading: false });
-      });
-    });
-  }
-
-  setUpTimeSaveFormRef = formRef => {
-    this.formRef = formRef;
-  };
-
   render() {
     const {
-      projectInfoManger: { proDeptList, proCodeList, setUpTime },
+      projectInfoManger: { proDeptList, proCodeList },
       addProjectInfo: { proTypeList },
       seriesManage: { seriesList },
       loading,
@@ -1308,28 +1277,18 @@ class ProjectAndSeriesQuery extends Component {
       seriesColumns,
       showTermModal,
       expandedRowRender,
-      setUpTimeVisible,
-      setUpTimeLoading,
     } = this.state;
 
     return (
       <>
         <Card
-          style={ {
+          style={{
             marginBottom: 10,
-          } }
+          }}
         >
-          <SetUpTimeModal
-            wrappedComponentRef={ this.setUpTimeSaveFormRef }
-            visible={ setUpTimeVisible }
-            loading={ setUpTimeLoading }
-            setUpTime={ setUpTime }
-            onCancel={ this.handleSetUpTimeCancel }
-            onCreate={ this.handleSetUpTimeCreate }
-          />
-          <Form { ...layout }>
-            <Row gutter={ 24 }>
-              <Col md={ 12 } sm={ 12 }>
+          <Form {...layout}>
+            <Row gutter={24}>
+              <Col md={12} sm={12}>
                 <Breadcrumb>
                   <Breadcrumb.Item>底稿项目管理</Breadcrumb.Item>
                   <Breadcrumb.Item>项目</Breadcrumb.Item>
@@ -1337,30 +1296,31 @@ class ProjectAndSeriesQuery extends Component {
                 </Breadcrumb>
               </Col>
               <Col
-                gutter={ 12 }
-                style={ {
+                gutter={12}
+                style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'flex-end',
-                } }
+                  // margin: 15,
+                }}
               >
                 <Search
                   placeholder="请输入项目/系列名称或编码"
-                  onSearch={ val => this.seachTableData(val) }
-                  onChange={ ev => this.setState({ keyWords: ev.target.value }) }
-                  value={ keyWords }
-                  style={ {
+                  onSearch={val => this.seachTableData(val)}
+                  onChange={ev => this.setState({ keyWords: ev.target.value })}
+                  value={keyWords}
+                  style={{
                     display: this.state.expand ? 'none' : 'block',
                     width: 220,
-                  } }
+                  }}
                 />
                 <Button
-                  style={ {
+                  style={{
                     display: this.state.expand ? 'none' : 'block',
                     marginLeft: 23,
                     fontSize: 14,
-                  } }
-                  onClick={ this.toggle }
+                  }}
+                  onClick={this.toggle}
                   type="link"
                 >
                   展开搜索
@@ -1369,124 +1329,124 @@ class ProjectAndSeriesQuery extends Component {
               </Col>
             </Row>
             <Row
-              gutter={ 24 }
-              style={ { display: this.state.expand ? 'block' : 'none', marginTop: 20 } }
+              gutter={24}
+              style={{ display: this.state.expand ? 'block' : 'none', marginTop: 20 }}
             >
-              <Col span={ 8 }>
-                { tabKey === 'project' ? (
+              <Col span={8}>
+                {tabKey === 'project' ? (
                   <Form.Item name="proCode" label="项目名称:">
-                    { getFieldDecorator('proCode')(
+                    {getFieldDecorator('proCode')(
                       <Select
                         placeholder="请选择"
                         mode="multiple"
                         showArrow
-                        filterOption={ this.productFilterOption }
+                        filterOption={this.productFilterOption}
                       >
-                        { proCodeList &&
+                        {proCodeList &&
                           proCodeList.map(item => (
-                            <Option key={ item.code } value={ item.code }>
-                              { item.name }
+                            <Option key={item.code} value={item.code}>
+                              {item.name}
                             </Option>
-                          )) }
+                          ))}
                       </Select>,
-                    ) }
+                    )}
                   </Form.Item>
                 ) : (
                   <Form.Item name="proCode" label="系列名称:">
-                    { getFieldDecorator('proCode')(
+                    {getFieldDecorator('proCode')(
                       <Select
                         placeholder="请选择"
                         mode="multiple"
                         showArrow
-                        filterOption={ this.productFilterOption }
+                        filterOption={this.productFilterOption}
                       >
-                        { seriesList &&
+                        {seriesList &&
                           seriesList.map(item => (
-                            <Option key={ item.code } value={ item.code }>
-                              { item.name }
+                            <Option key={item.code} value={item.code}>
+                              {item.name}
                             </Option>
-                          )) }
+                          ))}
                       </Select>,
-                    ) }
+                    )}
                   </Form.Item>
-                ) }
+                )}
               </Col>
-              <Col span={ 8 }>
+              <Col span={8}>
                 <Form.Item name="proType" label="项目类型:">
-                  { getFieldDecorator('proType')(
+                  {getFieldDecorator('proType')(
                     <Select
                       placeholder="请选择"
                       mode="multiple"
                       showArrow
-                      filterOption={ this.productFilterOption }
+                      filterOption={this.productFilterOption}
                     >
-                      { proTypeList &&
+                      {proTypeList &&
                         proTypeList.map(item => (
-                          <Option key={ item.code } value={ item.code }>
-                            { item.name }
+                          <Option key={item.code} value={item.code}>
+                            {item.name}
                           </Option>
-                        )) }
+                        ))}
                     </Select>,
-                  ) }
+                  )}
                 </Form.Item>
               </Col>
-              <Col span={ 8 }>
+              <Col span={8}>
                 <Form.Item name="proDept" label="所属部门:">
-                  { getFieldDecorator('proDept')(
+                  {getFieldDecorator('proDept')(
                     <Select
                       placeholder="请选择"
                       mode="multiple"
                       showArrow
-                      filterOption={ this.productFilterOption }
+                      filterOption={this.productFilterOption}
                     >
-                      { proDeptList &&
+                      {proDeptList &&
                         proDeptList.map(item => (
-                          <Option key={ item.code } value={ item.code }>
-                            { item.name }
+                          <Option key={item.code} value={item.code}>
+                            {item.name}
                           </Option>
-                        )) }
+                        ))}
                     </Select>,
-                  ) }
+                  )}
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={ 24 } style={ { display: this.state.expand ? 'block' : 'none' } }>
-              <Col span={ 8 } style={ { display: tabKey === 'project' ? 'inline-block' : 'none' } }>
+            <Row gutter={24} style={{ display: this.state.expand ? 'block' : 'none' }}>
+              <Col span={8} style={{ display: tabKey === 'project' ? 'inline-block' : 'none' }}>
                 <Form.Item label="项目周期">
-                  { getFieldDecorator('projectPeriod')(
-                    <RangePicker placeholder={ ['开始日期', '结束日期'] } format="YYYY-MM-DD" />,
-                  ) }
+                  {getFieldDecorator('projectPeriod')(
+                    <RangePicker placeholder={['开始日期', '结束日期']} format="YYYY-MM-DD" />,
+                  )}
                 </Form.Item>
               </Col>
-              <Col span={ 8 }>
-                <Form.Item label={ tabKey === 'project' ? '项目状态:' : '系列状态:' }>
-                  { getFieldDecorator('projectState')(
+              <Col span={8}>
+                <Form.Item label={tabKey === 'project' ? '项目状态:' : '系列状态:'}>
+                  {getFieldDecorator('projectState')(
                     <Select placeholder="请选择" mode="multiple" showArrow>
                       <Option value="noterminal">未终止</Option>
                       <Option value="state5">已终止</Option>
                     </Select>,
-                  ) }
+                  )}
                 </Form.Item>
               </Col>
-              <Col span={ 8 } style={ { textAlign: 'right', float: 'right', marginTop: 10 } }>
+              <Col span={8} style={{ textAlign: 'right', float: 'right', marginTop: 10 }}>
                 <Button
                   type="primary"
-                  onClick={ () => this.searchBtn() }
+                  onClick={() => this.searchBtn()}
                   htmlType="submit"
-                  style={ {
+                  style={{
                     display: this.state.expand ? 'inline-block' : 'none',
                     marginRight: '10px',
-                  } }
+                  }}
                 >
                   查询
                 </Button>
                 <Button
-                  onClick={ () => form.resetFields() }
-                  style={ { display: this.state.expand ? 'inline-block' : 'none', marginLeft: 8 } }
+                  onClick={() => form.resetFields()}
+                  style={{ display: this.state.expand ? 'inline-block' : 'none', marginLeft: 8 }}
                 >
                   重置
                 </Button>
-                <Button style={ { marginLeft: 5 } } onClick={ this.toggle } type="link">
+                <Button style={{ marginLeft: 5 }} onClick={this.toggle} type="link">
                   收起
                   <Icon type="up" />
                 </Button>
@@ -1496,102 +1456,102 @@ class ProjectAndSeriesQuery extends Component {
         </Card>
         <Card>
           <Radio.Group
-            style={ { marginBottom: '20px' } }
+            style={{ marginBottom: '20px' }}
             buttonStyle="solid"
             defaultValue="project"
-            value={ tabKey }
-            onChange={ this.changeTabs }
+            value={tabKey}
+            onChange={this.changeTabs}
           >
             <Radio.Button value="project">项目信息</Radio.Button>
             <Radio.Button value="series">系列信息</Radio.Button>
           </Radio.Group>
-          { tabKey === 'project' ? (
+          {tabKey === 'project' ? (
             <>
               <Table
-                dataSource={ projectData }
-                columns={ projectColumns }
-                scroll={ { x: projectColumns.length * 200 } }
-                rowKey={ (r, i) => i }
-                loading={ loading }
-                pagination={ false }
-                onChange={ this.changeTable }
+                dataSource={projectData}
+                columns={projectColumns}
+                scroll={{ x: 1300 }}
+                rowKey={record => record.proCode}
+                loading={loading}
+                pagination={false}
+                onChange={this.changeTable}
               />
-              { projectDataTotal != 0 ? (
+              {projectDataTotal != 0 ? (
                 <Pagination
-                  style={ {
+                  style={{
                     marginTop: 20,
                     textAlign: 'right',
-                  } }
-                  current={ pageNum }
-                  pageSize={ pageSize }
-                  onChange={ this.handleSetPage }
-                  onShowSizeChange={ this.handleSetPage }
-                  total={ projectDataTotal }
-                  showTotal={ () => `共 ${projectDataTotal} 条数据` }
+                  }}
+                  current={pageNum}
+                  pageSize={pageSize}
+                  onChange={this.handleSetPage}
+                  onShowSizeChange={this.handleSetPage}
+                  total={projectDataTotal}
+                  showTotal={() => `共 ${projectDataTotal} 条数据`}
                   showSizeChanger
-                  showQuickJumper={ projectDataTotal > pageSize }
+                  showQuickJumper={projectDataTotal > pageSize}
                 />
-              ) : null }
+              ) : null}
             </>
           ) : (
             <>
               <Table
-                dataSource={ seriesData }
-                columns={ seriesColumns }
-                scroll={ { x: seriesColumns.length * 200 } }
-                expandedRowRender={ expandedRowRender }
-                onExpand={ (expanded, record) => this.handleExpand(expanded, record) }
-                rowKey={ (r, i) => i }
-                loading={ loading }
-                pagination={ false }
-                onChange={ this.changeTable }
+                dataSource={seriesData}
+                columns={seriesColumns}
+                scroll={{ x: 1300 }}
+                expandedRowRender={expandedRowRender}
+                onExpand={(expanded, record) => this.handleExpand(expanded, record)}
+                rowKey={record => record.proCode}
+                loading={loading}
+                pagination={false}
+                onChange={this.changeTable}
               />
-              { seriesDataTotal != 0 ? (
+              {seriesDataTotal != 0 ? (
                 <Pagination
-                  style={ {
+                  style={{
                     marginTop: 20,
                     textAlign: 'right',
                     float: 'right',
-                  } }
-                  current={ pageNum }
-                  pageSize={ pageSize }
-                  onChange={ this.handleSetPage }
-                  onShowSizeChange={ this.handleSetPage }
-                  total={ seriesDataTotal }
-                  showTotal={ () => `共 ${seriesDataTotal} 条数据` }
+                  }}
+                  current={pageNum}
+                  pageSize={pageSize}
+                  onChange={this.handleSetPage}
+                  onShowSizeChange={this.handleSetPage}
+                  total={seriesDataTotal}
+                  showTotal={() => `共 ${seriesDataTotal} 条数据`}
                   showSizeChanger
-                  showQuickJumper={ seriesDataTotal > pageSize }
+                  showQuickJumper={seriesDataTotal > pageSize}
                 />
-              ) : null }
+              ) : null}
             </>
-          ) }
+          )}
         </Card>
-        {/* 项目终止信息补录弹窗 */ }
+        {/* 项目终止信息补录弹窗 */}
         <Modal
-          width={ 600 }
+          width={600}
           title="补录信息"
-          visible={ showTermModal }
-          onOk={ this.projectTermOk }
-          onCancel={ this.projectTermCancel }
+          visible={showTermModal}
+          onOk={this.projectTermOk}
+          onCancel={this.projectTermCancel}
           okText="确认终止"
         >
           <Form>
             <Form.Item name="terminationReason" label="终止原因:">
-              { getFieldDecorator('terminationReason', {
+              {getFieldDecorator('terminationReason', {
                 rules: [{ required: true, message: '终止原因是必填项' }],
               })(
                 <TextArea
-                  rows={ 4 }
+                  rows={4}
                   allowClear
-                  autoSize={ { minRows: 3, maxRows: 6 } }
-                  maxLength={ 500 }
+                  autosize={{ minRows: 3, maxRows: 6 }}
+                  maxLength={500}
                 />,
-              ) }
+              )}
             </Form.Item>
             <Form.Item name="terminationDate" label="终止日期">
-              { getFieldDecorator('terminationDate', {
+              {getFieldDecorator('terminationDate', {
                 rules: [{ required: true, message: '终止日期是必填项' }],
-              })(<DatePicker placeholder="请选择" />) }
+              })(<DatePicker placeholder="请选择" />)}
             </Form.Item>
           </Form>
         </Modal>

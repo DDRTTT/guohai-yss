@@ -1,9 +1,9 @@
 /**
  * 产品看板-查看产品-产品信息库
  */
- import React, { useContext, useEffect, useState } from 'react';
- import { Table, Tabs, Button, message, Card, Breadcrumb } from 'antd';
- import { connect, routerRedux } from 'dva';
+ import React, { useState } from 'react';
+ import { Tabs, message, Card } from 'antd';
+ import { connect } from 'dva';
  import router from 'umi/router';
  import { errorBoundary } from '@/layouts/ErrorBoundary';
  import styles from './index.less';

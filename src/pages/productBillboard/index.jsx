@@ -23,7 +23,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import cloneDeep from 'lodash/cloneDeep';
 import styles from './index.less';
 import staticInstance from '@/utils/staticInstance';
-import { Table, TableBtn } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
 
 const FormItem = Form.Item;
@@ -52,7 +52,7 @@ const Index = ({
   const [tabsShowAndOff, setTabsShowAndOff] = useState(
     staticInstance.getInstance().billboardRadioKey,
   );
-  const [tabsKey, setTabsKey] = useState('1')
+  const [tabsKey, setTabsKey] = useState('1');
   const [isKanban, setKanban] = useState(); // 是否展示看板
   const [productOnAndOff, setProductOnAndOff] = useState(false); // 产品类型展开/收起搜索
 
@@ -88,7 +88,7 @@ const Index = ({
   const proStageData = useRef([]); // 产品阶段
   const directionData = useRef(''); // 排序方式
   const fieldData = useRef(''); // 排序依据
-  const keyWordsData = useRef(""); // 模糊搜索关键字
+  const keyWordsData = useRef(''); // 模糊搜索关键字
   const batchData = useRef([]); // 批量操作参数
   // 系列(父级表格)
   const totalNewData = useRef(0); // 页码总数
@@ -253,8 +253,9 @@ const Index = ({
         if (typeof key === 'object') {
           arr.push(
             <Col
-              className={`${styles.productGrid} ${styles.productGridHover} ${proStageData.current.includes(key.proStage) ? styles.bgcFFF : ''
-                }`}
+              className={`${styles.productGrid} ${styles.productGridHover} ${
+                proStageData.current.includes(key.proStage) ? styles.bgcFFF : ''
+              }`}
               xs={{ span: 4 }}
               onClick={() => {
                 handleShowProstageData(key.proStage);
@@ -336,15 +337,15 @@ const Index = ({
     proStageData.current = [];
     investManagerData.current = [];
     proRiskData.current = [];
-    proEstablishStartTimeData.current = "";
-    proEstablishEndTimeData.current = "";
-    proTerminationStartTimeData.current = "";
-    proTerminationEndTimeData.current = "";
-    proTerminationEndTimeData.current = "";
-    keyWordsData.current = "";
+    proEstablishStartTimeData.current = '';
+    proEstablishEndTimeData.current = '';
+    proTerminationStartTimeData.current = '';
+    proTerminationEndTimeData.current = '';
+    proTerminationEndTimeData.current = '';
+    keyWordsData.current = '';
     handleGetDataObj();
     handleGetListData();
-  }
+  };
   // 系列看板重置
   const resetForSeries = () => {
     proNameNewData.current = [];
@@ -354,11 +355,11 @@ const Index = ({
     proStageNewData.current = [];
     investManagerNewData.current = [];
     proRiskNewData.current = [];
-    proTerminationEndTimeData.current = "";
-    keyWordsNewData.current = "";
+    proTerminationEndTimeData.current = '';
+    keyWordsNewData.current = '';
     handleGetDataNewObj();
     handleGetListNewData();
-  }
+  };
 
   /**
    * 修改:日期输入框change
@@ -493,7 +494,7 @@ const Index = ({
   };
 
   // 数组删除
-  Array.prototype.remove = function (val) {
+  Array.prototype.remove = function(val) {
     const index = this.indexOf(val);
     if (index > -1) {
       this.splice(index, 1);
@@ -667,9 +668,9 @@ const Index = ({
    *@param {Object} e 点击对象
    */
   const handleChangeRadioKey = key => {
-    keyWordsData.current = "";
-    keyWordsNewData.current = "";
-    setTabsKey(key)
+    keyWordsData.current = '';
+    keyWordsNewData.current = '';
+    setTabsKey(key);
     setTabsShowAndOff(key);
     staticInstance.getInstance().billboardRadioKey = key;
     if (key === '1') {
@@ -687,7 +688,7 @@ const Index = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proNameAndCodeData,
     },
     {
@@ -695,7 +696,7 @@ const Index = ({
       label: '系列名称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: seriesNameData,
     },
     {
@@ -703,7 +704,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeDatas,
     },
     {
@@ -711,7 +712,7 @@ const Index = ({
       label: '投资经理',
       type: 'select',
       readSet: { name: 'name', code: 'empNo', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: productBillboardInvestmentManagerData,
     },
     {
@@ -719,7 +720,7 @@ const Index = ({
       label: '风险等级',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.R001,
     },
     {
@@ -727,7 +728,7 @@ const Index = ({
       label: '产品阶段',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.P002,
     },
     {
@@ -776,11 +777,11 @@ const Index = ({
   // 模糊查询回调
   const handlerSearch = fieldsValue => {
     if (tabsKey === '1') {
-      searchForproduct(fieldsValue)
+      searchForproduct(fieldsValue);
     } else {
-      seriesSearchhandler(fieldsValue)
+      seriesSearchhandler(fieldsValue);
     }
-  }
+  };
 
   // 系列看板 === 搜索的区域的配置
   const formItemDataForSeries = [
@@ -789,7 +790,7 @@ const Index = ({
       label: '系列名称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: seriesNameData,
     },
     {
@@ -797,7 +798,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeDatas,
     },
     {
@@ -805,7 +806,7 @@ const Index = ({
       label: '投资经理',
       type: 'select',
       readSet: { name: 'name', code: 'empNo', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: productBillboardInvestmentManagerData,
     },
     {
@@ -813,7 +814,7 @@ const Index = ({
       label: '风险等级',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.R001,
     },
   ];
@@ -845,19 +846,22 @@ const Index = ({
   const handleAddRadio = () => {
     return (
       <>
+        {handleAddModal()}
         <List
           title={false}
-          formItemData={tabsKey === '1' ? formItemDataForProduct : formItemDataForSeries}
+          formItemData={formItemDataForProduct}
           advancSearch={handlerSearch}
           searchInputWidth="300"
           resetFn={() => {
             if (tabsKey === '1') {
-              resetForProduct()
+              resetForProduct();
             } else {
-              resetForSeries()
+              resetForSeries();
             }
           }}
-          searchPlaceholder={tabsKey === '1' ? "请输入产品全称/产品代码/系列名称" : "请输入系列名称/系列号"}
+          searchPlaceholder={
+            tabsKey === '1' ? '请输入产品全称/产品代码/系列名称' : '请输入系列名称/系列号'
+          }
           fuzzySearch={value => {
             if (tabsKey === '1') {
               blurSearch(value);
@@ -874,19 +878,24 @@ const Index = ({
             onTabChange: handleChangeRadioKey,
           }}
           extra={
-            tabsKey === "1" && (<Button style={{ height: 32 }} disabled={isKanban} onClick={() => setKanban(true)} type="link">
-              开启产品阶段
-            </Button>)
+            tabsKey === '1' && (
+              <Button disabled={isKanban} onClick={() => setKanban(true)} type="link">
+                开启产品阶段
+              </Button>
+            )
           }
-          tableList={tabsKey === '1' ? (<>
-            {handleAddGird()}
-            {tableData()}
-          </>) : (
-            <>{newTableDataFather()}</>
-          )}
+          tableList={
+            tabsKey === '1' ? (
+              <>
+                {handleAddGird()}
+                {tableData()}
+              </>
+            ) : (
+              <>{newTableDataFather()}</>
+            )
+          }
         />
       </>
-
     );
   };
 
@@ -1083,7 +1092,7 @@ const Index = ({
       onOk() {
         handleDeleteProData(record);
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -1095,7 +1104,7 @@ const Index = ({
         proStageData.current = [data];
         handleGetListData();
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -1216,7 +1225,7 @@ const Index = ({
   const handleGoProductData = record => {
     dispatch(
       routerRedux.push({
-        pathname: './productData',
+        pathname: './index/productData',
         query: { proCode: record.proCode },
       }),
     );
@@ -1241,7 +1250,7 @@ const Index = ({
   const handleGoSeriesData = record => {
     dispatch(
       routerRedux.push({
-        pathname: './seriesData',
+        pathname: './index/seriesData',
         query: { proCode: record.proCode },
       }),
     );
@@ -1250,11 +1259,11 @@ const Index = ({
   // 表头(产品看板)
   const columns = [
     {
-      title: '产品简称',
-      dataIndex: 'proFname',
-      key: 'proFname',
+      title: '产品全称',
+      dataIndex: 'proName',
+      key: 'proName',
       sorter: true,
-      width: 280,
+      width: 400,
       ellipsis: {
         showTitle: false,
       },
@@ -1264,8 +1273,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1285,8 +1294,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1306,8 +1315,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1327,8 +1336,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1348,8 +1357,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1369,8 +1378,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1380,7 +1389,7 @@ const Index = ({
       dataIndex: 'upstairsSeries',
       key: 'upstairsSeries',
       sorter: true,
-      width: 300,
+      width: 400,
       ellipsis: {
         showTitle: false,
       },
@@ -1390,8 +1399,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1411,8 +1420,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1432,8 +1441,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1453,8 +1462,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1474,8 +1483,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1495,8 +1504,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1516,8 +1525,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1525,17 +1534,48 @@ const Index = ({
     {
       title: '操作',
       key: '操作',
+      width: 220,
       align: 'center',
       fixed: 'right',
       render: (_, record) => {
         return (
-          <TableBtn
-            config={[
-              { name: "查看", Action: true, code: "productBillboard:query", click: () => handleGoProductData(record) },
-              { name: "删除", Action: true, code: "productBillboard:delete", click: () => handleShowDeleteConfirm(record) },
-              { name: "代码映射", Action: true, code: "productBillboard:codeChange", click: () => handleShowModal(record) },
-            ]}
-          />
+          <>
+            <Action code="productBillboard:query">
+              <Button
+                className={styles.proButton}
+                type="link"
+                onClick={() => handleGoProductData(record)}
+              >
+                查看
+              </Button>
+            </Action>
+            {/* <Button
+               type="link"
+               className={styles.proButton}
+               disabled={record.contractReview === '' ? 'disabled' : ''}
+               onClick={() => handleGoUpdate(record)}
+             >
+               变更
+             </Button> */}
+            <Action code="productBillboard:delete">
+              <Button
+                type="link"
+                className={styles.proButton}
+                onClick={() => handleShowDeleteConfirm(record)}
+              >
+                删除
+              </Button>
+            </Action>
+            {/* <Action code="productBillboard:codeChange"> */}
+            <Button
+              type="link"
+              className={styles.proButton}
+              onClick={() => handleShowModal(record)}
+            >
+              代码映射
+            </Button>
+            {/* </Action> */}
+          </>
         );
       },
     },
@@ -1544,11 +1584,11 @@ const Index = ({
   // 表头(系列看板-父级)
   const newFatherColumns = [
     {
-      title: '系列名称',// 改回去，不能改为系列简称
+      title: '系列名称',
       dataIndex: 'proName',
       key: 'proName',
       sorter: true,
-      width: 280,
+      width: 400,
       ellipsis: {
         showTitle: false,
       },
@@ -1558,8 +1598,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1579,8 +1619,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1600,8 +1640,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1621,8 +1661,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1632,7 +1672,7 @@ const Index = ({
       dataIndex: 'upstairsSeries',
       key: 'upstairsSeries',
       sorter: true,
-      width: 300,
+      width: 200,
       ellipsis: {
         showTitle: false,
       },
@@ -1642,8 +1682,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1663,8 +1703,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1684,8 +1724,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1705,8 +1745,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1726,8 +1766,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1747,8 +1787,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1757,15 +1797,30 @@ const Index = ({
       title: '操作',
       dataIndex: '操作',
       key: '操作',
+      width: 150,
       fixed: 'right',
       align: 'center',
       render: (_, record) => (
-        <TableBtn
-          config={[
-            { name: "查看", Action: true, code: "productBillboard:serviceQuery", click: () => handleGoSeriesData(record) },
-            { name: "删除", Action: true, code: "productBillboard:serviceDelete", click: () => handleShowDeleteConfirm(record) },
-          ]}
-        />
+        <div>
+          <Action code="productBillboard:serviceQuery">
+            <Button
+              type="link"
+              className={styles.proButton}
+              onClick={() => handleGoSeriesData(record)}
+            >
+              查看
+            </Button>
+          </Action>
+          <Action code="productBillboard:serviceDelete">
+            <Button
+              type="link"
+              className={styles.proButton}
+              onClick={() => handleShowDeleteConfirm(record)}
+            >
+              删除
+            </Button>
+          </Action>
+        </div>
       ),
     },
   ];
@@ -1773,9 +1828,9 @@ const Index = ({
   // 表头(系列看板-子级)
   const newChildColumns = [
     {
-      title: '产品简称',
-      dataIndex: 'proFname',
-      key: 'proFname',
+      title: '产品全称',
+      dataIndex: 'proName',
+      key: 'proName',
       sorter: true,
       width: 400,
       ellipsis: {
@@ -1787,8 +1842,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1808,8 +1863,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1829,8 +1884,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1850,8 +1905,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1871,8 +1926,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1892,8 +1947,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1913,8 +1968,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1934,8 +1989,8 @@ const Index = ({
             {text
               ? text.toString().replace(/null/g, '-')
               : text === '' || text === undefined
-                ? '-'
-                : 0}
+              ? '-'
+              : 0}
           </Tooltip>
         );
       },
@@ -1944,14 +1999,27 @@ const Index = ({
       title: '操作',
       dataIndex: 'batchoOperation',
       key: 'batchoOperation',
-      align: 'center',
       render: (_, record) => (
-        <TableBtn
-          config={[
-            { name: "查看", Action: true, code: "productBillboard:serviceQuery", click: () => handleGoProductData(record) },
-            { name: "删除", Action: true, code: "productBillboard:serviceQuery", click: () => handleShowDeleteConfirm(record) },
-          ]}
-        />
+        <div>
+          <Action code="productBillboard:serviceQuery">
+            <Button
+              type="link"
+              className={styles.proButton}
+              onClick={() => handleGoProductData(record)}
+            >
+              查看
+            </Button>
+          </Action>
+          <Action code="productBillboard:serviceQuery">
+            <Button
+              type="link"
+              className={styles.proButton}
+              onClick={() => handleShowDeleteConfirm(record)}
+            >
+              删除
+            </Button>
+          </Action>
+        </div>
       ),
     },
   ];
@@ -1970,7 +2038,7 @@ const Index = ({
         dataSource={productBillboardTableData.rows} // 表数据源
         columns={columns}
         onChange={handleChangeSorter}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 120 }}
       />
     );
   };
@@ -1988,7 +2056,7 @@ const Index = ({
         dataSource={productBillboardNewTabsData.rows} // 表数据源
         columns={newFatherColumns}
         expandedRowRender={newTableData}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 120 }}
         onChange={handleChangeNewSorter}
         // expandRowByClick="true" // 点击直接展开子表格
         expandedRowKeys={expandedRowKeysData}
@@ -2006,14 +2074,14 @@ const Index = ({
     handleGetDataNewChildObj();
     return (
       <Table
-        style={{ margin: '0 300px 2px -16px' }}
+        style={{ margin: '2px 300px 2px 3px' }}
         Checkbox={rowSelection}
         pagination={paginationNewChildProps}
         loading={listLoading2} // 加载中效果
         rowKey={record => record.proCode} // key值
         dataSource={productBillboardNewTableData.rows} // 表数据源
         columns={newChildColumns}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 150 }}
         onChange={handleChangeNewChildSorter}
       />
     );
@@ -2237,21 +2305,31 @@ const Index = ({
       render: (_, record) => {
         if (!record.id) {
           return (
-            <TableBtn
-              config={[
-                { name: "保存", click: () => handleCommitCodeLink() },
-                { name: "取消", click: () => handleCancelCodeLink(record, proCodeLinkTableDataRef.current) },
-              ]}
-            />
+            <div>
+              <Button type="link" onClick={() => handleCommitCodeLink()}>
+                保存
+              </Button>
+              <Button
+                type="link"
+                onClick={() => handleCancelCodeLink(record, proCodeLinkTableDataRef.current)}
+              >
+                取消
+              </Button>
+            </div>
           );
         }
         return (
-          <TableBtn
-            config={[
-              { name: "保存", click: () => handleCommitCodeLink() },
-              { name: "删除", click: () => handleCancelCodeLink(record, proCodeLinkTableDataRef.current) },
-            ]}
-          />
+          <div>
+            <Button type="link" onClick={() => handleCommitCodeLink()}>
+              保存
+            </Button>
+            <Button
+              type="link"
+              onClick={() => handleCancelCodeLink(record, proCodeLinkTableDataRef.current)}
+            >
+              删除
+            </Button>
+          </div>
         );
       },
     },
@@ -2262,6 +2340,7 @@ const Index = ({
    * @param {Object} record 行数据
    */
   const handleShowModal = record => {
+    console.log('代码映射');
     modalTitle.current = `${record.proName} : ${record.proCode}`;
     proCodeLinkData.current = record.proCode;
     handleGetCodeLinkTable(proCodeLinkData.current);
@@ -2295,7 +2374,7 @@ const Index = ({
       onOk() {
         handleUpdateCodeLink(proCodeLinkTableDataRef.current);
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -2336,7 +2415,7 @@ const Index = ({
             }
           }
         },
-        onCancel() { },
+        onCancel() {},
       });
     }
   };
@@ -2366,9 +2445,9 @@ const Index = ({
     );
   };
 
-  useEffect(() => {
-    handleAddModal();
-  }, [proCodeLinkTableDataRef.current]);
+  // useEffect(() => {
+  //   handleAddModal();
+  // }, [proCodeLinkTableDataRef.current]);
 
   useEffect(() => {
     handleGetSelectOptions(); // 请求:获取词汇字典数据

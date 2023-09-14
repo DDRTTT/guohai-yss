@@ -1,7 +1,10 @@
 import { checktoken, queryNotices, tokenRefresh } from '@/services/user';
-import { removeAllSession, setAuthToken } from '@/utils/session';
+import { ENCRYPTION, removeAllSession, setAuthToken, setSession, SYSID } from '@/utils/session';
 import { appendJs } from '@/utils/utils';
 import {
+  GET_ENCRYPTION_API,
+  GET_ES_BOOL_LIST_API,
+  GET_ES_QUERY_BY_ID_API,
   GET_REFRESH_TOKEN_API,
   GET_REFRESH_TOKEN_WITH_USERID_API,
   getNginxIP,
@@ -17,9 +20,12 @@ const GlobalModel = {
 
   state: {
     collapsed: false,
+    drawerVisible: false,
     notices: [],
     saveIP: { gateWayIp: '', jsApi: '' },
     SAVE_DATA_DICTIONARY: {},
+    SAVE_ES_BOOL_LIST: [],
+    SAVE_ES_QUERY_BY_ID: [],
   },
 
   effects: {
@@ -213,7 +219,51 @@ const GlobalModel = {
         message.warn(res.message);
       }
     },
+
+    // ES对比日期查询
+    *GET_ES_BOOL_LIST_FETCH({ payload }, { call }) {
+      const res = yield call(GET_ES_BOOL_LIST_API, payload);
+      if (res && res.status === 200 && res.data) {
+        const { data } = res;
+        return data;
+      } else {
+        message.warn(res.message);
+      }
+    },
+
+    // ES对比查询
+    *GET_ES_QUERY_BY_ID_FETCH({ payload }, { call, put }) {
+      const res = yield call(GET_ES_QUERY_BY_ID_API, payload);
+      if (res && res.status === 200 && res.data) {
+        const { data } = res;
+        yield put({
+          type: 'SAVE_ES_QUERY_BY_ID',
+          payload: data,
+        });
+        yield put({
+          type: 'drawerVisible',
+          payload: true,
+        });
+      } else {
+        message.warn(res.message);
+      }
+    },
+
+    // 加密查询
+    *GET_ENCRYPTION_FETCH({ payload }, { call, put }) {
+      const res = yield call(GET_ENCRYPTION_API, payload);
+      if (res && res.status === 200 && res.data) {
+        yield call(setSession, ENCRYPTION, JSON.stringify(res));
+      } else {
+        // 如果接口报错就填一个默认值
+        yield call(setSession, ENCRYPTION, JSON.stringify({ data: { responseEncryFlag: false } }));
+        // message.warn(res?.message || '请求错误');
+      }
+      // 获取项目信息（名称和Logo）
+      yield put({ type: 'user/GET_PROJECT_INFO_FETCH' });
+    },
   },
+
   reducers: {
     changeLayoutCollapsed(
       state = {
@@ -263,7 +313,28 @@ const GlobalModel = {
         SAVE_DATA_DICTIONARY: payload,
       };
     },
+
+    SAVE_ES_BOOL_LIST(state, { payload }) {
+      return {
+        ...state,
+        SAVE_ES_BOOL_LIST: payload,
+      };
+    },
+    SAVE_ES_QUERY_BY_ID(state, { payload }) {
+      return {
+        ...state,
+        SAVE_ES_QUERY_BY_ID: payload,
+      };
+    },
+
+    drawerVisible(state, { payload }) {
+      return {
+        ...state,
+        drawerVisible: payload,
+      };
+    },
   },
+
   subscriptions: {
     setup({ history, dispatch }) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
@@ -280,6 +351,7 @@ const GlobalModel = {
         const contentDom = document.getElementsByClassName('ant-layout')[2];
         const siderDom = document.getElementsByClassName('ant-pro-sider-menu-sider')[0];
         if (pathname === '/workspace') {
+          setSession(SYSID, 1);
           num = 0;
           if (contentDom && siderDom) {
             siderDom.style.display = 'none';
@@ -288,7 +360,7 @@ const GlobalModel = {
         } else if (num === 0) {
           if (contentDom && siderDom) {
             siderDom.style.display = 'block';
-            contentDom.style.paddingLeft = '256px';
+            contentDom.style.paddingLeft = '206px';
             dispatch({
               type: 'changeLayoutCollapsed',
               payload: false,

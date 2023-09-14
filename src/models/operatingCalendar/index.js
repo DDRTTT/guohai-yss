@@ -17,11 +17,6 @@ import {
   getSecSubInfo,
   getProductEnum,
   getperson,
-  queryProductPeriodInfoList,
-  addProductPeriodInfo,
-  delProductPeriodInfo,
-  getProNameAndCodeAPI,
-  getProTypeListAPI,
 } from '@/services/operatingCalendar/index';
 import {
   getHandleStrategyList,
@@ -89,10 +84,6 @@ export default {
     handleList: [],
     // 用户目前已启用的日程策略
     enableByUser: {},
-    // 产品全称下拉选项列表
-    productAllNameList: [],
-    // 开放日状态下拉列表
-    openStateList: [],
   },
   reducers: {
     /**
@@ -275,20 +266,6 @@ export default {
         enableByUser: payload,
       };
     },
-    // 产品全称下拉选项值
-    setProductAllNameList(state, { payload }) {
-      return {
-        ...state,
-        productAllNameList: payload,
-      };
-    },
-    // 开放日状态下拉列表
-    setOpenStateList(state, { payload }) {
-      return {
-        ...state,
-        openStateList: payload,
-      };
-    },
   },
   effects: {
     /**
@@ -298,7 +275,7 @@ export default {
       const res = yield call(taskHandleAdd, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 获取当前用户目前已经启用的日历策略
@@ -310,7 +287,7 @@ export default {
           type: 'setEnableByUser',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 删除办理策略
@@ -319,7 +296,7 @@ export default {
       const res = yield call(handleStrategyDeleteById, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 删除提醒策略
@@ -328,7 +305,7 @@ export default {
       const res = yield call(deleteById, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 删除日历策略
@@ -337,7 +314,7 @@ export default {
       const res = yield call(scheduleStrategyDelete, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 添加或者修改日历策略
@@ -346,7 +323,7 @@ export default {
       const res = yield call(scheduleStrategyAdd, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 获取用户所有的日历策略
@@ -358,7 +335,7 @@ export default {
           type: 'setCalendarSetList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 获取用户个人的颜色设置
@@ -378,7 +355,7 @@ export default {
       const res = yield call(deleteByName, payload);
       if (res && res.status === 200) {
         return Promise.resolve(true);
-      }
+      } 
     },
     /**
      * 新增或修改个人颜色
@@ -387,7 +364,7 @@ export default {
       const res = yield call(addBatchPer, payload);
       if (res && res.status === 200) {
         return Promise.resolve(res);
-      }
+      } 
     },
     /**
      * 新增或修改个人提醒策略
@@ -396,7 +373,7 @@ export default {
       const res = yield call(addPeople, payload);
       if (res && res.status == 200) {
         return Promise.resolve(res);
-      }
+      } 
     },
     /**
      * 新增或修改办理策略
@@ -405,7 +382,7 @@ export default {
       const res = yield call(handleStrategyAdd, payload);
       if (res && res.status == 200) {
         return Promise.resolve(res);
-      }
+      } 
     },
     /**
      * 新增或修改系统颜色模版设置
@@ -414,7 +391,7 @@ export default {
       const res = yield call(addBatchSys, payload);
       if (res && res.status === 200) {
         return Promise.resolve(res);
-      }
+      } 
     },
     /**
      * 获取样式设置的模版
@@ -427,7 +404,7 @@ export default {
           payload: res.data || [],
         });
         return Promise.resolve(true);
-      }
+      } 
     },
     /**
      * 获取系统设置的代码
@@ -440,7 +417,7 @@ export default {
           payload: res.data || [],
         });
         return Promise.resolve(true);
-      }
+      } 
     },
     /**
      * 获取办理策略列表
@@ -453,7 +430,7 @@ export default {
           payload: res.data || [],
         });
         return Promise.resolve(res.data);
-      }
+      } 
     },
     /**
      * 获取当前机构全部用户
@@ -465,7 +442,7 @@ export default {
           type: 'setPersonList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 产品名称下拉列表
@@ -477,7 +454,7 @@ export default {
           type: 'setProductEnum',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 获取二级分类列表
@@ -489,7 +466,7 @@ export default {
           type: 'setSecSubInfoList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 获取筛选条件的列表
@@ -501,7 +478,7 @@ export default {
           type: 'setFilterList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 获取任务类型的字典
@@ -518,7 +495,7 @@ export default {
           payload: tempData || {},
         });
         return Promise.resolve(res.data);
-      }
+      } 
     },
     /**
      * 获取任务列表
@@ -531,7 +508,7 @@ export default {
           payload: res.data || [],
         });
         return Promise.resolve(true);
-      }
+      } 
     },
     /**
      * 切换订阅状态的接口
@@ -540,7 +517,7 @@ export default {
       const res = yield call(subscribeChange, payload);
       if (res && res.status === 200) {
         return Promise.resolve(true);
-      }
+      } 
     },
     /**
      * [getRemindList 获取提醒设置的列表]
@@ -552,7 +529,7 @@ export default {
           type: 'setGetRemindList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * [getHandleList 获取办理设置的列表]
@@ -564,7 +541,7 @@ export default {
           type: 'setGetHandleList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * [getSubscribeList 获取订阅设置的列表]
@@ -576,7 +553,7 @@ export default {
           type: 'setSubscribeList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 获取左上角的tab的列表
@@ -590,7 +567,7 @@ export default {
         });
 
         return Promise.resolve(res.data);
-      }
+      } 
     },
     /**
      * 获取表格的数据
@@ -616,7 +593,7 @@ export default {
           type: 'setNoticeList',
           payload: tempData,
         });
-      }
+      } 
     },
     /**
      * 获取交易所休息日
@@ -628,7 +605,7 @@ export default {
           type: 'setHoliday',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 添加任务
@@ -637,7 +614,7 @@ export default {
       const res = yield call(addTask, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 获取象限视图
@@ -649,7 +626,7 @@ export default {
           type: 'setQuadrantList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 完成/取消完成任务
@@ -658,7 +635,7 @@ export default {
       const res = yield call(updateHandleSchedul, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
+      } 
     },
     /**
      * 获取产品数据视图的数据
@@ -670,7 +647,7 @@ export default {
           type: 'setStackedBarChartList',
           payload: res.data || [],
         });
-      }
+      } 
     },
     /**
      * 根据id获取任务详情
@@ -682,7 +659,7 @@ export default {
           type: 'setQueryMsgById',
           payload: res.data,
         });
-      }
+      } 
     },
     /**
      * 修改任务
@@ -691,53 +668,7 @@ export default {
       const res = yield call(updateTask, payload);
       if (res && res.status === 200) {
         callBack && callBack();
-      }
-    },
-
-    // 开放日设置列表
-    *queryProductPeriodInfoList({ payload, callback }, { call }) {
-      const response = yield call(queryProductPeriodInfoList, payload);
-      if (response && response.status === 200) {
-        if (callback) callback(response);
-      }
-    },
-
-    // 开放日设置新增
-    *addProductPeriodInfo({ payload, callback }, { call }) {
-      const response = yield call(addProductPeriodInfo, payload);
-      if (response && response.status === 200) {
-        if (callback) callback();
-      }
-    },
-
-    // 开放日设置删除
-    *delProductPeriodInfo({ payload, callback }, { call }) {
-      const response = yield call(delProductPeriodInfo, payload);
-      if (response) {
-        if (callback) callback();
-      }
-    },
-
-    // 产品全称下拉列表
-    *getProNameAndCodeList(payload, { put, call }) {
-      const res = yield call(getProNameAndCodeAPI, payload);
-      if (res && res.status === 200) {
-        yield put({
-          type: 'setProductAllNameList',
-          payload: res.data || [],
-        });
-      }
-    },
-
-    // 开放日状态下拉列表
-    *getOpenStateList(payload, { put, call }) {
-      const res = yield call(getProTypeListAPI);
-      if (res) {
-        yield put({
-          type: 'setOpenStateList',
-          payload: res || [],
-        });
-      }
+      } 
     },
   },
 };

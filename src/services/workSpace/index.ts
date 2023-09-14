@@ -28,6 +28,7 @@ interface screenParams {
 
 // 我待办的任务:根据用户Id获取任务(分页)  获取用户待办的任务
 export async function getTodoTasksAPI(params: toDoParams): Promise<any> {
+  // return request('/api/yss-base-billows/task-query/page/user-id', {
   return request('/yss-lifecycle-flow/common/todo-task/list', {
     method: 'POST',
     data: params,
@@ -65,12 +66,18 @@ export async function getLinkRouterAPI(params: screenParams): Promise<any> {
 
 // 已办理的任务
 export async function getHandledTasksAPI(params: any) {
-  return request(`/yss-lifecycle-flow/common/home-page/task-list?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=T001_5`);
+  // return request(`/yss-lifecycle-flow/task-query/task-list-page?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=${params.taskType}`);
+  return request(
+    `/yss-lifecycle-flow/common/home-page/task-list?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=T001_5`,
+  );
 }
 
 // 传阅的任务
 export async function getTransmitTasksAPI(params: any) {
-  return request(`/yss-lifecycle-flow/common/home-page/task-list?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=T001_6`);
+  // return request(`/yss-lifecycle-flow/task-query/task-list-page?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=${params.taskType}`);
+  return request(
+    `/yss-lifecycle-flow/common/home-page/task-list?pageNum=${params.pageNum}&pageSize=${params.pageSize}&taskType=T001_6`,
+  );
 }
 
 // 词汇字典
@@ -86,9 +93,4 @@ export async function GET_SYS_USER_INFO_API(params: { sysId: string }) {
 // 获取用户拥有的系统
 export async function GET_USER_SYSID_API() {
   return request(`${type.GET_USER_SYSID_API}`);
-}
-
-// 获取所有的流程 key 和 sysId
-export async function reqAllProcessKeyAndSysId(): Promise<any> {
-  return request('/yss-lifecycle-flow/process-module/query/queryAllProcessKeyAndSysId');
 }

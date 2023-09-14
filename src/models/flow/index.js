@@ -121,7 +121,7 @@ export default {
       const response = yield call(handleGetFlowInfoByIdAPI, payload);
       if (response && response.status === 200) {
         // nodeData中的id和elementId互换
-        response.data.nodeData.forEach(item => {
+        response?.data?.nodeData?.forEach(item => {
           let temp;
           temp = item.elementId;
           item.elementId = item.id;

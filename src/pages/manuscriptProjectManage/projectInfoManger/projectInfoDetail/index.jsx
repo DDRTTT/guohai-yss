@@ -87,7 +87,7 @@ class ProjectInfoDetail extends Component {
       },
       {
         key: 'issueTime',
-        title: '上市/挂牌时间',
+        title: '发行日期',
         width: 140,
         dataIndex: 'issueTime',
         align: 'center',
@@ -287,6 +287,7 @@ class ProjectInfoDetail extends Component {
   }
 
   messageHandle = event => {
+    console.log('projectInfoDetail event::', event);
     const eventData = event.data;
     if (eventData.code === '200' && eventData.type === 'dataDispatched') {
       if (
@@ -294,18 +295,9 @@ class ProjectInfoDetail extends Component {
         eventData.data.formData.businessData &&
         JSON.stringify(eventData.data.formData.businessData) !== '{}'
       ) {
-        this.props.dispatch({
-          type: 'projectInfoManger/getMemberInfoByCodeReq',
-          payload: {
-            proCode: eventData.data.formData.businessData.proCode,
-          },
-          callback: result => {
-            eventData.data.formData.businessData.proMembers = result.data;
-            this.setState({
-              pageInfo: eventData.data.formData.businessData,
-              isIframe: true,
-            });
-          },
+        this.setState({
+          pageInfo: eventData.data.formData.businessData,
+          isIframe: true,
         });
       }
     }
@@ -390,7 +382,7 @@ class ProjectInfoDetail extends Component {
   }
 
   getPageData = () => {
-    const { proCode, taskId } = this.props.location.query;
+    const { proCode, taskId, radioType } = this.props.location.query;
     this.setState({
       radioType: this.props.location.query.radioType,
     });
@@ -524,7 +516,7 @@ class ProjectInfoDetail extends Component {
       >
         <div
           style={{
-            height: 'calc(100vh - 210px)',
+            height: isIframe ? 'auto' : 'calc(100vh - 210px)',
             overflowY: 'auto',
           }}
         >
@@ -541,7 +533,7 @@ class ProjectInfoDetail extends Component {
                     <TextArea
                       rows={4}
                       allowClear
-                      autoSize={{ minRows: 3, maxRows: 6 }}
+                      autosize={{ minRows: 3, maxRows: 6 }}
                       value={pageInfo.terminationReason}
                       disabled
                     />
@@ -709,23 +701,6 @@ class ProjectInfoDetail extends Component {
             />
             <div
               style={{
-                display: pageInfo.publishTime ? 'block' : 'none',
-                padding: '20px 0 10px',
-                color: '#333',
-                fontSize: '16px',
-              }}
-            >
-              项目发行信息
-            </div>
-            <div
-              style={{
-                display: pageInfo.publishTime ? 'block' : 'none',
-              }}
-            >
-              发行时间：{this.formatDate(pageInfo.publishTime)}
-            </div>
-            <div
-              style={{
                 display:
                   pageInfo.proPublishInfoList &&
                   JSON.stringify(pageInfo.proPublishInfoList) !== '[]'
@@ -736,7 +711,7 @@ class ProjectInfoDetail extends Component {
                 fontSize: '16px',
               }}
             >
-              上市/挂牌信息
+              项目发行信息
             </div>
             <Table
               style={{

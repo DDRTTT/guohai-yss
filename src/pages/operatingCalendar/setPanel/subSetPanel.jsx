@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Table, Switch, Spin, Collapse, Button } from 'antd';
+import { Switch, Spin, Collapse } from 'antd';
+import { Table } from '@/components';
 import { connect } from 'dva';
 import styles from './../index.less';
-import router from 'umi/router';
 import { SetPanelLayout } from './strategyComponent';
 const { Panel } = Collapse;
 

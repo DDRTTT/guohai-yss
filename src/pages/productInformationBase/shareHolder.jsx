@@ -2,11 +2,10 @@
  * 产品信息要素 - 份额持有人大会及日常机构信息
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Table, Button, Card, Breadcrumb } from 'antd';
+import { Button } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import styles from './index.less';
 import {
   handleAddHeard,
   handleAddTable,

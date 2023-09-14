@@ -1221,22 +1221,22 @@ const Index = ({
           </Row>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div className={styles.wrapButton}>
-              <Button className={styles.listButtons} onClick={handleDownLoad}>
+              <Button type="primary" className={styles.listButtons} onClick={handleDownLoad}>
                 下载
               </Button>
-              <Button className={styles.listButtons} onClick={handleCheck}>
+              <Button type="primary" className={styles.listButtons} onClick={handleCheck}>
                 查看
               </Button>
-              <Button className={styles.listButtons} onClick={handleVersion}>
+              <Button type="primary" className={styles.listButtons} onClick={handleVersion}>
                 文档版本
               </Button>
-              <Button className={styles.listButtons} onClick={handleChangeTag}>
+              <Button type="primary" className={styles.listButtons} onClick={handleChangeTag}>
                 修改标签
               </Button>
-              <Button className={styles.listButtons} onClick={handleMoveToTree}>
+              <Button type="primary" className={styles.listButtons} onClick={handleMoveToTree}>
                 移动
               </Button>
-              <Button className={styles.listButtons} onClick={handleDelete}>
+              <Button type="primary" className={styles.listButtons} onClick={handleDelete}>
                 删除
               </Button>
             </div>

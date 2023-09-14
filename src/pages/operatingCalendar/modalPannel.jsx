@@ -174,7 +174,7 @@ const TaskInfo = props => {
       type: 'select',
       option: personList,
       width: 22,
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       readSet: { name: 'username', code: 'id' },
     },
   ];

@@ -2,14 +2,17 @@ import React from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
 import { Layout, Menu } from 'antd';
-import loginEnv from '@/utils/loginenv';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import styles from './BasicHeader.less';
 import { getSession, USER_INFO } from '@/utils/session';
 
 const { Header } = Layout;
 
-const BasicHeader = ({ dispatch }) => {
+const BasicHeader = props => {
+  const {
+    user: { SAVE_PROJECT_INFO },
+    dispatch,
+  } = props;
   const handleRefreshToken = () => {
     const userInfo = JSON.parse(getSession(USER_INFO));
     dispatch({
@@ -26,7 +29,12 @@ const BasicHeader = ({ dispatch }) => {
 
   return (
     <Header className={styles.content}>
-      <img src={loginEnv.LOGO} alt="HLOGO" className={styles.logo} onClick={handleRefreshToken} />
+      <img
+        src={`data:image/png;base64,${SAVE_PROJECT_INFO?.innerLogo}`}
+        alt="HLOGO"
+        className={styles.logo}
+        onClick={handleRefreshToken}
+      />
       <div className={styles.right}>
         <Menu theme="dark" mode="horizontal">
           {/* <Menu.Item key="1">首页</Menu.Item> */}
@@ -39,6 +47,7 @@ const BasicHeader = ({ dispatch }) => {
   );
 };
 
-export default connect(({ global }) => ({
+export default connect(({ global, user }) => ({
+  user,
   global,
 }))(BasicHeader);

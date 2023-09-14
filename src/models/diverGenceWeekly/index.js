@@ -1,4 +1,4 @@
-import { getTableDataList, getDictList,getRevokeAPI,getDeleteAPI,getBatchSubmitByProCodeApi,} from '@/services/divergenceWeekly';
+import { getTableDataList, getDictList,getRevokeAPI,getDeleteAPI,getBatchSubmitByProCodeApi,} from '@/services/diverGenceWeekly';
 import { message } from 'antd';
 
 export default {

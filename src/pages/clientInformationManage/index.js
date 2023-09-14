@@ -10,13 +10,10 @@ import {
   Menu,
   Row,
   Select,
-  Table,
-  Tag,
 } from 'antd';
+import { Table } from '@/components';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import Action, { fnLink } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import ActionButton from 'antd/lib/modal/ActionButton';
 import styles from './index.less';

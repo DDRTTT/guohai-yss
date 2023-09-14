@@ -12,21 +12,23 @@ import { parse } from 'qs';
 import { USER_INFO } from '@/utils/session';
 import Action from '@/utils/hocUtil';
 import { PageContainers } from '@/components';
-
+import {QUICK_AUTH_DETAIL_API, getAllAuthorizeById, getPositionsTree} from '@/services/userManagement/index'
+import styles from './index.less';
+import { stringify } from 'qs';
 const dirCode = 'attributionSystem,SysUserType,authorizationStrategy,roleName,manuscriptStrategy';
 const Detail = ({
   dispatch,
-  userManagement: { saveGetDept, roleComByUser, roleBySys, userauthed },
+  userManagement: { saveGetDept, roleComByUser, roleBySys },
   roleManagement: {
     saveDictList,
     saveDictList: { authorizationStrategy, attributionSystem },
     savePositionsList,
     saveAllMenuTree,
-    saveAuthorizeActionsList,
+    // saveAuthorizeActionsList,
     tags,
     saveRoleDetail,
     savePositionsTree,
-    savePositionAuthorizeActionsList,
+    // savePositionAuthorizeActionsList,
   },
   workSpace: { GET_USER_SYSID },
   fetchGetAuthorizeByIdLoading,
@@ -34,6 +36,7 @@ const Detail = ({
   fetchGetPositionsTreeLoading,
   getuserauthedLoading,
   form,
+  location
 }) => {
   // 用户信息
   const userInfo = JSON.parse(sessionStorage.getItem(USER_INFO));
@@ -61,8 +64,17 @@ const Detail = ({
   const [selectTagList, setSelectTagList] = useState([]);
   // 权限预览
   const [authModal, setAuthModal] = useState(false);
+  const [userauthed, setUserauthed] = useState({});
+  const [loading, setLoading] = useState(true)
+  const [saveAuthorizeActionsList, setSaveAuthorizeActionsList] = useState([])
+  const [savePositionAuthorizeActionsList, setSavePositionAuthorizeActionsList] = useState([])
 
-  // 冻结/解冻
+  // useEffect(()=>{
+    
+  // },[])
+  
+
+  //冻结/解冻
   const handleFreeze = payload =>
     dispatch({
       type: `userManagement/handleUserFreeze`,
@@ -114,14 +126,42 @@ const Detail = ({
 
   //   查询用户数据包
   const getUserInfo = () => {
+    setLoading(true);
     dispatch({
-      type: 'userManagement/getuserauthed',
+      type: 'userManagement/getGLAuserauthed',
       payload: {
         sysId,
         orgAuthedId: queryParam.orgAuthedId,
         userAuthedId: queryParam.userAuthedId,
       },
     });
+    
+    QUICK_AUTH_DETAIL_API({...location.query}).then(res => {
+      console.log(res.data);
+      let id = 0
+      let positionIds = []
+      if (res.data.userRole.length > 0) {
+        res.data.userRole.forEach(item => {
+          if(!item.name.includes('统稿')) {
+            id = item.id
+          }
+        })
+      }
+      if (res.data.positions.length > 0) {
+        res.data.positions.forEach(item => {
+          positionIds.push(item.id);
+        });
+      }
+      getPositionsTree(stringify({sysId: 1, positionIds })).then(succ => {
+        setSavePositionAuthorizeActionsList(succ.data[0].nodesMap);
+      })
+      getAllAuthorizeById(id).then(rsp => {
+        setSaveAuthorizeActionsList(rsp.data[0]?.actionsList || [])
+      });
+      setUserauthed(res.data);
+      setLoading(false);
+    });
+
   };
 
   useEffect(() => {
@@ -288,6 +328,17 @@ const Detail = ({
       },
     },
     {
+      name: 'principal',
+      label: '是否部门负责人',
+      type: 'radio',
+      ...defaultConfig,
+      option: [
+        { name: '是', code: 1 },
+        { name: '否', code: 0 },
+      ],
+      initialValue: userauthed.principal,
+    },
+    {
       name: 'assistMgtDept',
       label: '协管部门',
       type: 'select',
@@ -326,17 +377,17 @@ const Detail = ({
         },
       ]}
     >
-      <Spin spinning={getuserauthedLoading}>
+      <Spin spinning={loading}>
         <Card
           title={userauthed.username}
           extra={
             <div>
-              {userauthed.freezed == 0 && [
+              {/* {userauthed.freezed == 0 && [
                 <Action key="userManagement:modify" code="userManagement:modify">
                   <Button onClick={() => setShowModifyPannel(true)}>修改信息</Button>
                 </Action>,
                 <Action key="userManagement:reset" code="userManagement:reset">
-                  <Button style={{ marginLeft: '20px' }} onClick={restUserCode}>
+                  <Button className={styles.btnsStyle } onClick={restUserCode}>
                     重置密码
                   </Button>
                 </Action>,
@@ -344,25 +395,25 @@ const Detail = ({
               <Action key="userManagement:freeze" code="userManagement:freeze">
                 {userauthed.freezed == 0 ? (
                   <Button
-                    style={{ marginLeft: '20px' }}
+                    className={styles.btnsStyle }
                     onClick={() => {
                       handleFreeze({ freeze: 1 });
                     }}
                   >
                     冻结
                   </Button>
-                ) : userauthed.freezed == 1 ? (
+                ) : (
                   <Button
-                    style={{ marginLeft: '20px' }}
+                    className={styles.btnsStyle }
                     onClick={() => {
                       handleFreeze({ freeze: 0 });
                     }}
                   >
                     解冻
                   </Button>
-                ) : null}
-              </Action>
-              <Button style={{ marginLeft: '20px' }} onClick={() => router.go(-1)}>
+                )}
+              </Action> */}
+              <Button className={styles.btnsStyle } onClick={() => router.go(-1)}>
                 返回
               </Button>
             </div>
@@ -462,7 +513,7 @@ export default errorBoundary(
       fetchGetAuthTreeLoading: loading.effects['roleManagement/fetchGetAuthTree'],
       fetchGetPositionsTreeLoading: loading.effects['roleManagement/fetchGetPositionsTreeLoading'],
       handleCreateRoleLoading: loading.effects['roleManagement/handleCreateRole'],
-      getuserauthedLoading: loading.effects['userManagement/getuserauthed'],
+      getuserauthedLoading: loading.effects['userManagement/getGLAuserauthed'],
     }))(Detail),
   ),
 );

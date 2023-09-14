@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   Breadcrumb,
   Button,
-  Card,
   Col,
   DatePicker,
   Divider,
@@ -22,8 +21,8 @@ import { handleValidator } from '@/utils/utils';
 import styles from './less/addEmployees.less';
 import AddAccount from './addResume';
 import { tableRowConfig } from '@/pages/investorReview/func';
-
 // import staticInstance from '../../utils/staticInstance';
+import { Card, PageContainers } from '@/components';
 
 class addEmployees extends Component {
   state = {
@@ -88,7 +87,7 @@ class addEmployees extends Component {
       dispatch({
         type: 'addEmployees/getDetails',
         payload: location.query.id,
-      }).then(() => {
+      }).then(data => {
         const { detailsLists } = this.props.addEmployees;
         this.setState({
           detailsList: detailsLists,
@@ -113,7 +112,9 @@ class addEmployees extends Component {
   getPreservation = () => {
     this.props.form.validateFieldsAndScroll((err, options) => {
       if (err) return;
+
       const values = options;
+
       const { dispatch, location } = this.props;
       // const values = this.props.form.getFieldsValue();
       values.executiveResume = this.state.accountList;
@@ -311,7 +312,7 @@ class addEmployees extends Component {
 
   // 详细信息
   employeeDetails = () => {
-    const { disabled, detailsList } = this.state;
+    const {  disabled, detailsList } = this.state;
     const {
       addEmployees: { codeList, department },
       form: { getFieldDecorator },
@@ -350,25 +351,14 @@ class addEmployees extends Component {
               })(<Input autoComplete="off" disabled={disabled} placeholder="请选择姓名" />)}
             </Form.Item>
           </Col>
-          {/* <Col span={8}>
-            <Form.Item label="员工编号" {...formItemLayout}>
-              {getFieldDecorator('empNo', {
-                rules: [
-                  {
-                    required: true,
-                    message: '员工编号不可为空',
-                  },
-                  { validator: this.handleEmpNoValidator },
-                ],
-                initialValue: detailsList.empNo,
-              })(<Input autoComplete="off" disabled={disabled} placeholder="请输入员工编号" />)}
-            </Form.Item>
-          </Col> */}
           <Col span={8}>
             <Form.Item label="OA员工编号" {...formItemLayout}>
               {getFieldDecorator('oaEmployeeId', {
                 rules: [
-                  { required: true, message: '请输入OA员工编号' },
+                  {
+                    required: true,
+                    message: '请输入OA员工编号',
+                  },
                   { validator: this.handleOaEmployeeIdValidator },
                 ],
                 initialValue: detailsList.oaEmployeeId,
@@ -419,31 +409,16 @@ class addEmployees extends Component {
               )}
             </Form.Item>
           </Col>
-          {/* <Col span={8}>
-            <Form.Item label="联系方式" {...formItemLayout}>
-              {getFieldDecorator('linked', {
-                rules: [
-                  {
-                    required: true,
-                    message: '联系方式不可为空',
-                  },
-                ],
-                initialValue: detailsList.linked,
-              })(<Input autoComplete="off" disabled={disabled} placeholder="请输入联系方式" />)}
-            </Form.Item>
-          </Col> */}
           <Col span={8}>
             <Form.Item label="联系方式" {...formItemLayout}>
               {getFieldDecorator('phoneNumber', {
-                initialValue: detailsList.phoneNumber,
                 rules: [
-                  { required: true, message: '请输入联系方式' },
                   {
-                    pattern: /(^1[0-9]{10}$)|(^\+\d{13}$)/,
-                    message: '请输入正确的联系方式',
+                    required: true,
+                    message: '请输入联系方式',
                   },
-                  { validator: this.handlePhoneNumberValidator },
                 ],
+                initialValue: detailsList.phoneNumber,
               })(<Input autoComplete="off" disabled={disabled} placeholder="请输入联系方式" />)}
             </Form.Item>
           </Col>
@@ -527,16 +502,6 @@ class addEmployees extends Component {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="任职结束日期" {...formItemLayout}>
-              {getFieldDecorator('positionEndDate', {
-                initialValue:
-                  disabled || (location.query.type && location.query.type === 'modify')
-                    ? moment(detailsList.positionEndDate)
-                    : '',
-              })(<DatePicker disabled={disabled} />)}
-            </Form.Item>
-          </Col>
-          <Col span={8}>
             <Form.Item label="证件类型" {...formItemLayout}>
               {getFieldDecorator('certificateType', {
                 initialValue: detailsList.certificateType,
@@ -554,6 +519,16 @@ class addEmployees extends Component {
                     ))}
                 </Select>,
               )}
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="任职结束日期" {...formItemLayout}>
+              {getFieldDecorator('positionEndDate', {
+                initialValue:
+                  disabled || (location.query.type && location.query.type === 'modify')
+                    ? moment(detailsList.positionEndDate)
+                    : '',
+              })(<DatePicker disabled={disabled} />)}
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -701,7 +676,7 @@ class addEmployees extends Component {
   }
 
   render() {
-    const { dataSource, disabled, detailsList, accountList } = this.state;
+    const { dataSource, disabled, detailsList, accountList, title } = this.state;
     const columns = [
       {
         title: '序号',
@@ -709,6 +684,7 @@ class addEmployees extends Component {
         key: 'index',
         ...tableRowConfig,
         align: 'right',
+        sorter: false,
       },
       {
         title: '任职公司名称',
@@ -716,6 +692,7 @@ class addEmployees extends Component {
         editable: true,
         ...tableRowConfig,
         width: 400,
+        sorter: false,
       },
       {
         title: '任职部门',
@@ -723,6 +700,7 @@ class addEmployees extends Component {
         width: 200,
         editable: true,
         ...tableRowConfig,
+        sorter: false,
       },
       {
         title: '担任职位',
@@ -730,6 +708,7 @@ class addEmployees extends Component {
         width: 200,
         editable: true,
         ...tableRowConfig,
+        sorter: false,
       },
       {
         title: '任职开始日期',
@@ -737,6 +716,7 @@ class addEmployees extends Component {
         width: 200,
         editable: true,
         ...tableRowConfig,
+        sorter: false,
       },
       {
         title: '任职结束日期',
@@ -744,6 +724,7 @@ class addEmployees extends Component {
         width: 200,
         editable: true,
         ...tableRowConfig,
+        sorter: false,
       },
       {
         title: '操作',
@@ -792,9 +773,19 @@ class addEmployees extends Component {
     // });
     return (
       <Row className={styles.content}>
-        <Card>
-          {this.titleNav()}
-          {disabled ? this.goBack() : this.preservation()}
+        <PageContainers
+          breadcrumb={[
+            {
+              title: '员工管理',
+              url: '',
+            },
+            {
+              title: title,
+              url: '',
+            },
+          ]}
+        />
+        <Card extra={disabled ? this.goBack() : this.preservation()}>
           <div
             style={{
               overflow: 'auto',
@@ -811,7 +802,6 @@ class addEmployees extends Component {
                 新增
               </Button>
             </div>
-
             <Table
               columns={columns}
               scroll={{ x: columns.length * 200 + 200 }}

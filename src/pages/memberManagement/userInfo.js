@@ -143,7 +143,7 @@ export default class SelectionAgency extends Component {
         <Card style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.basic}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem
                   label="手机号码"
                   {...formItemLayout}
@@ -175,7 +175,7 @@ export default class SelectionAgency extends Component {
         <Card style={{ marginBottom: 24 }} bordered={false} loading={infoLoading}>
           <div className={styles.basic}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="用户名" {...formItemLayout}>
                   {getFieldDecorator('username', {
                     initialValue: saveInfo.username,
@@ -188,7 +188,7 @@ export default class SelectionAgency extends Component {
                 </FormItem>
               </Col>
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="登录名" {...formItemLayout}>
                   {getFieldDecorator('usercode', {
                     initialValue: saveInfo.usercode,
@@ -201,7 +201,7 @@ export default class SelectionAgency extends Component {
                 </FormItem>
               </Col>
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="用户类型" {...formItemLayout}>
                   {getFieldDecorator('type', {
                     initialValue: saveInfo.type,
@@ -225,7 +225,7 @@ export default class SelectionAgency extends Component {
                 </FormItem>
               </Col>
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="电子邮箱" {...formItemLayout}>
                   {getFieldDecorator('email', {
                     initialValue: saveInfo.email,
@@ -243,7 +243,7 @@ export default class SelectionAgency extends Component {
                 </FormItem>
               </Col>
 
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="所属部门" {...formItemLayout}>
                   {getFieldDecorator('deptId', {
                     initialValue: saveInfo.deptId,
@@ -252,11 +252,6 @@ export default class SelectionAgency extends Component {
                       style={{ minWidth: '100%' }}
                       disabled={this.state.disabled}
                       placeholder="请选择"
-                      showSearch
-                      optionFilterProp="children"
-                      filterOption={(input, option) => 
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
                     >
                       {saveGetDept &&
                         saveGetDept.map(i => {
@@ -270,7 +265,7 @@ export default class SelectionAgency extends Component {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8} sm={24}>
+              <Col md={12} sm={24}>
                 <FormItem label="员工编号" {...formItemLayout}>
                   {getFieldDecorator('oaUsernum', {
                     initialValue: saveInfo.oaUsernum,

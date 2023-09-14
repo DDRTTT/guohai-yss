@@ -11,7 +11,7 @@ interface listParams {
 }
 
 interface roleReviewParams {
-  roleComIds: number[]; // 批量审核时以英文逗号分割
+  roleComIds: Array<number>; // 批量审核时以英文逗号分割
   check: number; // 1:审核，0:反审核
 }
 
@@ -25,9 +25,9 @@ interface createRoleParams {
   name?: string; // 组件名称
   type: number; // 角色类型0：授权 1：功能
   roleComIds: number; // 角色[id]
-  dataStrategies: { strategyCode: string }[];
-  positions: { id: number }[];
-  functions: { id: number }[];
+  dataStrategies: Array<{ strategyCode: string }>;
+  positions: Array<{ id: number }>;
+  functions: Array<{ id: number }>;
 }
 
 const baseUri = '/yss-base-admin';
@@ -56,7 +56,7 @@ export async function getRoleList({ currentPage, pageSize, like, deptId, sysId }
 export async function getuserauthed({ orgAuthedId, userAuthedId, sysId }) {
   return request<Record<any, any>>(
     // `${uri}/userproduct/getuserauthed?sysId=${sysId}&orgAuthedId=${orgAuthedId}&userAuthedId=${userAuthedId}`,
-    `${baseUri}/userproduct/getuserauthed?sysId=${sysId}&orgAuthedId=${orgAuthedId}&userAuthedId=${userAuthedId}`,
+    `${baseUri}/userproduct/getGLAuserauthed?sysId=${sysId}&orgAuthedId=${orgAuthedId}&userAuthedId=${userAuthedId}`,
   );
 }
 
@@ -68,7 +68,7 @@ export async function updateUserInfo(params: any) {
   });
 }
 
-// 角色变更
+//角色变更
 export async function modifyRole({ sysId, id, roleComIds }: createRoleParams) {
   return request<Record<any, any>>(`${uri}/modify?sysId=${sysId}`, {
     method: 'POST',
@@ -166,11 +166,6 @@ export async function fetchUserFreeze({ userIds, freeze }: { userIds: string; fr
   return request<Record<any, any>>(`${baseUri}/user/freeze?${stringify({ userIds, freeze })}`);
 }
 
-// 注销用户（针对已离职人员，无反向操作）  
-export async function fetchUserWithdraw({ userIds, freeze }: { userIds: string; freeze: number }) {
-  return request<Record<any, any>>(`${baseUri}/user/logOut?${stringify({ userIds, freeze })}`);
-}
-
 // 注销用户
 export async function fetchUserLogout({ list }: { list: string }) {
   return request<Record<any, any>>(`${baseUri}/user/delMember?${stringify({ list })}`, {
@@ -189,6 +184,13 @@ export async function SAVE_QUICK_AUTH_API(params: any) {
     method: 'POST',
     data: params,
   });
+}
+
+export async function getAllAuthorizeById(id: any) {
+  return request(`/yss-base-admin/role/getrolebyroleid/${id}`);
+}
+export async function getPositionsTree(params: any) {
+  return request(`/yss-base-admin/positionInfo/getPositionFlowInfos?${params}`);
 }
 
 // 便捷授权详情

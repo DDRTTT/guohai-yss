@@ -340,7 +340,7 @@ export default class userLicense extends BaseCrudComponent {
             showTotal={total => `共 ${total} 条数据`}
             onChange={this.pageChange}
             defaultPageSize={6}
-            showQuickJumper
+            // showQuickJumper
           />
         </div>
       </div>

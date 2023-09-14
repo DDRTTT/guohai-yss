@@ -2,13 +2,11 @@
  * 产品看板-查看产品-产品数据-交易确认
  */
 import React, { useContext, useEffect } from 'react';
-import { Button, message, Row, Col, Table } from 'antd';
-import { connect, routerRedux } from 'dva';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
-import styles from './index.less';
 import {
-  handleChangeNumberToFloat,
   handleChangeThousands,
   pagination,
   handleChangeLabel,
@@ -16,7 +14,7 @@ import {
 import { tableRowConfig } from '@/pages/investorReview/func';
 
 const DealConfirm = ({ dispatch, listLoading, productBillboard: { dealConfirmData } }) => {
-  const { proCodeArguments, proTypeArguments } = useContext(MyContext); // 子组件接受的数据
+  const { proCodeArguments } = useContext(MyContext); // 子组件接受的数据
 
   // 获取交易确认信息表格
   const handleGetDealConfirmData = () => {

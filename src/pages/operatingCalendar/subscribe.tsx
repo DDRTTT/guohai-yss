@@ -37,6 +37,7 @@ class Index extends React.Component<any, any> {
       currentTitle: '',
     };
   }
+
   componentDidMount() {
     this.props
       .dispatch({
@@ -49,6 +50,7 @@ class Index extends React.Component<any, any> {
         });
       });
   }
+
   /**
    *菜单选择处理
    */
@@ -59,6 +61,7 @@ class Index extends React.Component<any, any> {
       currentTitle: tempTitle.name,
     });
   };
+
   render() {
     const { dataSource, currentSelectedKeys, currentTitle } = this.state;
     const { getSystemPathListLoading = false, systemPathList = [] } = this.props;

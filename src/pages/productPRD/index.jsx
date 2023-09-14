@@ -60,7 +60,6 @@ const Index = ({
     documentType,
     breakdown,
     documentTags,
-    proNameList,
   },
 }) => {
   // tabs code
@@ -119,7 +118,6 @@ const Index = ({
     documentTypeReq();
     breakdownReq();
     documentTagsReq();
-    proNameReq();
   }, []);
 
   const handleGetproductTreeData = () => {
@@ -200,14 +198,6 @@ const Index = ({
   const documentTagsReq = () => {
     dispatch({
       type: 'lifeCyclePRD/handleGetDocumentTags',
-      payload: null,
-    });
-  };
-
-  // 产品全称
-  const proNameReq = () => {
-    dispatch({
-      type: 'lifeCyclePRD/handleGetProNameAPI',
       payload: null,
     });
   };
@@ -381,13 +371,6 @@ const Index = ({
 
   const columns = [
     {
-      title: '产品全称',
-      dataIndex: 'proName',
-      key: 'proName',
-      sorter: true,
-      width: 400,
-    },
-    {
       title: '文档名称',
       dataIndex: 'fileName',
       key: 'fileName',
@@ -482,21 +465,6 @@ const Index = ({
       sorter: true,
       render: text => {
         return handleTableCss(text);
-      },
-    },
-    {
-      title: '操作',
-      dataIndex: 'id',
-      key: 'id',
-      width: 91,
-      align: 'center',
-      fixed: 'right',
-      render: (text, record) => {
-        return (
-          <Button onClick={() => handleDownLoad(record)} type="link">
-            下载
-          </Button>
-        );
       },
     },
   ];
@@ -1075,19 +1043,19 @@ const Index = ({
           </Row>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div className={styles.wrapButton}>
-              <Button className={styles.listButtons} onClick={handleDownLoad}>
+              <Button type="primary" className={styles.listButtons} onClick={handleDownLoad}>
                 下载
               </Button>
-              <Button className={styles.listButtons} onClick={handleCheck}>
+              <Button type="primary" className={styles.listButtons} onClick={handleCheck}>
                 查看
               </Button>
-              <Button className={styles.listButtons} onClick={handleVersion}>
+              <Button type="primary" className={styles.listButtons} onClick={handleVersion}>
                 文档版本
               </Button>
-              <Button className={styles.listButtons} onClick={handleRecord}>
+              <Button type="primary" className={styles.listButtons} onClick={handleRecord}>
                 流转记录
               </Button>
-              <Button className={styles.listButtons} onClick={handleSyncManage}>
+              <Button type="primary" className={styles.listButtons} onClick={handleSyncManage}>
                 同步至个人文档
               </Button>
             </div>
@@ -1174,7 +1142,7 @@ const Index = ({
           tagData={documentTags}
           selectData={selectData}
           handleSyncBack={syncBack}
-        />
+        ></SyncToPersonal>
         <Drawer
           title="产品电子档案"
           placement="right"
@@ -1193,27 +1161,6 @@ const Index = ({
                 xl: 48,
               }}
             >
-              <Col md={24} sm={24}>
-                <FormItem
-                  label="产品全称"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  {getFieldDecorator('proCodesCon')(
-                    handleMapList(
-                      proNameList,
-                      'proCode',
-                      'proName',
-                      'multiple',
-                      false,
-                      false,
-                      '产品全称',
-                    ),
-                  )}
-                </FormItem>
-              </Col>
               {leftTreeClickData && leftTreeClickData.code ? null : (
                 <Col md={24} sm={24}>
                   <FormItem

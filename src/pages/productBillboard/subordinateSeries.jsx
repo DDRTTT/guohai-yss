@@ -2,13 +2,12 @@
  * 产品看板-查看系列-下级系列表格
  */
 import React, { useContext, useEffect, useRef } from 'react';
-import { Table, Button, message } from 'antd';
-import { connect, routerRedux } from 'dva';
+import { Button } from 'antd';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import router from 'umi/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
-import styles from './index.less';
-import { tableRowConfig } from '@/pages/investorReview/func';
 import { handleChangeLabel } from '@/pages/productBillboard/baseFunc';
 
 const SubordinateSeries = ({

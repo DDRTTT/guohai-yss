@@ -1,4 +1,5 @@
-import { Card, Table, Breadcrumb, Input, Tooltip } from 'antd';
+import { Card, Breadcrumb, Input, Tooltip } from 'antd';
+import { Table } from '@/components';
 import router from 'umi/router';
 import styles from './index.less';
 

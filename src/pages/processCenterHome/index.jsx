@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Card, Form, Divider, Select, Spin, Empty, message, Row, Col } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, Divider, Empty, Form, message, Select, Spin } from 'antd';
 import { connect } from 'dva';
 import processLineMap from '@/utils/processLineMap';
 import router from 'umi/router';
-import { commonRequest } from '@/services/processCenterHome/index';
+import { commonRequest } from '@/services/processCenterHome';
 import styles from './index.less';
 import flatMap from 'lodash/flatMap';
 import { getMenu } from '@/utils/session';
@@ -17,7 +17,7 @@ const Index = props => {
   const {
     dispatch,
     stageList,
-    codeList: { A002: proTypeList = [] },
+    codeList: { TG004: proTypeList = [] },
     statistics,
     statisLoading,
     stageLoading,
@@ -33,15 +33,15 @@ const Index = props => {
   useEffect(() => {
     dispatch({
       type: 'investorReview/getDicsByTypes',
-      payload: ['A002'],
+      payload: ['TG004'],
     });
     canvas.current.addEventListener('circleClick', e => {
       // 如果在初始化的时候获取菜单树会拿到空的,所以只能在点击的时候去获取菜单树
       // 用户菜单树
-      let menuTree = [];
+      let menuTree;
       // 获取用户权限
       menuTree = ((getMenu() && JSON.parse(getMenu())) || []).find(item => {
-        return item.code == 'productLifecycle';
+        return item.code === 'productLifecycle';
       });
       menuTree = flatMap(recursiveGetData(menuTree, 'children'));
       menuTree =
@@ -51,9 +51,9 @@ const Index = props => {
           })) ||
         [];
       const { nodeActionType, nodeActionUri } = e.detail;
-      if (nodeActionType != '//') {
+      if (nodeActionType !== '//') {
         // 跳转到本地路由
-        if (nodeActionType == 'uri') {
+        if (nodeActionType === 'uri') {
           // 判断跳转权限
           if (menuTree.includes(nodeActionUri) || menuTree.includes(nodeActionUri + '/index')) {
             router.push(nodeActionUri);
@@ -77,7 +77,7 @@ const Index = props => {
       const special = ['start', 'end', 'parallel'];
       let codeList = stageList.map(item => {
         return item.nextCells
-          .filter(item => !special.includes(item.code))
+          .filter(i => !special.includes(i.code))
           .map(sonItem => {
             return sonItem.code;
           });
@@ -123,8 +123,8 @@ const Index = props => {
     setLoading(statisLoading || stageLoading);
   }, [stageLoading, statisLoading]);
   // 切换下拉框的时候
-  const handlerChange = currentCode => {
-    setCurrentCode(currentCode);
+  const handlerChange = code => {
+    setCurrentCode(code);
     if (mapInstance) {
       mapInstance.clear();
     }
@@ -136,9 +136,9 @@ const Index = props => {
           <p>资管平台主流程</p>
           <div className="rightSide">
             <Select style={{ width: 200 }} showSearch value={currentCode} onChange={handlerChange}>
-              {proTypeList.map((item, index) => {
+              {proTypeList.map(item => {
                 return (
-                  <Option key={index} value={item.code}>
+                  <Option key={item.code} value={item.code}>
                     {item.name}
                   </Option>
                 );
@@ -150,7 +150,7 @@ const Index = props => {
         <div className={styles.content}>
           <Spin spinning={isLoading}>
             <Empty
-              style={{ display: stageList ? 'none' : 'block' }}
+              style={{ display: stageList ? 'none' : 'block', height: 190 }}
               description="暂无流程配置数据"
             />
             <canvas
@@ -159,13 +159,6 @@ const Index = props => {
               style={{ display: !stageList ? 'none' : 'block' }}
             />
           </Spin>
-          <ul className={styles.ul}>
-            <li>立项阶段</li>
-            <li>募集阶段</li>
-            <li>成立阶段</li>
-            <li>运作阶段</li>
-            <li>清盘阶段</li>
-          </ul>
         </div>
       </Spin>
     </Card>
@@ -177,7 +170,6 @@ const processCenterHome = state => {
     loading,
     processCenterHome: { stageList, statistics },
     investorReview: { codeList },
-    user,
   } = state;
 
   return {

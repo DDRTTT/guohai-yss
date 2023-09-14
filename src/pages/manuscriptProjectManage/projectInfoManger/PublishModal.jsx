@@ -25,7 +25,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
       stockCode: '',
       stockShortName: '',
       issueTime: '',
-      publishTime: '',
       flag: 'add',
       modifyIndex: -1,
       columns: [
@@ -63,7 +62,7 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
         },
         {
           key: 'issueTime',
-          title: '上市/挂牌时间',
+          title: '挂牌日期',
           dataIndex: 'issueTime',
           width: 130,
           align: 'center',
@@ -117,7 +116,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
       validateFields((err, values) => {
         if (!err) {
           values.issueTime = this.formatDate(values.issueTime._d);
-          values.publishTime = this.formatDate(values.publishTime._d);
 
           if (flag === 'add') {
             this.setState({
@@ -127,7 +125,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
                   stockCode: values.stockCode,
                   stockShortName: values.stockShortName,
                   issueTime: values.issueTime,
-                  publishTime: values.publishTime,
                 },
               ],
             });
@@ -137,7 +134,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
                 item.stockCode = values.stockCode;
                 item.stockShortName = values.stockShortName;
                 item.issueTime = values.issueTime;
-                item.publishTime = values.publishTime;
               }
             });
           }
@@ -154,7 +150,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
         stockCode: record.stockCode,
         stockShortName: record.stockShortName,
         issueTime: moment(record.issueTime),
-        publishTime: record.publishTime ? moment(record.publishTime) : null,
       });
       this.setState({
         flag: 'modify',
@@ -201,25 +196,6 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
         >
           <Form {...layout} className={styles.publishForm}>
             <Row>
-              <Col>
-                <span>发行信息</span>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <Form.Item label="发行时间">
-                  {getFieldDecorator('publishTime', {
-                    rules: [{ required: true, message: '发行时间是必填项' }],
-                  })(<DatePicker placeholder="请选择" />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <span>上市挂牌信息</span>
-              </Col>
-            </Row>
-            <Row>
               <Col span={12}>
                 <Form.Item label="证券代码:">
                   {getFieldDecorator('stockCode', {
@@ -246,9 +222,9 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="上市/挂牌时间">
+                <Form.Item label="挂牌日期">
                   {getFieldDecorator('issueTime', {
-                    rules: [{ required: true, message: '上市/挂牌时间是必填项' }],
+                    rules: [{ required: true, message: '挂牌日期是必填项' }],
                   })(<DatePicker placeholder="请选择" />)}
                 </Form.Item>
               </Col>
@@ -259,9 +235,9 @@ const PublishModalForm = Form.create({ name: 'form_in_modal' })(
             onClick={this.addPublishInfo}
             style={{ float: 'right', marginBottom: 10, zIndex: 999 }}
           >
-            {flag === 'add' ? '添加' : '修改'}
+            {flag === 'add' ? '添加一条发行信息' : '修改'}
           </Button>
-          <Table rowKey="id" columns={columns} dataSource={publishList} bordered pagination={false} />
+          <Table columns={columns} dataSource={publishList} bordered pagination={false} />
         </Modal>
       );
     }

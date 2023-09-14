@@ -610,7 +610,6 @@ const Index = ({
    * @method searchBtn
    */
   const handlerSearch = fieldsValue => {
-    setPageNum(1);
     setSearchFormData(fieldsValue);
     handleGetListFetch(10, 1, '', '', fieldsValue);
   };
@@ -621,14 +620,11 @@ const Index = ({
   
   //重置
   const handleReset = () => {
-    setPageNum(1);
     setSearchFormData({});
     handleGetListFetch(10, 1, '', '', {});
   }
   // 模糊搜索
   const blurSearch = value => {
-    setPageNum(1);
-    setSearchFormData({});
     value = { keyword: value };
     handleGetListFetch(10, 1, '', '', value);
   };
@@ -885,7 +881,7 @@ const Index = ({
       label: '业务模块',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.M001 || [],
     },
     {
@@ -893,7 +889,7 @@ const Index = ({
       label: '模块业务属性名称',
       type: 'select',
       readSet: { name: 'propertyName', code: 'property' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: propertyListAll || [],
     },
     {
@@ -901,7 +897,7 @@ const Index = ({
       label: '属性业务值名称',
       type: 'select',
       readSet: { name: 'valueName', code: 'propertyValue' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: remarkListAll || [],
     },
     {
@@ -909,7 +905,7 @@ const Index = ({
       label: '档案类别',
       type: 'select',
       readSet: { name: 'fileTypeName', code: 'fileTypeCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: fileTypeListAll || [],
     },
   ];

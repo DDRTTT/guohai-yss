@@ -1,9 +1,5 @@
-import React, { Component } from 'react';
-import { Form, Input, Select, Row, Card, Col, Button, Radio, Modal, Table } from 'antd';
-
-import { connect } from 'dva';
-import { linkHoc } from '@/utils/hocUtil';
-import { errorBoundary } from '@/layouts/ErrorBoundary';
+import React from 'react';
+import { Form, Input, Select, Modal } from 'antd';
 
 const FormItem = Form.Item;
 

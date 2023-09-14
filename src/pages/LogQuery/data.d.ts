@@ -10,6 +10,7 @@ export interface LogBase {
   orgId: string;
   userHost: string;
   fsysId: string;
+  userName: string;
 }
 export interface Operator {
   className: string;

@@ -52,11 +52,12 @@ class Ownfunds extends Component {
     batchList: [],
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        // align: 'center',
         sorter: true,
-        width: 220,
-        key: 'proFname',
+        width: 200,
+        key: 'proName',
         ellipsis: {
           showTitle: false,
         },
@@ -73,6 +74,7 @@ class Ownfunds extends Component {
         dataIndex: 'proCode',
         sorter: true,
         width: 200,
+        // align: 'center',
         key: 'proCode',
         ellipsis: {
           showTitle: false,
@@ -87,6 +89,7 @@ class Ownfunds extends Component {
       },
       {
         title: '产品类型',
+        // align: 'center',
         dataIndex: 'proTypeName',
         sorter: true,
         width: 200,
@@ -104,6 +107,7 @@ class Ownfunds extends Component {
       },
       {
         title: '产品阶段',
+        // align: 'center',
         dataIndex: 'proStage',
         sorter: true,
         width: 200,
@@ -121,6 +125,7 @@ class Ownfunds extends Component {
       },
       {
         title: '实际募集结束日',
+        // align: 'center',
         dataIndex: 'raiseEdateActual',
         sorter: true,
         width: 200,
@@ -176,6 +181,7 @@ class Ownfunds extends Component {
         title: '自有资金投资金额',
         dataIndex: 'selfAmount',
         key: 'selfAmount',
+        // align: 'center',
         sorter: true,
         width: 200,
         align: 'right',
@@ -193,6 +199,7 @@ class Ownfunds extends Component {
       {
         title: '自有资金投资比例',
         dataIndex: 'selfMoneyRate',
+        // align: 'center',
         key: 'selfMoneyRate',
         sorter: true,
         width: 200,
@@ -238,6 +245,7 @@ class Ownfunds extends Component {
       {
         title: '状态',
         dataIndex: 'operStatusName',
+        align: 'right',
         key: 'operStatusName',
         sorter: true,
         width: 200,
@@ -256,73 +264,11 @@ class Ownfunds extends Component {
         key: 'id',
         dataIndex: 'id',
         title: '操作',
-        align: 'center',
+        // align: 'center',
         fixed: 'right',
         // width: 250,
         render: (text, record) => {
-          const moreActions = [
-            {
-              text: '修改',
-              flag: 'update',
-              onClick: record => this.groupOperate(record, 'update'),
-            },
-            {
-              text: '提交',
-              flag: 'submit',
-              onClick: record => this.groupOperate(record, 'submit'),
-            },
-            // {
-            //   text: '流程图',
-            //   flag: 'chart',
-            //   onClick: record => this.groupOperate(record, 'chart'),
-            // },
-            // {
-            //   text: '删除',
-            //   flag: 'delete',
-            //   onClick: record => this.groupOperate(record, 'delete'),
-            // },
-          ];
-
-          const joinedActions = [
-            {
-              text: '办理',
-              flag: 'check',
-              onClick: record => this.groupOperate(record, 'check'),
-            },
-            {
-              text: '流转历史',
-              flag: 'history',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-            // {
-            //   text: '撤销',
-            //   flag: 'revoke',
-            //   onClick: record => this.groupOperate(record, 'revoke'),
-            // },
-            {
-              text: '更多',
-              flag: 'more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const initActions = [
-            {
-              text: '详情',
-              flag: 'detail',
-              onClick: record => this.groupOperate(record, 'detail'),
-            },
-            {
-              text: '流转历史',
-              flag: 'history',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-            // {
-            //   text: '撤销',
-            //   flag: 'revoke',
-            //   onClick: record => this.groupOperate(record, 'revoke'),
-            // },
-          ];
+          const { taskTypeCode } = this.state;
           return (
             <span>
               <Action code="ownfunds:update">
@@ -330,7 +276,7 @@ class Ownfunds extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -347,7 +293,7 @@ class Ownfunds extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -364,7 +310,7 @@ class Ownfunds extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -381,7 +327,7 @@ class Ownfunds extends Component {
                   style={{
                     display:
                       (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                        record.operStatusName == '流程中'
+                      record.operStatusName == '流程中'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -399,8 +345,8 @@ class Ownfunds extends Component {
                     display:
                       ((taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
                         record.operStatusName == '已结束') ||
-                        taskTypeCode == 'T001_3' ||
-                        taskTypeCode == 'T001_5'
+                      taskTypeCode == 'T001_3' ||
+                      taskTypeCode == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -418,8 +364,8 @@ class Ownfunds extends Component {
                     display:
                       ((taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
                         record.operStatusName != '待提交') ||
-                        taskTypeCode == 'T001_3' ||
-                        taskTypeCode == 'T001_5'
+                      taskTypeCode == 'T001_3' ||
+                      taskTypeCode == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
@@ -467,12 +413,12 @@ class Ownfunds extends Component {
                 style={{
                   display:
                     (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
-                      record.operStatusName == '流程中'
+                    record.operStatusName == '流程中'
                       ? 'inline-block'
                       : 'none',
                   marginRight: 10,
                 }}
-              // onClick={this.groupOperate(record, 'more')}
+                // onClick={this.groupOperate(record, 'more')}
               >
                 {/* 更多 */}
                 <MoreOperation record={record} fn={this.getTableList} />
@@ -1046,6 +992,7 @@ class Ownfunds extends Component {
       this.handleCancel(record);
     }
   }
+
   // 删除
   handleDelete = record => {
     confirm({
@@ -1144,6 +1091,69 @@ class Ownfunds extends Component {
     const {
       ownfunds: { proTypeList, statusList, productDropList },
     } = this.props;
+    const moreActions = [
+      {
+        text: '修改',
+        flag: 'update',
+        onClick: record => this.groupOperate(record, 'update'),
+      },
+      {
+        text: '提交',
+        flag: 'submit',
+        onClick: record => this.groupOperate(record, 'submit'),
+      },
+      // {
+      //   text: '流程图',
+      //   flag: 'chart',
+      //   onClick: record => this.groupOperate(record, 'chart'),
+      // },
+      // {
+      //   text: '删除',
+      //   flag: 'delete',
+      //   onClick: record => this.groupOperate(record, 'delete'),
+      // },
+    ];
+
+    const joinedActions = [
+      {
+        text: '办理',
+        flag: 'check',
+        onClick: record => this.groupOperate(record, 'check'),
+      },
+      {
+        text: '流转历史',
+        flag: 'history',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+      // {
+      //   text: '撤销',
+      //   flag: 'revoke',
+      //   onClick: record => this.groupOperate(record, 'revoke'),
+      // },
+      {
+        text: '更多',
+        flag: 'more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const initActions = [
+      {
+        text: '详情',
+        flag: 'detail',
+        onClick: record => this.groupOperate(record, 'detail'),
+      },
+      {
+        text: '流转历史',
+        flag: 'history',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+      // {
+      //   text: '撤销',
+      //   flag: 'revoke',
+      //   onClick: record => this.groupOperate(record, 'revoke'),
+      // },
+    ];
 
     const layout = {
       labelAlign: 'right',
@@ -1159,15 +1169,15 @@ class Ownfunds extends Component {
             rowSelection={
               taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4'
                 ? {
-                  selectedRowKeys: this.state.selectedRowKeys,
-                  onChange: this.onSelectChange,
-                }
+                    selectedRowKeys: this.state.selectedRowKeys,
+                    onChange: this.onSelectChange,
+                  }
                 : null
             }
             dataSource={tableList}
             columns={columns}
             pagination={false}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 + 100 }}
             onChange={this.handleTableChange}
             loading={loading}
           />
@@ -1243,7 +1253,7 @@ class Ownfunds extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -1251,7 +1261,7 @@ class Ownfunds extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeList,
       },
       {
@@ -1259,7 +1269,7 @@ class Ownfunds extends Component {
         label: '产品状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

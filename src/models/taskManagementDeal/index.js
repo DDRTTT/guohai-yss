@@ -19,7 +19,6 @@ import {
   getUpdateFilePathApi,
   getCurrentNodeIdByProcessIdsApi,
   updateNeedUseSealOrUseSealApi,
-  withStandardCatalogueApi,
 } from '@/services/taskManagementDeal';
 import { cloneDeep } from 'lodash';
 
@@ -47,7 +46,6 @@ const model = {
     reviewList: [], //审核意见
     creatorList: [], // 操作用户
     noUsedTreeList: [], // 不适用目录树
-    contentOperateLog: {},
   },
   effects: {
     // 获取左侧目录树
@@ -145,7 +143,7 @@ const model = {
     },
 
     // 撤销接口
-    *getFileRevokeReq({ payload, callback }, { call }) {
+    *getFileRevokeReq({ payload, callback }, { call, put }) {
       const res = yield call(getFileRevokeApi, payload);
       if (res && res.status === 200) {
         message.success('撤销当前文档成功~');
@@ -167,15 +165,16 @@ const model = {
     },
 
     // 大文件上传前文件名重复检测
-    *getFileCheckedReq({ payload }, { call }) {
+    *getFileCheckedReq({ payload }, { call, put }) {
       const res = yield call(getFileCheckedApi, payload);
       return res;
     },
 
     // 大文件上传后信息登记
-    *getFileRegisteredReq({ payload, callback }, { call }) {
+    *getFileRegisteredReq({ payload, callback }, { call, put }) {
       const res = yield call(getFileRegisteredApi, payload);
       if (res && res.status === 200) {
+        //message.success('信息登记成功~');
         callback && callback();
       } else {
         message.error(res.message);
@@ -183,7 +182,7 @@ const model = {
     },
 
     // 目录树：删除
-    *getTaskPathDeleteReq({ payload, callback }, { call }) {
+    *getTaskPathDeleteReq({ payload, callback }, { call, put }) {
       const res = yield call(getTaskPathDeleteApi, payload);
       if (res && res.status === 200) {
         callback && callback();
@@ -193,7 +192,7 @@ const model = {
     },
 
     // 目录树：新增
-    *getTaskPathAddReq({ payload, callback }, { call }) {
+    *getTaskPathAddReq({ payload, callback }, { call, put }) {
       const res = yield call(getTaskPathAddApi, payload);
       if (res && res.status === 200) {
         callback && callback();
@@ -203,7 +202,7 @@ const model = {
     },
 
     // 目录树：修改
-    *getTaskPathEditReq({ payload, callback }, { call }) {
+    *getTaskPathEditReq({ payload, callback }, { call, put }) {
       const res = yield call(getTaskPathEditApi, payload);
       if (res && res.status === 200) {
         callback && callback();
@@ -233,7 +232,7 @@ const model = {
     },
 
     // 判断当前父目录下是否有文件
-    *getFileStateByPathReq({ payload }, { call }) {
+    *getFileStateByPathReq({ payload }, { call, put }) {
       const res = yield call(getFileStateByPathApi, payload);
       if (res && res.status === 200) {
         return res;
@@ -243,7 +242,7 @@ const model = {
     },
 
     // 文件批量迁移到新的目录
-    *getUpdateFilePathReq({ payload, callback }, { call }) {
+    *getUpdateFilePathReq({ payload, callback }, { call, put }) {
       const res = yield call(getUpdateFilePathApi, payload);
       if (res && res.status === 200) {
         callback && callback(res);
@@ -253,7 +252,7 @@ const model = {
     },
 
     // 获取流转历史所需的taskId
-    *getCurrentNodeIdByProcessIdsReq({ payload, callback }, { call }) {
+    *getCurrentNodeIdByProcessIdsReq({ payload, callback }, { call, put }) {
       const res = yield call(getCurrentNodeIdByProcessIdsApi, payload);
       if (res && res.status === 200) {
         callback && callback(res);
@@ -263,24 +262,10 @@ const model = {
     },
 
     // 是否用印、是否需要用印
-    *updateNeedUseSealOrUseSealReq({ payload, callback }, { call }) {
+    *updateNeedUseSealOrUseSealReq({ payload, callback }, { call, put }) {
       const res = yield call(updateNeedUseSealOrUseSealApi, payload);
       if (res && res.status === 200) {
         callback && callback(res);
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *withStandardCatalogueReq({ payload }, { call, put }) {
-      const res = yield call(withStandardCatalogueApi, payload);
-      if (res?.status === 200) {
-        yield put({
-          type: 'updateContentOperateLog',
-          payload: {
-            contentOperateLog: res?.data || {},
-          },
-        });
       } else {
         message.error(res.message);
       }
@@ -324,13 +309,6 @@ const model = {
       return {
         ...state,
         noUsedTreeList: payload.noUsedTreeList,
-      };
-    },
-
-    updateContentOperateLog(state, { payload }) {
-      return {
-        ...state,
-        contentOperateLog: payload.contentOperateLog,
       };
     },
   },

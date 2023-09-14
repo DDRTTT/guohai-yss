@@ -136,7 +136,7 @@ export async function handleAuthorized(params) {
 
 // 获取产品类
 export async function handlePermissionClass() {
-  return request(`/ams-base-product/product/getauthorizprotypetree`);
+  return request(`/ams-base-product/product/getauthorizprotypetreeGLA`);
 }
 
 // 获取角色
@@ -170,7 +170,7 @@ export async function handleRoleModify(params) {
 
 // 操作权限授权
 export async function handleOperationAuthority(params) {
-  return request(`/yss-base-admin/role/setAuth`, {
+  return request(`/yss-base-admin/role/setGLAAuthProduct`, {
     method: 'POST',
     data: params,
   });
@@ -241,7 +241,7 @@ export async function handleMobileOnly(params) {
 
 // 查询用户权限完整数据包
 export async function getAllData(params) {
-  return request(`/yss-base-admin/userproduct/getuserauthed?${stringify(params)}`);
+  return request(`/yss-base-admin/userproduct/getGLAuserauthed?${stringify(params)}`);
 }
 
 // 校验分组下是否有分组

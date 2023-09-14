@@ -609,6 +609,22 @@ class Modify extends Component {
       },
     );
   };
+  /**
+   * 重置 联系人
+   * @method handleClearVal
+   */
+  handleClearContact = () => {
+    this.props.form.resetFields();
+    this.setState(
+      {
+        contpageNum: 1,
+        contpageSize: 10,
+      },
+      () => {
+        this.getContacts();
+      },
+    );
+  };
 
   /**
    * 员工信息查询
@@ -777,7 +793,7 @@ class Modify extends Component {
                 <Button type="primary" onClick={() => this.contactSearch()}>
                   查 询
                 </Button>
-                <Button style={{ marginLeft: 10 }} onClick={() => this.handleClearVal()}>
+                <Button style={{ marginLeft: 10 }} onClick={() => this.handleClearContact()}>
                   重 置
                 </Button>
               </span>
@@ -930,16 +946,6 @@ class Modify extends Component {
       location: { query },
     } = this.props;
     const employeeList = [
-      // 需求：删除 职务类型 列
-      // {
-      //   title: '职务类型',
-      //   dataIndex: 'jobTypeName',
-      //   // sorter: true,
-      //   width: 400,
-      //   render: text => {
-      //     return handleTableCss(text);
-      //   },
-      // },
       {
         title: '姓名',
         dataIndex: 'name',
@@ -1163,8 +1169,8 @@ class Modify extends Component {
             {this.state.defaultActiveKey === '1' && this.publicInfor()}
             {this.state.defaultActiveKey === '0' && (
               <>
-                <Card title={false} style={{ paddingTop: 16 }}>
-                  <OrgStructure identification={query.type === 'details'} orgCode={query.orgCode || ''} orgId={query.id || ''}/>
+                <Card style={{ paddingTop: 16 }}>
+                  <OrgStructure identification={query.type === 'details'} />
                 </Card>
               </>
             )}

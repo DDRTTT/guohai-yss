@@ -24,10 +24,3 @@ export function trandingBoothInfo(params) {
     params,
   });
 }
-
-// 获取交易单元管理删除接口
-export function trandingBoothDelete(params) {
-  return request.post(`${uri}/productManagement/tradingBooth/remove/${params.pid}`, {
-    data: params,
-  });
-}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Card, Col, Row, Checkbox, Table } from 'antd';
+import React, { useState, useEffect, useContext } from 'react';
+import { Card } from 'antd';
+import { Table } from '@/components';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { getPaginationConfig, tableRowConfig } from '@/pages/investorReview/func';

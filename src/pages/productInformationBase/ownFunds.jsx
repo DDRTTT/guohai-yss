@@ -2,11 +2,10 @@
  * 产品信息要素 - 自有资金参与信息
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { Table, Button, Card, Breadcrumb } from 'antd';
+import { Button } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import styles from './index.less';
 import { handleAddHeard, handleAddTable, handleAddSearch, tableRender } from './baseFunc';
 import { moneyRender } from '@/pages/productBillboard/baseFunc';
 import Action from '@/utils/hocUtil';

@@ -1,10 +1,9 @@
 /**
  * 产品看板-查看产品-产品数据-终止信息
  */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Row, Col, Table, Tooltip, Button, Spin } from 'antd';
-import moment from 'moment/moment';
-import { connect, routerRedux } from 'dva';
+import React, { useContext } from 'react';
+import { Row, Col } from 'antd';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
 import styles from './index.less';
@@ -12,11 +11,8 @@ import { handleAddAllData } from './baseFunc'
 
 const ProductMessageTermination = ({ dispatch, productBillboard: { productOverviewMessage } }) => {
   const {
-    proCodeArguments,
-    proTypeArguments,
     codeListData,
     codeListCodeData,
-    proDictsObj,
   } = useContext(MyContext); // 子组件接受的数据
 
   // 终止信息(栅格信息) 100%

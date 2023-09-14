@@ -10,9 +10,6 @@ import {
   getConventionalEndApi,
   getTaskRevokeApi,
   getFileSizeApi,
-  getDeleteRecordApi,
-  getCheckedUseSealFileApi,
-  getFileDeleteBatchRevokeApi,
 } from '@/services/archiveTaskHandleList';
 import { getNginxIP } from '@/services/global';
 
@@ -34,10 +31,6 @@ const model = {
     taskType: [], // 任务类型
     taskName: [], // 任务名称
     saveIP: {},
-    deleteRecordList: {
-      total: 0,
-      rows: [],
-    },
   },
   effects: {
     // table表格
@@ -49,13 +42,11 @@ const model = {
           payload: res.data
             ? res.data
             : {
-              total: 0,
-              rows: [],
-            },
+                total: 0,
+                rows: [],
+              },
         });
-        if (typeof callback === 'function') {
-          callback();
-        }
+        callback && callback();
       } else {
         message.error(res.message);
       }
@@ -77,7 +68,7 @@ const model = {
     },
 
     // 任务类型
-    *getAwpTaskTypeReq({ }, { put, call }) {
+    *getAwpTaskTypeReq({}, { put, call }) {
       const res = yield call(getDicsByFcodeApi, { fcode: 'awp_task_type' });
       yield put({
         type: 'updateTaskType',
@@ -103,69 +94,59 @@ const model = {
     },
 
     // 任务列表提交
-    *getCommitByIdReq({ payload, callback }, { call }) {
+    *getCommitByIdReq({ payload, callback }, { call, put }) {
       const res = yield call(getCommitByIdApi, payload);
       if (res && res.status === 200) {
         message.success('提交成功~');
-        if (typeof callback === 'function') {
-          callback(res);
-        }
+        callback && callback(res);
       } else {
         message.error(res.message);
       }
     },
 
     // 任务列表删除
-    *getDeleteReq({ payload, callback }, { call }) {
+    *getDeleteReq({ payload, callback }, { call, put }) {
       const res = yield call(getDeleteApi, payload);
       if (res && res.status === 200) {
         message.success('删除成功~');
-        if (typeof callback === 'function') {
-          callback(res);
-        }
+        callback && callback(res);
       } else {
         message.error(res.message);
       }
     },
 
     // 文件下载
-    *getFileDownLoadReq({ payload }, { call }) {
-      yield call(getFileDownLoadApi, payload);
+    *getFileDownLoadReq({ payload }, { call, put }) {
+      const res = yield call(getFileDownLoadApi, payload);
     },
 
     // 结束任务
-    *getConventionalEndReq({ payload, callback }, { call }) {
+    *getConventionalEndReq({ payload, callback }, { call, put }) {
       const res = yield call(getConventionalEndApi, payload);
       if (res && res.status === 200) {
         message.success(res.data);
-        if (typeof callback === 'function') {
-          callback();
-        }
+        callback && callback();
       } else {
         message.error(res.message);
       }
     },
 
     // 任务撤销
-    *getTaskRevokeReq({ payload, callback }, { call }) {
+    *getTaskRevokeReq({ payload, callback }, { call, put }) {
       const res = yield call(getTaskRevokeApi, payload);
       if (res && res.status === 200) {
         message.success('任务撤销成功~');
-        if (typeof callback === 'function') {
-          callback();
-        }
+        callback && callback();
       } else {
         message.error(res.message);
       }
     },
 
     // 获取文件数量（判断是否可以完成任务）
-    *getFileSizeReq({ payload, callback }, { call }) {
+    *getFileSizeReq({ payload, callback }, { call, put }) {
       const res = yield call(getFileSizeApi, payload);
       if (res && res.status === 200) {
-        if (typeof callback === 'function') {
-          callback(res);
-        }
+        callback && callback(res);
       } else {
         message.error(res.message);
       }
@@ -182,46 +163,6 @@ const model = {
         appendJs(res.data.jsApi);
       }
     },
-
-    *getDeleteRecordReq({ payload }, { call, put }) {
-      const res = yield call(getDeleteRecordApi, payload);
-      if (res && res.status === 200) {
-        yield put({
-          type: 'updateDeleteRecordList',
-          payload: {
-            deleteRecordList: res.data
-              ? res.data
-              : {
-                total: 0,
-                rows: [],
-              },
-          },
-        });
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *getCheckedUseSealFileReq({ payload }, { call }) {
-      const res = yield call(getCheckedUseSealFileApi, payload);
-      if (res && res.status === 200) {
-        return res;
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *getFileDeleteBatchRevokeReq({ payload, callback }, { call }) {
-      const res = yield call(getFileDeleteBatchRevokeApi, payload);
-      if (res && res.status === 200) {
-        message.success('文件删除任务撤销成功~');
-        if (typeof callback === 'function') {
-          callback();
-        }
-      } else {
-        message.error(res.message);
-      }
-    }
   },
 
   reducers: {
@@ -257,13 +198,6 @@ const model = {
       return {
         ...state,
         saveIP: payload,
-      };
-    },
-
-    updateDeleteRecordList(state, { payload }) {
-      return {
-        ...state,
-        deleteRecordList: payload.deleteRecordList,
       };
     },
   },

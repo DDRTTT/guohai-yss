@@ -1,8 +1,14 @@
+/**
+ * 底稿--查看文件历史版本
+ * fileId：操作列id
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, Modal, Table } from 'antd';
+import { Button, Col, Row, Modal, Table } from 'antd';
 import DownloadFile from '@/components/DownloadFile';
 import Preview from '@/components/Preview';
+import record from '@/pages/lifeCyclePRD/record';
 
 class FileHistoryVersion extends Component {
   state = {
@@ -54,7 +60,7 @@ class FileHistoryVersion extends Component {
 
   /**
    * 隐藏模态框
-   * * */
+   * **/
   handleModalHide = () => {
     this.setState({
       show: false,
@@ -63,7 +69,7 @@ class FileHistoryVersion extends Component {
 
   /**
    * 查看历史版本
-   * * */
+   * **/
   handleLookHistoryVersion = () => {
     const { dispatch, fileId } = this.props;
     this.setState({ show: true });
@@ -77,7 +83,7 @@ class FileHistoryVersion extends Component {
 
   /**
    * 显示预览框
-   * * */
+   * **/
   handlePreview = record => {
     this.setState(
       {
@@ -101,6 +107,7 @@ class FileHistoryVersion extends Component {
 
     return (
       <span>
+        {/* 文档预览modal */}
         {previewShow ? (
           <Preview id="fileHistoryVersion" onRef={ref => (this.previewChild = ref)} />
         ) : null}

@@ -4,26 +4,24 @@
  *  修改时间：2021年12月16日 15:40:12
  **/
 import React, { useState, useEffect, useRef } from 'react';
-import { Popover, Checkbox, Divider, Button, message } from 'antd';
+import { Popover, Checkbox, Divider, Button, message, Tooltip } from 'antd';
 import icon_set from '@/assets/dynamicHeader/setting.png';
 import icon_reset from '@/assets/dynamicHeader/reset.png';
 import styles from './index.less';
 import { cloneDeep } from 'lodash';
-import { Container, Draggable } from 'react-smooth-dnd';
+// import { Container, Draggable } from 'react-smooth-dnd';
 import { dynamicColumnSave, dynamicColumnList, dynamicColumnDelete } from '@/services/user';
-import { hideTaskTime } from '@/pages/investorReview/func';
+// import { hideTaskTime } from '@/pages/investorReview/func';
 
 const CheckboxGroup = Checkbox.Group;
 
-let preTaskTypeCode = '';
-
-const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTimeKey }) => {
+const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTimeKey,tabValue,indexID }) => {
   //浮动列数组
   const floatList = useRef([]);
   // 浮动key
   const floatKeyList = useRef([]);
   //  原始columns
-  const defaultColumns = useRef([]);
+  const defaultColumns = useRef(columns);
   // 当前使用的columns 接收原始columns和接口用的
   const currentColumns = useRef([]);
   // 修改使用的columns
@@ -75,10 +73,7 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
   const onCheckAllChange = e => {
     setCheckedList(e.target.checked ? plainOptions : []);
   };
-
-  /**
-   *初始化
-   */
+  //初始化
   const init = () => {
     if (pageCode) {
       getDynamicList(pageCode + (taskTypeCode ? '_' + taskTypeCode : ''));
@@ -100,13 +95,9 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
     currentColumns.current = tempcurrentList;
     setToggle(!toggle);
   };
-
-  useEffect(() => {
-    // if (taskTypeCode == null) {
-    //   init();
-    // }
-    defaultColumns.current = columns;
-  }, []);
+  // useEffect(() => {
+  //   defaultColumns.current = columns;
+  // }, []);
 
   useEffect(() => {
     if ((defaultColumns.current.length == 0 && columns.length != 0) || sonFlag.current == false) {
@@ -115,19 +106,16 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
       init();
     }
   }, [columns]);
-
+  //判断是否添加任务到达时间
   useEffect(() => {
-    if (taskTypeCode && taskArrivalTimeKey) {
-      hideTaskTime(taskTypeCode, defaultColumns.current, taskArrivalTimeKey);
-    }
+    // if (taskTypeCode && taskArrivalTimeKey) {
+    //   hideTaskTime(taskTypeCode, defaultColumns.current, taskArrivalTimeKey,indexID);
+    // }
     sonFlag.current = false;
     init();
     setPopover(false);
   }, [taskTypeCode]);
-
-  /**
-   * 选中checkbox切换的时候 设置全选按钮的状态
-   **/
+  //选中checkbox切换的时候 设置全选按钮的状态
   useEffect(() => {
     setIndeterminate(!!checkedList.length && checkedList.length < plainOptions.length);
     setCheckAll(checkedList.length === plainOptions.length);
@@ -160,89 +148,178 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
    * @param {*} dragResult
    * @return {*}
    */
-  const onDrag = (arr = [], dragResult) => {
-    const { removedIndex, addedIndex, payload } = dragResult;
-    if (removedIndex === null && addedIndex === null) {
-      return arr;
-    }
-    const result = [...arr];
-    let itemToAdd = payload;
-    if (removedIndex !== null) {
-      itemToAdd = result.splice(removedIndex, 1)[0];
-    }
-    if (addedIndex !== null) {
-      result.splice(addedIndex, 0, itemToAdd);
-    }
-    return result;
-  };
+  // const onDrag = (arr = [], dragResult) => {
+  //   const { removedIndex, addedIndex, payload } = dragResult;
+  //   if (removedIndex === null && addedIndex === null) {
+  //     return arr;
+  //   }
+  //   const result = [...arr];
+  //   let itemToAdd = payload;
+  //   if (removedIndex !== null) {
+  //     itemToAdd = result.splice(removedIndex, 1)[0];
+  //   }
+  //   if (addedIndex !== null) {
+  //     result.splice(addedIndex, 0, itemToAdd);
+  //   }
+  //   return result;
+  // };
 
   /**
    *拖拽
    *
    * @param {*} dropResult
    */
-  const onDrop = dropResult => {
-    const { removedIndex, addedIndex } = dropResult;
-    if (removedIndex !== null || addedIndex !== null) {
-      const list = onDrag(customColumns, dropResult);
-      setCustomColumns(list);
-    }
-  };
+  // const onDrop = dropResult => {
+  //   const { removedIndex, addedIndex } = dropResult;
+  //   if (removedIndex !== null || addedIndex !== null) {
+  //     const list = onDrag(customColumns, dropResult);
+  //     setCustomColumns(list);
+  //   }
+  // };
 
-  /**
-   *取消 重置表头状态
-   *
-   */
-  const cancelHandler = () => {
-    setPopover(false);
-    const currentChecked = [];
-    setCustomColumns(
-      currentColumns.current.map(item => {
-        if (item.show == undefined || item?.show == 1) {
-          currentChecked.push(item.dataIndex);
-        }
-        return {
-          title: item.title,
-          dataIndex: item.dataIndex,
-        };
-      }),
-    );
-    setCheckedList(currentChecked);
-  };
+  //取消 重置表头状态
+  // const cancelHandler = () => {
+  //   setPopover(false);
+  //   const currentChecked = [];
+  //   setCustomColumns(
+  //     currentColumns.current.map(item => {
+  //       if (item.show == undefined || item?.show == 1) {
+  //         currentChecked.push(item.dataIndex);
+  //       }
+  //       return {
+  //         title: item.title,
+  //         dataIndex: item.dataIndex,
+  //       };
+  //     }),
+  //   );
+  //   setCheckedList(currentChecked);
+  // };
 
-  /**
-   *保存当前表头
-   *
-   */
-  const submitHandler = () => {
-    const tempColumns = cloneDeep(customColumns);
-    if (floatList.current[0]) {
-      const flag = tempColumns.find(item => item.dataIndex == floatList.current[0].value.dataIndex);
-      if (!flag) {
-        floatList.current.map(item => {
-          tempColumns.splice(item.index, 0, item.value);
-        });
-      }
-    }
-    const resultList = tempColumns.map((item, index) => {
-      return {
-        pageCode: pageCode + (taskTypeCode ? '_' + taskTypeCode : ''),
-        dataIndex: item.dataIndex,
-        title: item.title,
-        show: item.fixed ? 1 : +checkedList.includes(item.dataIndex),
-        sort: index,
-      };
-    });
-    dynamicSaveHandler(resultList);
-    setPopover(false);
-    disposeData(resultList);
-  };
+  //保存当前表头
+  // const submitHandler = () => {
+  //   const tempColumns = cloneDeep(customColumns);
+  //   if (floatList.current[0]) {
+  //     const flag = tempColumns.find(item => item.dataIndex == floatList.current[0].value.dataIndex);
+  //     if (!flag) {
+  //       floatList.current.map(item => {
+  //         tempColumns.splice(item.index, 0, item.value);
+  //       });
+  //     }
+  //   }
+  //   const resultList = tempColumns.map((item, index) => {
+  //     return {
+  //       pageCode: pageCode + (taskTypeCode ? '_' + taskTypeCode : ''),
+  //       dataIndex: item.dataIndex,
+  //       title: item.title,
+  //       show: item.fixed ? 1 : +checkedList.includes(item.dataIndex),
+  //       sort: index,
+  //     };
+  //   });
+  //   const clumns = [
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         dataIndex: "id",
+  //         title: "selection",
+  //         "show": 1,
+  //         "sort": 0,
+  //         "prop": "id"
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         dataIndex: "seq",
+  //         title: "序号",
+  //         "show": 1,
+  //         "sort": 1,
+  //         "prop": "index"
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         dataIndex: "proName",
+  //         title: " 产品名称",
+  //         "show": 1,
+  //         "sort": 2,
+  //         "prop": "proName"
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "fileName",
+  //         "show": 1,
+  //         title: "招募说明书名称",
+  //         sort: 2,
+  //         dataIndex: "fileName",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "proName",
+  //         "show": 1,
+  //         title: "产品名称",
+  //         sort: 3,
+  //         dataIndex: "proName",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "createTime",
+  //         "show": 1,
+  //         title: "创建时间",
+  //         sort: 4,
+  //         dataIndex: "createTime",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "expiryDate",
+  //         "show": 1,
+  //         title: "财务时间",
+  //         sort: 5,
+  //         dataIndex: "expiryDate",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "proName",
+  //         "show": 1,
+  //         title: "截至时间",
+  //         sort: 6,
+  //         dataIndex: "disclosureDate",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "updateType",
+  //         "show": 1,
+  //         title: "更新类型",
+  //         sort: 8,
+  //         dataIndex: "updateType"
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "batchNumber",
+  //         "show": 1,
+  //         title: "批次号",
+  //         sort: 9,
+  //         dataIndex: "batchNumber",
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         "prop": "state",
+  //         "show": 1,
+  //         title: "状态",
+  //         sort: 10,
+  //         dataIndex: "state"
+  //       },
+  //       {
+  //         pageCode: "020686d9-96d9-4fe1-bff9-76361e4be026_T001_1",
+  //         dataIndex: "action",
+  //         title: "操作",
+  //         "show": 1,
+  //         "sort": 11,
+  //         "prop": "action"
+  //       }
+  //   ];
+  //   // dynamicSaveHandler(clumns);
+  //   dynamicSaveHandler(resultList);
+  //   setPopover(false);
+  //   disposeData(resultList);
+  // };
 
-  /**
-   *处理数据
-   *
-   * @return {*}
-   */
+  //处理数据
   const disposeData = resultList => {
     let tempResultList = cloneDeep(resultList);
     const callbackList = [];
@@ -267,21 +344,17 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
       callbackList.push(tempItem);
     });
 
-    let final = callbackList.filter(item => item.show == 1);
+    let final = callbackList.filter(item => item.show === 1);
 
     final.map(item => {
       delete item.show;
     });
 
     sonFlag.current = true;
-    callBackHandler && callBackHandler(final);
+    // tempResultList的：checkbox选项，序号，操作需要在数据中被重写
+    callBackHandler && callBackHandler(final, tempResultList);
   };
-
-  /**
-   *获取当前表头的展示状态 接口
-   *
-   * @param {*} pageCode
-   */
+  //获取当前表头的展示状态 接口
   const getDynamicList = async pageCode => {
     try {
       const result = await dynamicColumnList(pageCode);
@@ -303,7 +376,6 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
 
   /**
    *保存当前表格的表头 接口
-   *
    * @param {*} resultList
    */
   const dynamicSaveHandler = async resultList => {
@@ -324,6 +396,7 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
       setSaveLoading(false);
     } catch (error) {}
   };
+
   /**
    *删除当前表头 接口
    *
@@ -334,7 +407,7 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
     try {
       const result = await dynamicColumnDelete(pageCode);
       if (result.status == 200) {
-       init();
+        init();
       } else {
         message.error(result.message);
       }
@@ -343,29 +416,29 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
   };
 
   // 弹出层内容
-  const content = (
-    <div className={styles.popContent}>
-      <CheckboxGroup value={checkedList} onChange={onChange}>
-        <Container onDrop={onDrop}>
-          {customColumns.map(item => {
-            return (
-              <Draggable key={item.dataIndex + '_wrap'}>
-                <Checkbox key={item.dataIndex} value={item.dataIndex}>
-                  {item.title}
-                </Checkbox>
-              </Draggable>
-            );
-          })}
-        </Container>
-      </CheckboxGroup>
-      <div className="bottomWrap">
-        <Button onClick={cancelHandler}>取消</Button>
-        <Button type="primary" onClick={submitHandler} loading={saveLoading}>
-          确定
-        </Button>
-      </div>
-    </div>
-  );
+  // const content = (
+  //   <div className={styles.popContent}>
+  //     <CheckboxGroup value={checkedList} onChange={onChange}>
+  //       <Container onDrop={onDrop}>
+  //         {customColumns.map(item => {
+  //           return (
+  //             <Draggable key={item.dataIndex + '_wrap'}>
+  //               <Checkbox key={item.dataIndex} value={item.dataIndex}>
+  //                 {item.title}
+  //               </Checkbox>
+  //             </Draggable>
+  //           );
+  //         })}
+  //       </Container>
+  //     </CheckboxGroup>
+  //     <div className="bottomWrap">
+  //       <Button onClick={cancelHandler}>取消</Button>
+  //       <Button type="primary" onClick={submitHandler} loading={saveLoading}>
+  //         确定
+  //       </Button>
+  //     </div>
+  //   </div>
+  // );
 
   return (
     <Popover
@@ -384,7 +457,7 @@ const Index = ({ columns, pageCode, callBackHandler, taskTypeCode, taskArrivalTi
           />
         </div>
       }
-      content={content}
+      // content={content}
       visible={popover}
     >
       <img

@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import { Button, Form, List, message, Row, Spin, Tooltip, Tree } from 'antd';
+import { Button, Form, List, Row, Spin, Tooltip, Tree, message } from 'antd';
 import router from 'umi/router';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import styles from '@/pages/userManagement/index.less';
@@ -11,7 +11,7 @@ const { TreeNode } = Tree;
 const AuthTree = memo(
   ({
     fetchGetAuthorizeByIdLoading = false,
-    // fetchGetAuthTreeLoading = false,
+    fetchGetAuthTreeLoading = false,
     allMenuTree,
     authorizeActionsList,
     disabled,
@@ -85,7 +85,7 @@ const AuthTree = memo(
 
 const Preview = ({
   title,
-  // fetchGetAuthorizeByIdLoading,
+  fetchGetAuthorizeByIdLoading,
   fetchGetAuthTreeLoading,
   addroleLoading = false,
   saveAllMenuTree,
@@ -121,11 +121,11 @@ const Preview = ({
       type: 'radio',
       width: 20,
       option: ownershipSystem,
-      initialValue: `${roleDetail?.sysId}`,
+      initialValue: isDetail === '0' ? undefined : `${roleDetail?.sysId}`,
       config: {
         onChange: e => ownershipSystemChange(e.target.value),
         ...defaultConfig,
-        value: `${selectOwnershipSystem}`,
+        value: selectOwnershipSystem,
       },
     },
     {
@@ -182,9 +182,7 @@ const Preview = ({
         payload: {
           ...values,
           id: roleDetail?.id,
-          orgId: roleDetail?.orgId,
           actionsList: selectAuth,
-          checked: 0,
         },
       }).then(res => {
         if (res) {
@@ -230,7 +228,7 @@ const Preview = ({
           </Row>
           {disabled && (
             <Row>
-              <Button style={{ float: 'right', marginTop: '10px' }} onClick={submitHandler}>
+              <Button className={styles.confirmBtn} onClick={submitHandler}>
                 确定
               </Button>
             </Row>

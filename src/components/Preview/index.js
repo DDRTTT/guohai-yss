@@ -1,6 +1,11 @@
+/**
+ * 底稿--文件预览
+ * onRef 暴露子组件方法
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, message, Spin } from 'antd';
+import { Button, Col, Row, Modal, Input, message, Spin } from 'antd';
 import { filePreviewWithBlobUrl } from '@/utils/download';
 import { uuid, launchIntoFullscreen } from '@/utils/utils';
 import OnlineEdit, { getDocumentType } from '@/components/OnlineEdit';
@@ -11,23 +16,28 @@ const IMGs =
   'webp.dubmp.pcx.zhitif.gif.jpg.jpeg.tga.exif.fpx.svg.psd.cdr.pcd.dxf.ufo.eps.ai.png.hdri.raw.wmf.flic.emf.ico';
 
 class Preview extends Component {
-  state = {
-    show: false,
-    IMG: false,
-    blobUrl: '',
-    awpFileNumber: '',
-    fileType: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      IMG: false,
+      blobUrl: '',
+      awpFileNumber: '',
+      fileType: '',
+    };
+  }
 
   componentDidMount() {
-    if (typeof this.props.onRef === 'function') {
-      this.props.onRef(this);
-    }
+    this.props.onRef && this.props.onRef(this);
+  }
+
+  componentWillUnmount() {
+    this.handleModalHide();
   }
 
   /**
    * 隐藏模态框
-   * * */
+   * **/
   handleModalHide = () => {
     this.setState({
       show: false,

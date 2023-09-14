@@ -50,10 +50,6 @@ class orgStructure extends Component {
     detailsList: [],
     // 判断修改和新增的标识
     falg: true,
-    // 机构分类为“分行”的数据，增加“机构类型”、“资质类型”字段
-    isSubBank: false,
-    // 获取公共信息页面中，机构类型  及  资质类型的数据
-    detailOtherData: {},
   };
   handleorgNameValidator = (rule, value, callback) => {
     handleValidator(value, callback, 100, '机构名称长度过长');
@@ -68,7 +64,7 @@ class orgStructure extends Component {
   // 初始化函数
   componentDidMount = () => {
     this.getCodes();
-    this.getSuperiorOrg(getQueryVariable('id'));
+    // this.getSuperiorOrg(getQueryVariable('id'));
     this.getDepartment(getQueryVariable('id'));
     this.handleGetDepartLeaderList();
   };
@@ -80,7 +76,7 @@ class orgStructure extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'modify/getCodeList',
-      payload: ['O002', 'J001', 'J004'],
+      payload: ['O002'],
     });
   }
 
@@ -154,8 +150,6 @@ class orgStructure extends Component {
         parentId: values.parentId,
         oaDeptId: values.oaDeptId,
         departLeader: values.departLeader,
-        orgType: values.orgType ? values.orgType.join(',') : '',
-        qualifyType: values.qualifyType,
       };
       // 根据falg来判断是不是修改 修改传id
       if (falg) {
@@ -197,38 +191,16 @@ class orgStructure extends Component {
         } = this.props;
         this.setState({
           detailsList,
-          isSubBank: detailsList.orgKind === '1'
         });
       }
     });
   };
-
-  // 获取公共信息页面，资质类型 及 机构类型数据
-  getOtherDetails = () => {
-    const { dispatch, orgId } = this.props;
-    dispatch({
-      type: 'modify/getOtherDetails',
-      payload: orgId,
-    }).then(() => {
-      const {
-        modify: { detailOtherData },
-      } = this.props;
-      const { orgType, qualifyType } = detailOtherData || {};
-      this.setState({
-        detailOtherData: {
-          orgType,
-          qualifyType,
-        },
-      });
-    });
-  };
   // 点击修改时决定弹框出现的状态
   showModal = title => {
-    if (!this.state.nodeData || !this.state.nodeData.title) {
+    if (!this.state.nodeData) {
       message.warn('请点击选择要修改的节点');
       return;
     }
-    this.getOtherDetails();
     this.getDetails(this.state.nodeData.code);
     this.setState({
       visible: true,
@@ -238,7 +210,6 @@ class orgStructure extends Component {
   };
   // 点击新增时弹框展示
   addShowModal = title => {
-    this.getOtherDetails();
     this.setState({
       visible: true,
       title,
@@ -259,7 +230,6 @@ class orgStructure extends Component {
   // 弹框销毁时的回调
   afterClose = () => {
     this.props.form.resetFields();
-    this.setState({ isSubBank: false });
   };
   getCheckMsg = (result, msg) => {
     // console.log(msg,'msg信息')
@@ -274,10 +244,6 @@ class orgStructure extends Component {
   };
   checkableFlag = () => {};
   multipleFlag = () => {};
-  // 选择机构分类下拉
-  changeValue = val => {
-    this.setState({ isSubBank: val === '1' });
-  };
   // 保存按钮
   preserButton = () => {
     return (
@@ -300,9 +266,8 @@ class orgStructure extends Component {
     const { getFieldDecorator } = this.props.form;
     const {
       modify: { codeList, departLeaderList },
-      orgCode,
     } = this.props;
-    const { SuperiorOrgs, title, detailsList, falg, department, detailOtherData } = this.state;
+    const { SuperiorOrgs, title, detailsList, falg, department } = this.state;
     const layout = {
       labelAlign: 'right',
       labelCol: { span: 8 },
@@ -406,61 +371,30 @@ class orgStructure extends Component {
                 })(<Input autoComplete="off" allowClear placeholder="请输入OA部门id" />)}
               </Form.Item>
             </Col>
-            {orgCode === '91450300198230687E' && (
-              <Col span={8}>
-                <Form.Item label="负责人">
-                  {getFieldDecorator('departLeader', {
-                    initialValue: falg ? detailsList.departLeader : undefined,
-                    rules: [
-                      {
-                        required: true,
-                        message: '负责人不可为空',
-                      },
-                    ],
-                  })(
-                    <Select
-                      placeholder="请选择负责人"
-                      filterOption={(input, option) =>
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            <Col span={8}>
+              <Form.Item label="负责人">
+                {getFieldDecorator('departLeader', {
+                  initialValue: falg ? detailsList.departLeader : undefined,
+                  rules: [
+                    {
+                      required: true,
+                      message: '负责人不可为空',
+                    },
+                  ],
+                })(
+                  <Select
+                    placeholder="请选择负责人"
+                    filterOption={(input, option) =>
+                      option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    onChange={this.changeValue}
+                    showSearch
+                  >
+                    {departLeaderList.map(item => {
+                      if (item.id !== undefined) {
+                        return <Select.Option key={item.id}>{item.name}</Select.Option>;
                       }
-                      showSearch
-                    >
-                      {departLeaderList.map(item => {
-                        if (item.id !== undefined) {
-                          return <Select.Option key={item.id}>{item.name}</Select.Option>;
-                        }
-                      })}
-                    </Select>,
-                  )}
-                </Form.Item>
-              </Col>
-            )}
-            <Col span={8} style={{ display: this.state.isSubBank ? 'block' : 'none' }}>
-              <Form.Item label="机构类型">
-                {getFieldDecorator('qualifyType', {
-                  initialValue: detailOtherData.qualifyType,
-                })(
-                  <Select disabled optionFilterProp="children">
-                    {codeList &&
-                      codeList.J001 &&
-                      codeList.J001.map(item => (
-                        <Select.Option key={item.code}>{item.name}</Select.Option>
-                      ))}
-                  </Select>,
-                )}
-              </Form.Item>
-            </Col>
-            <Col span={8} style={{ display: this.state.isSubBank ? 'block' : 'none' }}>
-              <Form.Item label="资质类型">
-                {getFieldDecorator('orgType', {
-                  initialValue: detailOtherData.orgType,
-                })(
-                  <Select disabled mode="multiple" optionFilterProp="children">
-                    {codeList &&
-                      codeList.J004 &&
-                      codeList.J004.map(item => (
-                        <Select.Option key={item.code}>{item.name}</Select.Option>
-                      ))}
+                    })}
                   </Select>,
                 )}
               </Form.Item>

@@ -9,6 +9,7 @@ import {
   Form,
   Card,
   Tag,
+  Modal,
   Dropdown,
   Tooltip,
   Menu,
@@ -16,7 +17,6 @@ import {
   Layout,
   Breadcrumb,
   Icon,
-  Modal
 } from 'antd';
 import { handleClearQuickJumperValue } from './util';
 import FileHistoryVersion from '@/components/FileHistoryVersion';
@@ -25,7 +25,7 @@ import DownloadFile from '@/components/DownloadFile';
 import PreciseSearch from './component/PreciseSearch';
 import FuzzySearch from './component/FuzzySearch';
 import SelfTree from '@/components/SelfTree';
-import { downloadFile } from '@/utils/download';
+
 const { Sider, Content } = Layout;
 const fuzzySearchRef = React.createRef();
 class Index extends Component {
@@ -55,29 +55,6 @@ class Index extends Component {
         render: text => <Tag>{text}</Tag>,
       },
       {
-        key: 'awpPathName',
-        title: '底稿目录',
-        width: 250,
-        dataIndex: 'awpPathName',
-        sorter: true,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => (
-          <Tooltip placement="topLeft" title={text}>
-            <span>{text}</span>
-          </Tooltip>
-        ),
-      },
-      {
-        key: 'isExtend',
-        title: '继承状态',
-        dataIndex: 'isExtend',
-        width: 120,
-        sorter: true,
-        render: text => <span>{text === '1' ? '已继承' : '未继承'}</span>,
-      },
-      {
         key: 'needUseSeal',
         dataIndex: 'needUseSeal',
         title: '是否需要用印',
@@ -104,11 +81,7 @@ class Index extends Component {
         width: 100,
         dataIndex: 'version',
         sorter: true,
-        render: (text, record) => (
-          <Action code="projectAndSeriesQuery:getFileHistory">
-            <FileHistoryVersion fileId={record.id} buttonText={text} />
-          </Action>
-        ),
+        render: (text, record) => <FileHistoryVersion fileId={record.id} buttonText={text} />,
       },
       {
         title: '操作',
@@ -152,41 +125,23 @@ class Index extends Component {
     selectedRowKeys: [],
     previewShow: false,
     collapsed: false,
-    isAddAllExtends: false,
-    isRemoveAllExtends: false,
-    isAddSelectedExtends: false,
-    isRemoveSelectedExtends: false,
-    visible: false,
-    resMessage:'',
-    errorList:[],
+    removeExtending: false,
   };
 
   componentDidMount() {
     const {
       location: {
-        query: { proCode, seriesCode, id },
+        query: { proCode, id },
       },
     } = this.props;
-    const params = {
-      ...this.state.params,
-      taskId: id,
-      proCode,
-      seriesCode,
-    };
-    const initParams = {
-      ...this.state.initParams,
-      taskId: id,
-      proCode,
-      seriesCode,
-    };
 
-    this.setState({
-      params,
-      initParams,
-    });
+    this.state.params.taskId = id;
+    this.state.params.proCode = proCode;
+    this.state.initParams.taskId = id;
+    this.state.initParams.proCode = proCode;
 
     // table表格数据
-    this.handleGetTableData(params);
+    this.handleGetTableData(this.state.params);
 
     // treeData
     this.handleGetSysTreeData();
@@ -194,56 +149,21 @@ class Index extends Component {
     // 文档名称下拉列表
     this.getFileNameList();
   }
-  /**
-   * 弹窗操作
-   * * */
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-  handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-  handleCancel = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-  /**
-   * 下载弹窗内错误报告 
-   */
-  downError = () => {
-    const {
-      dispatch
-    } = this.props;
-    const proCode  =this.state.errorList;
-    dispatch({
-      type: 'projectAndSeriesQueryExtends/downloadErrorFile',
-      payload: proCode,
-      callback: res => {
-        if (res) downloadFile(res, '继承详情.xlsx', 'application/vnd.ms-excel;charset=utf-8');
-      },
-    });
-  };
+
   /**
    * 文档名称
-   * * */
+   * **/
   getFileNameList = () => {
     const {
       dispatch,
       location: {
-        query: { seriesCode },
+        query: { proCode },
       },
     } = this.props;
     dispatch({
       type: 'manuscriptManagementList/getFileNameListReq',
       payload: {
-        proCode: seriesCode,
+        proCode,
         inType: '3',
       },
     });
@@ -251,7 +171,7 @@ class Index extends Component {
 
   /**
    * 获取表格数据
-   * * */
+   * **/
   handleGetTableData = (params, type = '') => {
     const { dispatch } = this.props;
     const { expand, selectedRowKeys } = this.state;
@@ -275,26 +195,26 @@ class Index extends Component {
 
   /**
    * 获取目录树数据
-   * * */
+   * **/
   handleGetSysTreeData = () => {
     const {
       dispatch,
       location: {
-        query: { seriesCode },
+        query: { proCode },
       },
     } = this.props;
 
     dispatch({
       type: 'projectAndSeriesQueryExtends/getSysTreeReq',
       payload: {
-        code: seriesCode,
+        code: proCode,
       },
     });
   };
 
   /**
    * 获取流转历史所需的taskId
-   * * */
+   * **/
   handleGetTaskId = ({ processInstanceId }) => {
     const { dispatch } = this.props;
     dispatch({
@@ -360,10 +280,10 @@ class Index extends Component {
     params.field = sorter.field;
     switch (sorter.order) {
       case 'ascend':
-        params.direction = 'asc';
+        params.direction = 'ASC';
         break;
       case 'descend':
-        params.direction = 'desc';
+        params.direction = 'DESC';
         break;
       default:
         params.direction = '';
@@ -374,7 +294,7 @@ class Index extends Component {
 
   /**
    * 显示预览框
-   * * */
+   * **/
   handlePreview = record => {
     this.setState(
       {
@@ -388,14 +308,14 @@ class Index extends Component {
 
   /**
    * 切换
-   * * */
+   * **/
   handleToggle = () => {
     this.setState(({ expand }) => ({ expand: !expand }));
   };
 
   /**
    * 返回
-   * * */
+   * **/
   handleBackPage = () => {
     const {
       dispatch,
@@ -405,7 +325,7 @@ class Index extends Component {
     } = this.props;
     dispatch(
       routerRedux.push({
-        pathname: '/projectManagement/projectAndSeriesQuery',
+        pathname: '/projectManagement/archiveTaskHandleList/index',
         query: { radioType },
       }),
     );
@@ -413,7 +333,7 @@ class Index extends Component {
 
   /**
    * 处理审批通过和审批拒绝的提交参数
-   * * */
+   * **/
   handleReviewSubmitParams = () => {
     const { selectedRows } = this.state;
     return Object.values(selectedRows).map(item => item);
@@ -433,66 +353,58 @@ class Index extends Component {
     this.handleGetTableData(this.state.initParams);
   };
 
-  addExtendsFn = (fileIds, key) => {
+  /**
+   * 移除继承
+   * **/
+  handleRemoveExtends = () => {
     const {
       dispatch,
       location: {
-        query: { proCode, seriesCode },
+        query: { proCode },
+      },
+      projectAndSeriesQueryExtends: {
+        tableList: { total },
       },
     } = this.props;
-    this.setState({
-      [key]: true,
-    });
-    dispatch({
-      type: 'projectAndSeriesQueryExtends/batchExtendArchivedFileReq',
-      payload: {
-        proCode,
-        seriesCode,
-        fileIds,
-      },
-      callback: res => {
-        if (res && res.status === 200) {
-          this.showModal()
-          this.state.resMessage=res.message
-          this.state.errorList=res.data
-          // message.success(res.message);
-          this.handleGetTableData(this.state.params);
-        } else {
-          message.error(res.message);
-        }
-        this.setState({
-          [key]: false,
-        });
-      },
-    });
-  };
+    const fileIds = this.handleReviewSubmitParams().map(item => item.id);
+    const removeExtends = () => {
+      this.setState({ removeExtending: true });
+      dispatch({
+        type: 'projectAndSeriesQueryExtends/batchDelProExtendArchivedFileReq',
+        payload: {
+          proCode,
+          fileIds,
+        },
+        callback: res => {
+          if (res && res.status === 200) {
+            this.handleGetTableData(this.state.params);
+            this.handleGetSysTreeData();
+            this.getFileNameList();
+          } else {
+            message.error(res.message);
+          }
+          this.setState({ removeExtending: false });
+        },
+      });
+    };
 
-  removeExtends = (fileIds, key) => {
-    const {
-      dispatch,
-      location: {
-        query: { proCode, seriesCode },
-      },
-    } = this.props;
+    if (total === 0) {
+      message.warn('此系列下已经没有可继承的文档了');
+      return;
+    }
 
-    this.setState({ [key]: true });
-    dispatch({
-      type: 'projectAndSeriesQueryExtends/batchDelProExtendArchivedFileReq',
-      payload: {
-        proCode,
-        fileIds,
-        seriesCode,
-      },
-      callback: res => {
-        if (res && res.status === 200) {
-          message.success(res.message)
-          this.handleGetTableData(this.state.params);
-        } else {
-          message.error(res.message);
-        }
-        this.setState({ [key]: false });
-      },
-    });
+    if (fileIds.length === 0) {
+      Modal.confirm({
+        title: '确定',
+        content: '您尚未选择要移除继承的文档，是要全部移除继承关系吗？',
+        onOk: () => {
+          removeExtends();
+        },
+      });
+      return;
+    }
+
+    removeExtends();
   };
 
   render() {
@@ -504,10 +416,7 @@ class Index extends Component {
       params: { pageNum, pageSize },
       initParams,
       collapsed,
-      isAddAllExtends,
-      isRemoveAllExtends,
-      isAddSelectedExtends,
-      isRemoveSelectedExtends,
+      removeExtending,
     } = this.state;
     const {
       loading,
@@ -528,105 +437,25 @@ class Index extends Component {
       <Card
         bordered={false}
         title={
-          <Breadcrumb>
-            <Breadcrumb.Item>底稿项目管理</Breadcrumb.Item>
-            <Breadcrumb.Item>项目</Breadcrumb.Item>
-            <Breadcrumb.Item>系列信息查询</Breadcrumb.Item>
-            <Breadcrumb.Item>系列继承</Breadcrumb.Item>
-          </Breadcrumb>
+          <>
+            <Breadcrumb>
+              <Breadcrumb.Item>底稿项目管理</Breadcrumb.Item>
+              <Breadcrumb.Item>项目</Breadcrumb.Item>
+              <Breadcrumb.Item>系列信息查询</Breadcrumb.Item>
+              <Breadcrumb.Item>系列继承</Breadcrumb.Item>
+            </Breadcrumb>
+          </>
         }
         extra={
           <>
-            <Modal
-              title="消息提醒"
-              visible={this.state.visible}
-              onOk={this.handleCancel}
-              onCancel={this.handleCancel}
-              okText="继承详情"
-              cancelText="取消"
-              footer={[
-                <Button
-                key="confim"
-                size="large"
-                loading={isAddAllExtends}
-                onClick={this.downError}
-              >
-                继承详情
-              </Button>,
-                <Button
-                key="confim"
-                size="large"
-                loading={isAddAllExtends}
-                onClick={this.handleCancel}
-              >
-                取消
-              </Button>
-              ]} 
+            <Button
+              style={{ marginRight: '12px' }}
+              type="primary"
+              loading={removeExtending}
+              onClick={this.handleRemoveExtends}
             >
-              <p>{this.state.resMessage}</p>
-            </Modal>
-            <Action code="projectAndSeriesQuery:batchExtendArchivedFile">
-              <Button
-                style={{ marginRight: '12px' }}
-                type="primary"
-                loading={isAddAllExtends}
-                onClick={() => this.addExtendsFn([], 'isAddAllExtends')}
-              >
-                全部继承
-              </Button>
-            </Action>
-            <Action code="projectAndSeriesQuery:batchDelProExtendArchivedFile">
-              <Button
-                style={{ marginRight: '12px' }}
-                type="primary"
-                loading={isRemoveAllExtends}
-                onClick={() => this.removeExtends([], 'isRemoveAllExtends')}
-              >
-                全部移除
-              </Button>
-            </Action>
-            <Action code="projectAndSeriesQuery:batchExtendArchivedFile">
-              <Button
-                style={{ marginRight: '12px' }}
-                type="primary"
-                disabled={
-                  this.handleReviewSubmitParams().filter(item => item.isExtend === '0').length === 0
-                }
-                loading={isAddSelectedExtends}
-                onClick={() =>
-                  this.addExtendsFn(
-                    this.handleReviewSubmitParams()
-                      .filter(item => item.isExtend === '0')
-                      .map(item => (item.parentId === '-1' ? item.id : item.parentId)),
-                    'isAddSelectedExtends',
-                  )
-                }
-              >
-                添加继承
-              </Button>
-            </Action>
-            <Action code="projectAndSeriesQuery:batchDelProExtendArchivedFile">
-              <Button
-                style={{ marginRight: '12px' }}
-                type="primary"
-                disabled={
-                  this.handleReviewSubmitParams()
-                    .filter(item => item.isExtend === '1')
-                    .map(item => item.id).length === 0
-                }
-                loading={isRemoveSelectedExtends}
-                onClick={() =>
-                  this.removeExtends(
-                    this.handleReviewSubmitParams()
-                      .filter(item => item.isExtend === '1')
-                      .map(item => (item.parentId === '-1' ? item.id : item.parentId)),
-                    'isRemoveSelectedExtends',
-                  )
-                }
-              >
-                移除继承
-              </Button>
-            </Action>
+              移除继承
+            </Button>
             <Button onClick={this.handleBackPage}>取消</Button>
           </>
         }
@@ -649,10 +478,7 @@ class Index extends Component {
                 multipleFlag={false}
                 getCheckMsg={() => null}
                 getClickMsg={this.getClickMsg}
-                ref={ref => {
-                  this.selfTreeRef = ref;
-                  return this.selfTreeRef;
-                }}
+                ref={ref => (this.selfTreeRef = ref)}
               />
             </div>
           </Sider>

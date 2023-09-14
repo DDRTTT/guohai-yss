@@ -12,12 +12,14 @@ import {
   emptyRole,
   getAllAuthorizeById,
   query,
+  roleType,
 } from '@/services/role';
 import { getCrudModel } from '@/utils/commonTemplate';
 import { message } from 'antd';
+import { switch2SelectOption } from '@/utils/utils';
 import { combine } from '@/utils/modelUtil';
 import { stateClear } from '@/utils/decorators';
-import { getSession } from '@/utils/session';
+import { getSession } from '../../utils/session';
 
 const namespace = 'role';
 
@@ -135,7 +137,7 @@ const model = {
 
     *addRole({ payload }, { put, call }) {
       const response = yield call(addRoleCtrl, payload);
-      if (response?.data?.errMsg === 'success') {
+      if (response.data.errMsg === 'success') {
         if (payload.id) {
           message.success('修改组件成功');
           yield put({
@@ -158,8 +160,7 @@ const model = {
         });
         return response;
       }
-      message.warn(response.data.errMsg);
-      return response;
+      message.error(response.data.errMsg);
     },
   },
 

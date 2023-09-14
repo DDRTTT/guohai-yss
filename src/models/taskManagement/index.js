@@ -23,6 +23,7 @@ import {
 } from '@/services/taskManagement';
 
 import { cloneDeep } from 'lodash';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 function handleNewTreeData(data) {
   data.forEach(item => {
@@ -135,7 +136,9 @@ const GlobalModel = {
     },
     // 获取任务名称
     *getTaskName({ payload, callback }, { call, put }) {
+      console.log(payload);
       const data = yield call(getTaskNameAPI, payload);
+      console.log(data, payload, 'canshu');
       if (callback) {
         callback(data);
       }
@@ -143,6 +146,7 @@ const GlobalModel = {
     // 保存
     *save({ payload, callback }, { call, put }) {
       const data = yield call(onSaveAPI, payload);
+      console.log(data, 'data');
       if (callback) {
         callback(data);
       }

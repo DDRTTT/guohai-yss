@@ -1,10 +1,27 @@
+/**
+ * author: jiaqiuhua
+ * date: 2021/7/28
+ * note: 文件目录迁移
+ * **/
+
 import { Button, Modal, Form, TreeSelect, message } from 'antd';
 import { connect } from 'dva';
 import treeNodeCustomize from './treeNodeCustomize';
 
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   class extends React.Component {
+    state = {
+      pathId: undefined,
+    };
+
+    onChange = (value, label, extra) => {
+      this.setState({
+        pathId: extra.triggerNode.props.eventKey,
+      });
+    };
+
     render() {
+      const { pathId } = this.state;
       const { visible, onCancel, onCreate, form, saveTreeData } = this.props;
       const { getFieldDecorator } = form;
       return (
@@ -24,10 +41,12 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                 <TreeSelect
                   showSearch
                   style={{ width: '100%' }}
+                  value={pathId}
                   dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                   placeholder="请选择新的文件所属目录!"
                   allowClear
                   treeDefaultExpandAll
+                  onChange={this.onChange}
                 >
                   {treeNodeCustomize(saveTreeData)}
                 </TreeSelect>,
@@ -56,27 +75,17 @@ class CollectionsPage extends React.Component {
   handleCreate = () => {
     const {
       props: { form },
+      state: { pathId },
     } = this.formRef;
     const { dispatch, record, handleGetSysTreeData, handleGetTableData } = this.props;
-    const ableUseFileIds = record.filter(item => item.operStatus === '0');
+    const fileIds = record.filter(item => item.operStatus === '0').map(item => item.id);
 
-    if (ableUseFileIds.length === 0) {
+    if (fileIds.length === 0) {
       return message.warn('您所选择的文档中没有待提交的文档，不可进行文档目录移动~');
     }
 
     form.validateFields((err, values) => {
       if (err) {
-        return;
-      }
-      const { pathId } = values;
-      const fileIds = ableUseFileIds.filter(item => item.awpCode !== pathId).map(item => item.id);
-
-      if (!pathId) {
-        return;
-      }
-
-      if (fileIds.length === 0) {
-        message.warn('目录未改变，请选择移动不同的目录');
         return;
       }
 

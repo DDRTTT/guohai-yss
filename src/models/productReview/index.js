@@ -44,7 +44,7 @@ export default {
         message.error('保存失败');
       }
     },
-    *queryTableList({ payload, callback }, { call, put }) {
+    *queryTableList({ payload,callback }, { call, put }) {
       const response = yield call(queryTableList, payload.params);
       if (response.status === 200) {
         yield put({
@@ -53,7 +53,7 @@ export default {
             taskListTable: response.data,
           },
         });
-        if (callback) callback();
+        callback&&callback();
       } else {
         errorMessage();
       }

@@ -1,3 +1,12 @@
+@fontSize14: 14px;
+@fontSize20: 20px;
+//列表操作列删除按钮
+@btndeleteColor: #D9001B;
+@authListbgColor: #f4f4f4;
+@bgc_color_ffffff: #ffffff;
+
+@import '~antd/es/style/themes/default.less';
+
 .base {
   :global {
     .steps-action {
@@ -8,9 +17,29 @@
   .btn {
     margin: 0 24px;
   }
+
+  .btnMargin {
+    margin: 5px;
+
+    .delete {
+      color: @btndeleteColor
+    }
+  }
+
+  .batch {
+    margin-top: -45px;
+
+    .batchBtn {
+      margin-right: 10px;
+      width: 100px;
+      height: 26px
+    }
+  }
 }
 
 .registerResult {
+  margin-top: 56px;
+
   :global {
     .anticon {
       font-size: 64px;
@@ -19,29 +48,19 @@
 
   .title {
     margin-top: 32px;
-    font-size: 20px;
+    font-size: @fontSize20;
     line-height: 28px;
 
     .message {
-      color: rgba(0, 0, 0, 0.447058823529412);
-      font-size: 14px;
-    }
-  }
-
-  .description {
-    background: #f0f2f5;
-
-    .content {
-      margin: 32px;
-      padding: 12px 0;
-      text-align: left;
+      font-size: @fontSize14;
+      color: @avatar-bg;
     }
   }
 
   .actions {
     margin-top: 40px;
 
-    a + a {
+    a+a {
       margin-left: 8px;
     }
   }
@@ -51,7 +70,7 @@
   margin-top: 40px;
 
   :global {
-    .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
+    .ant-table-small>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td {
       padding: 16px 16px;
     }
   }
@@ -59,38 +78,38 @@
   //权限列表样式修改
   .authList {
     height: 50px;
-    background-color: #f4f4f4;
+    background-color: @authListbgColor;
     //line-height: 50px;
 
     .roleAuth {
       float: left;
       margin: 14px;
       padding: 0;
-      color: #797979;
     }
   }
 }
 
-.inputSearch {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-  z-index: 1050;
-  display: block;
-  box-sizing: border-box;
-  height: 100px;
-  margin: 0;
-  padding: 0;
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
-  line-height: 1.5;
-  list-style: none;
-  background-color: #fff;
-  border: 1px solid rgb(217, 217, 217);
-  border-radius: 4px;
-  outline: none;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
-  font-feature-settings: 'tnum';
+.rolename {
+  width: 100% !important;
+}
+
+.divider {
+  margin: 4px 0
+}
+
+.addRole {
+  padding: 4px 8px;
+  cursor: pointer
+}
+
+
+.layout {
+  background: @bgc_color_ffffff;
+  border: 1px solid #e8e8e8;
+
+  .siderbox {
+    background: @bgc_color_ffffff
+  }
 }
 
 .slider {
@@ -98,7 +117,12 @@
   //width: 300px;
   max-height: 712px;
   overflow: auto;
-  background: #fff;
+  background: @bgc_color_ffffff;
+
+  .searchbox {
+    width: 180px;
+    margin: 10px
+  }
 }
 
 .box {
@@ -108,6 +132,78 @@
   text-align: center;
 }
 
+.addgrouping {
+  width: 90%;
+
+  .input {
+    width: 200px;
+  }
+}
+
+.addnewgroup {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  .input {
+    width: 200px;
+  }
+}
+
+.tree {
+  position: relative;
+
+  .divbox {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .treeSelect {
+      width: 200px;
+    }
+  }
+
+  .divbox2 {
+    height: 440px;
+    overflow-Y: scroll;
+
+    .tag {
+      margin: 5px
+    }
+  }
+}
+
+.deletemodal {
+  width: 650px;
+
+  .treeSelect {
+    width: 200px
+  }
+}
+
+.modifymodal {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  .treeSelect {
+    width: 200px;
+  }
+}
+
+.checkableTag {
+  font-size: @fontSize14;
+  cursor: pointer
+}
+
+.roleName {
+  display: flex;
+  justify-content: space-evenly,
+}
+
+.tabPane {
+  margin-top: 24px
+}
 .plusBtn {
   cursor: pointer;
   position: absolute;

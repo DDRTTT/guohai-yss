@@ -1,10 +1,9 @@
 import React from 'react';
-import { Breadcrumb, Form, Row, Button, Spin } from 'antd';
+import { Breadcrumb, Card, Form, Row, Button, Spin } from 'antd';
 import CustomFormItem from '@/components/AdvancSearch/CustomFormItem';
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import router from 'umi/router';
-import { PageContainers, Card } from '@/components';
 
 class Index extends React.Component {
   //   当前一级事项选择的key
@@ -44,6 +43,7 @@ class Index extends React.Component {
       });
     });
   };
+
   componentDidMount() {
     this.props.dispatch({
       type: 'operatingCalendar/getSecSubInfoList',
@@ -78,6 +78,7 @@ class Index extends React.Component {
         });
       });
   }
+
   render() {
     const { breadCrumb, firstList, secList } = this.state;
     const {
@@ -184,28 +185,19 @@ class Index extends React.Component {
         type: 'select',
         option: personList,
         width: 13,
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         readSet: { name: 'username', code: 'id' },
       },
     ];
     return (
       <>
-        <PageContainers
-          breadcrumb={[
-            {
-              title: '任务中心',
-              url: '',
-            },
-            {
-              title: '运营日历',
-              url: '/electronic/electronicRecord',
-            },
-            {
-              title: '新增自定义事项',
-              url: '',
-            },
-          ]}
-        ></PageContainers>
+        <Card>
+          <Breadcrumb>
+            {breadCrumb.map((item, index) => {
+              return <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>;
+            })}
+          </Breadcrumb>
+        </Card>
         <Spin
           spinning={
             personListLoading || productEnumLoading || secSubInfoListLoading || submitLoading
@@ -213,7 +205,6 @@ class Index extends React.Component {
         >
           <Card
             title="新增自定义事项"
-            
             extra={[
               <Button
                 key="save"
@@ -233,7 +224,7 @@ class Index extends React.Component {
               </Button>,
             ]}
           >
-            <Form {...this.layout} style={{padding:'20px'}}>
+            <Form {...this.layout}>
               <CustomFormItem formItemList={formItemData} form={form} />
             </Form>
           </Card>
@@ -242,6 +233,7 @@ class Index extends React.Component {
     );
   }
 }
+
 const addTaskPage = state => {
   const {
     dispatch,

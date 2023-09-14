@@ -1,8 +1,13 @@
+/**
+ * 项目电子底稿管理--抽查报送
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { linkHoc } from '@/utils/hocUtil';
+import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { Button, Col, Input, Row, Form, Card, Layout, message } from 'antd';
+import styles from './index.less';
 import SelfTree from '@/components/SelfTree';
 
 const { Content } = Layout;
@@ -43,7 +48,7 @@ class Agent extends Component {
 
   /**
    * 右侧下拉选中时重置左侧树
-   * * */
+   * **/
   handleResetTree = ref => {
     this.child = ref;
   };

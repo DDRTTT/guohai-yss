@@ -1,5 +1,7 @@
 export default {
-  'border-radius-base': '4px',
+  'line-height':'1.5715',
+  'border-radius':'2px',
+  'border-radius-base': '2px',
   'card-padding-base': '25px',
   'table-header-bg': '#F5F7FC',
   'table-padding-vertical': '12px',

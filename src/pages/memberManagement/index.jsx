@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Action from '@/utils/hocUtil';
-import { Button, Col, Drawer, Dropdown, Form, Icon, Menu, message, Popconfirm, Row, Tooltip, } from 'antd';
+import { Button, Col, Drawer, Dropdown, Form, Icon, Menu, message, Popconfirm, Row } from 'antd';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import styles from './index.less';
 import { getSession, setSession, USER_INFO } from '@/utils/session';
 import { Table } from '@/components';
 import List from '@/components/List';
-import Gird from '@/components/Gird';
 
 const Index = ({
   dispatch,
@@ -137,78 +136,21 @@ const Index = ({
       dataIndex: 'usercode',
       key: 'usercode',
       fixed: 'left',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '用户名',
       dataIndex: 'username',
       key: 'username',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '机构名称',
       dataIndex: 'orgName',
       key: 'orgName',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '机构类型',
       dataIndex: 'orgTypeName',
       key: 'orgTypeName',
-      width: 200,
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '手机号',
@@ -219,20 +161,6 @@ const Index = ({
       title: '邮箱',
       dataIndex: 'email',
       key: 'email',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '用户类型',
@@ -244,20 +172,6 @@ const Index = ({
       title: '部门',
       dataIndex: 'deptName',
       key: 'deptName',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => {
-        return (
-          <Tooltip title={text}>
-            {text
-              ? text.toString().replace(/null/g, '-')
-              : text === '' || text === undefined
-                ? '-'
-                : 0}
-          </Tooltip>
-        );
-      },
     },
     {
       title: '操作',
@@ -268,19 +182,27 @@ const Index = ({
       fixed: 'right',
       render: (text, record) => (
         <span>
-          <Button type="link" size="small" onClick={() => handleShowDrawer(record)}>查看</Button>
+          <span>
+            <a onClick={() => handleShowDrawer(record)}>查看</a>
+          </span>
           <Action key="memberManagement:authorization" code="memberManagement:authorization">
-              <Button type="link" size="small" onClick={() => handleOpearAuthorization(record)}>授权</Button>
+            <span style={{ margin: 5 }}>
+              <a onClick={() => handleOpearAuthorization(record)}>授权</a>
+            </span>
           </Action>
           <Action key="memberManagement:rest" code="memberManagement:rest">
-            <Popconfirm title="确认重置密码?" onConfirm={() => restUserCode(record)}>
-              <Button type="link" size="small">重置密码</Button>
-            </Popconfirm>
+            <span style={{ margin: 5 }}>
+              <Popconfirm title="确认重置密码?" onConfirm={() => restUserCode(record)}>
+                <a>重置密码</a>
+              </Popconfirm>
+            </span>
           </Action>
           <Action key="memberManagement:delete" code="memberManagement:delete">
-            <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.id)}>
-              <Button type="link" size="small">删除</Button>
-            </Popconfirm>
+            <span style={{ margin: 5 }}>
+              <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record.id)}>
+                <a>删除</a>
+              </Popconfirm>
+            </span>
           </Action>
         </span>
       ),
@@ -329,7 +251,7 @@ const Index = ({
       config: {
         dropdownStyle: { maxHeight: 400, overflow: 'auto' },
         treeData: saveOrgName,
-        // treeDefaultExpandAll: true,
+        treeDefaultExpandAll: true,
         showSearch: true,
         treeNodeFilterProp: 'title',
       },
@@ -371,22 +293,6 @@ const Index = ({
     setPageSize(10);
     setSearchForm({});
   };
-
-  const drawerConfig = [
-    { label: '手机号码', value: 'mobile' },
-    { label: '机构名称', value: 'orgName' },
-    { label: '创建时间', value: 'createTime' },
-    { label: '电子邮箱', value: 'email' },
-    { label: '机构代码', value: 'orgCode' },
-    { label: '机构类型', value: 'orgTypeName' },
-    { label: '用户代码', value: 'usercode' },
-    { 
-      label: '用户类型', 
-      value: 'type', 
-      type: 'select', 
-      option: [{ code: "01",name: "系统管理员" },{ code: "02", name: "普通用户"}], 
-    },
-  ]
 
   return (
     <div className={styles.content}>
@@ -450,7 +356,47 @@ const Index = ({
         onClose={handleCloseDrawer}
         visible={visible}
       >
-        <Gird config={drawerConfig} info={baseInfo}/>
+        <div className={styles.drawers}>
+          <div className={styles.bottomLeft} />
+          <div className={styles.middleBox}>
+            <Row>
+              <Col span={7} className={styles.inner}>
+                手机号码：{baseInfo.mobile}
+              </Col>
+              <Col span={7} className={styles.inner}>
+                机构名称：{baseInfo.orgName}
+              </Col>
+              <Col span={7} className={styles.inner}>
+                创建时间：{baseInfo.createTime}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} className={styles.inner}>
+                电子邮箱：{baseInfo.email}
+              </Col>
+              <Col span={7} className={styles.inner}>
+                机构代码：{baseInfo.orgCode}
+              </Col>
+              <Col span={7} className={styles.inner}>
+                机构类型：{baseInfo.orgTypeName}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} className={styles.inner}>
+                用户代码：{baseInfo.usercode}
+              </Col>
+              <Col span={7} className={styles.inner}>
+                用户类型：
+                {baseInfo.type === '01' ? '系统管理员' : '普通用户'}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} />
+              <Col span={7} />
+            </Row>
+          </div>
+          <div className={styles.bottomLeft} />
+        </div>
       </Drawer>
     </div>
   );

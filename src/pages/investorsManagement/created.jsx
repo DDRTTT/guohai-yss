@@ -13,9 +13,9 @@ import ModalWin from '@/pages/manuscriptProjectManage/projectInfoManger/addProje
 import styless from './add.less';
 import moment from 'moment';
 import { rangPickerFormat } from '@/pages/archiveTaskHandleList/util';
-import Gird from '@/components/Gird';
 import {
   Button,
+  Card,
   Cascader,
   Checkbox,
   Col,
@@ -29,13 +29,14 @@ import {
   Row,
   Select,
   Spin,
+  Table,
   Tabs,
   Tag,
   Tooltip,
 } from 'antd';
 import Position from './Position.jsx';
 import { parse } from 'qs';
-import { Table, Card, PageContainers } from '@/components';
+import { PageContainers } from '@/components';
 
 const { TabPane } = Tabs;
 const { TextArea } = Input;
@@ -100,7 +101,6 @@ const Created = ({
   const [awpFileNumber, setAwpFileNumber] = useState('');
   const [searchFileType, setSearchFileType] = useState([]); // 搜索文件类型
   const [searchFileName, setSearchFileName] = useState(''); // 搜索文件名称
-  const [restBtn, setRestBtn] = useState(); // 是否触发了重置按钮
   const [customDocPageNum, setcustomDocPageNum] = useState(1); // 客户文档列表页码
   const [customDocPageSize, setcustomDocPageSize] = useState(10); // 客户文档列表页面展示数量
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // 客户文档选中项key
@@ -275,9 +275,7 @@ const Created = ({
       dataIndex: 'checkedName',
       width: 140,
       align: 'center',
-      render: checkedName => {
-        return <div className={'working'}>{checkedName}</div>;
-      },
+      render: checkedName => <Tag>{checkedName}</Tag>,
     },
     {
       key: '',
@@ -862,14 +860,13 @@ const Created = ({
   // 身体
   const handleAddBody = () => {
     return (
-      <div className={(styless.content, 'detailPage bgcFFF')}>
-        <div className="scollWrap none-scroll-bar">
+      <div className={styless.content}>
+        <div style={{ position: 'relative', zIndex: 999 }}>
           <Tabs
             defaultActiveKey="1"
             tabPosition="left"
             activeKey={activeKey}
             onChange={handleTabsChange}
-            className={styless.mTabs}
           >
             {handleAddBodyData()}
             {dis ? handleCustomDocumentData() : ''}
@@ -994,7 +991,7 @@ const Created = ({
       }
     }
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue || (typeof def !== 'undefined' ? def : undefined),
@@ -1046,7 +1043,7 @@ const Created = ({
       }
     }
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue || (typeof def !== 'undefined' ? def : undefined),
@@ -1076,7 +1073,7 @@ const Created = ({
    */
   const handleAddInput = (queryValue, spanName, bindCode, isShow, Ruletype) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1102,7 +1099,7 @@ const Created = ({
    */
   const handleAddCascader = (queryValue, spanName, bindCode) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1135,7 +1132,7 @@ const Created = ({
    */
   const handleAddIdCardNumInput = (queryValue, spanName, bindCode, bindVar, isShow, Ruletype) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1180,7 +1177,7 @@ const Created = ({
    */
   const handleAddContactNumberInput = (queryValue, spanName, bindCode) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1221,7 +1218,7 @@ const Created = ({
    */
   const handleAddTextArea = (queryValue, spanName, bindCode, isShow) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1250,7 +1247,7 @@ const Created = ({
    */
   const handleAddDatePicker = (queryValue, spanName, bindCode, isShow) => {
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue ? moment(queryValue) : null,
@@ -1274,7 +1271,7 @@ const Created = ({
       queryValue = [moment(arr[0]), moment(arr[1])];
     }
     return (
-      <Col xl={8} lg={24} md={24} sm={24}>
+      <Col xl={12} lg={24} md={24} sm={24}>
         <Form.Item {...formItemLayout} label={spanName}>
           {getFieldDecorator(bindCode, {
             initialValue: queryValue,
@@ -1289,7 +1286,7 @@ const Created = ({
   const handleAddBaseData = () => {
     return (
       <div style={{ marginBottom: 24 }}>
-        <h1 className={'font-w600'}>基本信息</h1>
+        <div style={{ marginBottom: '20px' }}>基本信息</div>
         <Form>
           <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
             {/* {handleAddInput(saveDetail.clientCode, '客户编号', 'clientCode', true)} */}
@@ -1312,7 +1309,7 @@ const Created = ({
               'code',
               'name',
               _,
-              false,
+              true,
             )}
             {/* {clientTypeData !== '1'
                     ? handleAddInput(saveDetail.creditNumber, '信用编码', 'creditNumber', true)
@@ -1326,7 +1323,7 @@ const Created = ({
                   'code',
                   'name',
                   _,
-                  false,
+                  true,
                 )
               : ''}
             {/* dis?'详情页显示':'新增或编辑页显示' */}
@@ -1458,7 +1455,7 @@ const Created = ({
                 )}
               </>
             ) : null}
-            {handleAddInput(saveDetail.fundAccount, '基金账号', 'fundAccount', false)}
+            {handleAddInput(saveDetail.fundAccount, '基金账号', 'fundAccount', true)}
             {handleAddInput(saveDetail.channelCode, '渠道代码', 'channelCode', false)}
             {handleAddInput(saveDetail.branchCode, '网点代码', 'branchCode', false)}
             {clientTypeData !== '1'
@@ -1493,11 +1490,11 @@ const Created = ({
     if (clientTypeData === '0') {
       return (
         <div style={{ marginBottom: 24 }}>
-          <h1 className={'font-w600'}>机构客户信息</h1>
+          <div style={{ marginBottom: '20px' }}>机构客户信息</div>
           <Form>
             <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
               {handleAddInput(saveDetail.agencyName, '客户名称', 'agencyName', true)}
-              <Col xl={8} lg={24} md={24} sm={24}>
+              <Col xl={12} lg={24} md={24} sm={24}>
                 <Form.Item {...formItemLayout} label="统一社会信用代码">
                   {getFieldDecorator('businessLicenseNumber', {
                     initialValue: saveDetail.businessLicenseNumber,
@@ -1541,7 +1538,7 @@ const Created = ({
                     false,
                   )
                 : ''}
-              {handleAddInput(saveDetail.orgLegalPers, '法人代表', 'orgLegalPers', false)}
+              {handleAddInput(saveDetail.orgLegalPers, '法人代表', 'orgLegalPers', true)}
               {handleAddSelect(
                 saveDetail.orgLegalCertifcType,
                 '法人代表证件类型',
@@ -1550,14 +1547,14 @@ const Created = ({
                 'code',
                 'name',
                 handleOrgLegalCertifcTypeChange,
-                false,
+                true,
               )}
               {handleAddIdCardNumInput(
                 saveDetail.orgLegalCertificCode,
                 '法人代表证件代码',
                 'orgLegalCertificCode',
                 orgLegalCertifcType,
-                false,
+                true,
               )}
               {handleAddRadio(
                 saveDetail.orgLegalCertificValidPeriodPermanent,
@@ -1597,10 +1594,10 @@ const Created = ({
     if (clientTypeData === '1') {
       return (
         <div style={{ marginBottom: 24 }}>
-          <h1 className={'font-w600'}>自然人客户信息</h1>
+          <div style={{ marginBottom: '20px' }}>自然人客户信息</div>
           <Form>
             <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
-              {handleAddInput(saveDetail.naturalName, '客户名称', 'naturalName', true)}
+              {handleAddInput(saveDetail.naturalName, '姓名', 'naturalName', true)}
               {handleAddSelect(
                 saveDetail.certificaType,
                 '证件类型',
@@ -1609,14 +1606,14 @@ const Created = ({
                 'code',
                 'name',
                 handleNaturalPersonCertificaTypeChange,
-                false,
+                true,
               )}
               {handleAddIdCardNumInput(
                 saveDetail.certificNum,
                 '证件号码',
                 'certificNum',
                 certificaType,
-                false,
+                true,
               )}
               {handleAddRadio(
                 saveDetail.personCertificValidPeriodPermanent,
@@ -1643,7 +1640,7 @@ const Created = ({
                 'code',
                 'name',
                 _,
-                false,
+                true,
               )}
               {handleAddDatePicker(saveDetail.birthDate, '生日', 'birthDate', false)}
               {handleAddSelect(saveDetail.gender, '性别', 'gender', sex, 'code', 'name', _)}
@@ -1666,16 +1663,16 @@ const Created = ({
     if (clientTypeData === '2') {
       return (
         <div style={{ marginBottom: 24 }}>
-          <h1 className={'font-w600'}>产品客户信息</h1>
+          <div style={{ marginBottom: '20px' }}>产品客户信息</div>
           <Form>
             <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
-              {handleAddInput(saveDetail.productName, '客户名称', 'productName', true)}
+              {handleAddInput(saveDetail.productName, '产品全称', 'productName', true)}
               {/* {handleAddInput(saveDetail.productCode, '产品代码', 'productCode', true)} */}
               {handleAddInput(
                 saveDetail.productRecordCode,
                 '产品备案代码',
                 'productRecordCode',
-                false,
+                true,
               )}
               {handleAddSelect(
                 saveDetail.affiliation,
@@ -1742,14 +1739,14 @@ const Created = ({
           ) : (
             ''
           )}
-          <h1 className={'font-w600'}>受益所有人信息</h1>
+          <div style={{ marginBottom: '20px' }}>受益所有人信息</div>
           <Form>
             <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
               {handleAddInput(
                 beneficiarylist[k] && beneficiarylist[k].name,
                 '姓名',
                 `beneficname[${k}]`,
-                false,
+                true,
               )}
               {handleAddSelect(
                 beneficiarylist[k] && beneficiarylist[k].certificaType,
@@ -1759,14 +1756,14 @@ const Created = ({
                 'code',
                 'name',
                 val => handleBeneficCertifcTypeChange(val, k),
-                false,
+                true,
               )}
               {handleAddIdCardNumInput(
                 beneficiarylist[k] && beneficiarylist[k].certificNum,
                 '证件号码',
                 `beneficcertificNum[${k}]`,
                 beneficCertifcTypeList[k],
-                false,
+                true,
               )}
               {/* {handleAddInput(
                       beneficiarylist[k] && beneficiarylist[k].certificNum,
@@ -1886,10 +1883,10 @@ const Created = ({
     if (clientTypeData !== '1') {
       return (
         <div style={{ marginBottom: 24 }}>
-          <h1 className={'font-w600'}>经办人信息</h1>
+          <div style={{ marginBottom: '20px' }}>经办人信息</div>
           <Form>
             <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
-              {handleAddInput(saveDetail.operatorName, '经办人姓名', 'operatorName', false)}
+              {handleAddInput(saveDetail.operatorName, '经办人姓名', 'operatorName', true)}
               {handleAddSelect(
                 saveDetail.operatorCertType,
                 '经办人证件类型',
@@ -1898,14 +1895,14 @@ const Created = ({
                 'code',
                 'name',
                 handleOperatorCertTypeChange,
-                false,
+                true,
               )}
               {handleAddIdCardNumInput(
                 saveDetail.operatorCertNo,
                 '经办人证件号码',
                 'operatorCertNo',
                 operatorCertType,
-                false,
+                true,
               )}
               {handleAddInput(saveDetail.operatorEmail, '邮箱', 'operatorEmail', false, {
                 type: 'email',
@@ -1936,330 +1933,15 @@ const Created = ({
 
   // 五脏--客户基本信息
   const handleAddBodyData = () => {
-    const drawerConfigForBasic = [
-      {
-        label: '账户类型',
-        value: 'clientType',
-        type: 'select',
-        option: dicts.I009,
-      },
-      {
-        label: '是否专业投资者',
-        value: 'isMajorInvestor',
-        type: 'select',
-        option: yesAndNo,
-      },
-      {
-        label: '是否金融客户',
-        value: 'isFinanceClient',
-        type: 'select',
-        option: yesAndNo,
-        rule: clientTypeData === '1',
-      },
-      {
-        label: '是否机构自有资金',
-        value: 'isInstituteOwnFunds',
-        type: 'select',
-        option: yesAndNo,
-      },
-      {
-        label: '客户类型',
-        value: 'guestType',
-        type: 'select',
-        option: guestTypeData,
-      },
-      {
-        label: '子客户类型',
-        value: 'subGuestType',
-        type: 'subGuestTypeData',
-        option: yesAndNo,
-      },
-      {
-        label: '中基协投资者类型',
-        value: 'amacInvestorType',
-        type: 'select',
-        option: amacInvestorTypeData,
-      },
-      {
-        label: '中基协是否为电子签名',
-        value: 'isAmacESignature',
-        type: 'select',
-        option: yesAndNo,
-      },
-      {
-        label: '中基协是否为管理人关联方',
-        value: 'isAmacManagerRelation',
-        type: 'select',
-        option: yesAndNo,
-      },
-      {
-        label: '交易确认日期',
-        value: 'tradeConfirmDate',
-      },
-      {
-        label: '产品资金来源类型',
-        value: 'fundSourceType',
-        type: 'select',
-        option: fundSourceTypeData,
-      },
-      {
-        label: '产品资金来源子类型',
-        value: 'subFundSourceType',
-        type: 'select',
-        option: subFundSourceTypeData,
-      },
-      {
-        label: '投资者与产品关系',
-        value: 'investorProRel',
-        type: 'select',
-        option: dicts.R007,
-      },
-      {
-        label: '投资者类型',
-        value: 'investorType',
-        type: 'select',
-        option: investorTypeData,
-      },
-      {
-        label: '上层产品管理人名称',
-        value: 'superProManagerName',
-        rule: !(clientTypeData === '2'),
-      },
-      {
-        label: '资金来源中本公司或关联方情况',
-        value: 'sourcesFunds',
-        type: 'select',
-        option: dicts.F006,
-      },
-      { label: '基金账号', value: 'fundAccount' },
-      { label: '渠道代码', value: 'channelCode' },
-      { label: '网点代码', value: 'branchCode' },
-      {
-        label: '非自然人客户类型',
-        value: 'customerType',
-        type: 'select',
-        option: dicts.I001,
-      },
-      { label: '其他', value: 'other', rule: !(customerTypeData === 'I001_23') },
-      { label: '客户状态描述', value: 'clientStatusDescrip', proportion: true },
-    ];
-    const drawerConfigForOrganization = info => {
-      return [
-        { label: '客户名称', value: 'agencyName' },
-        { label: '统一社会信用代码', value: 'businessLicenseNumber' },
-        {
-          label: '是否永久有效',
-          value: 'certificValidPeriodPermanent',
-          type: 'select',
-          option: yesAndNo,
-        },
-        {
-          label: '证件有效期',
-          value: 'certificValidPeriod',
-          rule: !(info.certificValidPeriodPermanent === '0'),
-        },
-        { label: '法人代表', value: 'orgLegalPers' },
-        {
-          label: '法人法人代表证件类型代表',
-          value: 'orgLegalCertifcType',
-          type: 'select',
-          option: dicts.J002,
-        },
-        { label: '法人代表证件代码', value: 'orgLegalCertificCode' },
-        {
-          label: '是否永久有效',
-          value: 'orgLegalCertificValidPeriodPermanent',
-          type: 'select',
-          option: yesAndNo,
-        },
-        {
-          label: '法人代表证件有效期',
-          value: 'orgLegalCertificValidPeriod',
-          rule: !(info.orgLegalCertificValidPeriodPermanent === '0'),
-        },
-        { label: '注册所在地区', value: 'registeredArea' },
-        { label: '注册详细地址', value: 'registeredAddress' },
-        { label: '经营范围', value: 'businessScope' },
-      ];
-    };
-    const drawerConfigForNatural = info => {
-      return [
-        { label: '姓名', value: 'naturalName' },
-        {
-          label: '证件类型',
-          value: 'certificaType',
-          type: 'select',
-          option: dicts.J002,
-        },
-        { label: '证件号码', value: 'certificNum' },
-        {
-          label: '是否永久有效',
-          value: 'personCertificValidPeriodPermanent',
-          type: 'select',
-          option: yesAndNo,
-        },
-        {
-          label: '证件有效期',
-          value: 'personCertificValidPeriod',
-          rule: !(info.personCertificValidPeriodPermanent === '0'),
-        },
-        {
-          label: '职业',
-          value: 'profession',
-          type: 'select',
-          option: dicts.G001,
-        },
-        { label: '生日', value: 'birthDate' },
-        { label: '性别', value: 'gender' },
-        { label: '邮箱', value: 'mail' },
-        { label: '地区地址', value: 'addressArea' },
-        { label: '详细地址', value: 'address' },
-        { label: '邮编', value: 'postcode' },
-      ];
-    };
-    const drawerConfigForCustomer = info => {
-      return [
-        { label: '产品全称', value: 'productName' },
-        { label: '产品备案代码', value: 'productRecordCode' },
-        {
-          label: '所属机构',
-          value: 'affiliation',
-          type: 'select',
-          option: orgDicts,
-          optionConfig: { name: 'orgName', code: 'id' },
-        },
-        { label: '法人代表', value: 'legalPerson' },
-        {
-          label: '法人证件类型',
-          value: 'legalpCardTypeCode',
-          type: 'select',
-          option: dicts.J002,
-        },
-        { label: '法人证件号码', value: 'legalpCardId' },
-        {
-          label: '是否永久有效',
-          value: 'legalCertificValidPeriodPermanent',
-          type: 'select',
-          option: yesAndNo,
-        },
-        {
-          label: '法人证件有效期',
-          value: 'legalCertificValidPeriod',
-          rule: !(info.legalCertificValidPeriodPermanent === '0'),
-        },
-        { label: '地区', value: 'proAddressArea' },
-      ];
-    };
-    const drawerConfigForBeneficiary = [
-      { label: '姓名', value: 'name' },
-      {
-        label: '证件类型',
-        value: 'certificaType',
-        type: 'select',
-        option: dicts.J002,
-      },
-      { label: '证件号码', value: 'certificNum' },
-      { label: '证件有效期', value: 'certificValidPeriod' },
-      {
-        label: '受益人类型',
-        value: 'beneficType',
-        type: 'select',
-        option: beneficiaryTypeList,
-      },
-      {
-        label: '受益所有人身份类别',
-        value: 'beneficStatusType',
-        type: 'select',
-        option: dicts.I003,
-      },
-      {
-        label: '性别',
-        value: 'gender',
-        type: 'select',
-        option: sex,
-      },
-      {
-        label: '国籍',
-        value: 'nationality',
-        type: 'select',
-        option: dicts.G002,
-      },
-      {
-        label: '职业',
-        value: 'profession',
-        type: 'select',
-        option: dicts.G001,
-      },
-      { label: '邮箱', value: 'mail' },
-      { label: '联系人', value: 'contactPerson' },
-      { label: '联系人电话', value: 'contactNumber' },
-      { label: '地区地址', value: 'addressArea' },
-      { label: '详细地址', value: 'address' },
-      { label: '邮编', value: 'postcode' },
-      { label: '出生日期', value: 'birthDate' },
-    ];
-    const drawerConfigForOperator = [
-      { label: '经办人姓名', value: 'operatorName' },
-      {
-        label: '经办人证件类型',
-        value: 'operatorCertType',
-        type: 'select',
-        option: dicts.J002,
-      },
-      { label: '经办人证件号码', value: 'operatorCertNo' },
-      { label: '邮箱', value: 'operatorEmail' },
-      { label: '电话', value: 'operatorTel' },
-    ];
     return (
       <TabPane tab="客户基本信息" key="1">
-        {!dis && (
-          <div className={styless.body}>
-            <div>
-              {handleAddBaseData()}
-              {handleAddSellData()}
-              {handleAddNaturalPersonData()}
-              {handleAddProductClientData()}
-              {clientTypeData !== '1' ? (
-                <>
-                  <Button
-                    style={{ display: dis ? 'none' : 'inline-block' }}
-                    className={styless.save}
-                    onClick={add}
-                  >
-                    新增受益所有人
-                  </Button>
-                  {formItems}
-                </>
-              ) : (
-                ''
-              )}
-              {handleAddAgent()}
-            </div>
-          </div>
-        )}
-        {dis && (
+        <div className={styless.body}>
           <div>
-            <h1 className={'font-w600'}>基本信息</h1>
-            <Gird config={drawerConfigForBasic} info={saveDetail} />
-            {clientTypeData === '0' && (
-              <>
-                <h1 className={'font-w600'}>机构客户信息</h1>
-                <Gird config={drawerConfigForOrganization(saveDetail)} info={saveDetail} />
-              </>
-            )}
-            {clientTypeData === '1' && (
-              <>
-                <h1 className={'font-w600'}>自然人客户信息</h1>
-                <Gird config={drawerConfigForNatural(saveDetail)} info={saveDetail} />
-              </>
-            )}
-            {clientTypeData === '2' && (
-              <>
-                <h1 className={'font-w600'}>产品客户信息</h1>
-                <Gird config={drawerConfigForCustomer(saveDetail)} info={saveDetail} />
-              </>
-            )}
-            {clientTypeData !== '1' && (
+            {handleAddBaseData()}
+            {handleAddSellData()}
+            {handleAddNaturalPersonData()}
+            {handleAddProductClientData()}
+            {clientTypeData !== '1' ? (
               <>
                 <Button
                   style={{ display: dis ? 'none' : 'inline-block' }}
@@ -2268,33 +1950,14 @@ const Created = ({
                 >
                   新增受益所有人
                 </Button>
-                <div style={{ marginBottom: 24 }}>
-                  {keys.map(k => {
-                    return (
-                      <React.Fragment key={k}>
-                        {k && !dis ? (
-                          <Button className={styless.save} onClick={() => deleteBenefic(k)}>
-                            删除受益所有人
-                          </Button>
-                        ) : (
-                          ''
-                        )}
-                        <h1 className={'font-w600'}>受益所有人信息</h1>
-                        <Gird config={drawerConfigForBeneficiary} info={beneficiarylist[k] || {}} />
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
+                {formItems}
               </>
+            ) : (
+              ''
             )}
-            {clientTypeData !== '1' && (
-              <>
-                <h1 className={'font-w600'}>经办人信息</h1>
-                <Gird config={drawerConfigForOperator} info={saveDetail} />
-              </>
-            )}
+            {handleAddAgent()}
           </div>
-        )}
+        </div>
       </TabPane>
     );
   };
@@ -2405,7 +2068,6 @@ const Created = ({
   const handleReset = () => {
     setSearchFileType([]);
     setSearchFileName('');
-    setRestBtn(!restBtn);
   };
 
   // 切换页数的时候触发
@@ -2499,46 +2161,51 @@ const Created = ({
 
   // 五脏--审查信息
   const handleInvestReviewData = () => {
-    const drawerConfigForEligibility = [
-      {
-        label: '是否合格投资者',
-        value: 'isQualifiedInvestor',
-        type: 'select',
-        option: yesAndNo,
-      },
-      {
-        label: '审查结果',
-        value: 'reviewResult',
-        type: 'select',
-        option: passAndNoPass,
-      },
-    ];
-
-    const drawerConfigForAppropriateness = [
-      {
-        label: '风险承受能力',
-        value: 'riskTolerance',
-        type: 'select',
-        option: dicts?.I008,
-      },
-      {
-        label: '审查结果',
-        value: 'reviewResult',
-        type: 'select',
-        option: passAndNoPass,
-      },
-    ];
-
     return (
       <TabPane tab="审查信息" key="5">
         <Form>
           <div style={{ display: qualifiedInfo ? 'block' : 'none' }}>
-            <h1 className={'font-w600'}>合格性审查结果</h1>
-            <Gird config={drawerConfigForEligibility} info={qualifiedInfo || {}} />
+            <div style={{ marginTop: 24, marginBottom: 20 }}>合格性审查结果</div>
+            <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
+              {handleAddRadio(
+                qualifiedInfo && qualifiedInfo.isQualifiedInvestor,
+                '是否合格投资者',
+                'isQualifiedInvestor',
+                yesAndNo,
+                'code',
+                'name',
+              )}
+              {handleAddRadio(
+                qualifiedInfo && qualifiedInfo.reviewResult,
+                '审查结果',
+                '1',
+                passAndNoPass,
+                'code',
+                'name',
+              )}
+            </Row>
           </div>
           <div style={{ display: suitabilityInfo ? 'block' : 'none' }}>
-            <h1 className={'font-w600'}>适当性审查结果</h1>
-            <Gird config={drawerConfigForAppropriateness} info={suitabilityInfo || {}} />
+            <div style={{ marginBottom: '20px' }}>适当性审查结果</div>
+            <Row gutter={{ md: 24, lg: 24, xl: 48 }}>
+              {handleAddSelect(
+                suitabilityInfo && suitabilityInfo.riskTolerance,
+                '风险承受能力',
+                '1',
+                dicts.I008,
+                'code',
+                'name',
+                _,
+              )}
+              {handleAddRadio(
+                suitabilityInfo && suitabilityInfo.reviewResult,
+                '审查结果',
+                '1',
+                passAndNoPass,
+                'code',
+                'name',
+              )}
+            </Row>
           </div>
           <div style={{ display: isAntimoney === 1 ? 'block' : 'none' }}>
             <div style={{ marginTop: 24, marginBottom: 20 }}>反洗钱审查-客户身份识别</div>
@@ -2792,15 +2459,10 @@ const Created = ({
       const productinvest = {};
       if (values.beneficname) {
         for (var i = 0; i < values.beneficname.length; i++) {
-          // 需求：“账户类型”及“客户名称”字段保持必填，其他字段调整为非必填
-          // 下面这个判断逻辑会报错，所以注释掉
-          // if (values.beneficname[i].trim() === '') {
-          //   return message.warning('受益所有人姓名不能为空，请检查');
-          // }
-          // 根据需求新增的业务逻辑，表单可以正常提交
-          if (values.beneficname[i] !== undefined && values.beneficname[i].trim() !== '') {
-            myBeneficiarylist.push({});
+          if (values.beneficname[i].trim() === '') {
+            return message.warning('受益所有人姓名不能为空，请检查');
           }
+          myBeneficiarylist.push({});
         }
       }
       setIsSaving(true);
@@ -2887,7 +2549,7 @@ const Created = ({
   // 请求:客户文档信息列表
   useEffect(() => {
     if (customId && dis) getCustomDocumentList();
-  }, [customDocPageNum, customDocPageSize, dis, customId, restBtn]);
+  }, [customDocPageNum, customDocPageSize, dis, customId]);
 
   // 请求:获取交易确认信息列表
   useEffect(() => {

@@ -472,36 +472,34 @@ class Index extends Component {
     if (this.state.seriesType === 1) {
       return (
         <Select
-          disabled={ dis }
-          style={ { width: '75%' } }
-          value={ proPhase ? proPhase : undefined }
+          disabled={dis}
+          style={{ width: '75%' }}
+          value={proPhase ? proPhase : undefined}
           placeholder="请选择"
-          onChange={ event => {
+          onChange={event => {
             this.handleSelect(event, 'proPhase');
-          } }
+          }}
         >
-          { taskManagement.proStage &&
+          {taskManagement.proStage &&
             taskManagement.proStage.map(item => {
               return (
-                item.code !== 'state5' && (
-                  <Option key={ item.code } value={ item.code }>
-                    { item.name }
-                  </Option>
-                )
+                <Option key={item.code} value={item.code}>
+                  {item.name}
+                </Option>
               );
-            }) }
+            })}
         </Select>
       );
     }
     return (
       <Select
-        disabled={ dis }
-        style={ { width: '75%' } }
-        value={ proPhase ? proPhase : undefined }
+        disabled={dis}
+        style={{ width: '75%' }}
+        value={proPhase ? proPhase : undefined}
         placeholder="请选择"
-        onChange={ event => {
+        onChange={event => {
           this.handleSelect(event, 'proPhase');
-        } }
+        }}
       >
         <Option key="state1" value="state1">
           立项阶段
@@ -510,9 +508,16 @@ class Index extends Component {
           申报阶段
         </Option>
         <Option
-          // style={{ display: proPhase == 'state4' ? 'inline-block' : 'none' }}
-          key={ 'state4' }
-          value={ 'state4' }
+          style={{ display: proPhase == 'state5' ? 'inline-block' : 'none' }}
+          key={'state5'}
+          value={'state5'}
+        >
+          终止阶段
+        </Option>
+        <Option
+          style={{ display: proPhase == 'state4' ? 'inline-block' : 'none' }}
+          key={'state4'}
+          value={'state4'}
         >
           存续阶段
         </Option>
@@ -568,183 +573,183 @@ class Index extends Component {
 
     return (
       <div>
-        <div className={ style.top }>
+        <div className={style.top}>
           <Breadcrumb>
             <Breadcrumb.Item>
               <span>项目任务管理</span>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span>{ pageType === 1 ? '修改' : pageType === 0 ? '详情' : '发起' }</span>
+              <span>{pageType === 1 ? '修改' : pageType === 0 ? '详情' : '发起'}</span>
             </Breadcrumb.Item>
           </Breadcrumb>
-          <div className={ style.topBtn }>
+          <div className={style.topBtn}>
             <Action code="archiveTaskHandleList:initiateTask">
               <Button
-                className={ style.save }
-                style={ { display: dis ? 'none' : 'inline-block' } }
-                onClick={ () => this.onSave('保存') }
-                loading={ saveLoading }
+                className={style.save}
+                style={{ display: dis ? 'none' : 'inline-block' }}
+                onClick={() => this.onSave('保存')}
+                loading={saveLoading}
               >
                 保存
               </Button>
             </Action>
             <Action code="archiveTaskHandleList:updatecommit">
               <Button
-                className={ style.commit }
-                style={ {
+                className={style.commit}
+                style={{
                   display: dis || pageType === 1 ? 'none' : 'inline-block',
-                } }
-                onClick={ () => this.onSave('提交') }
-                loading={ updateLoading }
+                }}
+                onClick={() => this.onSave('提交')}
+                loading={updateLoading}
               >
                 提交
               </Button>
             </Action>
-            <Button onClick={ this.handleBackPage }>取消</Button>
+            <Button onClick={this.handleBackPage}>取消</Button>
           </div>
         </div>
         <div
-          style={ {
+          style={{
             height: 'calc(100vh - 172px)',
             overflowY: 'auto',
             padding: '2rem 1rem',
             background: '#fff',
-          } }
+          }}
         >
-          <span style={ { fontWeight: 'bold' } }>指定任务发起目标</span>
-          <div className={ style.list }>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }>
-                <span style={ { color: 'red' } }>*</span> 对象类型：
+          <span style={{ fontWeight: 'bold' }}>指定任务发起目标</span>
+          <div className={style.list}>
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}>
+                <span style={{ color: 'red' }}>*</span> 对象类型：
               </div>
               <Select
-                style={ { width: '75%' } }
-                value={ seriesType ? seriesType : seriesType === 0 ? 0 : undefined }
+                style={{ width: '75%' }}
+                value={seriesType ? seriesType : seriesType === 0 ? 0 : undefined}
                 optionFilterProp="children"
-                disabled={ id ? true : dis }
-                onChange={ event => this.handleSelect(event, 'seriesType') }
+                disabled={id ? true : dis}
+                onChange={event => this.handleSelect(event, 'seriesType')}
                 placeholder="请选择"
                 showSearch
               >
-                <Option key={ 0 } value={ 0 }>
+                <Option key={0} value={0}>
                   系列
                 </Option>
-                <Option key={ 1 } value={ 1 }>
+                <Option key={1} value={1}>
                   项目
                 </Option>
               </Select>
             </div>
           </div>
-          <span style={ { fontWeight: 'bold' } }>项目/系列信息</span>
-          <div className={ style.list }>
-            <div style={ { display: 'flex', width: '30%', alignItems: 'center' } }>
-              <div style={ { width: '30%' } }>
-                <span style={ { color: 'red' } }>*</span> { seriesType ? '项目名称：' : '系列名称：' }
+          <span style={{ fontWeight: 'bold' }}>项目/系列信息</span>
+          <div className={style.list}>
+            <div style={{ display: 'flex', width: '30%', alignItems: 'center' }}>
+              <div style={{ width: '30%' }}>
+                <span style={{ color: 'red' }}>*</span> {seriesType ? '项目名称：' : '系列名称：'}
               </div>
               <Select
-                style={ { width: '100%', maxWidth: '70%' } }
-                value={ proName ? proName : undefined }
+                style={{ width: '100%', maxWidth: '70%' }}
+                value={proName ? proName : undefined}
                 optionFilterProp="children"
-                disabled={ id ? true : dis }
+                disabled={id ? true : dis}
                 placeholder="请选择"
-                onChange={ event => {
+                onChange={event => {
                   this.handleSelect(event, 'proName');
-                } }
-                filterOption={ (input, option) =>
+                }}
+                filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 showSearch
               >
-                { proNameList &&
+                {proNameList &&
                   proNameList.map(item => {
                     return (
-                      <Option key={ item.code } value={ item.code }>
-                        { item.name }
+                      <Option key={item.code} value={item.code}>
+                        {item.name}
                       </Option>
                     );
-                  }) }
+                  })}
               </Select>
             </div>
-            <div style={ { display: 'flex', width: '30%', alignItems: 'center' } }>
-              <div style={ { width: '44%' } }>{ seriesType ? '项目编码：' : '系列编码：' }</div>
-              <Input disabled value={ proCode } name="proCode" />
+            <div style={{ display: 'flex', width: '30%', alignItems: 'center' }}>
+              <div style={{ width: '44%' }}>{seriesType ? '项目编码：' : '系列编码：'}</div>
+              <Input disabled value={proCode} name="proCode" />
             </div>
-            { seriesType ? (
-              <div style={ { display: 'flex', width: '30%', alignItems: 'center' } }>
-                <div style={ { width: '44%' } }>项目简称：</div>
-                <Input disabled value={ proShortName } name="proShortName" />
+            {seriesType ? (
+              <div style={{ display: 'flex', width: '30%', alignItems: 'center' }}>
+                <div style={{ width: '44%' }}>项目简称：</div>
+                <Input disabled value={proShortName} name="proShortName" />
               </div>
             ) : (
-              <div style={ { display: 'flex', width: '30%' } } />
-            ) }
+              <div style={{ display: 'flex', width: '30%' }} />
+            )}
           </div>
-          <div className={ style.list }>
-            <div style={ { display: 'flex', alignItems: 'center', width: '30%' } }>
-              <div style={ { width: '44%' } }>项目类型：</div>
-              <Input disabled value={ proType } name="proType" />
+          <div className={style.list}>
+            <div style={{ display: 'flex', alignItems: 'center', width: '30%' }}>
+              <div style={{ width: '44%' }}>项目类型：</div>
+              <Input disabled value={proType} name="proType" />
             </div>
-            { proType === '3007' ? (
-              <div style={ { display: 'flex', width: '30%', alignItems: 'center' } }>
-                <div style={ { width: '44%' } }>其它项目类型：</div>
-                <Input disabled value={ otherProType } name="otherProType" />
+            {proType === '3007' ? (
+              <div style={{ display: 'flex', width: '30%', alignItems: 'center' }}>
+                <div style={{ width: '44%' }}>其它项目类型：</div>
+                <Input disabled value={otherProType} name="otherProType" />
               </div>
-            ) : null }
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>项目区域：</div>
-              <Input disabled value={ proArea } name="proArea" />
+            ) : null}
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>项目区域：</div>
+              <Input disabled value={proArea} name="proArea" />
             </div>
-            <div style={ { display: proType === '3007' ? 'none' : 'inline-block', width: '30%' } } />
+            <div style={{ display: proType === '3007' ? 'none' : 'inline-block', width: '30%' }} />
           </div>
-          <div className={ style.list }>
-            { proArea === '境外' ? (
-              <div style={ { display: 'flex', width: '30%' } }>
-                <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>
+          <div className={style.list}>
+            {proArea === '境外' ? (
+              <div style={{ display: 'flex', width: '30%' }}>
+                <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>
                   境外区域名称：
                 </div>
-                <Input disabled value={ overseasProArea } name="overseasProArea" />
+                <Input disabled value={overseasProArea} name="overseasProArea" />
               </div>
-            ) : null }
+            ) : null}
             <div
-              style={ {
+              style={{
                 display: 'flex',
                 width: '30%',
-              } }
+              }}
             >
-              <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>所属部门：</div>
-              <Input disabled value={ proDept } name="proDept" />
+              <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>所属部门：</div>
+              <Input disabled value={proDept} name="proDept" />
             </div>
-            { seriesType ? (
-              <div style={ { display: 'flex', width: '30%' } }>
-                <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>
+            {seriesType ? (
+              <div style={{ display: 'flex', width: '30%' }}>
+                <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>
                   开始日期：
                 </div>
-                <Input disabled value={ proCDate } name="proCDate" />
+                <Input disabled value={proCDate} name="proCDate" />
               </div>
             ) : (
-              <div style={ { display: 'flex', width: '30%' } } />
-            ) }
-            <div style={ { display: proArea !== '境外' ? 'inline-block' : 'none', width: '30%' } } />
+              <div style={{ display: 'flex', width: '30%' }} />
+            )}
+            <div style={{ display: proArea !== '境外' ? 'inline-block' : 'none', width: '30%' }} />
           </div>
-          { seriesType ? (
+          {seriesType ? (
             <>
-              <div className={ style.row }>
+              <div className={style.row}>
                 <div>项目描述：</div>
-                <TextArea disabled rows={ 4 } value={ proDesc } name="proDesc" />
+                <TextArea disabled rows={4} value={proDesc} name="proDesc" />
               </div>
-              <div className={ style.list }>
-                <div style={ { display: 'flex', width: '30%' } }>
-                  <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>
+              <div className={style.list}>
+                <div style={{ display: 'flex', width: '30%' }}>
+                  <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>
                     项目分类：
                   </div>
-                  <Input disabled value={ proBusType } name="proBusType" />
+                  <Input disabled value={proBusType} name="proBusType" />
                 </div>
-                <div style={ { display: 'flex', width: '30%' } }>
-                  <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>
+                <div style={{ display: 'flex', width: '30%' }}>
+                  <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>
                     是否招投标：
                   </div>
-                  <Input disabled value={ biddingFlag } name="biddingFlag" />
+                  <Input disabled value={biddingFlag} name="biddingFlag" />
                 </div>
-                <div style={ { display: 'flex', width: '30%' } } />
+                <div style={{ display: 'flex', width: '30%' }} />
                 {/* <div style={{ display: 'flex', width: '30%' }}>
                   <div style={{width:'44%',display:'flex',alignItems:'center'}}>其他项目类型：</div>
                   <Input disabled value={otherProType2} name={'otherProType2'} onChange={(event) => {
@@ -755,130 +760,128 @@ class Index extends Component {
             </>
           ) : (
             ''
-          ) }
-          <span style={ { display: 'block', fontWeight: 'bold', paddingTop: 20 } }>任务信息</span>
-          <div className={ style.list }>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }>
-                <span style={ { color: 'red' } }>*</span> 项目阶段：
+          )}
+          <span style={{ display: 'block', fontWeight: 'bold', paddingTop: 20 }}>任务信息</span>
+          <div className={style.list}>
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}>
+                <span style={{ color: 'red' }}>*</span> 项目阶段：
               </div>
-              { this.renderProStageOption() }
+              {this.renderProStageOption()}
             </div>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }>
-                <span style={ { color: 'red' } }>*</span> 任务类型：
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}>
+                <span style={{ color: 'red' }}>*</span> 任务类型：
               </div>
               <Select
-                disabled={ dis }
-                style={ { width: '75%' } }
+                disabled={dis}
+                style={{ width: '75%' }}
                 placeholder="请选择"
-                value={ taskType ? taskType : undefined }
-                onChange={ event => {
+                value={taskType ? taskType : undefined}
+                onChange={event => {
                   this.handleSelect(event, 'taskType');
-                } }
-                filterOption={ (input, option) =>
+                }}
+                filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 showSearch
               >
-                { TaskTypeCode &&
+                {TaskTypeCode &&
                   TaskTypeCode.map(item => {
                     return (
-                      item.code !== 'fileDelete' &&
-                      <Option key={ item.code } value={ item.code }>
-                        { item.name }
+                      <Option key={item.code} value={item.code}>
+                        {item.name}
                       </Option>
-
                     );
-                  }) }
+                  })}
               </Select>
             </div>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }>
-                <span style={ { color: 'red' } }>*</span> 任务名称：
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}>
+                <span style={{ color: 'red' }}>*</span> 任务名称：
               </div>
-              { this.state.showBack === 1 ? (
+              {this.state.showBack === 1 ? (
                 <Input
-                  disabled={ dis }
-                  style={ { width: '76%' } }
+                  disabled={dis}
+                  style={{ width: '76%' }}
                   placeholder="请输入"
-                  value={ executor }
+                  value={executor}
                   name="executor"
-                  maxLength={ 50 }
-                  onChange={ event => {
+                  maxLength={50}
+                  onChange={event => {
                     this.handleChangeInput(event, 'executor');
-                  } }
+                  }}
                 />
               ) : (
                 <Select
-                  disabled={ dis }
+                  disabled={dis}
                   placeholder="请选择"
-                  value={ executor ? executor : undefined }
-                  style={ { width: '75%' } }
-                  onChange={ event => {
+                  value={executor ? executor : undefined}
+                  style={{ width: '75%' }}
+                  onChange={event => {
                     this.handleSelect(event, 'executor');
-                  } }
-                  filterOption={ (input, option) =>
+                  }}
+                  filterOption={(input, option) =>
                     option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                   showSearch
                 >
-                  { taskName &&
+                  {taskName &&
                     taskName.map(item => {
-                      return <Option value={ item.name }>{ item.name }</Option>;
-                    }) }
+                      return <Option value={item.name}>{item.name}</Option>;
+                    })}
                 </Select>
-              ) }
+              )}
             </div>
           </div>
-          <div className={ style.list }>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }> &nbsp;开始日期：</div>
+          <div className={style.list}>
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}> &nbsp;开始日期：</div>
               <DatePicker
-                disabled={ dis }
+                disabled={dis}
                 value={
                   dutStaDate ? moment(dutStaDate, 'YYYY-MM-DD') : moment(moment(), 'YYYY-MM-DD')
                 }
-                style={ { width: '75%' } }
-                placeholder={ dis ? '' : '请选择' }
-                onChange={ (date, dateString) => {
+                style={{ width: '75%' }}
+                placeholder={dis ? '' : '请选择'}
+                onChange={(date, dateString) => {
                   this.dataPick(date, dateString, 'dutStaDate');
-                } }
+                }}
               />
             </div>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '32%' } }> &nbsp;截止日期：</div>
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '32%' }}> &nbsp;截止日期：</div>
               <DatePicker
-                disabled={ dis }
-                placeholder={ dis ? '' : '请选择' }
-                value={ dutEndDate ? moment(dutEndDate, 'YYYY-MM-DD') : dutEndDate }
-                style={ { width: '75%' } }
-                onChange={ (event, dateString) => {
+                disabled={dis}
+                placeholder={dis ? '' : '请选择'}
+                value={dutEndDate ? moment(dutEndDate, 'YYYY-MM-DD') : dutEndDate}
+                style={{ width: '75%' }}
+                onChange={(event, dateString) => {
                   this.dataPick(event, dateString, 'dutEndDate');
-                } }
+                }}
               />
             </div>
-            <div style={ { display: 'flex', width: '30%' } }>
-              <div style={ { width: '44%', display: 'flex', alignItems: 'center' } }>
+            <div style={{ display: 'flex', width: '30%' }}>
+              <div style={{ width: '44%', display: 'flex', alignItems: 'center' }}>
                 任务持续时间：
               </div>
-              <Input disabled value={ taskDuration } name="taskDuration" />
+              <Input disabled value={taskDuration} name="taskDuration" />
             </div>
           </div>
-          <div className={ style.row }>
+          <div className={style.row}>
             <div>
-              <span style={ { color: 'red' } }>*</span>任务内容：
+              <span style={{ color: 'red' }}>*</span>任务内容：
             </div>
             <TextArea
-              disabled={ dis }
-              rows={ 4 }
-              maxLength={ 500 }
+              disabled={dis}
+              rows={4}
+              maxLength={500}
               placeholder="请输入500字以内内容..."
-              value={ dutContent }
+              value={dutContent}
               name="dutContent"
-              onChange={ event => {
+              onChange={event => {
                 this.handleChangeInput(event, 'dutContent');
-              } }
+              }}
             />
           </div>
 
@@ -898,42 +901,42 @@ class Index extends Component {
               <Option value={0}>否</Option>
             </Select>
           </div> */}
-          <div style={ { display: 'flex', marginTop: '1rem' } }>
-            <div style={ { width: '9%' } }>
-              <span style={ { color: 'red' } }>*</span>优先级：
+          <div style={{ display: 'flex', marginTop: '1rem' }}>
+            <div style={{ width: '9%' }}>
+              <span style={{ color: 'red' }}>*</span>优先级：
             </div>
             <Select
-              disabled={ dis }
-              style={ { width: '21%' } }
+              disabled={dis}
+              style={{ width: '21%' }}
               placeholder="请选择"
-              value={ priority ? priority : undefined }
-              onChange={ event => {
+              value={priority ? priority : undefined}
+              onChange={event => {
                 this.handleSelect(event, 'priority');
-              } }
+              }}
             >
-              <Option key={ 2 } value="2">
+              <Option key={2} value="2">
                 高
               </Option>
-              <Option key={ 1 } value="1">
+              <Option key={1} value="1">
                 中
               </Option>
-              <Option key={ 0 } value="0">
+              <Option key={0} value="0">
                 低
               </Option>
             </Select>
           </div>
-          <div className={ style.row }>
+          <div className={style.row}>
             <div>注意事项：</div>
             <TextArea
-              disabled={ dis }
-              rows={ 4 }
-              maxLength={ 500 }
-              placeholder={ dis ? '' : '请输入500字以内内容...' }
-              value={ attention }
+              disabled={dis}
+              rows={4}
+              maxLength={500}
+              placeholder={dis ? '' : '请输入500字以内内容...'}
+              value={attention}
               name="attention"
-              onChange={ event => {
+              onChange={event => {
                 this.handleChangeInput(event, 'attention');
-              } }
+              }}
             />
           </div>
         </div>

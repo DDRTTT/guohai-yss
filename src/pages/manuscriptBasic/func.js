@@ -6,8 +6,8 @@ import { Tooltip } from 'antd';
  * @param {string} val
  * */
 
-export const handleTableCss = (text, val = '') => {
-  const width = val === '机构名称' || val === '文件名称' ? '380px' : '150px';
+export const handleTableCss = (text, val) => {
+  const width = val === '机构名称' ? '380px' : '180px';
   return (
     <Tooltip title={text} placement="topLeft">
       <span
@@ -16,15 +16,11 @@ export const handleTableCss = (text, val = '') => {
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis',
           display: 'inline-block',
-          width,
+          width: width,
           paddingTop: '5px',
         }}
       >
-        {text
-          ? text.toString().replace(/null/g, '-')
-          : text === '' || text === undefined
-            ? '-'
-            : '-'}
+        {text}
       </span>
     </Tooltip>
   );

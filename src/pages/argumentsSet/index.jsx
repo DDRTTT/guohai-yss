@@ -47,11 +47,11 @@ const Index = ({
     // 表头数据(有时间)
     [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
-        width: 250,
+        width: 400,
         render: text => {
           return (
             <Tooltip title={text}>
@@ -59,8 +59,8 @@ const Index = ({
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </span>
             </Tooltip>
           );
@@ -72,14 +72,12 @@ const Index = ({
         dataIndex: 'proCode',
         key: 'proCode',
         ...titleRender,
-        width: 150,
       },
       {
         title: '产品类型',
         dataIndex: 'proTypeName',
         key: 'proTypeName',
         ...titleRender,
-        width: 150,
       },
       {
         title: '参数类型',
@@ -98,7 +96,6 @@ const Index = ({
         dataIndex: 'status',
         key: 'status',
         ...titleRender,
-        width: 150,
         render: text => {
           if (text === 'S001_1') {
             return '待提交';
@@ -117,7 +114,6 @@ const Index = ({
         key: 'action',
         dataIndex: 'action',
         fixed: 'right',
-        align: 'center',
         render: (_, record) => {
           switch (taskTypeCodeData.current) {
             case 'T001_1':
@@ -736,7 +732,7 @@ const Index = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proNameAndCodeData,
     },
     {
@@ -744,7 +740,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeDatas,
     },
     {
@@ -752,7 +748,7 @@ const Index = ({
       label: '参数类型',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts && dicts.CS021,
     },
     {
@@ -760,7 +756,7 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts && dicts.S001,
     },
   ];
@@ -813,7 +809,16 @@ const Index = ({
           onTabChange: handleClickGetTabsData,
         }}
         extra={operations}
-        tableList={tableData(columns)}
+        tableList={
+          <>
+            {(taskTypeCodeData.current === 'T001_3' || taskTypeCodeData.current === 'T001_5') && (
+              <>{tableData(columns)}</>
+            )}
+            {(taskTypeCodeData.current === 'T001_1' || taskTypeCodeData.current === 'T001_4') && (
+              <>{tableData(columns)}</>
+            )}
+          </>
+        }
       />
       <MoreOperation
         batchStyles={{ position: 'relative', left: '35px', top: '-75px' }}

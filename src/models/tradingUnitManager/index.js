@@ -2,7 +2,6 @@ import {
   queryTableList,
   queryHosting,
   trandingBoothInfo,
-  trandingBoothDelete,
 } from '@/services/tradingUnitManager/index';
 import { message } from 'antd';
 
@@ -134,17 +133,6 @@ export default {
           type: 'setTrandingBoothInfo',
           payload: res.data,
         });
-      } else {
-        message.error(res.message);
-      }
-    },
-    /**
-     * 删除
-     */
-    *deleteTrandingBoothInfo({ payload, callback }, { call }) {
-      const res = yield call(trandingBoothDelete, payload);
-      if (res && res.status === 200) {
-        if (callback) callback();
       } else {
         message.error(res.message);
       }

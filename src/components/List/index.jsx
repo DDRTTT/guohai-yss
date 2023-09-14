@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, Form, Icon, Input, Row } from 'antd';
-import { Card, PageContainers, Table, CommonSearch3 } from '@/components';
+import { Card, PageContainers, Table } from '@/components';
 import { isNullObj } from '@/pages/investorReview/func';
 import CustomFormItem from '@/components/AdvancSearch/CustomFormItem';
-import PageContainer from '@/components/PageContainers';
-import DynamicHeader from '@/components/DynamicHeader';
+// import PageContainer from '@/components/PageContainers';
+// import DynamicHeader from '@/components/DynamicHeader';
+// import { number } from 'sockjs-client/lib/utils/random';
 const { Search } = Input;
 // 布局
 let layout = {
@@ -12,6 +13,7 @@ let layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+
 const Index = props => {
   const {
     advancSearch = () => {}, // 获取高级搜索的回调函数
@@ -22,12 +24,13 @@ const Index = props => {
     fuzzySearchBool = true, //是否存在模糊查询
     advancSearchBool = true, //是否存在精准查询
     showBreadCrumb = true, // 是否展示面包屑列表
-    loading = false,
+    showSearch, // 只显示条件搜索
+    loading,
     resetFn, //重置
     pageContainerProps,
     tabs,
     tableList,
-    title = true,
+    title,
     extra,
     pageCode,
     columns,
@@ -39,8 +42,9 @@ const Index = props => {
     hasMoreTabs,
     customLayout,
     loginId,
+    searchType,
   } = props;
-  const tabvalue = useRef('');
+  const tabValue = useRef('');
 
   // 非要改成可以一直调接口的
   const [waste, setWaste] = useState(false);
@@ -54,14 +58,37 @@ const Index = props => {
   // 是否展开
   const [expand, setExpand] = useState(false);
 
+  useEffect(()=>{
+    getSession()
+    expandFun()
+  },[])
+
+  //只显示条件搜索
+  function expandFun(){
+    if(showSearch){
+      setExpand(true)
+    }
+  }
+
+  //sessionStorage存搜索条件
+  function getSession(){
+    const formData = sessionStorage.getItem('keyValueSearch');
+    let reqBody
+    let objectKeys
+    if (formData) {
+      reqBody = JSON.parse(formData);
+    }
+    formData && setSearchValue(reqBody?.keyWords)
+  }
+
   // 切换 模糊 or 精准查询
   const updateExpand = boolean => {
     setExpand(boolean);
     setSearchValue('');
-    if (!loginId) {
-      // 产品要素管理，彭章涛要求切换时，不能重置查询条件
-      handleReset();
-    }
+    // if (!loginId) {
+    //   // 产品要素管理，彭章涛要求切换时，不能重置查询条件
+    //   handleReset();
+    // }
   }; // ok
 
   // tabs 切换
@@ -70,7 +97,7 @@ const Index = props => {
     setSearchValue('');
     form.resetFields();
     tabs.onTabChange(value);
-    tabvalue.current = value;
+    tabValue.current = value;
   };
 
   /**
@@ -96,13 +123,13 @@ const Index = props => {
     } else {
       form.resetFields();
     }
-    tabvalue.current = tabvalue.current + '1';
+    tabValue.current = tabValue.current + '1';
   };
 
   // 模糊查询组件
   const renderFuzzy = (
-    <>
-      <Search
+    <div style={{display: !searchType  ? 'block' : 'none'}}>
+      <Search loading={loading}
         placeholder={searchPlaceholder}
         value={searchValue}
         onChange={searchChange}
@@ -125,57 +152,59 @@ const Index = props => {
         高级搜索
         <Icon type="down" />
       </Button>
-    </>
+    </div>
   );
-
   // customLayout存在，优先使用;否则，使用原layout
   layout = customLayout ? customLayout : layout;
-
   // tab栏较多时，显示有问题，需要重新设置样式
   const cardClassName = `listCard ${hasMoreTabs ? 'moreTabsListCard' : ''}`;
   return (
     <>
-      <div style={{ display: showBreadCrumb ? 'block' : 'none' }}>
-        <PageContainers {...pageContainerProps} fuzz={fuzzySearchBool ? renderFuzzy : ''} />
+      <div style={{ display: searchInputWidth?'block' : 'none'}}>
+        <div style={{ display: showBreadCrumb ? 'block' : 'none' }}>
+          <PageContainers {...pageContainerProps} fuzz={fuzzySearchBool ? renderFuzzy : ''} />
+        </div>
+        <Card
+          className={'search-card2 margin_t-16'}
+          style={{ display: expand || !fuzzySearchBool ? 'block' : 'none' }}
+        >
+          <Form {...layout} onSubmit={handleSearch} className={'seachForm2'} >
+            <Row gutter={24} style={{padding:'12px'}}>
+              <CustomFormItem
+                tabValue={tabValue?.current}
+                formItemList={formItemData}
+                form={form}
+                loginId={loginId}
+              />
+              <Col span={6} className={'textAlign_r padding_t8 padding_b8 float_r'}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  className={'margin_l5 margin_l5'}
+                >
+                  查询
+                </Button>
+                <Button loading={loading} onClick={handleReset} className={'margin_l5 margin_r5'}>
+                  重置
+                </Button>
+                {
+                  !showSearch? <Button
+                    style={{ display: fuzzySearchBool ? 'inline-block' : 'none' }}
+                    onClick={() => {
+                      updateExpand(!expand);
+                    }}
+                    type="link"
+                  >
+                    收起
+                    <Icon type="up" />
+                  </Button>:''
+                }
+              </Col>
+            </Row>
+          </Form>
+        </Card>
       </div>
-      <Card
-        className={'search-card2 margin_t-16'}
-        style={{ display: expand || !fuzzySearchBool ? 'block' : 'none' }}
-      >
-        <Form {...layout} onSubmit={handleSearch} className={'seachForm2'}>
-          <Row gutter={24}>
-            <CustomFormItem
-              tabvalue={tabvalue.current}
-              formItemList={formItemData}
-              form={form}
-              loginId={loginId}
-            />
-            <Col span={6} className={'textAlign_r padding_t8 padding_b8 float_r'}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                className={'margin_l5 margin_l5'}
-              >
-                查询
-              </Button>
-              <Button onClick={handleReset} className={'margin_l5 margin_r5'}>
-                重置
-              </Button>
-              <Button
-                style={{ display: fuzzySearchBool ? 'inline-block' : 'none' }}
-                onClick={() => {
-                  updateExpand(!expand);
-                }}
-                type="link"
-              >
-                收起
-                <Icon type="up" />
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
       <Card
         title={title}
         className={cardClassName}
@@ -185,14 +214,15 @@ const Index = props => {
         extra={
           <>
             {extra}
-            {pageCode && (
-              <DynamicHeader
-                columns={columns}
-                pageCode={pageCode}
-                callBackHandler={dynamicHeaderCallback}
-                taskTypeCode={taskTypeCode}
-                taskArrivalTimeKey={taskArrivalTimeKey}
-              />
+            {pageCode && (''
+              // <DynamicHeader
+              //   tabValue={tabValue.current}
+              //   columns={columns}
+              //   pageCode={pageCode}
+              //   callBackHandler={dynamicHeaderCallback}
+              //   taskTypeCode={taskTypeCode}
+              //   taskArrivalTimeKey={taskArrivalTimeKey}
+              // />
             )}
           </>
         }

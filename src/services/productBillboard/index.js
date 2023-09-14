@@ -1,6 +1,5 @@
 import request from '@/utils/request';
 import requestCopy from 'umi-request'
-import { stringify } from 'qs';
 
 const url = '/yss-lifecycle-flow';
 const urlFile = '/ams-file-service';
@@ -309,16 +308,4 @@ export async function getRCAPI(proCode) {
   return request(
     `${url}/productBoard/getProductInfo?proCode=${proCode.toString()}&type=chargeItem`,
   );
-}
-
-// 产品看板-查看-监管要素
-export async function reqRegulatoryElements(params) {
-  return request(
-    `/yss-lifecycle-manage/operationLog/queryLog?${stringify(params)}`,
-  );
-}
-
-// 所有用户id-name，转换监管要素操作人使用
-export function reqAllUsers() {
-  return request(`/yss-base-admin/user/users-all`);
 }

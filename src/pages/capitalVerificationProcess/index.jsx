@@ -43,17 +43,17 @@ const Index = ({
   const [batchObj, setBatchObj] = useState({});
   const keyWordsValue = useRef('');
   const [searchData, setSearchData] = useState({});
-  const [field, setField] = useState('');
-  const [direction, setDirection] = useState('');
+  const [field, setField] = useState({});
+  const [direction, setDirection] = useState({});
 
   // 表格表头
   const [columns, setColumns] = useState([
     {
-      title: '产品简称',
-      dataIndex: 'proFname',
-      key: 'proFname',
+      title: '产品全称',
+      dataIndex: 'proName',
+      key: 'proName',
       sorter: true,
-      width: 250,
+      width: 400,
       render: text => {
         return (
           <Tooltip title={text}>
@@ -61,8 +61,8 @@ const Index = ({
               {text
                 ? text.toString().replace(/null/g, '-')
                 : text === '' || text === undefined
-                  ? '-'
-                  : 0}
+                ? '-'
+                : 0}
             </span>
           </Tooltip>
         );
@@ -77,7 +77,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 140,
     },
     {
       title: '产品类型',
@@ -87,7 +86,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 140,
     },
     {
       title: '投资经理',
@@ -97,7 +95,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 200,
     },
     {
       title: '实际募集结束日',
@@ -107,7 +104,15 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 180,
+    },
+    {
+      title: '取得验资报告日',
+      dataIndex: 'assetVerifiedDate',
+      key: 'assetVerifiedDate',
+      sorter: true,
+      render: text => {
+        return handleTableCss(text);
+      },
     },
     {
       title: '验资机构名称',
@@ -117,7 +122,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 200,
     },
     {
       title: '成立规模',
@@ -128,7 +132,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 200,
     },
     {
       title: '产品成立日',
@@ -138,7 +141,6 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 150,
     },
     {
       title: '任务到达时间',
@@ -148,20 +150,19 @@ const Index = ({
       render: text => {
         return handleTableCss(text);
       },
-      width: 180,
     },
     {
       title: '状态',
       dataIndex: 'operStatusName',
       key: 'operStatus',
       sorter: true,
-      width: 130,
+      width: 100,
     },
     {
       title: '操作',
       dataIndex: 'opeator',
       key: 'opeator',
-      align: 'center',
+      align: 'left',
       fixed: 'right',
       render: (text, record) => {
         const actionBtnList = getActionBtn(record, taskTypeCodeRef.current);
@@ -200,14 +201,15 @@ const Index = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             display: 'inline-block',
+            width: '180px',
             paddingTop: '5px',
           }}
         >
           {text
             ? text.toString().replace(/null/g, '-')
             : text === '' || text === undefined
-              ? '-'
-              : 0}
+            ? '-'
+            : 0}
         </span>
       </Tooltip>
     );
@@ -390,31 +392,11 @@ const Index = ({
     });
     setTabs(key);
     taskTypeCodeRef.current = key;
+    // 隐藏任务到达时间
+    console.log('--', key);
     handleReset();
   };
 
-  /**
-   * @description 隐藏任务到达时间
-   * @param {String} tabKey 当前tab
-   * @param {Array} conditions  隐藏tab条件
-   * @param {Array} arr column数组
-   * @param {String} key  删除的key
-   * @param {Object} obj  添加的key
-   */
-  const hideTaskArriveTime = (tabKey, conditions, arr, key, obj) => {
-    // 已办理和我发起不显示任务到达时间
-    const hideTaskTime = conditions;
-    const index = arr.findIndex(
-      item => item.dataIndex === 'createTime' || item.dataIndex === 'taskArriveTime',
-    );
-    if (hideTaskTime.includes(tabKey) && ~index) {
-      arr.splice(index, 1);
-    } else if (~index) {
-    } else {
-      arr.splice(8, 0, obj);
-    }
-    setColumns(arr);
-  };
 
   /**
    * rowSelection 回调
@@ -548,28 +530,26 @@ const Index = ({
         // 审阅按钮
         if (item.label === '审阅') {
           button = (
-            <Button
-              type="link"
-              size="small"
+            <a
+              style={{ marginRight: 10 }}
               onClick={() => {
                 props.handlerBack(item.label, props.record);
               }}
             >
               {item.label}
-            </Button>
+            </a>
           );
         } else {
           button = (
             <Action code={item.code}>
-              <Button
-                type="link"
-                size="small"
+              <a
+                style={{ marginRight: 10 }}
                 onClick={() => {
                   props.handlerBack(item.label, props.record);
                 }}
               >
                 {item.label}
-              </Button>
+              </a>
             </Action>
           );
         }
@@ -593,9 +573,7 @@ const Index = ({
         );
         button = (
           <Dropdown overlay={menu} trigger={['click']}>
-            <Button
-              type="link"
-              size="small"
+            <a
               className="ant-dropdown-link"
               onClick={e => {
                 e.preventDefault();
@@ -603,7 +581,7 @@ const Index = ({
             >
               更多
               <Icon type="caret-right" />
-            </Button>
+            </a>
           </Dropdown>
         );
       }
@@ -882,7 +860,7 @@ const Index = ({
         columns={columns}
         pagination={paginationProps}
         onChange={handlePaginationChange}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 200 + 200 }}
         rowSelection={{
           type: 'checkbox',
           selectedRowKeys: selectedRowKeys,
@@ -924,7 +902,7 @@ const Index = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveProductSelection,
     },
     {
@@ -932,7 +910,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.A002,
     },
     {
@@ -940,7 +918,7 @@ const Index = ({
       label: '投资经理',
       type: 'select',
       readSet: { name: 'name', code: 'empNo' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: investManagerNameList,
     },
     {
@@ -948,7 +926,7 @@ const Index = ({
       label: '验资机构名称',
       type: 'select',
       readSet: { name: 'orgName', code: 'id', bracket: 'id' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveOrganization,
     },
     {
@@ -956,14 +934,14 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.S001,
     },
   ];
 
-  const callBackHandler = value => {
+  const callBackHandler=(value)=>{
     setColumns(value);
-  };
+  }
   return (
     <>
       <List
@@ -995,20 +973,20 @@ const Index = ({
             {tabs === 'T001_3' && <> {tableCom()} </>}
             {tabs === 'T001_4' && <> {tableCom()} </>}
             {tabs === 'T001_5' && <> {tableCom()} </>}
-            {/* <div className={styles.batchBtn}> */}
-            <MoreOperation
-              opertations={{
-                tabs: taskTypeCodeRef.current,
-                statusKey: 'operStatus',
-              }}
-              batchStyles={{ marginLeft: '38px', position: 'relative', top: '-45px' }}
-              fn={handleGetSearchFetch}
-              type="batch"
-              batchList={selectData}
-              submitCallback={handlerBatchSubmit}
-              successCallback={handlerSuccessCallback}
-            />
-            {/* </div> */}
+            <div className={styles.batchBtn}>
+              <MoreOperation
+                opertations={{
+                  tabs: taskTypeCodeRef.current,
+                  statusKey: 'operStatus',
+                }}
+                batchStyles={{ marginLeft: '38px', marginTop: '-77px', float: 'left' }}
+                fn={handleGetSearchFetch}
+                type="batch"
+                batchList={selectData}
+                submitCallback={handlerBatchSubmit}
+                successCallback={handlerSuccessCallback}
+              />
+            </div>
           </>
         }
       />

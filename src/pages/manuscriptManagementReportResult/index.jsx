@@ -1,8 +1,13 @@
+/**
+ * 项目底稿报送查询
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import { Table, Form, Card, Tooltip, Radio } from 'antd';
+import { Form, Card, Tooltip, Radio } from 'antd';
+import { Table } from '@/components';
 import { handleClearQuickJumperValue } from '@/pages/archiveTaskHandleList/util';
 import FuzzySearch from './component/FuzzySearch';
 import PreciseSearch from './component/PreciseSearch';
@@ -39,11 +44,11 @@ class Agent extends Component {
         ),
       },
       {
-        key: 'state',
-        title: '报送阶段',
-        width: 150,
+        key: 'proType',
+        title: '项目类型',
+        width: 130,
         align: 'center',
-        dataIndex: 'state',
+        dataIndex: 'proType',
         sorter: true,
         ellipsis: {
           showTitle: false,
@@ -349,7 +354,6 @@ class Agent extends Component {
     return (
       <Card bordered={false}>
         <Table
-          rowKey={(r, i) => i}
           columns={columns}
           dataSource={allSubTableListObj[`batchNumber_${item.batchNumber}`]}
           pagination={false}

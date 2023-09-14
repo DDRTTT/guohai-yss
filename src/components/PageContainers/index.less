@@ -3,8 +3,8 @@
 /* @import  ../operation-unit.less ; */
 
 .pageContainer {
-  margin: -16px -16px 16px -16px;
-  padding: 0 20px;
+  margin-bottom: 16px;
+  padding: 0px 20px;
   background: #fff;
 
   .contentBreadcrumb {
@@ -37,14 +37,18 @@
       margin-left: 5px;
     }
 
-    &:hover{
-      color: #5e7ce0;
+    &:hover {
+      color: @primary-color;
     }
   }
 
-  .contentSearch{
+  .contentSearch {
     width: auto;
     float: right;
     margin-top: -39px;
+  }
+  .contentFilter {
+    clear: both;
+    display: block;
   }
 }

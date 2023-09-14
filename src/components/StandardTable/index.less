@@ -1,0 +1,380 @@
+@import "../../../node_modules/antd/lib/style/themes/default.less";
+@import "../../utils/utils.less";
+
+* {
+  font-family: "微软雅黑 Regular";
+}
+
+.tableList {
+  .tableListOperator {
+    margin-bottom: 16px;
+
+    button {
+      margin-right: 8px;
+    }
+  }
+}
+
+// 报表导航
+
+
+.tableListForm {
+  :global {
+    .ant-form-item {
+      margin-bottom: 24px;
+      margin-right: 0;
+      display: flex;
+
+      label {
+        width: 112px;
+        display: inline-block;
+      }
+
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+      }
+    }
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    white-space: nowrap;
+    margin-bottom: 24px;
+  }
+}
+
+.boby {
+  :global {
+    .ant-card-wider-padding .ant-card-body {
+      padding: 0 32px;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .tableListForm :global(.ant-form-item) {
+    margin-right: 8px;
+  }
+}
+
+.standardTable {
+  :global {
+    .ant-table-pagination {
+      margin-top: 24px;
+    }
+  }
+
+  .tableAlert {
+    //margin-bottom: 16px;
+  }
+}
+
+.actionsButton {
+
+  button {
+    margin-left: 10px;
+  }
+}
+
+.btnWidth96 {
+  width: 96px;
+}
+
+.btnQuery {
+  width: 96px;
+  padding: 0 20px;
+}
+
+.btnStyleLong {
+  width: 96px;
+  float: right;
+  margin-top: 2px;
+}
+
+.standardTable {
+  :global {
+    .ant-pagination {
+      text-align: center;
+    }
+
+    .ant-table-tbody > tr > td, .ant-table-thead > tr > th {
+      padding: 10px;
+    }
+
+    .ant-table-bordered .ant-table-thead > tr > th {
+      background: #f2f2f2;
+    }
+
+    .ant-table-bordered .ant-table-tbody > tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+  }
+}
+
+.dowmBuutton {
+  top: -52px;
+  left: 60px;
+}
+
+.dowmWBRBuutton {
+  top: -65px;
+  left: 60px;
+  margin-right: 20px;
+  width: 80px;
+}
+
+.RangePicker {
+  width: 100%;
+}
+
+.vertical-center-modal {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.vertical-center-modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  width: 0;
+}
+
+.vertical-center-modal .ant-modal {
+  display: inline-block;
+  vertical-align: middle;
+  top: 0;
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.allCard {
+  width: 940px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.rowStyle {
+  padding: 10px 0;
+}
+
+/**  产品信息字段展示  **/
+.Coltitle {
+  display: block;
+  float: left;
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+  width: 38%;
+  text-align: right;
+}
+
+.Coltext {
+  display: block;
+  padding-left: 10px;
+  float: left;
+  font-size: 14px;
+  color: #333;
+  width: 62%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.ColtextE {
+  color: #3384d5;
+}
+
+/**  水平线样式  **/
+.hrStyle {
+  background-color: #e8e8e8;
+  height: 2px;
+  border: none;
+  margin: 10px 0;
+  margin-bottom: 30px;
+}
+
+/**  线上悬停样式  **/
+.posR {
+  position: relative;
+}
+
+.linePosBtn {
+  font-size: 18px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 12px;
+  left: 45%;
+  width: 12%;
+  padding: 1px 8px;
+  margin-left: -8px;
+  //color: #777;
+  border-radius: 2px 2px 0 0;
+  background: #fff;
+  color: #3384d5;
+  -webkit-transition: background-color .4s;
+  transition: background-color .4s;
+
+  p {
+    float: left;
+  }
+
+  i {
+    float: left;
+  }
+}
+
+.linePosBtn_icon {
+  display: block;
+  width: 25px;
+  height: 25px;
+  background: url("../../assets/product/rightArrow.png") right center no-repeat;
+}
+
+.linePosTile {
+  position: absolute;
+  top: -14px;
+  padding: 1px 8px;
+  margin-left: -8px;
+  color: #777;
+  border-radius: 2px 2px 0 0;
+  background: #fff;
+  -webkit-transition: background-color .4s;
+  transition: background-color .4s;
+}
+
+.btnAddStyle {
+  position: absolute;
+  top: -60px;
+  right: 100px;
+}
+
+.btnCancelStyle {
+  position: absolute;
+  top: -60px;
+  right: 0;
+}
+
+.btnStyle {
+  position: absolute;
+  right: 0;
+  top: -60px;
+}
+
+.fLeft {
+  float: left;
+}
+
+/**  自定义表单  **/
+.fromCustomTitle {
+  float: left;
+  width: 20%;
+  line-height: 30px;
+
+  .fromCustomTitle_star {
+    padding: 0 1px;
+    font-size: 17px;
+    color: red;
+  }
+
+  .fromCustomTitle_text {
+    padding: 0 6px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  div {
+    padding: 0 2px;
+    float: right;
+  }
+}
+
+.fromCustomContent {
+  float: left;
+  width: 80%;
+  position: relative;
+
+  .fromCustomContent_textwarn {
+    position: absolute;
+    bottom: -20px;
+    color: red;
+    left: 5px;
+  }
+}
+
+.borderWarn {
+  border: 1px solid red;
+  border-radius: 6px;
+}
+
+.showWain {
+  display: block;
+}
+
+.hideWarn {
+  display: none;
+}
+
+/**  表详情样式优化  **/
+.countClass {
+  text-align: center !important;
+}
+
+@keyframes bubbleSlide {
+  from {
+    width: 100px;
+    height: 108px;
+    background-size: 100%;
+  }
+  to {
+    width: 110px;
+    height: 120px;
+    background-size: 102%;
+  }
+}
+
+.radio {
+  line-height: 35px;
+  position: absolute;
+  left: -28px;
+}
+
+.header {
+  :global {
+    .ant-collapse-header {
+      width: 100%;
+    }
+
+    .ant-collapse-content-box {
+      padding: 0;
+    }
+  }
+}
+
+.onclick {
+  color: #08c;
+  cursor: pointer;
+}
+
+.unclick {
+  cursor: pointer;
+}
+
+.over {
+  div:hover {
+    background-color: #d9d9d9;
+  }
+}

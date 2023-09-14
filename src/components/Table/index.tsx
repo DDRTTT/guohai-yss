@@ -1,6 +1,8 @@
-import React from 'react';
+import React,{memo} from 'react';
 import { Table } from 'antd';
-import { handleTableCss } from '@/pages/manuscriptBasic/func';
+
+interface T {
+}
 
 const TableProvider: React.FC<any> = props => {
   const columns = props?.columns;
@@ -12,23 +14,24 @@ const TableProvider: React.FC<any> = props => {
       render: (text: any, record: T, index: number) => React.ReactNode;
     }) => {
       const i = item;
-      i.ellipsis ? (i.ellipsis = false) : '';
-      if (!i.render) {
-        i.render = (text: string) => <>{handleTableCss(text) || '-'}</>;
+      i.ellipsis ? (i.ellipsis = false) : '';//控制表宽度是否自适应
+      if (i.title=='操作') {
+        i.ellipsis=true
       }
     },
   );
+  // props.pagination.pageSizeOptions=['30','50','100','300']
   return (
     <Table
       {...props}
       bordered
-      rowClassName={(record, index) => {
-        let className = '';
-        if (index % 2 === 1) className = 'bgcFBFCFF';
-        return className;
-      }}
+      // rowClassName={(record, index) => {
+      //   let className = '';
+      //   if (index % 2 === 1) className = 'bgcFBFCFF';
+      //   return className;
+      // }}
     />
   );
 };
 
-export default TableProvider;
+export default memo(TableProvider)

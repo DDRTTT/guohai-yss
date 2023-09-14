@@ -5,7 +5,6 @@ import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { connect } from 'dva';
 import {
   Button,
-  Card,
   Col,
   Dropdown,
   Form,
@@ -14,6 +13,7 @@ import {
   Menu,
   Row,
   Select,
+  Table,
   Tabs,
   message,
 } from 'antd';
@@ -23,7 +23,7 @@ import { cloneDeep } from 'lodash';
 import styles from './index.less';
 import PageContainer from '@/components/PageContainers';
 import List from '@/components/List';
-import { Table } from '@/components';
+import { Card } from '@/components';
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -50,9 +50,9 @@ const Index = ({
   const pageSize = useRef(10);
   // 页码(10)
   const currentPage = useRef(1);
-  const lifecycleName = useRef();
-  const proType = useRef();
-  const proCode = useRef();
+  const lifecycleName = useRef('');
+  const proType = useRef([]);
+  const proCode = useRef([]);
   const field = useRef('');
   const direction = useRef('');
 
@@ -188,11 +188,11 @@ const Index = ({
    * 查询按钮
    * @method  handleGetSearchFetch
    */
-  const handleGetSearchFetch = (searchnData) => {
+  const handleGetSearchFetch = searchnData => {
     const data = searchnData || {};
     lifecycleName.current = data.lifecycleName;
-    proType.current = data.proType
-    proCode.current = data.pProCode
+    proType.current = data.proType;
+    proCode.current = data.pProCode;
     handleGetListFetch();
   };
 
@@ -201,13 +201,13 @@ const Index = ({
    * @method  handleFormReset
    */
   const handleFormReset = () => {
-    lifecycleName.current = null
-    proType.current = null
-    proCode.current = null
-    pageSize.current = 10
-    currentPage.current = 1
-    field.current = ""
-    direction.current = ""
+    lifecycleName.current = '';
+    proType.current = [];
+    proCode.current = [];
+    pageSize.current = 10;
+    currentPage.current = 1;
+    field.current = '';
+    direction.current = '';
     handleGetListFetch();
   };
 
@@ -231,7 +231,7 @@ const Index = ({
       direction: direction.current,
       lifecycleName: lifecycleName.current,
       proCode: proCode.current,
-    }
+    };
     dispatch({
       type: 'flowList/handleGetListMsg',
       payload: params,
@@ -243,8 +243,8 @@ const Index = ({
    * @param {*} key
    */
   const handleTabsChanges = key => {
-    tabs.current = key
-    handleFormReset()
+    tabs.current = key;
+    handleFormReset();
   };
 
   /**
@@ -274,13 +274,23 @@ const Index = ({
         direction.current = '';
         break;
     }
-    pageSize.current = 10;
-    currentPage.current = 1;
+    let cc = 1;
+    let pp = parseInt(pagination.pageSize);
+    if (typeof pagination.current === "object"){
+       cc = 1;
+    }else{
+      cc = parseInt(pagination.current);
+
+    }
+    // pageSize.current = 10;
+    // currentPage.current = 1;
+    pageSize.current = pp;
+    currentPage.current = cc;
     handleGetListFetch();
   };
 
   // 批量操作 Todo
-  const batchOperate = () => { };
+  const batchOperate = () => {};
 
   // 展开搜索收起 查询
   const blurSearch = value => {
@@ -291,7 +301,8 @@ const Index = ({
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: true,
-    current: currentPage,
+    pageSize:pageSize.current,
+    current: currentPage.current,
     total: saveFlowListInfo.total,
     showTotal: total => `共 ${total} 条数据`,
   };
@@ -316,13 +327,14 @@ const Index = ({
       let button;
       if (item.type !== 'more') {
         button = (
-          <Button type="link" size="small"
+          <a
+            style={{ marginRight: 8 }}
             onClick={() => {
               props.handlerBack(item.label, props.record);
             }}
           >
             {item.label}
-          </Button>
+          </a>
         );
       } else {
         const menu = (
@@ -330,13 +342,13 @@ const Index = ({
             {item.list.map((item, index) => {
               return (
                 <Menu.Item key={index}>
-                  <Button type="link" size="small"
+                  <a
                     onClick={() => {
                       props.handlerBack(item, props.record);
                     }}
                   >
                     {item}
-                  </Button>
+                  </a>
                 </Menu.Item>
               );
             })}
@@ -344,7 +356,7 @@ const Index = ({
         );
         button = (
           <Dropdown overlay={menu} trigger={['click']}>
-            <Button type="link" size="small"
+            <a
               className="ant-dropdown-link"
               onClick={e => {
                 e.preventDefault();
@@ -352,7 +364,7 @@ const Index = ({
             >
               更多
               <Icon type="caret-right" />
-            </Button>
+            </a>
           </Dropdown>
         );
       }
@@ -541,32 +553,32 @@ const Index = ({
       name: 'lifecycleName',
       label: '生命周期标题',
       type: 'input',
-    }, {
+    },
+    {
       name: 'proCode',
       label: '产品类型',
       type: 'select',
       readSet: { name: 'name', code: 'code', bracket: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveWordDictionaryFetch.A002,
-    }
-  ]
-  console.log("saveAuthorityProduct");
-  console.log(saveAuthorityProduct);
+    },
+  ];
+
   const formItemDataForProduct = [
     {
       name: 'lifecycleName',
       label: '生命周期标题',
       type: 'input',
-    }, {
+    },
+    {
       name: 'proCode',
       label: '产品代码',
       type: 'select',
-      readSet: { name: 'value', code: 'text' },
-      config: { mode: 'multiple' },
+      readSet: { name: 'name', code: 'code', bracket: 'code' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: saveAuthorityProduct,
     },
-  ]
-
+  ];
 
   return (
     <>
@@ -575,13 +587,13 @@ const Index = ({
         formItemData={tabs.current === 'type' ? formItemData : formItemDataForProduct}
         advancSearch={handleGetSearchFetch}
         resetFn={handleFormReset}
-        searchPlaceholder='请输入模板名称'
+        searchPlaceholder="请输入模板名称"
         fuzzySearch={blurSearch}
         extra={extractContent()}
         tabs={{
           tabList: [
             { key: 'type', tab: '按产品类型' },
-            { key: 'product', tab: '按产品' }
+            { key: 'product', tab: '按产品' },
           ],
           activeTabKey: tabs.current,
           onTabChange: handleTabsChanges,

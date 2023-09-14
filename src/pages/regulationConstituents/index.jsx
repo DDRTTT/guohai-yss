@@ -53,16 +53,17 @@ const Index = ({
   const [batchData, setDatchData] = useState([]); // 批量操作参数
   const [batchObj, setBatchObj] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
   const [columns, setColumns] = useState(
     // 表头数据(有时间)
     [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
         ...tableRowConfig,
-        width: 300,
+        width: 400,
       },
       {
         title: '产品代码',
@@ -70,7 +71,6 @@ const Index = ({
         key: 'proCode',
         sorter: true,
         ...tableRowConfig,
-        width: 140,
       },
       {
         title: '产品类型',
@@ -78,7 +78,6 @@ const Index = ({
         key: 'proType',
         sorter: true,
         ...tableRowConfig,
-        width: 140,
       },
       {
         title: '监管要素类型',
@@ -86,7 +85,7 @@ const Index = ({
         key: 'reportType',
         sorter: true,
         ...tableRowConfig,
-        width: 350,
+        width: 400,
       },
       {
         title: '任务到达时间',
@@ -101,14 +100,12 @@ const Index = ({
         key: 'status',
         sorter: true,
         ...tableRowConfig,
-        width: 150,
       },
       {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
         fixed: 'right',
-        align: 'center',
         render: (_, record) => {
           switch (taskTypeCodeData.current) {
             case 'T001_1':
@@ -748,7 +745,7 @@ const Index = ({
         dataSource={regulationConstituentsTableData.rows} // 表数据源
         columns={columns} // 表头数据
         onChange={handleChangeSorter}
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 200 + 600 }}
       />
     );
   };
@@ -805,7 +802,7 @@ const Index = ({
       label: '产品全称',
       type: 'select',
       readSet: { name: 'proName', code: 'proCode' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proNameAndCodeData,
     },
     {
@@ -813,7 +810,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeDatas,
     },
     {
@@ -821,7 +818,7 @@ const Index = ({
       label: '监管要素类型',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts && dicts.R004,
     },
     {
@@ -829,7 +826,7 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts && dicts.S001,
     },
   ];

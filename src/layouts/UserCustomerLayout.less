@@ -1,0 +1,116 @@
+@import '~antd/es/style/themes/default.less';
+@import './customerThem.less';
+
+.container {
+  height: 100vh;
+  overflow: auto;
+
+  @media screen and (min-width: 1000px) and (max-width: 1410px) {
+    width: 100%;
+  }
+  .layout {
+    // min-width: 1000px;
+    // max-width: 1410px;
+    .header {
+      height: 64px;
+      background: @customer_them_primary-color;
+      box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.06);
+
+      .box {
+        // border: solid 1px blueviolet;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1480px;
+        margin: 0 auto;
+
+        .logo {
+          margin-top: 10px;
+          width: 165px;
+          height: 37px;
+        }
+        .header_menu {
+          line-height: 64px;
+          background: none;
+
+          li a {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .content {
+      // border: solid 1px red;
+    }
+
+    .footer {
+      height: 214px;
+      background: #f2f5ff;
+
+      .box {
+        // border: solid 1px blueviolet;
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        max-width: 1280px;
+        margin: 0 auto;
+
+        .leftFooter {
+          // min-width: 200px;
+
+          .leftFooterTitle {
+            display: flex;
+            width: 72px;
+            height: 25px;
+            font-weight: 500;
+            font-size: 18px;
+            font-family: PingFangSC-Medium;
+          }
+          ul {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+            min-width: 200px;
+            margin-top: 12px;
+          }
+          ul li {
+            // width: 96px;
+            height: 22px;
+            margin-top: 12px;
+            margin-right: 40px;
+            font-weight: 400;
+            font-size: 16px;
+            font-family: PingFangSC-Regular;
+            opacity: 0.8;
+          }
+          ul li:hover {
+            color: @customer_them_selected_primary-color;
+            cursor: pointer;
+          }
+        }
+
+        .rightFooter {
+          // width: 100%;
+          display: flex;
+
+          img {
+            margin-left: 40px;
+          }
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-layout-footer {
+      // padding: 32px 50px;
+      padding: 32px 50px 89px 50px;
+    }
+    .ant-menu.ant-menu-dark .ant-menu-item-selected,
+    .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
+      background: @customer_them_selected_primary-color;
+    }
+  }
+}

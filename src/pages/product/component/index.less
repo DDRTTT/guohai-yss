@@ -1,0 +1,74 @@
+@import '~antd/es/style/themes/default.less';
+:global {
+  .site-layout-background {
+    position: relative;
+    width: 100%;
+  }
+
+  .bgBar {
+    position: absolute;
+    top: 35px;
+
+    right: 0;
+    left: 0;
+    height: 6px;
+    background-color: #dedee1;
+    border-radius: 6px;
+  }
+
+  .phaseStepWrap {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 24px 0;
+    p {
+      margin-left: -20px;
+    }
+  }
+}
+
+.tab {
+  :global {
+    .ant-tabs-left-content {
+      padding-left: 0 !important;
+    }
+    .ant-card-bordered {
+      border: 1px solid #ffffff;
+    }
+  }
+}
+
+.timelines {
+  :global {
+    .ant-timeline-item:nth-child(1) {
+      .ant-timeline-item-head {
+        background-color: #2450a5;
+      }
+    }
+  }
+}
+
+.history {
+  :global {
+    .phaseStepWrap {
+      justify-content: none;
+    }
+    .phaseStepItem {
+      flex: 1 1;
+    }
+    .antd-pro-pages-product-component-index-timelines {
+      .ant-timeline-item {
+        top: -15px;
+        left: -5px;
+      }
+      .ant-timeline-item:nth-child(1) {
+        padding-bottom: 40px;
+        .ant-timeline-item-head {
+          width: 40px;
+          height: 20px;
+          margin-left: -15px;
+        }
+      }
+    }
+  }
+}

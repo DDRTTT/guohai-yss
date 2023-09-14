@@ -1,5 +1,10 @@
-import { TreeSelect, Tooltip } from 'antd';
+/**
+ * author: jiaqiuhua
+ * date: 2021/7/28
+ * note: treeNode自定义
+ * **/
 
+import { TreeSelect, Tooltip } from 'antd';
 const { TreeNode } = TreeSelect;
 
 const treeNodeCustomize = data => {
@@ -7,7 +12,7 @@ const treeNodeCustomize = data => {
     if (item.children) {
       return (
         <TreeNode
-          value={item.code}
+          value={item.title}
           key={item.code}
           disabled={true}
           title={
@@ -25,7 +30,7 @@ const treeNodeCustomize = data => {
 
     return (
       <TreeNode
-        value={item.code}
+        value={item.title}
         key={item.code}
         disabled={item.applicability == 0}
         title={

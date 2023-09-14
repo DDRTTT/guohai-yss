@@ -25,15 +25,15 @@ import * as types from '@/utils/FormItemType';
 import styles from '@/utils/utils.less';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import {
+  AccessManagerResources,
   BasicResources,
   DataCenterResources,
-  FundApplication,
   ManuscriptResources,
   MultipleCheckBasicResources,
   PositionResources,
   ReportWorldBasicResources,
   SchedulingResources,
-  SpecialProductsResources,
+  ProductInventoryResources,
 } from '@/common';
 import MenuPage from './Menu';
 import { getAuthToken } from '@/utils/session';
@@ -272,6 +272,7 @@ export default class personMenu extends BaseCrudComponent {
       payload: {
         fieldValues,
         code: typeAction,
+        searchData: { search: this.state.Search, sysId: this.state.sysType },
       },
     }).then(res => {
       that.setState({
@@ -341,7 +342,7 @@ export default class personMenu extends BaseCrudComponent {
     if (id == undefined) {
       menuId = this.state.selectedKeys;
     } else {
-      this.setState({ selectedKeys: id, selectedKeysArr: selectedKeys });
+      this.setState({ selectedKeys: id });
       menuId = id;
     }
 
@@ -375,6 +376,11 @@ export default class personMenu extends BaseCrudComponent {
     } else {
       this.doDataSearch({ id: menuId }, 1, 10, 'personMenu');
     }
+  };
+
+  // tree 选中
+  handleTreeCheck = (checkedKeys, info) => {
+    this.setState({ selectedKeysArr: checkedKeys });
   };
 
   getTable = () => {
@@ -468,7 +474,7 @@ export default class personMenu extends BaseCrudComponent {
     ];
     return (
       <div>
-        <span style={{ color: '#f5222d', marginLeft: 10 }}> * 若菜单为一级菜单请不要输入路径</span>
+        <span className={styles.tips}> * 若菜单为一级菜单请不要输入路径</span>
         {formItemCreate(getFieldDecorator, son_add, 2)}
       </div>
     );
@@ -490,9 +496,7 @@ export default class personMenu extends BaseCrudComponent {
       treeCheckable: true,
       showCheckedStrategy: SHOW_PARENT,
       searchPlaceholder: '请选择菜单',
-      style: {
-        width: 300,
-      },
+      className: styles.treeselectwidth,
     };
     return (
       <div className={styles.buttongrop}>
@@ -544,11 +548,13 @@ export default class personMenu extends BaseCrudComponent {
         // 头寸系统
         basic = PositionResources;
         break;
-      case 8:
-        basic = FundApplication;
+      case 12:
+        // 对客服务平台（赢管家）
+        basic = AccessManagerResources;
         break;
-      case 10:
-        basic = SpecialProductsResources;
+      case 13:
+        // 产品盘点系统
+        basic = ProductInventoryResources;
         break;
       default:
         message.warning('该系统菜单数据不存在，请添加后再试');
@@ -649,11 +655,11 @@ export default class personMenu extends BaseCrudComponent {
 
     return (
       <div>
-        <div style={{ float: 'left' }}>
+        <div className={styles.selectSystem}>
           选择系统：
           <Select
             defaultValue={1}
-            style={{ width: 120 }}
+            className={styles.seleWidth}
             onChange={value => this.handleChooseSys(value)}
           >
             {attributionSystem &&
@@ -666,7 +672,7 @@ export default class personMenu extends BaseCrudComponent {
               })}
           </Select>
         </div>
-        <div style={{ float: 'left' }}>
+        <div className={styles.selectSystem}>
           <Action key="personMenu:init" code="personMenu:init">
             <Spin size="small" spinning={isloading}>
               <Popconfirm
@@ -675,16 +681,16 @@ export default class personMenu extends BaseCrudComponent {
                 okText="确定"
                 cancelText="取消"
               >
-                <Button style={{ marginLeft: '12px' }} type="danger">
+                <Button className={styles.initialization} type="danger">
                   初始化
                 </Button>
               </Popconfirm>
             </Spin>
           </Action>
         </div>
-        <div style={{ float: 'left' }}>
+        <div className={styles.selectSystem}>
           <Dropdown overlay={menu} placement="bottomCenter">
-            <Button style={{ marginLeft: '12px' }}>
+            <Button className={styles.initialization}>
               <Icon type="ellipsis" />
             </Button>
           </Dropdown>
@@ -742,7 +748,7 @@ export default class personMenu extends BaseCrudComponent {
         dataIndex: 'title',
         render(val, record) {
           return (
-            <div style={record.parent === -1 ? colorRedStyle : colorGreenStyle}>
+            <div className={record.parent === -1 ? styles.warning : ""}>
               {val || '- - -'}
             </div>
           );
@@ -753,7 +759,7 @@ export default class personMenu extends BaseCrudComponent {
         dataIndex: 'path',
         render(val, record) {
           return (
-            <div style={record.parent === -1 ? colorRedStyle : colorGreenStyle}>
+            <div className={record.parent === -1 ? styles.warning : ""}>
               {val || '- - -'}
             </div>
           );
@@ -764,7 +770,7 @@ export default class personMenu extends BaseCrudComponent {
         dataIndex: 'code',
         render(val, record) {
           return (
-            <div style={record.parent === -1 ? colorRedStyle : colorGreenStyle}>
+            <div className={record.parent === -1 ? styles.warning : ""}>
               {val || '- - -'}
             </div>
           );
@@ -775,7 +781,7 @@ export default class personMenu extends BaseCrudComponent {
         dataIndex: 'icon',
         render(val, record) {
           return (
-            <div style={record.parent === -1 ? colorRedStyle : colorGreenStyle}>
+            <div className={record.parent === -1 ? styles.warning : ""}>
               {val || '- - -'}
             </div>
           );
@@ -786,7 +792,7 @@ export default class personMenu extends BaseCrudComponent {
         dataIndex: 'parent',
         render(val) {
           return (
-            <div style={val === -1 ? colorRedStyle : colorGreenStyle}>
+            <div className={val === -1 ? styles.warning : ""}>
               {val === -1 ? '首级菜单' : '子级菜单'}
             </div>
           );
@@ -841,7 +847,7 @@ export default class personMenu extends BaseCrudComponent {
         <Row gutter={24}>
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
             <Card
-              style={{ marginBottom: 24 }}
+              className={styles.menuCard}
               title="菜单"
               bordered={false}
               bodyStyle={{
@@ -853,26 +859,27 @@ export default class personMenu extends BaseCrudComponent {
               loading={menuTreeLoading}
             >
               <Tree
-                multiple
+                checkable
                 showIcon
                 defaultExpandAll={false}
                 defaultExpandedKeys={seltree}
                 onSelect={e => this.handleNodeSelect(e)}
+                onCheck={this.handleTreeCheck}
                 draggable
                 onDrop={this.onDrop}
                 onDragEnter={this.onDragEnter}
-                switcherIcon={<Icon type="down" style={{ fontSize: '12px' }} />}
+                switcherIcon={<Icon type="down" />}
               >
                 {this.loadMenus(gData)}
               </Tree>
             </Card>
           </Col>
           <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-            <Card style={{ marginBottom: 24 }} title="子级菜单" bordered={false}>
+            <Card className={styles.sublevelmenu} title="子级菜单" bordered={false}>
               <CrudComponent {...ccProps} />
             </Card>
 
-            <div style={{ display: actionsShow ? 'block' : 'none' }}>
+            <div className={actionsShow ? styles.menuPageblock : styles.menuPagenone}>
               <MenuPage selectNode={currentSelectNode} save={this.save} gData={gData} />
             </div>
           </Col>
@@ -889,17 +896,13 @@ export default class personMenu extends BaseCrudComponent {
             <Card className={styles.card1}>
               <div>
                 {this.getTable()}
-                <div style={{ textAlign: 'center', marginTop: 5 }}>
+                <div className={styles.carddiv}>
                   <span className="submitButtons">
-                    <Button
-                      style={{ height: 28, marginRight: 20 }}
-                      htmlType="submit"
-                      type="primary"
-                    >
+                    <Button className={styles.save} htmlType="submit" type="primary">
                       保存
                     </Button>
                     <Button
-                      style={{ height: 28 }}
+                      className={styles.cancel}
                       type="danger"
                       onClick={() => this.handleModalVisible()}
                     >

@@ -5,7 +5,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Form, Tooltip} from 'antd';
+import { Form } from 'antd';
 import { getDateStr } from '@/utils/utils';
 import BaseCrudComponent from '@/components/BaseCrudComponent';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
@@ -19,7 +19,7 @@ const dateFormat = 'YYYY-MM-DD';
 @Form.create()
 @connect(({ operationLog, loading }) => ({
   operationLog,
-  loading: loading.effects['operationLog/logListTable'],
+  loading: loading.effects['operationLog/logListTable2'],
 }))
 export default class logList extends BaseCrudComponent {
   state = {
@@ -27,11 +27,12 @@ export default class logList extends BaseCrudComponent {
       start: 1,
       length: 10,
     },
-    startDate: getDateStr(-7)
+    startDate: getDateStr(-7),
   };
 
   handleSearch = fieldsValue => {
     const { dispatch } = this.props;
+    console.log('++++++++++++++++++', fieldsValue);
     const date = {
       startDate: getDateStr(-15),
       endDate: getDateStr(0),
@@ -42,8 +43,10 @@ export default class logList extends BaseCrudComponent {
     }
     const value = {
       service: fieldsValue?.service,
+      // userId: fieldsValue?.userId,
       userName: fieldsValue?.userName,
       method: fieldsValue?.method,
+      url: fieldsValue?.url,
       start: 1,
       length: 10,
       ...date,
@@ -52,7 +55,7 @@ export default class logList extends BaseCrudComponent {
       formValues: value,
     });
     dispatch({
-      type: `operationLog/logListTable`,
+      type: `operationLog/logListTable2`,
       payload: value,
     });
   };
@@ -63,10 +66,10 @@ export default class logList extends BaseCrudComponent {
     const value = { start: 1, length: 10, startDate: getDateStr(-15), endDate: getDateStr(0) };
     this.setState({ formValues: value });
     dispatch({
-      type: `operationLog/logListTable`,
+      type: `operationLog/logListTable2`,
       payload: value,
     });
-  }
+  };
 
   handleStandardTableChange = ({ current, pageSize }) => {
     const { dispatch } = this.props;
@@ -77,7 +80,7 @@ export default class logList extends BaseCrudComponent {
       length: pageSize,
     };
     dispatch({
-      type: `operationLog/logListTable`,
+      type: `operationLog/logListTable2`,
       payload: form,
     });
     this.setState({
@@ -86,21 +89,22 @@ export default class logList extends BaseCrudComponent {
   };
 
   // 跳转
-  jumpPage = ({ id }) =>
-    router.push(`/LogQuery/logList/logDetails?startTime=${this.state.startDate}&id=${id}`);
+  jumpPage = ({ id, index }) =>
+    // router.push(`/LogQuery/logList/logDetails?startTime=${this.state.startDate}&id=${id}`);
+    router.push(`/LogQuery/logList/logDetails?index=${index}&id=${id}`);
 
   componentDidMount() {
     const { dispatch } = this.props;
 
-    // 操作类型 - 词汇字典
-    dispatch({
-      type: `operationLog/vocabularyDic`,
-      payload: 'opeType',
-    });
+    // // 操作类型 - 词汇字典
+    // dispatch({
+    //   type: `operationLog/vocabularyDic`,
+    //   payload: 'opeType',
+    // });
 
     // 服务模块 下拉
     dispatch({
-      type: 'operationLog/searchgroup2',
+      type: 'operationLog/searchBusGroupList',
       payload: {
         startDate: getDateStr(-7),
         endDate: getDateStr(0),
@@ -112,13 +116,38 @@ export default class logList extends BaseCrudComponent {
         ],
       },
     });
+    // 当前用户下的机构
+    dispatch({
+      type: 'operationLog/getOrgDropDownList',
+      payload: {
+        orgId: JSON.parse(sessionStorage.getItem('USER_INFO')).orgId,
+      },
+    });
 
     this.handleSearch();
   }
 
+  getSeverResource = param => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'operationLog/getResourceData2',
+      payload: {
+        currentPage: 1,
+        pageSize: 10000,
+        ...param,
+      },
+    });
+  };
+
   render() {
     const {
-      operationLog: { saveNewTable, saveSearchGroup, saveVocabularyDic },
+      operationLog: {
+        saveBusTable,
+        saveBusGroup,
+        saveVocabularyDic,
+        resourceData,
+        departLeaderList,
+      },
       loading,
     } = this.props;
 
@@ -128,7 +157,7 @@ export default class logList extends BaseCrudComponent {
       showSizeChanger: true,
       showQuickJumper: true,
       current: formValues.start,
-      total: saveNewTable.total,
+      total: saveBusTable.total,
       showTotal: total => `共 ${total} 条数据`,
     };
 
@@ -137,476 +166,126 @@ export default class logList extends BaseCrudComponent {
         title: '服务名',
         dataIndex: 'service',
         key: 'service',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '主机名',
         dataIndex: 'host',
         key: 'host',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '端口号',
         dataIndex: 'port',
         key: 'port',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '日志级别',
         dataIndex: 'severity',
         key: 'severity',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '线程',
         dataIndex: 'thread',
         key: 'thread',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '进程号',
         dataIndex: 'pid',
         key: 'pid',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '终端请求方式',
         dataIndex: 'type',
         key: 'type',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '操作人ID',
         dataIndex: 'userId',
         key: 'userId',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '用户归属机构ID',
         dataIndex: 'orgId',
         key: 'orgId',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '操作人姓名',
         dataIndex: 'userName',
         key: 'userName',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '操作人终端IP',
         dataIndex: 'userHost',
         key: 'userHost',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '用户归属系统ID',
         dataIndex: 'fsysId',
         key: 'fsysId',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求类名',
         dataIndex: 'className',
         key: 'className',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求类名描述',
         dataIndex: 'swaggerApi',
         key: 'swaggerApi',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求方法',
         dataIndex: 'classMethod',
         key: 'classMethod',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求方法描述',
         dataIndex: 'swaggerApiOperation',
         key: 'swaggerApiOperation',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求方式',
         dataIndex: 'method',
         key: 'method',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求路径',
         dataIndex: 'url',
         key: 'url',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求终端IP',
         dataIndex: 'clientIp',
         key: 'clientIp',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求sessionId',
         dataIndex: 'sessionId',
         key: 'sessionId',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求开始时间',
         dataIndex: 'startTime',
         key: 'startTime',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求结束时间',
         dataIndex: 'endTime',
         key: 'endTime',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '接口返回时间',
         dataIndex: 'returnTime',
         key: 'returnTime',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '请求耗时',
         dataIndex: 'timeConsuming',
         key: 'timeConsuming',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '响应码',
         dataIndex: 'httpStatusCode',
         key: 'httpStatusCode',
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                  ? '-'
-                  : 0}
-            </Tooltip>
-          );
-        },
       },
       {
         title: '操作',
@@ -629,20 +308,50 @@ export default class logList extends BaseCrudComponent {
         label: '服务模块',
         type: 'select',
         readSet: { name: 'key', code: 'key' },
-        option: saveSearchGroup.rows,
+        option: saveBusGroup.rows,
+        config: {
+          onChange: e => {
+            console.log(e);
+            this.getSeverResource({ uriFlag: e });
+          },
+        },
       },
-
+      {
+        name: 'url',
+        label: '服务资源',
+        type: 'select',
+        option: resourceData.rows,
+        // fieldNames: {
+        //   label: 'description',
+        //   value: 'uri',
+        // },
+        readSet: {
+          name: 'description',
+          code: 'uri',
+          bracket: 'uri',
+        },
+      },
       {
         name: 'userName',
         label: '操作人',
         type: 'input',
       },
-      {
-        name: 'method',
-        label: '操作类型',
-        type: 'select',
-        option: saveVocabularyDic,
-      },
+      // {
+      //   name: 'userId',
+      //   label: '操作人',
+      //   type: 'select',
+      //   option: departLeaderList,
+      //   readSet: {
+      //     name: 'name',
+      //     code: 'id',
+      //   },
+      // },
+      // {
+      //   name: 'method',
+      //   label: '操作类型',
+      //   type: 'select',
+      //   option: saveVocabularyDic,
+      // },
       {
         name: 'date',
         label: '选择日期',
@@ -665,16 +374,18 @@ export default class logList extends BaseCrudComponent {
           resetFn={this.handleReset}
           fuzzySearchBool={false}
           loading={loading}
-          tableList={<Table
-            columns={columns}
-            loading={loading}
-            dataSource={saveNewTable.rows}
-            onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-            bordered={false}
-            pagination={handlePagination}
-            scroll={{ x: 4500 }}
-          />}
+          tableList={
+            <Table
+              columns={columns}
+              loading={loading}
+              dataSource={saveBusTable.rows}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+              bordered={false}
+              pagination={handlePagination}
+              scroll={{ x: 4500 }}
+            />
+          }
         />
       </>
     );

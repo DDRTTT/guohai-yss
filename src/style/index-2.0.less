@@ -43,6 +43,10 @@ body {
         }
       }
     }
+
+    .ant-menu-item::after {
+      border-right: 3px solid @primary-color !important;
+    }
     .ant-menu-item > a:hover {
       color: @primary-color;
     }
@@ -50,6 +54,22 @@ body {
     .ant-menu-submenu-selected,
     .ant-menu-submenu-title:hover {
       color: @primary-color;
+    }
+
+    // 菜单宽度设置
+    .ant-pro-sider-menu-sider {
+      // flex: 0 0 206px !important;
+      // width: 206px !important;
+      // min-width: 206px !important;
+      // max-width: 206px !important;
+      .ant-menu-item{
+        a {
+          width: 120px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
     }
 
     // 分页
@@ -117,7 +137,7 @@ body {
 
     // 全局背景
     .ant-layout {
-      background-color: #f2f5fc;
+      background-color: #f2f2f3;
     }
 
     // 禁用按钮
@@ -148,7 +168,7 @@ body {
     .ant-table-thead > tr > th {
       color: #000;
       font-weight: 700;
-      background-color: #f2f5fc;
+      background-color: #f2f2f3;
     }
 
     // 表头进入色
@@ -159,7 +179,7 @@ body {
     // 表头间距
     .ant-table-thead > tr > th,
     .ant-table-tbody > tr > td {
-      height: 48px;
+      height: 43px;
       padding: 0 16px;
     }
 
@@ -212,7 +232,7 @@ body {
 
     // 内容边距
     .ant-pro-basicLayout-content {
-      margin: 16px;
+      margin: 0px;
     }
 
     // 输入框禁用的文字颜色
@@ -237,11 +257,15 @@ body {
 }
 
 .search-card2 {
-  margin: 0 -16px;
-  border: 1px solid #ffffff;
+  border: 0 ;
   box-shadow: none !important;
   .ant-card-body {
     padding: 8px 16px 8px 16px;
+  }
+  :global {
+    .ant-select-selection__choice {
+      max-width: 54% !important;
+    }
   }
 }
 
@@ -261,8 +285,7 @@ body {
 }
 
 .content {
-  margin: 16px 0;
-  padding: 0 16px 16px 16px;
+  padding: 16px;
   background-color: #fff;
 }
 
@@ -314,12 +337,12 @@ body {
 }
 
 .listCard {
-  margin-top: 16px;
+  margin: 16px;
   .ant-tabs-bar {
     border-bottom: 1px solid #ffffff;
   }
   .ant-card-body {
-    padding: 16px;
+    padding: 0 0 16px !important;
   }
   .ant-card-head {
     border-bottom: 1px solid #ffffff;
@@ -330,15 +353,6 @@ body {
   }
   .ant-tabs .ant-tabs-large-bar .ant-tabs-tab {
     padding: 10px;
-  }
-}
-
-.moreTabsListCard {
-  .ant-card-head {
-    .ant-tabs {
-      position: static;
-      margin-bottom: -10px;
-    }
   }
 }
 
@@ -425,18 +439,6 @@ body {
       .ant-checkbox-wrapper {
         margin-left: 8px;
       }
-    }
-  }
-}
-
-// 运营日历，提示框左侧箭头样式
-.antd-pro-pages-operating-calendar-index-blackMode.ant-popover-placement-right {
-  :global {
-    .ant-popover-arrow {
-      border-left-color: rgba(9, 16, 34, 0.7) !important;
-      border-bottom-color: rgba(9, 16, 34, 0.7) !important;
-      border-top-color: transparent !important;
-      border-right-color: transparent !important;
     }
   }
 }

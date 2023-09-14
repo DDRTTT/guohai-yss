@@ -22,9 +22,8 @@ import { filePreviewWithBlobUrl } from '@/utils/download';
 import OnlineEdit, { getDocumentType } from '@/components/OnlineEdit';
 import ModalWin from '@/pages/manuscriptProjectManage/projectInfoManger/addProjectInfo/ModalWin';
 import { launchIntoFullscreen, uuid } from '@/utils/utils';
-import { Table, TableBtn } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
-import Gird from '@/components/Gird';
 
 const IMGs =
   'webp.dubmp.pcx.zhitif.gif.jpg.jpeg.tga.exif.fpx.svg.psd.cdr.pcd.dxf.ufo.eps.ai.png.hdri.raw.wmf.flic.emf.ico';
@@ -127,14 +126,40 @@ class OAprocessDistribute extends Component {
         key: 'handel',
         title: '操作',
         fixed: 'right',
-        key: 'action',
-        dataIndex: 'action',
-        // width: 150,
+        dataIndex: 'handel',
+        width: 150,
         render: (val, record) => (
           <div>
-            <TableBtn config={[{ name: '查看', click: () => this.lookMore(record) }]} />
+            <a
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                this.lookMore(record);
+              }}
+            >
+              查看
+            </a>
+            {/* <a
+              style={{
+                marginRight: 10,
+                color: record.busClassification != 2 ? '#2450A5' : '#cccccc',
+              }}
+              onClick={() => {
+                this.distribute(record);
+              }}
+            >
+              分发
+            </a> */}
             {record.busClassification == '1' || record.busClassification == '3' ? (
-              <TableBtn config={[{ name: '分发', click: () => this.distribute(record) }]} />
+              <a
+                style={{
+                  marginRight: 10,
+                }}
+                onClick={() => {
+                  this.distribute(record);
+                }}
+              >
+                分发
+              </a>
             ) : (
               ''
             )}
@@ -161,12 +186,14 @@ class OAprocessDistribute extends Component {
       isHandle: e,
     });
   };
+
   // 切换业务分类
   changeClassification = e => {
     this.setState({
       classification: e,
     });
   };
+
   // 切换标题
   changeTitle = e => {
     this.setState({
@@ -178,7 +205,6 @@ class OAprocessDistribute extends Component {
   handlerSearch = fieldsValue => {
     const time =
       fieldsValue && fieldsValue.time ? moment(fieldsValue.time).format('YYYY-MM-DD') : '';
-
     const payload = {
       ...fieldsValue,
       time,
@@ -186,7 +212,7 @@ class OAprocessDistribute extends Component {
       pageSize: 10,
       keyWords: this.state.keyWords,
     };
-    this.setState({ page: 1, limit: 10, ...fieldsValue, time }, () => {
+    this.setState({ page: 1, limit: 10, ...fieldsValue }, () => {
       this.handleGetTableList(payload);
     });
   };
@@ -395,6 +421,7 @@ class OAprocessDistribute extends Component {
       }
     });
   };
+
   /**
    * 查看预览
    * * */
@@ -519,7 +546,17 @@ class OAprocessDistribute extends Component {
         width: 200,
         // fixed: 'right',
         render: (val, record) => (
-          <TableBtn config={[{ name: '预览', click: () => this.filePreview(record) }]} />
+          <div>
+            {/* <a style={{ marginRight: 10 }} onClick={() => { this.lookMore(record,'look') }}>查看</a> */}
+            <a
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                this.filePreview(record);
+              }}
+            >
+              预览
+            </a>
+          </div>
         ),
       },
     ];
@@ -557,8 +594,8 @@ class OAprocessDistribute extends Component {
         name: 'classification',
         label: '业务分类',
         type: 'select',
-        readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        readSet: { name: 'name', code: 'code', bracket: 'code' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: businessType.O006 || [],
       },
       {
@@ -571,19 +608,12 @@ class OAprocessDistribute extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
+        config: { maxTagCount: 1 },
         option: [
           { name: '未分发', code: '0' },
           { name: '已分发', code: '1' },
         ],
       },
-    ];
-
-    // 弹窗配置-查看基本信息
-    const drawerConfigForSeal = [
-      { label: '标题', value: 'title' },
-      { label: '业务分类', value: 'businessClassification' },
-      { label: '分发状态', value: 'idHandleString' },
-      { label: '创建时间', value: 'createTime' },
     ];
     return (
       <>
@@ -700,7 +730,30 @@ class OAprocessDistribute extends Component {
           zIndex={998}
           width={900}
         >
-          <Gird config={drawerConfigForSeal} col={2} info={record} />
+          <Form {...formItemLayout}>
+            <Row style={{ marginBottom: 20 }}>
+              <Col span={12}>
+                <Form.Item label="标题:">
+                  <Input value={record.title} disabled />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="业务分类:">
+                  <Input value={record.businessClassification} disabled />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="分发状态:">
+                  <Input value={record.idHandleString} disabled />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="创建时间:">
+                  <Input value={record.createTime} disabled />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
           <Table
             rowKey="id"
             dataSource={fileInfoList}

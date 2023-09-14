@@ -151,14 +151,15 @@ class Index extends Component {
               url: '',
             },
             {
-              title: `${flag === 'businessAdd' ? '新增' : '修改'}产品要素${activeKey === 'business' ? '业务信息' : '表结构信息'
-                }`,
+              title: `${flag === 'businessAdd' ? '新增' : '修改'}产品要素${
+                activeKey === 'business' ? '业务信息' : '表结构信息'
+              }`,
               url: '',
             },
           ]}
         />
         <Card title={`产品要素-${activeKey === 'business' ? '业务信息' : '表结构信息'}`}>
-          <div style={{ padding: '0 40px' }}>
+          <div className={styles.cardStyle}>
             <Spin spinning={loading}>
               <Form>
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -447,7 +448,12 @@ class Index extends Component {
                     <FormItem label="字典英文名称:" {...formItemLayout}>
                       {getFieldDecorator('dicItemCode', {
                         initialValue: record?.dicItemCode || '',
-                        rules: [{ pattern: /^[a-zA-Z0-9]+$/, message: '只能输入英文和数字' }],
+                        rules: [
+                          {
+                            pattern: /^[a-zA-Z0-9_:-]+$/,
+                            message: '只能输入英文、数字、下划线及冒号',
+                          },
+                        ],
                       })(<Input placeholder="请输入字典英文名称" />)}
                     </FormItem>
                   </Col>
@@ -490,13 +496,13 @@ class Index extends Component {
                     <FormItem label="归属机构:" {...formItemLayout}>
                       {getFieldDecorator('orgId', {
                         rules: [{ required: true, message: '请选择归属机构' }],
-                        initialValue: loginId === '1' ? (record?.orgId || '') : loginOrgId,// 超级管理员登录，逻辑同前；否则，归属机构默认为登录用户的归属机构，且不可编辑
+                        initialValue: loginId === '1' ? record?.orgId || '' : loginOrgId, // 超级管理员登录，逻辑同前；否则，归属机构默认为登录用户的归属机构，且不可编辑
                       })(
                         <Select
                           placeholder="请选择归属机构"
                           showSearch
                           optionFilterProp="children"
-                          disabled={loginId === '1' ? false : true}// 修改原因见 initialValue
+                          disabled={loginId === '1' ? false : true} // 修改原因见 initialValue
                         >
                           {orgData.length > 0 &&
                             orgData.map(item => (
@@ -546,15 +552,15 @@ class Index extends Component {
                   </Col>
                 </Row>
 
-                <div style={{ marginBottom: 10 }}>
+                <div className={styles.div1}>
                   <Row>
-                    <Col span={24} style={{ marginBottom: 10 }} style={{ textAlign: 'right' }}>
-                      <Button style={{ marginRight: 8 }} onClick={this.jumpBack}>
+                    <Col span={24} className={styles.col}>
+                      <Button className={styles.btn} onClick={this.jumpBack}>
                         取消
                       </Button>
                       <Button
                         type="primary"
-                        style={{ marginRight: 8 }}
+                        className={styles.btn}
                         loading={loading}
                         onClick={this.save}
                       >

@@ -1,13 +1,13 @@
 /**
  * 产品看板-查看产品-产品数据-关联方参与信息
  */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Table, Button, Spin } from 'antd';
-import { connect, routerRedux } from 'dva';
+import React, { useContext, useRef } from 'react';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
 import styles from './index.less';
-import { handleChangeNumberToFloat, handleChangeThousands } from './baseFunc';
+import { handleChangeThousands } from './baseFunc';
 import { tableRowConfig } from '@/pages/investorReview/func';
 
 const ProductMessageRelationInspect = ({

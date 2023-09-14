@@ -57,12 +57,12 @@ const Index = ({
     // 表头数据(有时间)
     [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
         ...tableRowConfig,
-        width: 280,
+        width: 400,
       },
       {
         title: '产品代码',
@@ -70,7 +70,6 @@ const Index = ({
         key: 'proCode',
         sorter: true,
         ...tableRowConfig,
-        width: 150,
       },
       {
         title: '产品类型',
@@ -90,12 +89,32 @@ const Index = ({
               '';
           }
         },
-        width: 150,
       },
       {
         title: '投资经理',
         dataIndex: 'investmentManager',
         key: 'investmentManager',
+        sorter: true,
+        ...tableRowConfig,
+      },
+      {
+        title: '募集开始日',
+        dataIndex: 'raiseSdate',
+        key: 'raiseSdate',
+        sorter: true,
+        ...tableRowConfig,
+      },
+      {
+        title: '实际募集结束日',
+        dataIndex: 'actualEndRaisingDate',
+        key: 'actualEndRaisingDate',
+        sorter: true,
+        ...tableRowConfig,
+      },
+      {
+        title: '是否达到成立条件',
+        dataIndex: 'raisingResultName',
+        key: 'raisingResultName',
         sorter: true,
         ...tableRowConfig,
       },
@@ -124,36 +143,12 @@ const Index = ({
               '';
           }
         },
-        width: 150,
-      },
-      {
-        title: '募集开始日',
-        dataIndex: 'raiseSdate',
-        key: 'raiseSdate',
-        sorter: true,
-        ...tableRowConfig,
-        width: 150,
-      },
-      {
-        title: '实际募集结束日',
-        dataIndex: 'actualEndRaisingDate',
-        key: 'actualEndRaisingDate',
-        sorter: true,
-        ...tableRowConfig,
-      },
-      {
-        title: '是否达到成立条件',
-        dataIndex: 'raisingResultName',
-        key: 'raisingResultName',
-        sorter: true,
-        ...tableRowConfig,
       },
       {
         title: '操作',
         key: 'action',
         dataIndex: 'action',
         fixed: 'right',
-        align: 'center',
         render: (_, record) => {
           switch (taskTypeCodeData.current) {
             case 'T001_1':
@@ -365,8 +360,8 @@ const Index = ({
 
   // 重置
   const handleReset = () => {
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
+    pageNumData.current = '1';
+    pageSizeData.current = '10';
     proNameData.current = [];
     proCodeData.current = [];
     proTypeData.current = [];
@@ -387,8 +382,6 @@ const Index = ({
    */
   const blurSearch = key => {
     keyWordsData.current = key;
-    pageNumData.current = 1;
-    pageSizeData.current = 10;
     handleGetListData();
   };
 
@@ -802,7 +795,7 @@ const Index = ({
         rowKey={record => record.id} // key值
         dataSource={riseOverTableData.rows} // 表数据源
         columns={columns} // 表头数据
-        scroll={{ x: true }}
+        scroll={{ x: columns.length * 200 + 400 }}
         onChange={handleChangeSorter}
       />
     );
@@ -852,14 +845,18 @@ const Index = ({
     setSelectedRowKeys([]);
     setBatchObj({});
   };
+
+  const callBackHandler=(value)=>{
+    setColumns(value);
+  }
   // 条件查询配置
   const formItemData = [
     {
       name: 'proCode',
       label: '产品全称',
       type: 'select',
-      readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-      config: { mode: 'multiple' },
+      readSet: { name: 'proName', code: 'proName', bracket: 'proCode' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proNameAndCodeData,
     },
     {
@@ -867,7 +864,7 @@ const Index = ({
       label: '产品类型',
       type: 'select',
       readSet: { name: 'label', code: 'value' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: proTypeNewData,
     },
     {
@@ -875,7 +872,7 @@ const Index = ({
       label: '投资经理',
       type: 'select',
       readSet: { name: 'name', code: 'empNo', bracket: 'empNo' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: investmentManagerDataList,
     },
     {
@@ -883,6 +880,7 @@ const Index = ({
       label: '是否达到成立条件',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: [
         { name: '成功', code: '0' },
         { name: '失败', code: '1' },
@@ -893,14 +891,10 @@ const Index = ({
       label: '状态',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dicts.S001,
     },
   ];
-
-  const callBackHandler = value => {
-    setColumns(value);
-  };
   return (
     <>
       <List
@@ -928,12 +922,9 @@ const Index = ({
         extra={operations}
         tableList={
           <>
-            {taskTypeCodeData.current === 'T001_1' && <> {tableData(columns)} </>}
-            {taskTypeCodeData.current === 'T001_3' && <> {tableData(columns)} </>}
-            {taskTypeCodeData.current === 'T001_4' && <> {tableData(columns)} </>}
-            {taskTypeCodeData.current === 'T001_5' && <> {tableData(columns)} </>}
+            {tableData(columns)}
             <MoreOperation
-              batchStyles={{ position: 'relative', left: '35px', top: '-45px' }}
+              batchStyles={{ position: 'relative', left: '35px', top: '-75px' }}
               opertations={{
                 tabs: taskTypeCodeData.current,
                 statusKey: 'status',

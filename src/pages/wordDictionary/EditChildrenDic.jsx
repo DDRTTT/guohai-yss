@@ -1,10 +1,35 @@
 import { connect } from 'dva';
-import { Button, Col, Form, message, Modal, Row, Select, Table } from 'antd';
+import { Button, Modal, Form, Select, Row, Col, message } from 'antd';
+import { Table } from '@/components';
 
 const { Option } = Select;
 
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
   class extends React.Component {
+    state = {
+      visible: false,
+      columns: [
+        {
+          title: '词汇名称',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: '词汇代码',
+          dataIndex: 'code',
+          key: 'code',
+        },
+        {
+          title: '操作',
+          key: 'operation',
+          render: (text, record) => <a onClick={() => this.handleDelete(record.code)}>删除</a>,
+        },
+      ],
+      confirmLoading: false,
+      dataSource: [],
+      current: 1,
+    };
+
     showModal = () => {
       const {
         dispatch,
@@ -103,30 +128,6 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
       });
     };
 
-    state = {
-      visible: false,
-      columns: [
-        {
-          title: '词汇名称',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: '词汇代码',
-          dataIndex: 'code',
-          key: 'code',
-        },
-        {
-          title: '操作',
-          key: 'operation',
-          render: (text, record) => <a onClick={() => this.handleDelete(record.code)}>删除</a>,
-        },
-      ],
-      confirmLoading: false,
-      dataSource: [],
-      current: 1,
-    };
-
     handleCreate = () => {
       const { dispatch, datadictId, inquiryOneList } = this.props;
       const { dataSource } = this.state;
@@ -145,7 +146,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         callback: () => {
           message.success('保存成功~');
           this.setState({ visible: false, confirmLoading: false });
-          inquiryOneList();
+          inquiryOneList && inquiryOneList();
         },
       });
     };
@@ -220,7 +221,8 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                         },
                       ],
                     })(
-                      <Select placeholder="请选择词汇..." onChange={this.handleChange}>
+                      <Select placeholder="请选择词
+                      汇..." onChange={this.handleChange} showSearch>
                         {getDropDownList &&
                           getDropDownList.map(({ code, name, id }) => (
                             <Option value={`${JSON.stringify({ code, name })}`} key={id}>

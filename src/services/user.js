@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { getUserMenu } from '@/common/basicResources';
+import * as type from '@/services/type';
 
 // 收到消息以后的反馈
 export async function feedback(parameters) {
@@ -86,7 +87,6 @@ export async function getUnreadMsgListAPI(parameters) {
   });
 }
 
-
 // 动态列保存
 export async function dynamicColumnSave(params) {
   return request('/ams-base-admin/dynamic/column/save', {
@@ -96,7 +96,7 @@ export async function dynamicColumnSave(params) {
 }
 // 动态列获取
 export async function dynamicColumnList(pageCode) {
-  return request('/ams-base-admin/dynamic/column/list?pageCode=' + pageCode, {
+  return request('/yss-base-admin/dynamic/column/list?pageCode=' + pageCode, {
     method: 'GET',
   });
 }
@@ -105,4 +105,9 @@ export async function dynamicColumnDelete(pageCode) {
   return request('/ams-base-admin/dynamic/column/delete?pageCode=' + pageCode, {
     method: 'DELETE',
   });
+}
+
+// 获取项目名称和Logo
+export async function GET_PROJECT_INFO_API() {
+  return request(`${type.GET_PROJECT_INFO_API}`);
 }

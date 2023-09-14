@@ -3,22 +3,22 @@
  */
 import React, { Component } from 'react';
 import {
-  Table,
-  Modal,
-  Form,
-  Select,
+  Breadcrumb,
   Button,
-  Row,
-  Col,
-  Input,
   Card,
+  Col,
+  Form,
+  Icon,
+  Input,
+  message,
+  Modal,
   Pagination,
+  Row,
+  Select,
+  Table,
   Tabs,
   Tag,
-  Icon,
   Tooltip,
-  message,
-  Breadcrumb,
 } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
@@ -38,11 +38,335 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+
 @Form.create()
 class SeriesManage extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentDidMount() {
+    this.getTableList();
+    this.getDropLists();
+    this.handleColumns();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.setTimeoutInputElement);
+    clearTimeout(this.setTimeoutAttr);
+  }
+
+  // 我发起 已办理 不展示 任务到达时间
+  handleColumns = () => {
+    let columns1 = [];
+    this.state.columns.forEach(item => {
+      if (item.title !== '任务到达时间') columns1.push(item);
+    });
+    this.setState({
+      columns1,
+    });
+  };
+
+  // 获取列表数据
+  getTableList() {
+    const { pageNum, pageSize, keyWords, direction, field, taskTypeCode } = this.state;
+    const { dispatch, form } = this.props;
+    const formItems = form.getFieldsValue();
+
+    const payload = {
+      pageNum,
+      pageSize,
+      keyWords,
+      direction,
+      field,
+      ...formItems,
+      isProduct: 0,
+      taskTypeCode,
+    };
+    dispatch({
+      type: 'projectInfoManger/getProductList',
+      payload,
+    }).then(res => {
+      this.setState(
+        {
+          dataList: [],
+          total: 0,
+        },
+        () => {
+          if (res && res.status === 200) {
+            this.setState({
+              dataList: res.data.rows,
+              total: res.data.total,
+            });
+          } else {
+            message.warn(res.message);
+          }
+        },
+      );
+      this.setTimeoutInputElement = setTimeout(() => {
+        let InputElement = document.querySelector('.ant-pagination-options-quick-jumper>input');
+        if (InputElement) InputElement.value = '';
+      }, 300);
+
+      this.setState({
+        selectedRowKeys: [],
+        selectedRows: [],
+      });
+    });
+  }
+
+  formatDate(date, type) {
+    if (type === 1) return moment(date).format('YYYY-MM-DD 00:00:00');
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+  }
+
+  seachTableData = val => {
+    this.setState(
+      {
+        keyWords: val,
+        pageNum: 1,
+      },
+      () => {
+        this.getTableList();
+      },
+    );
+  };
+
+  getDropLists() {
+    const { dispatch } = this.props;
+    // this.getSeriesList();
+    //获取系列名称下拉数据
+    this.props
+      .dispatch({
+        type: 'seriesManage/getSeriesName',
+        payload: {
+          type: 0,
+          projectState: [],
+        },
+      })
+      .then(res => {
+        if (res && res.status === 200) {
+          this.setState({
+            seriesList: res.data,
+          });
+        }
+      });
+    // 所属部门下拉框数据获取
+    dispatch({
+      type: 'projectInfoManger/getProcodeAndProDept',
+      payload: {
+        type: 4,
+      },
+    });
+    // 项目类型下拉框数据获取
+    dispatch({
+      type: 'addProjectInfo/getProTypeList',
+      payload: {
+        fcode: 'awp_pro_type',
+      },
+    });
+    // 系列流程类型下拉框数据获取
+    dispatch({
+      type: 'addProjectInfo/getProTypeList',
+      payload: {
+        fcode: 'awp_process_series',
+      },
+    });
+  }
+
+  // 条件查询
+  searchBtn = () => {
+    this.setState(
+      {
+        pageNum: 1,
+      },
+      () => {
+        this.getTableList();
+      },
+    );
+  };
+
+  /**
+   * @method 展开搜索/收起搜索
+   */
+  toggle = () => {
+    const { expand } = this.state;
+    this.props.form.resetFields();
+    this.setState({ expand: !expand, keyWords: '' });
+  };
+
+  // 删除操作
+  delete = record => {
+    confirm({
+      title: '温馨提示',
+      closable: true,
+      content: '请确认是否删除这条数据?',
+      onOk: () => {
+        this.props
+          .dispatch({
+            type: 'projectInfoManger/delete',
+            payload: {
+              instanceIds: [record.processInstanceId],
+            },
+          })
+          .then(res => {
+            if (res && res.status === 200) {
+              this.getTableList();
+            }
+          });
+      },
+    });
+  };
+
+  // 批量删除
+  handleDelete = () => {
+    const { selectedRows } = this.state;
+    const instanceIds = [];
+    for (let i = 0; i < selectedRows.length; i++) {
+      if (selectedRows[i].checked === 1 || selectedRows[i].operStatus === 'S001_2') {
+        message.info('已生效或流程中的项目不能删除!');
+        return;
+      }
+      instanceIds.push(selectedRows[i].processInstanceId);
+    }
+    confirm({
+      title: '温馨提示',
+      closable: true,
+      content: '请确认是否批量删除这些数据?',
+      onOk: () => {
+        this.props
+          .dispatch({
+            type: 'projectInfoManger/delete',
+            payload: {
+              instanceIds,
+            },
+          })
+          .then(res => {
+            if (res && res.status === 200) {
+              this.getTableList();
+            }
+          });
+      },
+    });
+  };
+
+  /**
+   * @method 改变表格排序
+   * @param {*} pagination
+   * @param {*} filters
+   * @param {*} sorter
+   */
+  changeTable = (pagination, filters, sorter) => {
+    this.setState(
+      {
+        direction: sorter.order ? (sorter.order === 'ascend' ? 'asc' : 'desc') : '',
+        field: sorter.order ? sorter.field : '',
+      },
+      () => this.getTableList(),
+    );
+  };
+
+  /**
+   * @method 选中列表
+   * @param {*} selectedRowKeys
+   * @param selectedRows
+   */
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedRowKeys,
+      selectedRows,
+    });
+  };
+
+  // 切换tab
+  changeTabs = key => {
+    tabKey = key;
+    this.props.form.resetFields();
+    this.setState(
+      {
+        pageNum: 1,
+        pageSize: 10,
+        direction: '',
+        field: '',
+        taskTypeCode: key,
+      },
+      () => {
+        this.getTableList();
+      },
+    );
+  };
+
+  /**
+   * @method  handleSetPage 切换页数的时候触发
+   * @param page 当前页数
+   * @param pageSize
+   */
+  handleSetPage = (page, pageSize) => {
+    this.setState(
+      {
+        pageNum: page,
+        pageSize,
+      },
+      () => this.getTableList(),
+    );
+  };
+
+  // 查看操作
+  watchDetail = ({ processInstanceId }) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'taskManagementDeal/getCurrentNodeIdByProcessIdsReq',
+      payload: {
+        processInstanceIds: [processInstanceId],
+      },
+      callback: res => {
+        if (res.data) {
+          dispatch(
+            routerRedux.push({
+              pathname: `/processCenter/processDetail?processInstanceId=${processInstanceId}&nodeId=${res.data[0].taskDefinitionKey}&taskId=${res.data[0].id}`,
+            }),
+          );
+        }
+      },
+    });
+  };
+
+  // 修改操作
+  changeProjectInfo = record => {
+    router.push(
+      `/projectManagement/addProjectSeries?proCode=${record.proCode}&comeFrom=series&taskId=${record.taskId}`,
+    );
+  };
+
+  // 审核
+  handelCheck = record => {
+    this.props.dispatch(
+      routerRedux.push({
+        pathname: '/processCenter/taskDeal',
+        query: {
+          taskId: record.taskId,
+          processDefinitionId: record.processDefinitionId,
+          processInstanceId: record.processInstanceId,
+          taskDefinitionKey: record.taskDefinitionKey,
+          mode: 'deal',
+        },
+      }),
+    );
+  };
+
+  // 流转历史
+  handleHistory = ({ processInstanceId, taskId }) => {
+    const { dispatch } = this.props;
+    dispatch(
+      routerRedux.push({
+        pathname: '/processCenter/processHistory',
+        query: {
+          processInstanceId,
+          taskId,
+        },
+      }),
+    );
+  };
 
   state = {
     expand: false, // 判断搜索是否隐藏
@@ -112,7 +436,7 @@ class SeriesManage extends Component {
         align: 'center',
         sorter: true,
         width: 120,
-        render: (operStatus, record) => {
+        render: operStatus => {
           return (
             <Tag>
               {operStatus === 'S001_1' ? '待提交' : operStatus === 'S001_2' ? '流程中' : '已结束'}
@@ -166,15 +490,10 @@ class SeriesManage extends Component {
         },
         sorter: true,
         width: 170,
-        render: (text, record) => {
-          let { customerName } = record;
-          if ('customerList' in record) {
-            customerName =
-              record.customerList && record.customerList.map(item => item.customerName).join(',');
-          }
+        render: customerName => {
           return (
             <Tooltip placement="topLeft" title={customerName}>
-              {customerName}
+              <span>{customerName}</span>
             </Tooltip>
           );
         },
@@ -186,20 +505,8 @@ class SeriesManage extends Component {
         align: 'center',
         sorter: true,
         width: 140,
-        render: (text, record) => {
-          let customerType = record.customerType === '1' ? '机构' : '自然人';
-          if ('customerList' in record) {
-            customerType =
-              record.customerList &&
-              record.customerList
-                .map(item => (item.customerType === '1' ? '机构' : '自然人'))
-                .join(',');
-          }
-          return (
-            <Tooltip placement="topLeft" title={customerType}>
-              {customerType}
-            </Tooltip>
-          );
+        render: customerType => {
+          return <span>{customerType === '1' ? '机构' : '自然人'}</span>;
         },
       },
       // {
@@ -286,7 +593,7 @@ class SeriesManage extends Component {
                 <Button
                   style={{
                     display:
-                      (taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
+                      (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                       record.operStatus === 'S001_1'
                         ? 'inline-block'
                         : 'none',
@@ -302,7 +609,7 @@ class SeriesManage extends Component {
                 <Button
                   style={{
                     display:
-                      taskTypeCode == 'T001_1' && record.operStatus == 'S001_2'
+                      taskTypeCode === 'T001_1' && record.operStatus === 'S001_2'
                         ? 'inline-block'
                         : 'none',
                   }}
@@ -317,9 +624,9 @@ class SeriesManage extends Component {
                 <Button
                   style={{
                     display:
-                      taskTypeCode == 'T001_3' ||
-                      taskTypeCode == 'T001_5' ||
-                      ((taskTypeCode == 'T001_1' || taskTypeCode == 'T001_4') &&
+                      taskTypeCode === 'T001_3' ||
+                      taskTypeCode === 'T001_5' ||
+                      ((taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') &&
                         record.operStatus !== 'S001_1')
                         ? 'inline-block'
                         : 'none',
@@ -460,7 +767,7 @@ class SeriesManage extends Component {
         dataIndex: 'checked',
         sorter: true,
         width: 100,
-        render: (checked, record) => {
+        render: checked => {
           return <span>{checked ? '已生效' : '未生效'}</span>;
         },
       },
@@ -474,7 +781,7 @@ class SeriesManage extends Component {
       return (
         <Card style={{ width: '1680px' }}>
           <Table
-            rowKey={r => r.proCode}
+            rowKey={record => record.proCode}
             columns={expandedColumns}
             dataSource={allSubTableListObj[`seriesCode_${record.proCode}`]}
             pagination={false}
@@ -483,320 +790,6 @@ class SeriesManage extends Component {
         </Card>
       );
     },
-  };
-
-  componentDidMount() {
-    this.getTableList();
-    this.getDropLists();
-    this.handleColumns();
-  }
-
-  // 我发起 已办理 不展示 任务到达时间
-  handleColumns = () => {
-    let columns1 = [];
-    this.state.columns.forEach(item => {
-      if (item.title !== '任务到达时间') columns1.push(item);
-    });
-    this.setState({
-      columns1,
-    });
-  };
-
-  // 获取列表数据
-  getTableList() {
-    const { pageNum, pageSize, keyWords, direction, field, taskTypeCode } = this.state;
-    const { dispatch, form } = this.props;
-    const formItems = form.getFieldsValue();
-
-    const payload = {
-      pageNum,
-      pageSize,
-      keyWords,
-      direction,
-      field,
-      ...formItems,
-      isProduct: 0,
-      taskTypeCode,
-    };
-    dispatch({
-      type: 'projectInfoManger/getProductList',
-      payload,
-    }).then(res => {
-      this.setState(
-        {
-          dataList: [],
-          total: 0,
-        },
-        () => {
-          if (res && res.status === 200) {
-            this.setState({
-              dataList: res.data.rows,
-              total: res.data.total,
-            });
-          } else {
-            message.warn(res.message);
-          }
-        },
-      );
-      setTimeout(() => {
-        let InputElement = document.querySelector('.ant-pagination-options-quick-jumper>input');
-        if (InputElement) InputElement.value = '';
-      }, 300);
-
-      this.setState({
-        selectedRowKeys: [],
-        selectedRows: [],
-      });
-    });
-  }
-
-  formatDate(date, type) {
-    if (type === 1) return moment(date).format('YYYY-MM-DD 00:00:00');
-    return moment(date).format('YYYY-MM-DD HH:mm:ss');
-  }
-
-  seachTableData = val => {
-    this.setState(
-      {
-        keyWords: val,
-        pageNum: 1,
-      },
-      () => {
-        this.getTableList();
-      },
-    );
-  };
-
-  getDropLists() {
-    const { dispatch } = this.props;
-    // this.getSeriesList();
-    //获取系列名称下拉数据
-    this.props
-      .dispatch({
-        type: 'seriesManage/getSeriesName',
-        payload: {
-          type: 0,
-          projectState: [],
-        },
-      })
-      .then(res => {
-        if (res && res.status === 200) {
-          this.setState({
-            seriesList: res.data,
-          });
-        }
-      });
-    // 所属部门下拉框数据获取
-    dispatch({
-      type: 'projectInfoManger/getProcodeAndProDept',
-      payload: {
-        type: 4,
-      },
-    });
-    // 项目类型下拉框数据获取
-    dispatch({
-      type: 'addProjectInfo/getProTypeList',
-      payload: {
-        fcode: 'awp_pro_type',
-      },
-    });
-    // 系列流程类型下拉框数据获取
-    dispatch({
-      type: 'addProjectInfo/getProTypeList',
-      payload: {
-        fcode: 'awp_process_series',
-      },
-    });
-  }
-
-  // 条件查询
-  searchBtn = () => {
-    this.setState(
-      {
-        pageNum: 1,
-      },
-      () => {
-        this.getTableList();
-      },
-    );
-  };
-  /**
-   * @method 展开搜索/收起搜索
-   */
-  toggle = () => {
-    const { expand } = this.state;
-    this.props.form.resetFields();
-    this.setState({ expand: !expand, keyWords: '' });
-  };
-
-  // 删除操作
-  delete = record => {
-    confirm({
-      title: '温馨提示',
-      closable: true,
-      content: '请确认是否删除这条数据?',
-      onOk: () => {
-        this.props
-          .dispatch({
-            type: 'projectInfoManger/delete',
-            payload: {
-              instanceIds: [record.processInstanceId],
-            },
-          })
-          .then(res => {
-            if (res && res.status === 200) {
-              this.getTableList();
-            }
-          });
-      },
-    });
-  };
-
-  // 批量删除
-  handleDelete = () => {
-    const { selectedRows } = this.state;
-    const instanceIds = [];
-    for (let i = 0; i < selectedRows.length; i++) {
-      if (selectedRows[i].checked === 1 || selectedRows[i].operStatus === 'S001_2') {
-        message.info('已生效或流程中的项目不能删除!');
-        return;
-      }
-      instanceIds.push(selectedRows[i].processInstanceId);
-    }
-    confirm({
-      title: '温馨提示',
-      closable: true,
-      content: '请确认是否批量删除这些数据?',
-      onOk: () => {
-        this.props
-          .dispatch({
-            type: 'projectInfoManger/delete',
-            payload: {
-              instanceIds,
-            },
-          })
-          .then(res => {
-            if (res && res.status === 200) {
-              this.getTableList();
-            }
-          });
-      },
-    });
-  };
-
-  /**
-   * @method 改变表格排序
-   * @param {*} pagination
-   * @param {*} filters
-   * @param {*} sorter
-   */
-  changeTable = (pagination, filters, sorter) => {
-    this.setState(
-      {
-        direction: sorter.order ? (sorter.order == 'ascend' ? 'asc' : 'desc') : '',
-        field: sorter.order ? sorter.field : '',
-      },
-      () => this.getTableList(),
-    );
-  };
-
-  /**
-   * @method 选中列表
-   * @param {*} selectedRowKeys
-   */
-  onSelectChange = (selectedRowKeys, selectedRows) => {
-    this.setState({
-      selectedRowKeys,
-      selectedRows,
-    });
-  };
-
-  // 切换tab
-  changeTabs = key => {
-    tabKey = key;
-    this.props.form.resetFields();
-    this.setState(
-      {
-        pageNum: 1,
-        pageSize: 10,
-        direction: '',
-        field: '',
-        taskTypeCode: key,
-      },
-      () => {
-        this.getTableList();
-      },
-    );
-  };
-  /**
-   * @method  handleSetPage 切换页数的时候触发
-   * @param page 当前页数
-   */
-  handleSetPage = (page, pageSize) => {
-    this.setState(
-      {
-        pageNum: page,
-        pageSize,
-      },
-      () => this.getTableList(),
-    );
-  };
-
-  // 查看操作
-  watchDetail = ({ processInstanceId }) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'taskManagementDeal/getCurrentNodeIdByProcessIdsReq',
-      payload: {
-        processInstanceIds: [processInstanceId],
-      },
-      callback: res => {
-        if (res.data) {
-          dispatch(
-            routerRedux.push({
-              pathname: `/processCenter/processDetail?processInstanceId=${processInstanceId}&nodeId=${res.data[0].taskDefinitionKey}&taskId=${res.data[0].id}`,
-            }),
-          );
-        }
-      },
-    });
-  };
-
-  // 修改操作
-  changeProjectInfo = record => {
-    router.push(
-      `/projectManagement/addProjectSeries?proCode=${record.proCode}&comeFrom=series&taskId=${record.taskId}`,
-    );
-  };
-
-  // 审核
-  handelCheck = record => {
-    this.props.dispatch(
-      routerRedux.push({
-        pathname: '/processCenter/taskDeal',
-        query: {
-          taskId: record.taskId,
-          processDefinitionId: record.processDefinitionId,
-          processInstanceId: record.processInstanceId,
-          taskDefinitionKey: record.taskDefinitionKey,
-          mode: 'deal',
-        },
-      }),
-    );
-  };
-
-  // 流转历史
-  handleHistory = ({ processInstanceId, taskId }) => {
-    const { dispatch } = this.props;
-    dispatch(
-      routerRedux.push({
-        pathname: '/processCenter/processHistory',
-        query: {
-          processInstanceId,
-          taskId,
-        },
-      }),
-    );
   };
 
   productFilterOption = (input, option) => {
@@ -840,36 +833,36 @@ class SeriesManage extends Component {
           curClickId: record.proCode,
         }),
         () => {
-          this.handleSubTableData(record);
+          this.handleSubTableData(record.proCode);
         },
       );
     }
   }
 
   // 子表格查询
-  handleSubTableData(record) {
+  handleSubTableData(proCode) {
     this.props
       .dispatch({
         type: 'seriesManage/getProductBySeries',
         payload: {
-          seriesCode: record.proCode,
+          seriesCode: proCode,
         },
       })
       .then(() => {
-        setTimeout(() => {
-          const attr = `data-row-key=${record.taskId}-extra-row`;
+        this.setTimeoutAttr = setTimeout(() => {
+          const attr = `data-row-key=${proCode + '-extra-row'}`;
           const $dom = this.attrSelect(`tr[${attr}]`);
-          const h = this.getH($dom);
+          let h = this.getH($dom);
 
           const $row = this.attrSelect(`tr[${attr}]`);
           this.setH($row, h);
-        });
+        }, 500);
       });
   }
 
   // 原生JS简单实现标签+属性选择器
   attrSelect = name => {
-    const Arr = [];
+    let Arr = [];
     const ns = name.match(/([a-z]+)\[([^=]+)=([^\]]*)\]/);
     if (!ns) return null;
     const tag = ns[1];
@@ -1091,9 +1084,9 @@ class SeriesManage extends Component {
             expandedRowRender={expandedRowRender}
             onExpand={(expanded, record) => this.handleExpand(expanded, record)}
             loading={loading}
-            rowKey={record => record.taskId}
+            rowKey={record => record.proCode}
             rowSelection={{
-              selectedRowKeys,
+              selectedRowKeys: selectedRowKeys,
               onChange: this.onSelectChange,
             }}
             pagination={false}

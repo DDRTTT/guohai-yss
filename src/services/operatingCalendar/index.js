@@ -150,32 +150,3 @@ export function getProductEnum(params) {
 export function getperson(params) {
   return request.get(`${uriBase}/user/getperson`, { params });
 }
-
-// 开放日设置列表
-export function queryProductPeriodInfoList(params) {
-  return request.post(`${uri}/productPeriodInfo/list`, {
-    data: params,
-  });
-}
-
-// 开放日设置新增
-export function addProductPeriodInfo(params) {
-  return request.post(`${uri}/productPeriodInfo/add`, {
-    data: params,
-  });
-}
-
-// 开放日设置删除
-export function delProductPeriodInfo(id) {
-  return request.get(`${uri}/productPeriodInfo/delLogic?id=${id}`);
-}
-
-// 产品全称/代码下拉列表
-export async function getProNameAndCodeAPI() {
-  return request(`${uriLife}/product/review/productEnum/search`);
-}
-
-// 请求 项目类型 下拉列表项
-export function getProTypeListAPI() {
-  return request(`/ams-base-parameter/datadict/queryInfo?fcode=K001`);
-}

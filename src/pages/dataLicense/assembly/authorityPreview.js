@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Checkbox, Col, List, Row, Spin, Table } from 'antd';
+import { Button, Checkbox, Col, List, Row, Spin } from 'antd';
+import { Table } from '@/components';
 import eq from 'lodash/eq';
 import styles from '../Less/dataLicense.less';
 

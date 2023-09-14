@@ -45,9 +45,31 @@ export async function handleSearchGroup(params) {
   });
 }
 
+//
+export async function searchBusGroup(params) {
+  return request(`${uri}/searchBusGroup`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function searchStackGroup(params) {
+  return request(`${uri}/searchStackGroup`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 新建页面table
 export async function handleSearchtimevaguedata(params) {
   return request(`${uri}/searchtimevaguedata`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function handleSearchtimevaguedata2(params) {
+  return request(`${uri}/searchBusLogList`, {
     method: 'POST',
     data: params,
   });
@@ -61,9 +83,25 @@ export async function handleLogDetails(params) {
   });
 }
 
+// 日志详情
+export async function handleLogDetails2(params) {
+  return request(`${uri}/searchBusLogById?${stringify(params)}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 堆栈日志
 export async function handleLogStack(params) {
   return request(`${uri}/searchstacklog`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 堆栈日志
+export async function handleLogStack2(params) {
+  return request(`${uri}/searchStackLog`, {
     method: 'POST',
     data: params,
   });

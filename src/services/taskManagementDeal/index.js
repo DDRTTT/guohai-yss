@@ -104,10 +104,3 @@ export const getNoPathTreeApi = params =>
 // 目录树：判断当前父节点下是否有文件
 export const getFileStateByPathApi = params =>
   request(`${uri}/task/path/getFileStateByPath?${stringify(params)}`);
-
-export async function withStandardCatalogueApi(params) {
-  return request(`${uri}/path/comparison/withStandardCatalogue`, {
-    method: 'POST',
-    data: params,
-  });
-}

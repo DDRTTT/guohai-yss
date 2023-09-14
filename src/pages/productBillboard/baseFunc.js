@@ -105,11 +105,9 @@ export const handleChangeThousands = val => {
   if (typeof val === 'number') {
     return val.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
   } else if (typeof val === 'string') {
-    if (val) {
-      return parseFloat(val)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-    } else return '-';
+    return parseFloat(val)
+      .toFixed(2)
+      .replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
   } else return val ? val.toString().replace(/null/g, '-') : val == 0 ? 0 : '-';
 };
 

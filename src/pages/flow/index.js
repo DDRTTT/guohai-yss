@@ -40,7 +40,7 @@ const Index = props => {
   useEffect(() => {
     // 获取所有信息
     getFlowAttrList();
-    handleWordDictionaryFetch('A002');
+    handleWordDictionaryFetch('TG004');
     handleAuthorityProduct('flow'); // 当前菜单代码
     const { id, preview, edit } = props.location.query;
     if (preview) {
@@ -223,7 +223,7 @@ const Index = props => {
         flowCOmmonData={saveFlowCommonMsg}
         flowAttrData={saveFlowAttrMsg}
         originData={saveOriginMsg}
-        wordDictionary={saveWordDictionaryFetch}
+        wordDictionary={saveWordDictionaryFetch.TG004}
         authorityProduct={saveAuthorityProduct}
         getChildValue={tempObj}
         flowInfo={saveFlowInfo}

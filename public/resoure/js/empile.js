@@ -240,8 +240,6 @@
     pageVisibility: getPageVisibility(),
     transitionendName: getTransitionEndName(),
   };
-  console.log(_);
-
 
   // ### 2、参数中CSS样式对象的解析方法和类
 
@@ -285,10 +283,11 @@
 
     // 获取所有没有被禁用的style标签
     obtainAvailStyles: function() {
-      var sheets = _.toArray(doc.styleSheets);
-      return sheets.filter(function(sheetList) {
-        return !sheetList.disabled && sheetList.ownerNode.tagName === 'STYLE';
-      });
+      var sheets = _.toArray(doc.styleSheets),
+        availSheets = sheets.filter(function(sheetList) {
+          return !sheetList.disabled && sheetList.ownerNode.tagName === 'STYLE';
+        });
+      return availSheets;
     },
 
     // 页面中添加CSS样式新规则，参数：[cssText,cssText,...]数组
@@ -705,8 +704,9 @@
       previousIndex = empile.activeIndex;
     }
     activeSlide = _.find(originList, function(slide) {
-      var i = +slide.getAttribute(dataSlideIndex);
-      return i === baseIndex;
+      var i = +slide.getAttribute(dataSlideIndex),
+        flag = i === baseIndex;
+      return flag;
     });
     activeIndex = originList.indexOf(activeSlide);
 

@@ -7,7 +7,7 @@ import router from 'umi/router';
 const Index = ({ breadcrumbArray }) => {
   const indexRouter = {
     title: '首页',
-    url: '/base/processCenterHome',
+    url: '/base/prospectuSetHome',
   };
   const [breadcrumb, setBreadcrumb] = useState([]);
   const menu = JSON.parse(getSession(USER_MENU));
@@ -28,7 +28,6 @@ const Index = ({ breadcrumbArray }) => {
     } else {
       setBreadcrumb([indexRouter].concat(parentMenuItem, currentMenuItem));
     }
-    sessionStorage.setItem("breadcrumb",JSON.stringify(breadcrumb))
   };
 
   useEffect(() => getBreadcrumb(), [breadcrumbArray]);

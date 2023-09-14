@@ -1,9 +1,8 @@
 /**
  * 产品看板-查看产品-产品数据-服务机构
  */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Row, Col, Table, Button, Spin } from 'antd';
-import moment from 'moment/moment';
+import React, { useContext } from 'react';
+import { Row, Col } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';

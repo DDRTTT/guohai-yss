@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, forwardRef, useMemo } from 'react';
-import { Row, Col, Form, Layout, message, Spin, Select, Icon } from 'antd';
+import { Row, Col, Form, Layout, message, Spin, Select, Icon, Empty } from 'antd';
 import { connect } from 'dva';
 import icon_cornerMark from '@/assets/processLibraryGuide/icon_cornerMark.png';
 import icon_test from '@/assets/processLibraryGuide/icon_test.png';
@@ -8,7 +8,7 @@ import icon_close from '@/assets/processLibraryGuide/icon_close.png';
 import router from 'umi/router';
 import { commonRequest } from '@/services/processCenterHome/index';
 import style from './index.less';
-import flatMap from 'lodash/flatMap';
+import flatMapDeep from 'lodash/flatMapDeep';
 import { getMenu } from '@/utils/session';
 import { recursiveGetData } from '@/utils/utils';
 
@@ -194,7 +194,7 @@ const Index = props => {
     stageList: planList,
     proTypeAndCodeList,
     proStageTaskList,
-    codeList: { A002: proTypeList = [] },
+    codeList: { TG004: proTypeList = [] },
     getProTypeAndCodeLoading,
     // getProStageTaskLoading,
     getPhaseDataLoading,
@@ -247,8 +247,8 @@ const Index = props => {
   // }, [getStageListLoading, getProStageTaskLoading]);
   // 最下面流程的loading
   useEffect(() => {
-    setDownLoading(getPhaseDataLoading || getProTypeAndCodeLoading);
-    setUpLoading(getPhaseDataLoading || getProTypeAndCodeLoading);
+    setDownLoading(!!getPhaseDataLoading || !!getProTypeAndCodeLoading);
+    setUpLoading(!!getPhaseDataLoading || !!getProTypeAndCodeLoading);
   }, [getPhaseDataLoading, getProTypeAndCodeLoading]);
 
   useEffect(() => {
@@ -275,10 +275,11 @@ const Index = props => {
 
   useEffect(() => {
     // 获取用户权限
-    menuTree = ((getMenu() && JSON.parse(getMenu())) || []).find(item => {
-      return item.code == 'productLifecycle';
-    });
-    menuTree = flatMap(recursiveGetData(menuTree, 'children'));
+    menuTree = (getMenu() && JSON.parse(getMenu())) || [];
+    // .find(item => {
+    //   return item.code == 'productLifecycle';
+    // });
+    menuTree = flatMapDeep(recursiveGetData(menuTree, 'children'));
     menuTree =
       (menuTree &&
         menuTree.map(item => {
@@ -287,7 +288,7 @@ const Index = props => {
       [];
     dispatch({
       type: 'investorReview/getDicsByTypes',
-      payload: ['A002'],
+      payload: ['TG004'],
     });
   }, []);
   useEffect(() => {
@@ -311,7 +312,7 @@ const Index = props => {
     let tempList = phaseList.map(item => {
       return item.process;
     });
-    tempList = flatMap(tempList);
+    tempList = flatMapDeep(tempList);
     const tempData = tempList.find(sonItem => sonItem.id == currentId) || {};
     setCurrentData(tempData);
   }, [currentId]);
@@ -322,7 +323,7 @@ const Index = props => {
     let tempList = phaseList.map(item => {
       return item.process.map(item => item.code);
     });
-    tempList = _.flatMap(tempList);
+    tempList = _.flatMapDeep(tempList);
     dispatch({
       type: 'processLibraryGuide/getProTypeAndCode',
       payload: {
@@ -394,18 +395,22 @@ const Index = props => {
           </Header>
         </Spin>
         <Spin spinning={downLoading}>
-          <div className="content">
-            {fuseList.map((item, index) => {
-              return (
-                <PhaseWrap
-                  data={item}
-                  index={index}
-                  currentId={currentId}
-                  changeCurrentId={changeCurrentId}
-                  key={item.code}
-                />
-              );
-            })}
+          <div className="contents">
+            {fuseList.length > 0 ? (
+              fuseList.map((item, index) => {
+                return (
+                  <PhaseWrap
+                    data={item}
+                    index={index}
+                    currentId={currentId}
+                    changeCurrentId={changeCurrentId}
+                    key={item.code}
+                  />
+                );
+              })
+            ) : (
+              <Empty className="emptyIcon" />
+            )}
             <GuideDetail
               ref={detailRef}
               data={currentData}

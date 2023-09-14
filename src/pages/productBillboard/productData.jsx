@@ -20,9 +20,7 @@ import BonusOfDetail from './bonusOfDetail';
 import Investor from './investor';
 import Stakeholder from './stakeholder';
 import SalesOrganization from './salesOrganization';
-import RegulatoryElements from './regulatoryElements';
 import { PageContainers } from '@/components';
-import Gird from '@/components/Gird';
 
 const { TabPane } = Tabs;
 
@@ -82,6 +80,7 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
         return (receiveArguments.current = pair[1]);
       }
     }
+    return message.error('参数接收错误');
   };
 
   /**
@@ -114,10 +113,7 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
    * 返回按钮(返回产品视图)
    */
   const handleGoProductBillboard = () => {
-    const defaultActiveKey = handleGetUrlParam('defaultActiveKey') || '1';
-    if (defaultActiveKey === '1') {
-      router.push('./index');
-    } else history.go(-1);
+    router.push('./index');
   };
 
   /**
@@ -192,28 +188,61 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
    *产品数据渲染
    */
   const handleAddData = data => {
-    const drawerConfig = [
-      { label: '产品全称', value: 'proName' },
-      { label: '产品代码', value: 'proCode' },
-      { label: '产品简称', value: 'proFname' },
-      { label: '管理人', value: 'proCustodian' },
-      { label: '产品类型', value: 'proTypeName' },
-      { label: '风险等级', value: 'proRisk' },
-      { label: '募集开始日', value: 'recSdate' },
-      { label: '募集实际结束日', value: 'recEdate' },
-      { label: '产品成立日', value: 'proCdate' },
-      { label: '产品到期日', value: 'proEdate' },
-    ];
     return (
       <Spin spinning={loadingData} size="large" style={{ backgroundColor: '#fff' }}>
         <div
           className={styles.bodyData}
-          style={{ height: 'calc(100vh - 130px)', overflowY: 'auto' }}
+          style={{ height: 'calc(100vh - 200px)', overflowY: 'auto' }}
         >
           <h2 style={{ fontSize: '24px', paddingBottom: '10px', fontWeight: 'bold' }}>
             {data.proName ? `${data.proName}\xa0\xa0——\xa0${data.proCode}` : ''}
           </h2>
-          <Gird config={drawerConfig} info={productBillboardProductOverview} />
+          <div>
+            <Row gutter={[16, 16]}>
+              <Col span={2} />
+              <Col span={2}>产品全称:</Col>
+              <Col span={4}>{productBillboardProductOverview.proName || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>产品代码:</Col>
+              <Col span={4}>{productBillboardProductOverview.proCode || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>产品简称:</Col>
+              <Col span={4}>{productBillboardProductOverview.proFname || '—'}</Col>
+              <Col span={2} />
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={2} />
+              <Col span={2}>管理人:</Col>
+              <Col span={4}>{productBillboardProductOverview.proCustodian || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>产品类型:</Col>
+              <Col span={4}>{productBillboardProductOverview.proTypeName || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>风险等级:</Col>
+              <Col span={4}>{productBillboardProductOverview.proRisk || '—'}</Col>
+              <Col span={1} />
+              <Col span={1} />
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={2} />
+              <Col span={2}>募集开始日:</Col>
+              <Col span={4}>{productBillboardProductOverview.recSdate || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>募集实际结束日:</Col>
+              <Col span={4}>{productBillboardProductOverview.recEdate || '—'}</Col>
+              <Col span={1} />
+              <Col span={2}>产品成立日:</Col>
+              <Col span={4}>{productBillboardProductOverview.proCdate || '—'}</Col>
+              <Col span={1} />
+              <Col span={1} />
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={2} />
+              <Col span={2}>产品到期日:</Col>
+              <Col span={4}>{productBillboardProductOverview.proEdate || '—'}</Col>
+              <Col span={1} />
+            </Row>
+          </div>
           <div style={{ clear: 'both' }}>{handleAddTabs()}</div>
         </div>
       </Spin>
@@ -238,9 +267,8 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
   // 创建Tabs标签页
   const handleAddTabs = () => {
     if (productBillboardProductOverview.proCode) {
-      const defaultActiveKey = handleGetUrlParam('defaultActiveKey') || '1';
       return (
-        <Tabs defaultActiveKey={defaultActiveKey} className={styles.bgcFFF}>
+        <Tabs defaultActiveKey="1" className={styles.bgcFFF}>
           <TabPane tab="产品生命周期" key="1" className={styles.tabsTabPane}>
             <MyContext.Provider value={{ proTypeArguments }}>
               <ProductLifeCycle />
@@ -279,13 +307,6 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
               <TimeLine />
             </MyContext.Provider>
           </TabPane>
-
-          <TabPane tab="监管要素" key="14" className={styles.tabsTabPane}>
-            <MyContext.Provider value={{ proCodeArguments }}>
-              <RegulatoryElements />
-            </MyContext.Provider>
-          </TabPane>
-
           <TabPane tab="产品文档" key="4" className={styles.tabsTabPane}>
             <MyContext.Provider value={{ proCodeArguments }}>
               <ProductFile />
@@ -298,10 +319,10 @@ const ProductData = ({ dispatch, productBillboard: { productBillboardProductOver
             </MyContext.Provider>
           </TabPane>
           {/* <TabPane tab="定期报告" key="8" className={styles.tabsTabPane}>
-             <MyContext.Provider value={{ proCodeArguments }}>
-               <PeriodicReport />
-             </MyContext.Provider>
-           </TabPane> */}
+            <MyContext.Provider value={{ proCodeArguments }}>
+              <PeriodicReport />
+            </MyContext.Provider>
+          </TabPane> */}
           <TabPane tab="评审记录" key="9" className={styles.tabsTabPane}>
             <MyContext.Provider value={{ proCodeArguments }}>
               <ReviewRecord />

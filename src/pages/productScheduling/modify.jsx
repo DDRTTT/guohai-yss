@@ -181,6 +181,7 @@ class RegistrationForm extends React.Component {
       productScheduling: { proBeDepList, ccObjectList, productList, proTypeList },
     } = this.props;
     const { productData, recordList } = this.state;
+
     const tProps = {
       treeData: ccObjectList,
       onChange: this.onClickChange,
@@ -201,22 +202,12 @@ class RegistrationForm extends React.Component {
           sm: { span: 16 },
         },
       };
-      const formItemLayoutForOne = {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 3 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
-        },
-      };
 
       return (
         <Form>
-          <div className={styles.box,'info-form'}>
+          <div className={styles.box}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={8}>
+              <Col md={12}>
                 <FormItem label="产品名称:" {...formItemLayout}>
                   {getFieldDecorator('proNames', {
                     initialValue: { label: productData.proNames, value: productData.proCode },
@@ -240,7 +231,9 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8}>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="产品代码:" {...formItemLayout}>
                   {getFieldDecorator('proCode', {
                     initialValue: productData.proCode,
@@ -261,7 +254,9 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8}>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="产品类型:" {...formItemLayout}>
                   {getFieldDecorator('proType', {
                     initialValue: productData.proType,
@@ -278,7 +273,9 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8}>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="投资类型:" {...formItemLayout}>
                   {getFieldDecorator('proBelongDepartment', {
                     initialValue: productData.proArchivalTypeName
@@ -297,7 +294,9 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
-              <Col md={8}>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="产品归属部门:" {...formItemLayout}>
                   {getFieldDecorator('proBelongDepartment', {
                     initialValue: productData.proBelongDepartmentNames
@@ -316,8 +315,10 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
+            </Row>
             {productData.proType !== 'A002_1' && (
-                <Col md={8}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                <Col md={12}>
                   <FormItem name="proTa" label="所属TA:" {...formItemLayout}>
                     {getFieldDecorator('proTa', {
                       initialValue: productData.proTa ? productData.proTa : '',
@@ -330,9 +331,11 @@ class RegistrationForm extends React.Component {
                     )}
                   </FormItem>
                 </Col>
+              </Row>
             )}
             {productData.proType !== 'A002_1' && (
-                <Col md={8}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                <Col md={12}>
                   <FormItem label="募集日期：" {...formItemLayout}>
                     {getFieldDecorator('recSdateDate', {
                       initialValue: [
@@ -343,9 +346,11 @@ class RegistrationForm extends React.Component {
                     })(<RangePicker />)}
                   </FormItem>
                 </Col>
+              </Row>
             )}
             {productData.proType !== 'A002_1' && (
-                <Col md={8}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                <Col md={12}>
                   <FormItem label="是否允许自有资金参与：" {...formItemLayout}>
                     {getFieldDecorator('canOwnfundParticipation', {
                       initialValue: productData.canOwnfundParticipation,
@@ -357,8 +362,10 @@ class RegistrationForm extends React.Component {
                     )}
                   </FormItem>
                 </Col>
+              </Row>
             )}
-              <Col md={8}>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="计划成立日：" {...formItemLayout}>
                   {getFieldDecorator('proCdate', {
                     initialValue: moment(productData.proCdate, 'YYYY-MM-DD'),
@@ -366,7 +373,9 @@ class RegistrationForm extends React.Component {
                   })(<DatePicker />)}
                 </FormItem>
               </Col>
-              <Col md={8}>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
                 <FormItem label="成立备案联系人：" {...formItemLayout}>
                   {getFieldDecorator('proRecordContactor', {
                     initialValue: productData.proRecordContactor,
@@ -390,8 +399,10 @@ class RegistrationForm extends React.Component {
                   )}
                 </FormItem>
               </Col>
+            </Row>
             {productData.proType !== 'A002_1' && productData.canOwnfundParticipation == '1' && (
-                <Col md={8}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                <Col md={12}>
                   <FormItem label="预计自有资金参与日：" {...formItemLayout}>
                     {getFieldDecorator('canOwnfundPartDate', {
                       initialValue: moment(
@@ -412,9 +423,11 @@ class RegistrationForm extends React.Component {
                     )}
                   </FormItem>
                 </Col>
+              </Row>
             )}
             {productData.proType !== 'A002_1' && productData.canOwnfundParticipation == '1' && (
-                <Col md={8}>
+              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                <Col md={12}>
                   <FormItem label="最晚自有资金公告日：" {...formItemLayout}>
                     {getFieldDecorator('canOwnfundNoticeDate', {
                       initialValue: moment(
@@ -424,21 +437,23 @@ class RegistrationForm extends React.Component {
                     })(<DatePicker disabled />)}
                   </FormItem>
                 </Col>
+              </Row>
             )}
-              <Col md={8}>
-                <FormItem label="抄送：" {...formItemLayout}>
-                  {getFieldDecorator('recordNames', {
-                    initialValue: productData.ccOVs || null,
-                  })(<TreeSelect {...tProps} />)}
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12}>
+                <FormItem label="备注：" {...formItemLayout}>
+                  {getFieldDecorator('remarks', {
+                    initialValue: productData.remarks ? productData.remarks : '',
+                  })(<TextArea rows={6} allowClear placeholder="请输入" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={17}>
-                <FormItem label="备注：" {...formItemLayoutForOne}>
-                  {getFieldDecorator('remarks', {
-                    initialValue: productData.remarks ? productData.remarks : '',
-                  })(<TextArea rows={6} allowClear placeholder="请输入" />)}
+              <Col md={12}>
+                <FormItem label="抄送：" {...formItemLayout}>
+                  {getFieldDecorator('recordNames', {
+                    initialValue: productData.ccOVs || null,
+                  })(<TreeSelect {...tProps} />)}
                 </FormItem>
               </Col>
             </Row>

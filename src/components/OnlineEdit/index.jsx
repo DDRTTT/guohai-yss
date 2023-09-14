@@ -35,7 +35,7 @@ const unitParameters = {
   mode: 'edit', // view 只读  edit 编辑
   user: {
     id: '',
-    name: '',
+    mane: '',
   },
   limitEditMode: 'nolimit',
 };
@@ -87,7 +87,6 @@ const OnlineEdit = ({ fileType, _key, title, url }) => {
           copyoutenabled: unitParameters.copyoutenabled, // 是否可复制编辑器里的内容
           commentFilter: unitParameters.commentFilter, // 批注权限
         },
-        usePdfjs: false,
       },
       documentType: getDocumentType(fileType), // 指明文档类型 如 word excel
       editorConfig: {
@@ -103,7 +102,7 @@ const OnlineEdit = ({ fileType, _key, title, url }) => {
           about: false,
           chat: unitParameters.chat,
           comments: unitParameters.comments,
-          // zoom: unitParameters.zoom,
+          zoom: unitParameters.zoom,
           leftMenu: unitParameters.leftMenu,
           rightMenu: unitParameters.rightMenu,
           toolbar: unitParameters.toolbar,
@@ -166,7 +165,7 @@ const OnlineEdit = ({ fileType, _key, title, url }) => {
     setTimeout(() => {
       renderCXEditor(fileType, _key, title, url);
     }, 2000);
-  }, []);
+  },[]);
 
   return (
     <div id="preview" style={{ height: '100%' }}>

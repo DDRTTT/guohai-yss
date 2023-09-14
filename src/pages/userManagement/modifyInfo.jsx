@@ -111,6 +111,18 @@ const ModifyInfo = ({
       },
     },
     {
+      name: 'principal',
+      label: '是否部门负责人',
+      type: 'radio',
+      // rules: [{ required: true, message: '请选择是否部门负责人' }],
+      ...defaultConfig,
+      option: [
+        { name: '是', code: 1 },
+        { name: '否', code: 0 },
+      ],
+      initialValue: userauthed.principal,
+    },
+    {
       name: 'assistMgtDept',
       label: '协管部门',
       type: 'select',

@@ -9,7 +9,7 @@ import MoreOperation from '@/components/moreOperation';
 import router from 'umi/router';
 import { tableRowConfig } from '@/pages/investorReview/func';
 import { handleShowTransferHistory } from '@/utils/transferHistory';
-import { Table, TableBtn } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
 
 const { TabPane } = Tabs;
@@ -36,12 +36,12 @@ class ContractSeal extends Component {
     fieldsValue: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
         ...tableRowConfig,
-        width: 220,
+        width: 400,
       },
       {
         title: '产品代码',
@@ -49,7 +49,6 @@ class ContractSeal extends Component {
         key: 'proCode',
         sorter: true,
         ...tableRowConfig,
-        width: 150,
       },
       {
         title: '产品类型',
@@ -57,7 +56,6 @@ class ContractSeal extends Component {
         key: 'assetTypeName',
         sorter: true,
         ...tableRowConfig,
-        width: 150,
       },
       {
         title: '投资经理',
@@ -86,7 +84,6 @@ class ContractSeal extends Component {
         key: 'status',
         sorter: true,
         ...tableRowConfig,
-        width: 150,
       },
       {
         key: 'taskId',
@@ -94,110 +91,7 @@ class ContractSeal extends Component {
         title: '操作',
         fixed: 'right',
         width: 240,
-        align: 'center',
         render: (text, record) => {
-          const moreActions = [
-            {
-              text: '修改',
-              code: 'contractSeal:update',
-              onClick: record => this.groupOperate(record, 'edit'),
-            },
-            {
-              text: '复制',
-              code: 'contractSeal:copy',
-              onClick: record => this.groupOperate(record, 'copy'),
-            },
-            {
-              text: '提交',
-              code: 'contractSeal:commit',
-              onClick: record => this.groupOperate(record, 'submit'),
-            },
-            {
-              text: '删除',
-              onClick: record => this.groupOperate(record, 'del'),
-              code: 'contractSeal:deleteApi',
-            },
-          ];
-
-          const lookOverActions = [
-            {
-              text: '审阅',
-              code: 'lookOver',
-              onClick: record => this.groupOperate(record, 'lookOver'),
-            },
-          ];
-
-          const joinedActions = [
-            {
-              text: '办理',
-              code: 'contractSeal:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'contractSeal:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '撤销',
-              code: 'contractSeal:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-            {
-              text: '更多',
-              code: 'contractSeal:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const joinActions = [
-            {
-              text: '办理',
-              code: 'contractSeal:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'contractSeal:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '更多',
-              code: 'contractSeal:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const initActions = [
-            {
-              text: '详情',
-              code: 'contractSeal:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'contractSeal:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '撤销',
-              code: 'contractSeal:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-          ];
-
-          const inActions = [
-            {
-              text: '详情',
-              code: 'contractSeal:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'contractSeal:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-          ];
           if (this.state.taskTypeCode === 'T001_1' && record.circulateFlag === '0') {
             return this.renderColActions(lookOverActions, text, record);
           }
@@ -405,8 +299,6 @@ class ContractSeal extends Component {
     this.setState(
       {
         keyWords: val,
-        page: 1,
-        limit: 10,
       },
       () => {
         this.getTableDataList();
@@ -436,9 +328,9 @@ class ContractSeal extends Component {
             this.actionButtonMore(record)
           ) : (
             <Action code={btn.code}>
-              <Button onClick={() => btn.onClick(record)} type="link" size="small">
+              <a onClick={() => btn.onClick(record)} type="link" style={{ marginRight: 10 }}>
                 {btn.text}
-              </Button>
+              </a>
             </Action>
           ),
         )}
@@ -466,7 +358,6 @@ class ContractSeal extends Component {
     this.setState(
       {
         page: 1,
-        limit: 10,
         fieldsValue: fieldsValue || {},
         keyWords: '',
       },
@@ -481,7 +372,6 @@ class ContractSeal extends Component {
     this.setState(
       {
         page: 1,
-        limit: 10,
         fieldsValue: {},
         direct: '',
         oField: '',
@@ -716,6 +606,109 @@ class ContractSeal extends Component {
     /* const { } = this.props; */
     const { tableList, oTotal, page, loading, taskTypeCode, columns } = this.state;
 
+    const moreActions = [
+      {
+        text: '修改',
+        code: 'contractSeal:update',
+        onClick: record => this.groupOperate(record, 'edit'),
+      },
+      {
+        text: '复制',
+        code: 'contractSeal:copy',
+        onClick: record => this.groupOperate(record, 'copy'),
+      },
+      {
+        text: '提交',
+        code: 'contractSeal:commit',
+        onClick: record => this.groupOperate(record, 'submit'),
+      },
+      {
+        text: '删除',
+        onClick: record => this.groupOperate(record, 'del'),
+        code: 'contractSeal:deleteApi',
+      },
+    ];
+
+    const lookOverActions = [
+      {
+        text: '审阅',
+        code: 'lookOver',
+        onClick: record => this.groupOperate(record, 'lookOver'),
+      },
+    ];
+
+    const joinedActions = [
+      {
+        text: '办理',
+        code: 'contractSeal:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'contractSeal:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '撤销',
+        code: 'contractSeal:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+      {
+        text: '更多',
+        code: 'contractSeal:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const joinActions = [
+      {
+        text: '办理',
+        code: 'contractSeal:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'contractSeal:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '更多',
+        code: 'contractSeal:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const initActions = [
+      {
+        text: '详情',
+        code: 'contractSeal:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'contractSeal:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '撤销',
+        code: 'contractSeal:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+    ];
+
+    const inActions = [
+      {
+        text: '详情',
+        code: 'contractSeal:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'contractSeal:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+    ];
+
     const rowSelection = {
       onChange: (selectedRowKeys, selectRows) => {
         const { page } = this.state;
@@ -749,7 +742,7 @@ class ContractSeal extends Component {
             dataSource={tableList}
             columns={columns}
             pagination={false}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 + 320 }}
             onChange={this.handleTableChange}
             loading={loading}
             rowKey="taskId"
@@ -795,7 +788,7 @@ class ContractSeal extends Component {
         label: '产品名称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -803,7 +796,7 @@ class ContractSeal extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value', bracket: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeList,
       },
       {
@@ -811,7 +804,7 @@ class ContractSeal extends Component {
         label: '托管人',
         type: 'select',
         readSet: { name: 'orgName', code: 'id', bracket: 'id' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTrusBankList,
       },
       {
@@ -819,7 +812,7 @@ class ContractSeal extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo', bracket: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investmentManagerList,
       },
       {
@@ -827,7 +820,7 @@ class ContractSeal extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

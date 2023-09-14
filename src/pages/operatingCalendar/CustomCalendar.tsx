@@ -12,10 +12,10 @@ import { sliceEvents, createPlugin } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interaction from '@fullcalendar/interaction';
-import { Card, Popover, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import moment from 'moment';
 const styles = require('./index.less');
-import { calendarState, calendarProps, CustiomDayEventProps, holiday, tasItemData} from './operatingCalendar.d';
+import { calendarState, calendarProps, CustiomDayEventProps, holiday } from './operatingCalendar.d';
 import TaskList from './taskList';
 import SingleCustomerEvents from '@/utils/SingleCustomerEvents';
 import TaskItem from './taskListItem';
@@ -30,27 +30,13 @@ enum weekEnum {
   '日',
 }
 
-const PopOverPannel = (props: { data: tasItemData }) => {
-  const { data } = props;
-  return (
-    <>
-      {data.content && <p>{data.proOrToDo || data.title}</p>}
-      {data.content && <p>{data.content}</p>}
-      {data.toDoNode && <p>待办节点:{data.toDoNode}</p>}
-      {data.toDoPeople && <p>待办人:{data.toDoPeople}</p>}
-    </>
-  );
-};
-
 //自定义日的事件块
 const CustomDayEventWrap = (props: CustiomDayEventProps): JSX.Element => {
   const {
     data,
-    data: { color = 'black', flag },
+    data: { color = 'black' },
     time,
   } = props;
-
-  console.log(data);
   return (
     <div className={styles.customDayEventWrap}>
       <div className="topWrap">
@@ -58,31 +44,9 @@ const CustomDayEventWrap = (props: CustiomDayEventProps): JSX.Element => {
         <p className="title">{data['title']}</p>
       </div>
       <div className="contentWrap">
-        {flag == 'tradingCalendar' ? (
-          <Card className={styles.taskItem} style={{ borderLeftColor: color }}>
-            {data['list'].map((item: any, index: number) => {
-              return (
-                <li className="tradingDayItem">
-                  <span className="tt">{item.itemType}</span>
-                  <span className="rest">{item.specificItem}</span>
-                </li>
-              );
-            })}
-          </Card>
-        ) : (
-          data['list'].map((item: any, index: number) => {
-            return <Popover
-              autoAdjustOverflow
-              placement="left"
-              overlayClassName={styles.blackMode}
-              content={<PopOverPannel data={item} key={'index' + index} />}
-            >
-              <div>
-                <TaskItem data={item} />
-              </div>
-            </Popover>
-          })
-        )}
+        {data['list'].map((item: any, index: number) => {
+          return <TaskItem data={item} key={'index' + index} />;
+        })}
       </div>
     </div>
   );
@@ -94,33 +58,16 @@ const CustomView = (props: any): JSX.Element => {
   let eventDatas: any = {};
   segs.forEach(item => {
     const data = JSON.parse(item.def.title);
-    console.log(data);
-    if (data.flag == 'tradingCalendar') {
-      if (eventDatas[data.flag]) {
-        // return JSON.parse(item.def.title);
-        eventDatas[data.flag].list.push(data);
-      } else {
-        if (!data.flag) return;
-        eventDatas[data.flag] = {
-          title: '交易日历',
-          color: data.color,
-          flag: data.flag,
-          list: [data],
-        };
-      }
+    // return JSON.parse(item.def.title);
+    if (eventDatas[data.itemTypeCode]) {
+      eventDatas[data.itemTypeCode].list.push(data);
     } else {
-      if (eventDatas[data.itemTypeCode]) {
-        // return JSON.parse(item.def.title);
-        eventDatas[data.itemTypeCode].list.push(data);
-      } else {
-        if (!data.itemType) return;
-        eventDatas[data.itemTypeCode] = {
-          title: data.itemType,
-          color: data.color,
-          list: [data],
-          flag: data.flag,
-        };
-      }
+      if (!data.itemType) return;
+      eventDatas[data.itemTypeCode] = {
+        title: data.itemType,
+        color: data.color,
+        list: [data],
+      };
     }
   });
   const eventKeys = Object.keys(eventDatas);

@@ -8,9 +8,21 @@
 }
 .content {
   :global {
-    .ant-table-fixed-left table,
-    .ant-table-fixed-right table {
+    .ant-table-fixed-left table, .ant-table-fixed-right table{
       width: min-content;
+    }
+  }
+}
+.leftSider{
+  :global {
+    .ant-layout-sider-children{
+      min-height: 300px;
+      height: min-content;
+    }
+    .ant-layout-sider-trigger{
+      position: sticky;
+      bottom: 0;
+      background: #f5f7fc;
     }
   }
 }

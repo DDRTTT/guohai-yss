@@ -29,7 +29,6 @@ const Index = ({
   batchList,
   submitCallback,
   successCallback,
-  isHideSkip,
   batchStyles = { float: 'left', marginTop: '-48px', marginLeft: '10px' },
 }) => {
   const [visible, setVisible] = useState(false);
@@ -100,8 +99,7 @@ const Index = ({
     return temp || [];
   };
   // 获取按钮
-  const filterList = isHideSkip ? actionList.filter(obj => obj.name !== '跳过') : actionList;
-  const operation = filterList.filter(item => {
+  const operation = actionList.filter(item => {
     if (type === 'batch') {
       // TODO 退回有问题先不做
       if (item.action === 'reject') return false;
@@ -319,7 +317,7 @@ const Index = ({
   const handleGeneral = (payload, localItem) => {
     setVisible(false);
     if (dispatch) {
-      console.log(payload, localItem, type);
+      console.log(payload, item);
       dispatch({
         type: `moreOperation/${type === 'batch' ? localItem.batchEffects : localItem.effects}`,
         payload,
@@ -373,14 +371,9 @@ const Index = ({
               批量操作
             </Button>
           ) : (
-            <Button
-              type="link"
-              size="small"
-              className="ant-dropdown-link"
-              onClick={e => e.preventDefault()}
-            >
+            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
               更多 <Icon type="down" />
-            </Button>
+            </a>
           )}
         </Dropdown>
       )}

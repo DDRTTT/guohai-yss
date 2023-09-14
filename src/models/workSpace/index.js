@@ -11,7 +11,6 @@ import {
   getProductCenterFlowIdAPI,
   getTodoTasksAPI,
   getTransmitTasksAPI,
-  reqAllProcessKeyAndSysId,
 } from '@/services/workSpace';
 
 const workSpace = {
@@ -45,7 +44,7 @@ const workSpace = {
 
   effects: {
     // 我待办的任务:根据用户Id获取任务(分页)  获取用户待办的任务
-    * getTodoTasks({ payload }, { call, put }) {
+    *getTodoTasks({ payload }, { call, put }) {
       const res = yield call(getTodoTasksAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -58,7 +57,7 @@ const workSpace = {
     },
 
     // 我参与的任务：获取指定用户的已经办流程的任务(分页)
-    * getParticipateTasks({ payload }, { call, put }) {
+    *getParticipateTasks({ payload }, { call, put }) {
       const res = yield call(getParticipateTasksAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -71,7 +70,7 @@ const workSpace = {
     },
 
     // 我发起的任务：获取指定发起人或发起组的任务(分页)
-    * getInitiatedTasks({ payload }, { call, put }) {
+    *getInitiatedTasks({ payload }, { call, put }) {
       const res = yield call(getInitiatedTasksAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -84,7 +83,7 @@ const workSpace = {
     },
 
     // 我已办理的任务：获取已办理的任务(分页)
-    * getHandledTasks({ payload }, { call, put }) {
+    *getHandledTasks({ payload }, { call, put }) {
       const res = yield call(getHandledTasksAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -97,7 +96,7 @@ const workSpace = {
     },
 
     // 我传阅的任务：获取传阅的任务(分页)
-    * getTransmitTasks({ payload }, { call, put }) {
+    *getTransmitTasks({ payload }, { call, put }) {
       const res = yield call(getTransmitTasksAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -110,7 +109,7 @@ const workSpace = {
     },
 
     // 获取非底稿任务流程
-    * getProductCenterFlowId({ payload }, { call, put }) {
+    *getProductCenterFlowId({ payload }, { call, put }) {
       const res = yield call(getProductCenterFlowIdAPI, payload);
       if (res.status === 200) {
         yield put({
@@ -123,7 +122,7 @@ const workSpace = {
     },
 
     // 对办理和未提交进行筛选API
-    * getLinkRouter({ payload }, { call, put }) {
+    *getLinkRouter({ payload }, { call, put }) {
       const res = yield call(getLinkRouterAPI, payload);
 
       if (res.status === 200) {
@@ -140,12 +139,13 @@ const workSpace = {
     },
 
     // 获取系统词汇
-    * DATA_DICTIONARY_FETCH({ payload }, { call, put }) {
+    *DATA_DICTIONARY_FETCH({ payload }, { call, put }) {
       const res = yield call(DATA_DICTIONARY_API, payload);
       if (res && res.status === 200 && res.data) {
+        let { data } = res;
         yield put({
           type: 'SAVE_DATA_DICTIONARY',
-          payload: res.data,
+          payload: data,
         });
       } else {
         message.warn(res.message);
@@ -153,7 +153,7 @@ const workSpace = {
     },
 
     // 获取用户拥有的系统
-    * GET_USER_SYSID_FETCH({ payload }, { call, put }) {
+    *GET_USER_SYSID_FETCH({ payload }, { call, put }) {
       const res = yield call(GET_USER_SYSID_API, payload);
       if (res && res.status === 200 && res.data) {
         yield put({
@@ -166,24 +166,12 @@ const workSpace = {
     },
 
     // 根据用户的sysId查询对应系统的映射信息
-    * GET_SYS_USER_INFO_FETCH({ payload }, { call }) {
+    *GET_SYS_USER_INFO_FETCH({ payload }, { call }) {
       const res = yield call(GET_SYS_USER_INFO_API, payload);
       if (res && res.data && res.status === 200) {
         return res.data;
       } else {
         message.warn(res.message);
-      }
-    },
-
-    // 获取所有的流程 key 和 sysId
-    * getAllProcessKeyAndSysId({ payload }, { call }) {
-      const res = yield call(reqAllProcessKeyAndSysId, payload);
-      if (res && res.data && res.status === 200) {
-        return res.data;
-      } else {
-        if (res.message) {
-          message.warn(res.message);
-        }
       }
     },
   },

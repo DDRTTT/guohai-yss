@@ -7,7 +7,7 @@ import LoginComponents from './components/Login';
 import styles from './style.less';
 import { removeAuthToken } from '@/utils/session';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
+const { UserName, Password, Submit } = LoginComponents;
 
 @Form.create()
 class Login extends Component {
@@ -125,8 +125,6 @@ class Login extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
-
     if (!err) {
       const { dispatch } = this.props;
       const val = {
@@ -192,7 +190,7 @@ class Login extends Component {
   render() {
     const { userLogin = {}, submitting } = this.props;
     const { status, type: loginType } = userLogin;
-    const { type, autoLogin } = this.state;
+    const { type } = this.state;
     return (
       <div className={styles.main}>
         {this.handleAddModal()}

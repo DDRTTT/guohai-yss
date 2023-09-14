@@ -275,15 +275,10 @@ class ProjectInfoManger extends Component {
         ellipsis: {
           showTitle: false,
         },
-        render: (text, record) => {
-          let { customerName } = record;
-          if ('customerList' in record) {
-            customerName =
-              record.customerList && record.customerList.map(item => item.customerName).join(',');
-          }
+        render: customerName => {
           return (
             <Tooltip placement="topLeft" title={customerName}>
-              {customerName}
+              <span>{customerName}</span>
             </Tooltip>
           );
         },
@@ -295,20 +290,8 @@ class ProjectInfoManger extends Component {
         sorter: true,
         width: 140,
         align: 'center',
-        render: (text, record) => {
-          let customerType = record.customerType === '1' ? '机构' : '自然人';
-          if ('customerList' in record) {
-            customerType =
-              record.customerList &&
-              record.customerList
-                .map(item => (item.customerType === '1' ? '机构' : '自然人'))
-                .join(',');
-          }
-          return (
-            <Tooltip placement="topLeft" title={customerType}>
-              {customerType}
-            </Tooltip>
-          );
+        render: customerType => {
+          return <span>{customerType === '1' ? '机构' : '自然人'}</span>;
         },
       },
       {

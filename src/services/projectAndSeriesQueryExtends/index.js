@@ -13,14 +13,7 @@ export const getFileListApi = params =>
     data: params,
   });
 
-// 全部继承、添加继承
-export const batchExtendArchivedFileApi = params =>
-  request(`${uri}/productFile/batchExtendArchivedFile`, {
-    method: 'POST',
-    data: params,
-  });
-
-// 全部移除、移除继承
+// 移除继承
 export const batchDelProExtendArchivedFileApi = params =>
   request(`${uri}/productFile/batchDelProExtendArchivedFile`, {
     method: 'POST',
@@ -44,13 +37,3 @@ export const getTaskQueryProcessIdApi = params =>
     method: 'POST',
     data: params,
   });
-
-// 获取下载错误excel
-export const downloadError = params => 
-  request(`${uri}/productFile/downloadPost`,{
-    data:params,
-    method:'POST',
-    responseType:'blob',
-  });
-
-  

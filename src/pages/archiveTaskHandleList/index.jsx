@@ -1,25 +1,17 @@
+/**
+ * 项目管理--底稿归档任务办理列表
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import Action, { linkHoc, ActionBool } from '@/utils/hocUtil';
+import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import {
-  Button,
-  Table,
-  Form,
-  Card,
-  Tag,
-  Modal,
-  Tooltip,
-  message,
-  Radio,
-  Menu,
-  Dropdown,
-} from 'antd';
+import { Button, Form, Card, Tag, Modal, Tooltip, message, Radio } from 'antd';
 import { handleClearQuickJumperValue } from './util';
 import PreciseSearch from './component/IndexPreciseSearch';
 import FuzzySearch from './component/IndexFuzzySearch';
-import DeleteRecordModal from './component/DeleteRecordModal';
+import { Table } from '@/components';
 
 const { confirm } = Modal;
 const fuzzySearchRef = React.createRef();
@@ -73,21 +65,6 @@ class Index extends Component {
         sorter: true,
         width: 150,
         render: (text, record) => <span>{record.projectStateName}</span>,
-      },
-      {
-        key: 'creatorId',
-        title: '创建人',
-        dataIndex: 'creatorId',
-        sorter: true,
-        width: 120,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: (text, record) => (
-          <Tooltip title={record.creatorName}>
-            <span>{record.creatorName}</span>
-          </Tooltip>
-        ),
       },
       {
         key: 'fileStatus',
@@ -173,6 +150,21 @@ class Index extends Component {
         width: 180,
       },
       {
+        key: 'creatorId',
+        title: '创建人',
+        dataIndex: 'creatorId',
+        sorter: true,
+        width: 120,
+        ellipsis: {
+          showTitle: false,
+        },
+        render: (text, record) => (
+          <Tooltip title={record.creatorName}>
+            <span>{record.creatorName}</span>
+          </Tooltip>
+        ),
+      },
+      {
         key: 'timeoutStatus',
         title: '超时状态',
         dataIndex: 'timeoutStatus',
@@ -187,10 +179,7 @@ class Index extends Component {
         width: 120,
         sorter: true,
         render: text => (
-          // 0未提交、1处理中、3未归档、4已归档、5入库中、6已入库、7已完成
-          <Tag>
-            {['未提交', '处理中', '', '未归档', '已归档', '入库中', '已入库', '已完成'][text]}
-          </Tag>
+          <Tag>{['未提交', '办理中', '已完成', '未归档', '已归档', '入库中', '已入库'][text]}</Tag>
         ),
       },
       {
@@ -227,23 +216,18 @@ class Index extends Component {
             case 1: // 办理中
               return (
                 <>
-                  {(record &&
-                    record.taskName === '归档文件更新' &&
-                    record.taskTypeName === '文件更新任务') ||
-                  record.taskType === 'fileDelete' ? null : (
-                    <Action code="archiveTaskHandleList:execute">
-                      <Button onClick={() => this.handleExecute(record)} type="link">
-                        办理
-                      </Button>
-                    </Action>
-                  )}
+                  <Action code="archiveTaskHandleList:execute">
+                    <Button onClick={() => this.handleExecute(record)} type="link">
+                      办理
+                    </Button>
+                  </Action>
                   <Action code="archiveTaskHandleList:link">
                     <Button onClick={() => this.handleJumpDetail(record)} type="link">
                       查看
                     </Button>
                   </Action>
                   <Action code="archiveTaskHandleList:taskCompleted">
-                    {record.taskType === 'archive' || record.taskType === 'fileDelete' ? null : (
+                    {record.taskType === 'archive' ? null : (
                       <Button onClick={() => this.handleTaskCompleted(record)} type="link">
                         任务完成
                       </Button>
@@ -252,26 +236,16 @@ class Index extends Component {
                   {/* revoke=1可撤销  任务撤销 */}
                   <Action code="archiveTaskHandleList:taskRevoke">
                     {record.revoke === 1 ? (
-                      <Button onClick={() => this.handleTaskRevoke([record.id])} type="link">
+                      <Button onClick={() => this.handleTaskRevoke(record)} type="link">
                         撤销
                       </Button>
                     ) : null}
                   </Action>
-                  {record.taskType === 'fileDelete' ? (
-                    <Action code="archiveTaskHandleList:fileDeleteBatchRevoke">
-                      <Button onClick={() => this.handleFileDeleteRevoke([record.id])} type="link">
-                        文件删除撤销
-                      </Button>
-                    </Action>
-                  ) : null}
                   <Action code="archiveTaskHandleList:check">
                     <Button onClick={() => this.handleJumpReviewPage(record)} type="link">
                       审核
                     </Button>
                   </Action>
-                  <Button onClick={() => this.showDeleteRecordModal(record.id)} type="link">
-                    查看删除记录
-                  </Button>
                 </>
               );
             case 2: // 已完成
@@ -288,9 +262,6 @@ class Index extends Component {
                       审核
                     </Button>
                   </Action>
-                  <Button onClick={() => this.showDeleteRecordModal(record.id)} type="link">
-                    查看删除记录
-                  </Button>
                 </>
               );
             case 3: // 未归档
@@ -311,9 +282,6 @@ class Index extends Component {
                       审核
                     </Button>
                   </Action>
-                  <Button onClick={() => this.showDeleteRecordModal(record.id)} type="link">
-                    查看删除记录
-                  </Button>
                 </>
               );
             case 5: // 入库中
@@ -328,39 +296,6 @@ class Index extends Component {
                   <Button onClick={() => this.handleJumpPhysicalArchivePage(record)} type="link">
                     审核
                   </Button>
-                  <Button onClick={() => this.showDeleteRecordModal(record.id)} type="link">
-                    查看删除记录
-                  </Button>
-                </>
-              );
-            case 7: // 已完成
-              return (
-                <>
-                  <Action code="archiveTaskHandleList:link">
-                    <Button onClick={() => this.handleJumpDetail(record)} type="link">
-                      查看
-                    </Button>
-                  </Action>
-                  {record.taskType === 'fileDelete' && (
-                    <Button onClick={() => this.handleJumpReviewPage(record)} type="link">
-                      查看审核
-                    </Button>
-                  )}
-                </>
-              );
-            case 7: // 已完成
-              return (
-                <>
-                  <Action code="archiveTaskHandleList:link">
-                    <Button onClick={() => this.handleJumpDetail(record)} type="link">
-                      查看
-                    </Button>
-                  </Action>
-                  {record.taskType === 'fileDelete' && (
-                    <Button onClick={() => this.handleJumpReviewPage(record)} type="link">
-                      查看审核
-                    </Button>
-                  )}
                 </>
               );
             default:
@@ -380,8 +315,6 @@ class Index extends Component {
     expand: false,
     selectedRows: [],
     selectedRowKeys: [],
-    deleteRecordModalVisible: false,
-    deleteRecordId: null,
   };
 
   /**
@@ -418,7 +351,7 @@ class Index extends Component {
 
   /**
    * 项目编码
-   * * */
+   * **/
   handleProCodeData = (type = initParams.type) => {
     const { dispatch } = this.props;
     dispatch({
@@ -431,14 +364,12 @@ class Index extends Component {
 
   /**
    * 获取表格数据
-   * * */
+   * **/
   handleGetTableData = params => {
     const { dispatch } = this.props;
     const { expand } = this.state;
     const payload = { ...params };
-    if (expand) {
-      delete payload.keyWords;
-    }
+    expand && delete payload.keyWords;
     dispatch({
       type: 'archiveTaskHandleList/getTableListReq',
       payload,
@@ -476,8 +407,8 @@ class Index extends Component {
 
   /**
    * 跳转到二级审核审核页面
-   * * */
-  handleJumpReviewPage = ({ id, proCode, proName, taskType }) => {
+   * **/
+  handleJumpReviewPage = ({ id, proCode, proName }) => {
     this.props.dispatch(
       routerRedux.push({
         pathname: '/projectManagement/archiveTaskHandleList/review',
@@ -486,7 +417,6 @@ class Index extends Component {
           proCode,
           proName,
           radioType: initParams.type,
-          taskType,
         },
       }),
     );
@@ -494,7 +424,7 @@ class Index extends Component {
 
   /**
    * 跳转到物理归档入库页面
-   * * */
+   * **/
   handleJumpPhysicalArchivePage = ({ id, proCode, checked }) => {
     this.props.dispatch(
       routerRedux.push({
@@ -536,86 +466,49 @@ class Index extends Component {
       otherQuery.pageType = 'update';
       otherQuery.pageSource = 'archiveTaskHandleListPage';
     }
-
-    this.getCheckedUseSealFileFn(proCode).then(() => {
-      dispatch(
-        routerRedux.push({
-          pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
-          query: {
-            generateArchiveTask: 0,
-            taskIdArchive: id,
-            type: 1,
-            proCode,
-            ...otherQuery,
-            radioType: initParams.type,
-          },
-        }),
-      );
-    });
-  }
-
-  getCheckedUseSealFileFn(proCode) {
-    return new Promise(resolve => {
-      this.props
-        .dispatch({
-          type: 'archiveTaskHandleList/getCheckedUseSealFileReq',
-          payload: { proCode },
-        })
-        .then(res => {
-          // type:1表示是在移动流程，0表示在文件删除流程 2表示正常 3 是全部都在删除流程
-          if (res?.data?.type === 0) {
-            confirm({
-              maskClosable: true,
-              title: '用印文件归档',
-              content: `其中目前部分文档已在删除流程中，无法用印，文档包括：${res?.data?.fileNames?.join(
-                '、',
-              )}`,
-              onOk: () => {
-                resolve();
-              },
-            });
-          } else if (res?.data?.type === 1) {
-            message.error('需要用印的文件正处于文件移动审批流程，请完成审批');
-          } else if (res?.data?.type === 3) {
-            message.error('目前文档已发起删除流程，无法发起用印文件归档操作！');
-          } else {
-            resolve();
-          }
-        });
-    });
+    dispatch(
+      routerRedux.push({
+        pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
+        query: {
+          generateArchiveTask: 0,
+          taskIdArchive: id,
+          type: 1,
+          proCode,
+          ...otherQuery,
+          radioType: initParams.type,
+        },
+      }),
+    );
   }
 
   /**
    * 跳转至用印上传页面
    * * */
   handleTaskUploadPrinting = ({ proCode, id }) => {
-    const { dispatch } = this.props;
     confirm({
       maskClosable: true,
       title: '用印文件归档',
       content: '是否发起用印文件归档任务?',
       onOk: () => {
-        this.getCheckedUseSealFileFn(proCode).then(() => {
-          dispatch(
-            routerRedux.push({
-              pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
-              query: {
-                generateArchiveTask: 1,
-                type: 1,
-                proCode,
-                taskIdConventional: id,
-                radioType: initParams.type,
-              },
-            }),
-          );
-        });
+        this.props.dispatch(
+          routerRedux.push({
+            pathname: '/projectManagement/archiveTaskHandleListUploadPrinting',
+            query: {
+              generateArchiveTask: 1,
+              type: 1,
+              proCode,
+              taskIdConventional: id,
+              radioType: initParams.type,
+            },
+          }),
+        );
       },
     });
   };
 
   /**
    * 任务发起：页面跳转至任务发起页面
-   * * */
+   * **/
   handleJumpTaskStart = () => {
     this.props.dispatch(
       routerRedux.push({
@@ -627,7 +520,7 @@ class Index extends Component {
   /**
    * 简单封装
    * 提交、撤销、删除、完成
-   * * */
+   * **/
   submitRevokeDeleteCompletedFn = ({ content = '', type = '', payload = {} }) => {
     confirm({
       maskClosable: true,
@@ -659,34 +552,24 @@ class Index extends Component {
    * 撤销
    * 任务撤销，办理中任务状态revoke=1时刻撤销
    * * */
-  handleTaskRevoke = ids => {
+  handleTaskRevoke({ id }) {
     this.submitRevokeDeleteCompletedFn({
       content: '请确认是否撤销当前任务?',
       type: 'archiveTaskHandleList/getTaskRevokeReq',
-      payload: {
-        ids,
-      },
+      payload: { id },
     });
-  };
-
-  handleFileDeleteRevoke = ids => {
-    this.submitRevokeDeleteCompletedFn({
-      content: '请确认是否撤销当前任务?',
-      type: 'archiveTaskHandleList/getFileDeleteBatchRevokeReq',
-      payload: ids,
-    });
-  };
+  }
 
   /**
    * 删除：接口参数值为record.id
    * * */
-  handleDelete = ids => {
+  handleDelete(ids) {
     this.submitRevokeDeleteCompletedFn({
       content: '请确认是否删除当前任务?',
       type: 'archiveTaskHandleList/getDeleteReq',
       payload: { ids },
     });
-  };
+  }
 
   /**
    * 办理中：任务完成结束任务
@@ -708,6 +591,11 @@ class Index extends Component {
     });
   }
 
+  /**
+   * @method handleRowSelectChange checkbox触发
+   * @param {*selectedRowKeys} 序号ID
+   * @param {*selectedRows} 选中的行
+   */
   handleRowSelectChange = (selectedRowKeys, selectedRows) => {
     this.setState({
       selectedRowKeys,
@@ -768,42 +656,18 @@ class Index extends Component {
     const columns = this.handleTableColumnTitle(type);
     initParams.type = type;
     this.setState({ columns, expand: false }, () => {
-      if (fuzzySearchRef.current) {
-        fuzzySearchRef.current.handleReset();
-      }
+      fuzzySearchRef.current && fuzzySearchRef.current.handleReset();
       this.handleProCodeData(type);
       this.handleGetTableData(initParams);
-    });
-  };
-
-  showDeleteRecordModal = id => {
-    this.setState({
-      deleteRecordModalVisible: true,
-      deleteRecordId: id,
-    });
-  };
-
-  handleDeleteRecordModalOk = () => {
-    this.setState({
-      deleteRecordModalVisible: false,
-    });
-  };
-
-  handleDeleteRecordModalCancel = () => {
-    this.setState({
-      deleteRecordModalVisible: false,
     });
   };
 
   render() {
     const {
       selectedRowKeys,
-      selectedRows,
       columns,
       params: { pageSize, pageNum, type },
       expand,
-      deleteRecordId,
-      deleteRecordModalVisible,
     } = this.state;
     const {
       archiveTaskHandleList: { tableList, proCode, taskType, taskName },
@@ -813,17 +677,13 @@ class Index extends Component {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.handleRowSelectChange,
+      getCheckboxProps: record => ({
+        disabled: record.checked !== 0,
+      }),
     };
 
     return (
       <>
-        {/* 删除历史记录 */}
-        <DeleteRecordModal
-          id={deleteRecordId}
-          visible={deleteRecordModalVisible}
-          handleOk={this.handleDeleteRecordModalOk}
-          handleCancel={this.handleDeleteRecordModalCancel}
-        />
         {/* 高级搜索 */}
         <Card bordered={false}>
           {expand ? (
@@ -883,78 +743,23 @@ class Index extends Component {
               showSizeChanger: true,
               showQuickJumper: true,
               current: pageNum,
-              pageSize,
+              pageSize: pageSize,
               total: tableList.total,
               showTotal: total => `共 ${total} 条数据`,
             }}
           />
-          <Dropdown
-            overlay={
-              <Menu>
-                {ActionBool('archiveTaskHandleList:taskRevoke') && (
-                  <Menu.Item key="0">
-                    <Button
-                      size="small"
-                      type="link"
-                      style={{ color: '#666' }}
-                      disabled={selectedRows.filter(item => item.revoke === 1).length === 0}
-                      onClick={() =>
-                        this.handleTaskRevoke(
-                          selectedRows.filter(item => item.revoke === 1).map(item => item.id),
-                        )
-                      }
-                    >
-                      批量撤销
-                    </Button>
-                  </Menu.Item>
-                )}
-                {ActionBool('archiveTaskHandleList:delete') && (
-                  <Menu.Item key="1">
-                    <Button
-                      size="small"
-                      type="link"
-                      style={{ color: '#666' }}
-                      disabled={selectedRows.filter(item => item.checked === 0).length === 0}
-                      onClick={() =>
-                        this.handleDelete(
-                          selectedRows.filter(item => item.checked === 0).map(item => item.id),
-                        )
-                      }
-                    >
-                      批量删除
-                    </Button>
-                  </Menu.Item>
-                )}
-                {ActionBool('archiveTaskHandleList:fileDeleteBatchRevoke') && (
-                  <Menu.Item key="2">
-                    <Button
-                      size="small"
-                      type="link"
-                      style={{ color: '#666' }}
-                      disabled={
-                        selectedRows.filter(
-                          item => item.checked === 1 && item.taskType === 'fileDelete',
-                        ).length === 0
-                      }
-                      onClick={() =>
-                        this.handleFileDeleteRevoke(
-                          selectedRows
-                            .filter(item => item.checked === 1 && item.taskType === 'fileDelete')
-                            .map(item => item.id),
-                        )
-                      }
-                    >
-                      文件删除批量撤销
-                    </Button>
-                  </Menu.Item>
-                )}
-              </Menu>
-            }
-            placement="topCenter"
-            arrow
-          >
-            <Button style={{ float: 'left', marginTop: '-48px' }}>批量操作</Button>
-          </Dropdown>
+          <Action code="archiveTaskHandleList:delete">
+            <Button
+              disabled={selectedRowKeys.length === 0}
+              style={{
+                float: 'left',
+                marginTop: '-40px',
+              }}
+              onClick={() => this.handleDelete(selectedRowKeys)}
+            >
+              批量删除
+            </Button>
+          </Action>
         </Card>
       </>
     );
@@ -964,10 +769,18 @@ class Index extends Component {
 export default errorBoundary(
   linkHoc()(
     Form.create()(
-      connect(({ archiveTaskHandleList, loading }) => ({
-        archiveTaskHandleList,
-        loading: loading.effects['archiveTaskHandleList/getTableListReq'],
-      }))(Index),
+      connect(({ archiveTaskHandleList, loading }) => {
+        const tableLoading =
+          loading.effects['archiveTaskHandleList/getTableListReq'] ||
+          loading.effects['archiveTaskHandleList/getCommitByIdReq'] ||
+          loading.effects['archiveTaskHandleList/getTaskRevokeReq'] ||
+          loading.effects['archiveTaskHandleList/getDeleteReq'] ||
+          loading.effects['archiveTaskHandleList/getConventionalEndReq'];
+        return {
+          archiveTaskHandleList,
+          loading: tableLoading,
+        };
+      })(Index),
     ),
   ),
 );

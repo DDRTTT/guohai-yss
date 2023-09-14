@@ -1,32 +1,24 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, message, Popconfirm, Table, Tooltip } from 'antd';
-import { connect } from 'dva';
-import styles from './index.less';
-import { handleTableCss } from '@/utils/utils';
-import EditChildrenDic from './EditChildrenDic';
+import { Input, Button, Popconfirm, Form, Tooltip, message } from 'antd';
+import { Table } from '@/components';
+import { handleTableCss } from '../manuscriptBasic/func';
 import Action from '@/utils/hocUtil';
-
-const FormItem = Form.Item;
+import React from 'react';
+import { cloneDeep } from 'lodash';
+import EditChildrenDic from './EditChildrenDic';
 const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={ form }>
-    <tr { ...props } />
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
   </EditableContext.Provider>
 );
+
+const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
   state = {
     editing: false,
   };
-
-  componentDidMount() {
-    document.addEventListener('click', this.handleClickOutside, true);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside, true);
-  }
 
   toggleEdit = () => {
     const editing = !this.state.editing;
@@ -37,17 +29,10 @@ class EditableCell extends React.Component {
     });
   };
 
-  handleClickOutside = e => {
-    const { editing } = this.state;
-    if (editing && this.cell !== e.target && !this.cell.contains(e.target)) {
-      this.save();
-    }
-  };
-
-  save = () => {
+  save = e => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error) {
+      if (error && error[e.currentTarget.id]) {
         return;
       }
       this.toggleEdit();
@@ -55,15 +40,34 @@ class EditableCell extends React.Component {
     });
   };
 
-  getInput = () => {
-    if (this.props.inputType === 'orderNum') {
-      return <InputNumber ref={ node => (this.input = node) } onPressEnter={ this.save } min={ 1 } />;
-    }
-    return <Input ref={ node => (this.input = node) } onPressEnter={ this.save } maxLength={ 200 } />;
+  renderCell = form => {
+    this.form = form;
+    const { children, dataIndex, record, title } = this.props;
+    const { editing } = this.state;
+    return editing ? (
+      <Form.Item style={{ margin: 0 }}>
+        {form.getFieldDecorator(dataIndex, {
+          rules: [
+            {
+              required: true,
+              message: `${title} is required.`,
+            },
+          ],
+          initialValue: record[dataIndex],
+        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+      </Form.Item>
+    ) : (
+      <div
+        className="editable-cell-value-wrap"
+        style={{ paddingRight: 24 }}
+        onClick={this.toggleEdit}
+      >
+        {children}
+      </div>
+    );
   };
 
   render() {
-    const { editing } = this.state;
     const {
       editable,
       dataIndex,
@@ -71,111 +75,37 @@ class EditableCell extends React.Component {
       record,
       index,
       handleSave,
-      isMuch,
+      children,
       ...restProps
     } = this.props;
-
     return (
-      <td ref={ node => (this.cell = node) } { ...restProps }>
-        { editable ? (
-          <EditableContext.Consumer>
-            { form => {
-              this.form = form;
-              return editing ? (
-                <FormItem style={ { margin: 0 } }>
-                  { form.getFieldDecorator(dataIndex, {
-                    rules: [
-                      {
-                        required: dataIndex !== 'remark',
-                        message: `请输入${title}`,
-                      },
-                    ],
-                    initialValue: record[dataIndex],
-                  })(this.getInput(dataIndex)) }
-                </FormItem>
-              ) : (
-                <div
-                  className={ styles.editableCellValueWrap }
-                  style={ {
-                    paddingRight: 24,
-                    height: 20,
-                  } }
-                  onClick={ this.toggleEdit }
-                >
-                  { restProps.children }
-                </div>
-              );
-            } }
-          </EditableContext.Consumer>
+      <td {...restProps}>
+        {editable ? (
+          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
         ) : (
-          restProps.children
-        ) }
+          children
+        )}
       </td>
     );
   }
 }
 
-const EditableFormRow = Form.create()(EditableRow);
-
-@Form.create()
-class Index extends Component {
-  state = {};
-
-  componentDidMount() {
-    // 数据字典初始化
-    sessionStorage.setItem('addWordList', JSON.stringify([]));
+class Index extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // 接受父组件数据字典数据
-    sessionStorage.setItem('addWordList', JSON.stringify(nextProps.data));
+  componentWillMount() {
+    const tempDataSrource = cloneDeep(this.props.dataSource || []);
+    tempDataSrource.map((item, index) => (item.orderNum = index + 1));
+    this.setState({ dataSource: tempDataSrource });
   }
-
-  componentWillUnmount() {
-    sessionStorage.removeItem('addWordList');
-  }
-
-  render() {
-    const { data, edit, dictategoryId, deleteParam, dispatch, type, inquiryOneList } = this.props;
-
-    return (
-      <div>
-        <EditableTable
-          data={ data }
-          isEdit={ edit }
-          dictategoryId={ dictategoryId }
-          deleteParam={ deleteParam }
-          dispatch={ dispatch }
-          type={ type }
-          inquiryOneList={ inquiryOneList }
-        />
-      </div>
-    );
-  }
-}
-
-const EditableTable = props => {
-  const [dataSource, setDataSource] = useState([]);
-  const [count, setCount] = useState(0);
-  const [current, setCurrent] = useState(1);
-
-  useEffect(() => {
-    if (props.data instanceof Array) {
-      const { dispatch, data } = props;
-      setDataSource(data);
-      dispatch({
-        type: 'wordDictionary/forMoment',
-        payload: data,
-      });
-    }
-  }, []);
-
-  const { isEdit } = props;
-  const columns = [
+  isEdit = this.props?.isEdit || true;
+  baseColumns = [
     {
       title: '序号',
       dataIndex: 'orderNum',
-      editable: isEdit,
+      editable: this.isEdit,
       width: 70,
       inputType: 'orderNum',
       render: text => handleTableCss(text),
@@ -183,15 +113,15 @@ const EditableTable = props => {
     {
       title: '字典代码',
       dataIndex: 'code',
-      width: 400,
-      editable: isEdit,
+      width: 300,
+      editable: this.isEdit,
       render: text => handleTableCss(text),
     },
     {
       title: '字典名称',
       dataIndex: 'name',
-      width: 250,
-      editable: isEdit,
+      width: 300,
+      editable: this.isEdit,
       render: text => handleTableCss(text),
     },
     {
@@ -201,29 +131,30 @@ const EditableTable = props => {
       ellipsis: true,
       render: (text, record) => {
         return (
-          <div style={ { display: 'flex', justifyContent: 'space-between' } }>
-            <Tooltip title={ record.linkageDatadictsName } placement="topLeft">
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Tooltip title={record.linkageDatadictsName} placement="topLeft">
               <span
-                style={ {
+                style={{
                   display: 'inline-block',
                   width: '220px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                } }
+                }}
               >
-                { record.linkageDatadictsName }
+                {record.linkageDatadictsName}
               </span>
             </Tooltip>
-            { isEdit ? (
+            {this.isEdit ? (
               <Action code="wordDictionary:updateByLinkage">
                 <EditChildrenDic
-                  datadictId={ record.id }
-                  datadictCode={ record.code }
-                  inquiryOneList={ props.inquiryOneList }
-                  tableCellText={ 'status' in record ? '' : text ? '编辑' : '新增' }
+                  datadictId={record.id}
+                  datadictCode={record.code}
+                  inquiryOneList={this.props.inquiryOneList}
+                  tableCellText={'status' in record ? '' : text ? '编辑' : '新增'}
                 />
+                <></>
               </Action>
-            ) : null }
+            ) : null}
           </div>
         );
       },
@@ -231,110 +162,51 @@ const EditableTable = props => {
     {
       title: '备注',
       dataIndex: 'remark',
-      editable: isEdit,
+      editable: this.isEdit,
       width: 250,
       render: text => handleTableCss(text),
     },
+  ];
+
+  actionCol = [
     {
       title: '操作',
       align: 'center',
       render: (text, record) => {
         return (
-          <Popconfirm title="确定要删除吗?" onConfirm={ () => handleDelete(record.id) }>
+          <Popconfirm title="确定要删除吗?" onConfirm={() => this.handleDelete(record.id)}>
             <a>删除</a>
           </Popconfirm>
         );
       },
     },
   ];
-  const columns1 = [
-    {
-      title: '序号',
-      dataIndex: 'orderNum',
-      editable: isEdit,
-      width: 70,
-      inputType: 'orderNum',
-      render: text => handleTableCss(text),
-    },
-    {
-      title: '字典代码',
-      dataIndex: 'code',
-      editable: isEdit,
-      width: 400,
-      render: text => handleTableCss(text),
-    },
-    {
-      title: '字典名称',
-      dataIndex: 'name',
-      editable: isEdit,
-      width: 250,
-      render: text => handleTableCss(text),
-    },
-    {
-      title: '联动词汇',
-      dataIndex: 'linkageDatadicts',
-      width: 300,
-      ellipsis: true,
-      render: (text, record) => {
-        return (
-          <div style={ { display: 'flex', justifyContent: 'space-between' } }>
-            <Tooltip title={ record.linkageDatadictsName } placement="topLeft">
-              <span
-                style={ {
-                  display: 'inline-block',
-                  width: '220px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                } }
-              >
-                { record.linkageDatadictsName }
-              </span>
-            </Tooltip>
-            { isEdit ? (
-              <Action code="wordDictionary:updateByLinkage">
-                <EditChildrenDic
-                  datadictId={ record.id }
-                  datadictCode={ record.code }
-                  inquiryOneList={ props.inquiryOneList }
-                  tableCellText={ 'status' in record ? '' : text ? '编辑' : '新增' }
-                />
-              </Action>
-            ) : null }
-          </div>
-        );
-      },
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      editable: isEdit,
-      width: 250,
-      render: text => handleTableCss(text),
-    },
-  ];
-  // 点击删除处理
-  const handleDelete = id => {
-    const { dispatch } = props;
-    if (dataSource.length === 0) {
-      message.warn('请输入数据字典');
-    } else {
-      const arr = dataSource.filter(item => {
-        return item.id !== id;
-      });
-      sessionStorage.setItem('addWordList', JSON.stringify(arr));
-      setDataSource(arr);
-      dispatch({
-        type: 'wordDictionary/forMoment',
-        payload: arr,
-      });
-    }
+
+  state = {
+    dataSource: [],
+    count: 0,
+    pageNum: 1,
   };
 
-  // 添加
-  const handleAdd = () => {
+  handleDelete = key => {
+    const dataSource = [...this.state.dataSource];
+    const tempSource = dataSource
+      .filter(item => item.id !== key)
+      .map((item, index) => {
+        item.orderNum = index + 1;
+        return item;
+      });
+
+    this.setState({ dataSource: tempSource }, () => {
+      this.props.updataDataSource(this.state.dataSource);
+    });
+  };
+
+  handleAdd = () => {
+    const { count, dataSource } = this.state;
     const newData = {
-      id: count + 1,
-      dictategoryId: props.dictategoryId,
+      id: count + 1 + 'fe',
+      dictategoryId: this.props?.dictategoryId,
       code: '',
       name: ``,
       remark: ``,
@@ -342,102 +214,101 @@ const EditableTable = props => {
       status: 0,
       linkageDatadicts: '',
     };
+    console.log('添加字典:' + newData);
 
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
-    setCurrent(Math.ceil(dataSource.length / 10));
+    this.setState({
+      dataSource: [...dataSource, newData],
+      count: count + 1,
+    });
   };
 
-  // 保存
-  const handleSave = row => {
-    let flag = true;
-    const { dispatch, type } = props;
-    const newData = [...dataSource];
+  handleSave = row => {
+    const newData = [...this.state.dataSource];
     const index = newData.findIndex(item => row.id === item.id);
     const item = newData[index];
-
-    for (let i = 0; i < newData.length; i++) {
-      if (row.code === newData[i].code && row.id !== newData[i].id) {
-        message.warn('字典代码不能重复');
-        flag = false;
-        break;
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    });
+    // const repeatIndex = newData.findIndex(item => item.code == row.code && row.id != item.id);
+    // if (repeatIndex != -1) {
+    //   message.warn('字典代码不能重复');
+    //   return;
+    // }
+    newData.map(item => {
+      // if (item.code.length == 0 || item.code == '-') {
+      //   message.warn('字典代码不能为空');
+      //   return;
+      // }
+      // if (item.name.length == 0 || item.name == '-') {
+      //   message.warn('字典名称不能为空');
+      //   return;
+      // }
+      if (item.code == row.code && row.id != item.id) {
+        message.warn('字典代码"' + item.code + '"不能重复');
+        return;
       }
-    }
-
-    if (flag) {
-      newData.splice(index, 1, {
-        ...item,
-        ...row,
-      });
-      setDataSource(newData);
-
-      dispatch({
-        type: `wordDictionary/${type}`,
-        payload: { list: newData },
-      });
-      dispatch({
-        type: 'wordDictionary/forMoment',
-        payload: newData,
-      });
-    }
+    });
+    this.setState({ dataSource: newData });
+    // 如果有回调就回调更新数据
+    this.props?.updataDataSource && this.props?.updataDataSource(newData);
   };
 
-  const components = {
-    body: {
-      row: EditableFormRow,
-      cell: EditableCell,
-    },
-  };
-  const col = isEdit ? columns : columns1;
-  const column = col.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        isMust: col.isMust,
-        title: col.title,
-        inputType: col.inputType,
-        handleSave,
-      }),
+  render() {
+    const { dataSource, pageNum } = this.state;
+    const { isEdit } = this.props;
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell,
+      },
     };
-  });
+    const tempColumn = isEdit ? [...this.baseColumns, ...this.actionCol] : this.baseColumns;
+    const columns = tempColumn.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          editable: col.editable,
+          dataIndex: col.dataIndex,
+          title: col.title,
+          handleSave: this.handleSave,
+        }),
+      };
+    });
+    return (
+      <div>
+        {isEdit && (
+          <div>
+            <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+              添加
+            </Button>
+            <span> ( 双击空白格编辑字典列表 ) </span>
+          </div>
+        )}
+        <Table
+          components={components}
+          rowClassName={() => 'editable-row'}
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          scroll={{ x: columns.length * 200 }}
+          pagination={{
+            current: pageNum,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            onChange: page => {
+              this.setState({ pageNum: page });
+            },
+            showTotal: total => `共 ${dataSource.length} 条数据`,
+          }}
+        />
+      </div>
+    );
+  }
+}
 
-  return (
-    <>
-      { props.isEdit ? (
-        <div>
-          <Button onClick={ handleAdd } type="primary" style={ { marginBottom: 16 } }>
-            添加
-          </Button>
-          <span> ( 双击空白格编辑字典列表 ) </span>
-        </div>
-      ) : (
-        ''
-      ) }
-      <Table
-        components={ components }
-        rowClassName={ styles.editableRow }
-        bordered
-        dataSource={ dataSource }
-        columns={ column }
-        scroll={ { x: column.length * 200 } }
-        pagination={ {
-          current,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          onChange: page => setCurrent(page),
-          showTotal: total => `共 ${total} 条数据`,
-        } }
-      />
-    </>
-  );
-};
-
-export default connect(({ wordDictionary }) => ({
-  wordDictionary,
-}))(Index);
+export default Index;

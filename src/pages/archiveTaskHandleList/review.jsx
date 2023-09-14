@@ -1,7 +1,11 @@
+/**
+ * 项目管理--底稿归档任务办理--二级审批页面
+ * author: jiaqiuhua
+ * * */
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import Action, { linkHoc, ActionBool } from '@/utils/hocUtil';
+import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import {
   Button,
@@ -16,10 +20,7 @@ import {
   message,
   Layout,
   Breadcrumb,
-  Row,
-  Col,
-  Switch,
-  Popconfirm,
+  Icon,
 } from 'antd';
 import { handleClearQuickJumperValue } from './util';
 import ReviewOpinion from '@/components/ReviewOpinion';
@@ -37,7 +38,7 @@ const initParams = {
   keyWords: '',
   pageNum: 1,
   pageSize: 10,
-  direction: 'DESC',
+  direction: 'desc',
   field: '',
 };
 
@@ -48,9 +49,9 @@ class Review extends Component {
       {
         key: 'awpName',
         title: '文档名称',
+        width: 200,
         dataIndex: 'awpName',
         sorter: true,
-        width: 250,
         ellipsis: {
           showTitle: false,
         },
@@ -67,34 +68,17 @@ class Review extends Component {
         render: text => <Tag>{text}</Tag>,
       },
       {
-        key: 'awpPathName',
-        title: '底稿目录',
-        dataIndex: 'awpPathName',
-        sorter: true,
-        width: 250,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: (text, record) => {
-          return (
-            <Tooltip placement="topLeft" title={record.awpPathName}>
-              <span>{record.awpPathName}</span>
-            </Tooltip>
-          );
-        },
-      },
-      {
         key: 'processType',
         title: '办理状态',
-        width: 140,
+        width: 120,
         dataIndex: 'processType',
         sorter: true,
         render: text => {
           switch (text) {
             case 'gtasksFile':
-              return <div className="error">待办理</div>;
+              return <Tag color="magenta">待办理</Tag>;
             case 'completedFile':
-              return <div className="success">已办理</div>;
+              return <Tag color="orange">已办理</Tag>;
             case 'readOnly':
               return <Tag>只读</Tag>;
             default:
@@ -105,6 +89,7 @@ class Review extends Component {
       {
         key: 'needUseSeal',
         title: '是否需要用印',
+        width: 150,
         dataIndex: 'needUseSeal',
         sorter: true,
         render: text => <span>{text === 1 ? '是' : '否'}</span>,
@@ -112,23 +97,16 @@ class Review extends Component {
       {
         key: 'useSeal',
         title: '是否用印文档',
+        width: 150,
         dataIndex: 'useSeal',
         sorter: true,
         render: text => <span>{text === 1 ? '是' : '否'}</span>,
       },
-    ],
-    optColumns: [
       {
         title: '操作',
         key: 'action',
         fixed: 'right',
         render: (text, record) => {
-          const {
-            dispatch,
-            location: {
-              query: { taskType },
-            },
-          } = this.props;
           return (
             <>
               <DownloadFile buttonType="link" record={[record]} />
@@ -136,38 +114,19 @@ class Review extends Component {
                 查看
               </Button>
               {/* 待办理 */}
-              {record && record.processType === 'gtasksFile' ? (
-                <Action code="archiveTaskHandleList:reviewPass">
-                  {taskType !== 'fileDelete' && (
-                    <Button
-                      type="link"
-                      size="small"
-                      onClick={() => this.handleReviewModalShow([record])}
-                    >
-                      审批
-                    </Button>
-                  )}
-                </Action>
-              ) : null}
+              <Action code="archiveTaskHandleList:reviewPass">
+                {record && record.processType === 'gtasksFile' ? (
+                  <ReviewModal buttonType="link" payload={[record]} success={this.handleSuccess} />
+                ) : null}
+              </Action>
               {/* 审核意见 */}
               {record && record.opinion === 1 ? (
                 <Action code="archiveTaskHandleList:reviewOpinion">
                   <ReviewOpinion processInstanceId={record.processInstanceId} />
                 </Action>
               ) : null}
-              {taskType === 'fileDelete' ? (
-                <Action code="archiveTaskHandleList:fileDeleteReason">
-                  <Button
-                    type="link"
-                    size="small"
-                    onClick={() => this.handleFileDeleteReason(record)}
-                  >
-                    查看删除原因
-                  </Button>
-                </Action>
-              ) : null}
               {/* revoke=1 文件撤销 */}
-              {record && record.revoke == 1 ? (
+              {record && record.revoke === 1 ? (
                 <Action code="archiveTaskHandleList:fileRevoke">
                   <Button type="link" size="small" onClick={() => this.handleFileRevoke(record)}>
                     撤销
@@ -189,7 +148,7 @@ class Review extends Component {
       keyWords: '',
       pageNum: 1,
       pageSize: 10,
-      direction: 'DESC',
+      direction: 'desc',
       field: '',
       taskId: '',
     },
@@ -197,11 +156,7 @@ class Review extends Component {
     selectedRows: {},
     selectedRowKeys: [],
     previewShow: false,
-    siderWidth: 350,
-    showOpt: true,
-    reviewModalVisible: false,
-    reviewModalCheckedRowsArr: null,
-    reviewModalLoading: false,
+    collapsed: false,
   };
 
   componentDidMount() {
@@ -232,7 +187,7 @@ class Review extends Component {
 
   /**
    * 获取目录树数据
-   * * */
+   * **/
   handleGetSysTreeData = () => {
     const { dispatch } = this.props;
     const { proCode, taskId } = initParams;
@@ -247,7 +202,7 @@ class Review extends Component {
 
   /**
    * 获取流转历史所需的taskId
-   * * */
+   * **/
   handleGetTaskId = ({ processInstanceId }) => {
     const { dispatch } = this.props;
     dispatch({
@@ -273,7 +228,7 @@ class Review extends Component {
 
   /**
    * 获取表格数据
-   * * */
+   * **/
   handleGetTableData = (params, type = '') => {
     const { dispatch } = this.props;
     const { expand, selectedRowKeys, selectedRows } = this.state;
@@ -293,6 +248,13 @@ class Review extends Component {
         handleClearQuickJumperValue();
       },
     });
+  };
+
+  /**
+   * 审批 成功后的回调
+   * **/
+  handleSuccess = () => {
+    this.handleGetTableData(this.state.params);
   };
 
   /**
@@ -336,11 +298,11 @@ class Review extends Component {
         });
       });
 
-      Object.keys(selectedRows).forEach(key => {
+      for (let key in selectedRows) {
         if (!selectedRowKeys.includes(key)) {
           delete selectedRows[key];
         }
-      });
+      }
     } else {
       selectedRows = {};
     }
@@ -375,7 +337,7 @@ class Review extends Component {
 
   /**
    * 显示预览框
-   * * */
+   * **/
   handlePreview = record => {
     this.setState(
       {
@@ -389,14 +351,14 @@ class Review extends Component {
 
   /**
    * 切换
-   * * */
+   * **/
   handleToggle = () => {
     this.setState(({ expand }) => ({ expand: !expand }));
   };
 
   /**
    * 返回
-   * * */
+   * **/
   handleBackPage = () => {
     const {
       dispatch,
@@ -413,8 +375,21 @@ class Review extends Component {
   };
 
   /**
+   * 处理审批通过和审批拒绝的提交参数
+   * **/
+  handleReviewSubmitParams = () => {
+    const { selectedRows } = this.state;
+    const arr = [];
+    for (let key in selectedRows) {
+      arr.push(selectedRows[key]);
+    }
+
+    return arr;
+  };
+
+  /**
    * 催办
-   * * */
+   * **/
   handleSendReminder = () => {
     const {
       dispatch,
@@ -453,138 +428,16 @@ class Review extends Component {
     this.handleGetTableData(initParams);
   };
 
-  /**
-   * 处理审批通过和审批拒绝的提交参数
-   * * */
-  handleReviewSubmitParams = () => {
-    const { selectedRows } = this.state;
-    return Object.values(selectedRows).map(item => item);
-  };
-
-  handleReviewModalShow = record => {
-    this.setState({
-      reviewModalVisible: true,
-      reviewModalCheckedRowsArr: record,
-    });
-  };
-
-  // 全部审批
-  allApproval = () => {
-    const {
-      review: { tableList },
-    } = this.props;
-    this.setState({
-      reviewModalVisible: true,
-      reviewModalCheckedRowsArr: tableList?.rows || [],
-    });
-  };
-
-  handleReviewModalCancel = () => {
-    this.setState({
-      reviewModalVisible: false,
-    });
-  };
-
-  handleReviewModalCreate = status => {
-    const { form } = this.formRef.props;
-    const {
-      dispatch,
-      location: {
-        query: { taskType, proCode },
-      },
-    } = this.props;
-    const { reviewModalCheckedRowsArr } = this.state;
-    const getReviewApi = (type, status) => {
-      if (type === 'fileDelete') {
-        return status ? 'getFileDeleteHandleReq' : 'getFileDeleteNotPassHandleReq';
-      }
-      return status ? 'getProcessAuditReq' : 'getAuditNoPassedReq';
-    };
-    const awpProductFile = reviewModalCheckedRowsArr
-      .filter(item => item.processType === 'gtasksFile')
-      .map(({ id, processInstanceId, awpFileNumber, awpName, processTaskId } = item) => ({
-        id,
-        processInstanceId,
-        awpFileNumber,
-        awpName,
-        processTaskId,
-      }));
-
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      const { opinion } = values;
-
-      if (taskType !== 'fileDelete' && !awpProductFile.length) {
-        return message.warn('仅待办理的可进行审批~');
-      }
-
-      this.setState({ reviewModalLoading: true });
-      dispatch({
-        type: `review/${getReviewApi(taskType, status)}`,
-        payload: {
-          awpProductFile,
-          opinion,
-          taskId: reviewModalCheckedRowsArr[0].taskId,
-          proCode,
-        },
-      }).then(res => {
-        if (res && res.status === 200) {
-          message.success('审批成功~');
-          form.resetFields();
-          this.setState({
-            reviewModalVisible: false,
-            reviewModalCheckedRowsArr: null,
-          });
-        } else {
-          message.error(res.message);
-        }
-        this.setState({ reviewModalLoading: false });
-        this.handleGetTableData(this.state.params);
-      });
-    });
-  };
-
-  reviewModalSaveFormRef = formRef => {
-    this.formRef = formRef;
-  };
-
-  handleFileDeleteReason = record => {
-    this.props.dispatch({
-      type: 'review/getFileDeleteFileDelReasonByFileIdReq',
-      payload: {
-        id: record.id,
-      },
-      callback: res => {
-        Modal.info({
-          title: '查看删除原因',
-          okText: '关闭',
-          content: <div>{res.data}</div>,
-        });
-      },
-    });
-  };
-
   render() {
     const {
       expand,
+      columns,
       selectedRowKeys,
       previewShow,
       params: { pageNum, pageSize },
-      columns,
-      optColumns,
-      showOpt,
-      siderWidth,
-      reviewModalVisible,
-      reviewModalLoading,
-      deleteReasonVisible,
+      collapsed,
     } = this.state;
     const {
-      location: {
-        query: { taskType },
-      },
       loading,
       form,
       review: { tableList, fileNames },
@@ -609,138 +462,104 @@ class Review extends Component {
         }
         extra={
           <>
-            {taskType !== 'fileDelete' && (
-              <Button
-                type="primary"
-                style={{ marginRight: '12px' }}
-                onClick={this.handleSendReminder}
-              >
-                催办
-              </Button>
-            )}
-            {tableList?.rows && tableList?.rows[0]?.processType === 'gtasksFile' ? (
-              <Action code="archiveTaskHandleList:fileDeleteReviewPass">
-                {taskType === 'fileDelete' && (
-                  <Button type="primary" style={{ marginRight: '12px' }} onClick={this.allApproval}>
-                    全部审批
-                  </Button>
-                )}
-              </Action>
-            ) : null}
-
+            <Button
+              type="primary"
+              style={{ marginRight: '12px' }}
+              onClick={this.handleSendReminder}
+            >
+              催办
+            </Button>
             <Button onClick={this.handleBackPage}>取消</Button>
           </>
         }
       >
-        {/* 审批：通过、拒绝 */}
-        <ReviewModal
-          wrappedComponentRef={this.reviewModalSaveFormRef}
-          visible={reviewModalVisible}
-          isLoading={reviewModalLoading}
-          taskType={taskType}
-          onCancel={this.handleReviewModalCancel}
-          onCreate={this.handleReviewModalCreate}
-        />
         <Layout style={{ backgroundColor: '#fff' }}>
           <Sider
             breakpoint="lg"
             theme="light"
-            width={siderWidth}
+            width={350}
             style={{
               margin: '15px',
               overflowY: 'auto',
             }}
+            trigger={null}
+            collapsed={collapsed}
           >
-            <SelfTree
-              treeData={saveTreeData}
-              multipleFlag={false}
-              getCheckMsg={() => null}
-              getClickMsg={this.getClickMsg}
-              ref={ref => (this.selfTreeRef = ref)}
-            />
+            <div>
+              <SelfTree
+                treeData={saveTreeData}
+                multipleFlag={false}
+                getCheckMsg={() => null}
+                getClickMsg={this.getClickMsg}
+                ref={ref => (this.selfTreeRef = ref)}
+              />
+            </div>
           </Sider>
           <Content>
-            {/* 文档预览modal */}
-            {previewShow ? <Preview onRef={ref => (this.previewChild = ref)} /> : null}
-            {/* 高级搜索 */}
-            {expand ? (
-              <PreciseSearch
-                props={{ form, fileNames, initParams }}
-                handleToggle={this.handleToggle}
-                handleGetTableData={this.handleGetTableData}
-              />
-            ) : (
-              <FuzzySearch
-                props={{
-                  form,
-                  initParams,
+            <Card
+              title={
+                <Breadcrumb>
+                  <Breadcrumb.Item>
+                    <Icon
+                      style={{ color: 'blue' }}
+                      type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                      onClick={() => this.setState({ collapsed: !collapsed })}
+                    />
+                  </Breadcrumb.Item>
+                  <Breadcrumb.Item>文档清单</Breadcrumb.Item>
+                </Breadcrumb>
+              }
+            >
+              {/* 文档预览modal */}
+              {previewShow ? <Preview onRef={ref => (this.previewChild = ref)} /> : null}
+              {/* 高级搜索 */}
+              {expand ? (
+                <PreciseSearch
+                  props={{ form, fileNames, initParams }}
+                  handleToggle={this.handleToggle}
+                  handleGetTableData={this.handleGetTableData}
+                />
+              ) : (
+                <FuzzySearch
+                  props={{
+                    form,
+                    initParams,
+                  }}
+                  handleToggle={this.handleToggle}
+                  handleGetTableData={this.handleGetTableData}
+                  ref={fuzzySearchRef}
+                />
+              )}
+              <Table
+                rowKey={record => record.id}
+                rowSelection={rowSelection}
+                columns={columns}
+                dataSource={tableList.rows}
+                scroll={{ x: columns.length * 200 }}
+                onChange={this.sortChange}
+                loading={loading}
+                pagination={{
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  current: pageNum,
+                  pageSize: pageSize,
+                  total: tableList.total,
+                  showTotal: total => `共 ${total} 条数据`,
                 }}
-                handleToggle={this.handleToggle}
-                handleGetTableData={this.handleGetTableData}
-                ref={fuzzySearchRef}
               />
-            )}
-            <Row type="flex">
-              <Col span={3}>
-                <Form.Item label="目录树" type="flex">
-                  <Switch
-                    checked={!!siderWidth}
-                    onChange={bool => {
-                      this.setState({
-                        siderWidth: bool ? 350 : 0,
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={3}>
-                <Form.Item label="操作列" type="flex">
-                  <Switch
-                    checked={!!showOpt}
-                    onChange={bool => {
-                      this.setState({
-                        showOpt: bool,
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Table
-              rowKey={record => record.id}
-              rowSelection={taskType !== 'fileDelete' ? rowSelection : false}
-              columns={showOpt ? columns.concat(optColumns) : columns}
-              dataSource={tableList.rows}
-              scroll={{ x: columns.length * 250 }}
-              onChange={this.sortChange}
-              loading={loading}
-              pagination={{
-                showSizeChanger: true,
-                showQuickJumper: true,
-                current: pageNum,
-                pageSize,
-                total: tableList.total,
-                showTotal: total => `共 ${total} 条数据`,
-              }}
-            />
-            {taskType !== 'fileDelete' && (
               <Dropdown
                 overlay={
                   <Menu>
-                    {ActionBool('archiveTaskHandleList:reviewPass') && (
-                      <Menu.Item key="0">
-                        <Button
-                          type="link"
-                          size="small"
-                          disabled={this.handleReviewSubmitParams().length === 0}
-                          onClick={() =>
-                            this.handleReviewModalShow(this.handleReviewSubmitParams())
-                          }
-                        >
-                          批量审批
-                        </Button>
-                      </Menu.Item>
-                    )}
+                    <Menu.Item key="0">
+                      <Action code="archiveTaskHandleList:reviewPass">
+                        <ReviewModal
+                          buttonType="link"
+                          buttonText="批量审批"
+                          payload={this.handleReviewSubmitParams()}
+                          success={this.handleSuccess}
+                        />
+                      </Action>
+                    </Menu.Item>
                     <Menu.Item key="1">
                       <DownloadFile
                         buttonType="link"
@@ -757,7 +576,7 @@ class Review extends Component {
               >
                 <Button style={{ float: 'left', marginTop: '-48px' }}>批量操作</Button>
               </Dropdown>
-            )}
+            </Card>
           </Content>
         </Layout>
       </Card>
@@ -768,12 +587,17 @@ class Review extends Component {
 export default errorBoundary(
   linkHoc()(
     Form.create()(
-      connect(({ review, taskManagementDeal, loading }) => ({
-        review,
-        taskManagementDeal,
-        loading:
-          loading.effects['review/getTableListReq'] || loading.effects['review/getFileRevokeReq'],
-      }))(Review),
+      connect(({ global, review, taskManagementDeal, loading, router }) => {
+        const tableLoading =
+          loading.effects['review/getTableListReq'] || loading.effects['review/getFileRevokeReq'];
+        return {
+          review,
+          taskManagementDeal,
+          router,
+          global,
+          loading: tableLoading,
+        };
+      })(Review),
     ),
   ),
 );

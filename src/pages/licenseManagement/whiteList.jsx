@@ -16,9 +16,9 @@ import {
   Modal,
   Row,
   Switch,
-  Table,
   TreeSelect,
 } from 'antd';
+import { Table } from '@/components';
 import BaseCrudComponent from '@/components/BaseCrudComponent';
 import Action from '@/utils/hocUtil';
 import styles from './index.less';
@@ -128,7 +128,7 @@ export default class WhiteList extends BaseCrudComponent {
   // 批量操作
   signManageAction = () => {
     return (
-      <div style={{ marginTop: -45, zIndex: 1 }}>
+      <div className={styles.batchStyle}>
         <Dropdown
           overlay={
             <Menu onClick={this.handleClick}>
@@ -141,7 +141,7 @@ export default class WhiteList extends BaseCrudComponent {
           }
           placement="topLeft"
         >
-          <Button style={{ marginRight: 10, width: 100, height: 26 }}>
+          <Button className={styles.buttons}>
             批量操作
             <Icon type="up" />
           </Button>
@@ -239,61 +239,61 @@ export default class WhiteList extends BaseCrudComponent {
     return (
       <div className={styles.receiptStyle}>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <div style={{ lineHeight: '30px' }}>
+          <div className={styles.receiptLine}>
             <Col
               sm={24}
               md={8}
               xxl={8}
-              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+              className={styles.receiptCols}
             >
               <span className={styles.receiptLabel}>机构ID：</span>
             </Col>
-            <Col sm={24} md={16} xxl={16} style={{ paddingLeft: 0, paddingRight: 24 }}>
+            <Col sm={24} md={16} xxl={16} className={styles.receiptCol2}>
               <span className={styles.receiptWord}>
                 {whiteDetailData.orgId ? whiteDetailData.orgId : '暂无'}
               </span>
             </Col>
           </div>
-          <div style={{ lineHeight: '30px' }}>
+          <div className={styles.receiptLine}>
             <Col
               sm={24}
               md={8}
               xxl={8}
-              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+              className={styles.receiptCols}
             >
               <span className={styles.receiptLabel}>白名单IP：</span>
             </Col>
-            <Col sm={24} md={16} xxl={16} style={{ paddingLeft: 0, paddingRight: 24 }}>
+            <Col sm={24} md={16} xxl={16} className={styles.receiptCol2}>
               <span className={styles.receiptWord}>
                 {whiteDetailData.ip ? whiteDetailData.ip : '暂无'}
               </span>
             </Col>
           </div>
-          <div style={{ lineHeight: '30px' }}>
+          <div className={styles.receiptLine}>
             <Col
               sm={24}
               md={8}
               xxl={8}
-              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+              className={styles.receiptCols}
             >
               <span className={styles.receiptLabel}>创建时间：</span>
             </Col>
-            <Col sm={24} md={16} xxl={16} style={{ paddingLeft: 0, paddingRight: 24 }}>
+            <Col sm={24} md={16} xxl={16} className={styles.receiptCol2}>
               <span className={styles.receiptWord}>
                 {whiteDetailData.createTime ? whiteDetailData.createTime : '暂无'}
               </span>
             </Col>
           </div>
-          <div style={{ lineHeight: '30px' }}>
+          <div className={styles.receiptLine}>
             <Col
               sm={24}
               md={8}
               xxl={8}
-              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+              className={styles.receiptCols}
             >
               <span className={styles.receiptLabel}>启用状态：</span>
             </Col>
-            <Col sm={24} md={16} xxl={16} style={{ paddingLeft: 0, paddingRight: 24 }}>
+            <Col sm={24} md={16} xxl={16} className={styles.receiptCol2}>
               <span className={styles.receiptWord}>
                 <Switch
                   checkedChildren="启用"
@@ -305,16 +305,16 @@ export default class WhiteList extends BaseCrudComponent {
             </Col>
           </div>
 
-          <div style={{ lineHeight: '30px' }}>
+          <div className={styles.receiptLine}>
             <Col
               sm={24}
               md={8}
               xxl={8}
-              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+              className={styles.receiptCols}
             >
               <span className={styles.receiptLabel}>备注信息：</span>
             </Col>
-            <Col sm={24} md={16} xxl={16} style={{ paddingLeft: 0, paddingRight: 24 }}>
+            <Col sm={24} md={16} xxl={16} className={styles.receiptCol2}>
               <span className={styles.receiptWord}>
                 {whiteDetailData.desc ? whiteDetailData.desc : '暂无'}
               </span>
@@ -324,7 +324,7 @@ export default class WhiteList extends BaseCrudComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.receiptCol}>
           <Button
             onClick={() => this.cancelModal(1)}
-            style={{ marginRight: 24, float: 'right', marginLeft: 10 }}
+            className={styles.receiptQuit}
           >
             取消
           </Button>
@@ -373,8 +373,8 @@ export default class WhiteList extends BaseCrudComponent {
                 ],
               })(
                 <TreeSelect
+                  className={styles.treeStyle}
                   dropdownStyle={{ overflow: 'auto' }}
-                  style={{ width: '80%', float: 'left' }}
                   treeData={orgNameList}
                   treeDefaultExpandAll
                   showSearch
@@ -393,7 +393,7 @@ export default class WhiteList extends BaseCrudComponent {
                     message: '白名单IP不能为空',
                   },
                 ],
-              })(<Input style={{ width: '80%' }} />)}
+              })(<Input className={styles.colStyle} />)}
             </FormItem>
           </Col>
           <Col md={24} sm={24}>
@@ -426,15 +426,15 @@ export default class WhiteList extends BaseCrudComponent {
                     message: '备注信息不能为空',
                   },
                 ],
-              })(<TextArea rows={4} style={{ width: '80%' }} />)}
+              })(<TextArea rows={4} className={styles.colStyle} />)}
             </FormItem>
           </Col>
         </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{ textAlign: 'right', marginTop: 30 }}>
-          <Button style={{ marginRight: 10 }} onClick={() => this.cancelAddOrPut()}>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.rowStyle}>
+          <Button className={styles.butStyle1} onClick={() => this.cancelAddOrPut()}>
             取消
           </Button>
-          <Button style={{ marginRight: 30 }} type="primary" onClick={() => this.sureRevise()}>
+          <Button className={styles.butStyle2} type="primary" onClick={() => this.sureRevise()}>
             确定
           </Button>
         </Row>
@@ -591,12 +591,12 @@ export default class WhiteList extends BaseCrudComponent {
         render: (val, record) => (
           <span>
             <div>
-              <a style={{ paddingRight: 10 }} onClick={() => this.handleCallback(record, 'look')}>
+              <a className={styles.aStyle} onClick={() => this.handleCallback(record, 'look')}>
                 查看
               </a>
               <Action key="licenseManagement:whitePut" code="licenseManagement:whitePut">
                 <a
-                  style={{ paddingRight: 10 }}
+                  className={styles.aStyle}
                   onClick={() => this.handleCallback(record, 'update')}
                 >
                   修改
@@ -604,7 +604,7 @@ export default class WhiteList extends BaseCrudComponent {
               </Action>
               <Action key="licenseManagement:whiteDel" code="licenseManagement:whiteDel">
                 <a
-                  style={{ paddingRight: 10 }}
+                  className={styles.aStyle}
                   onClick={() => this.handleCallback(record, 'delete')}
                 >
                   删除

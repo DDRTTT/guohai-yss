@@ -8,19 +8,40 @@ import {
   handleCheckPassowrdAPI,
   handleUpdatePasswordAPI,
   redisInit,
+  redisInitAccess,
 } from '@/services/login';
+import { handleGetMenuAPI } from '@/services/user';
 // import { setAuthority } from '@/utils/authority';
-import { removeAllSession, removeAuthToken, setAuthToken } from '@/utils/session';
-import { setLassTime, setNountType, setCatchProjectConfigTime } from '@/utils/cookie';
+import { removeAllSession, removeAuthToken, setAuthToken, getCustomerFlag, setMenu, setSession, SYSID } from '@/utils/session';
+import { setLassTime, setNountType } from '@/utils/cookie';
 import { decryptText } from '@/utils/encryption';
 import { ENCRYPTED_PASSWORD } from '@/utils/Code';
-
+const loginFunc = () => {
+  sessionStorage.setItem('ONCLICK_TIME', Date.now())
+  // 有url的情况下跳转至/base/processCenterHome
+  handleGetMenuAPI({
+    needAction: true,
+    sysId: 1,
+  }).then(res=>{
+    if (res && res.status === 200) {
+      const menu = res.data;
+      setMenu(JSON.stringify(menu));
+      setSession('d', '招募说明书智能撰写');
+      setSession('sysId', 1);
+      setSession(SYSID, 1);
+      router.push('/base/prospectuSetHome');
+      location.href = '/base/prospectuSetHome'
+    }
+  })
+};
 export default {
   namespace: 'login',
+
   state: {
     token: undefined,
     modelVisible: false,
   },
+//20220824 廖志，测试提交权限
   effects: {
     *login({ payload, flag = true, callback }, { call, put }) {
       const res = yield call(accountLogin, payload);
@@ -36,8 +57,6 @@ export default {
         res?.data?.token !== '' &&
         res?.data?.token !== null
       ) {
-        // 解决子项目不更新的问题:在登录时记录当前时间戳，拼接到project.config.js中entry的js文件后
-        setCatchProjectConfigTime()
         // 将token放入cookies中缓存
         yield call(setAuthToken, res.data.token);
         // 检查密码是否未修改
@@ -54,7 +73,9 @@ export default {
           setLassTime();
           if (flag) {
             yield call(redisInit, {});
-            yield put(routerRedux.push('/'));
+            // yield call(redisInitAccess, {});
+            // yield put(routerRedux.push('/'));
+            loginFunc();
           }
         }
       }
@@ -94,18 +115,21 @@ export default {
     },
 
     logout() {
-      // const { redirect } = getPageQuery(); // Note: There may be security issues, please note
+      const customerFlag = getCustomerFlag();
       removeAllSession();
       if (window.location.pathname !== '/user/login') {
-        router.replace({
-          pathname: '/user/login',
-          // search: stringify({
-          //   redirect: window.location.href,
-          // }),
-        });
+        customerFlag
+          ? router.replace({
+              pathname: '/userCustomer/login',
+            })
+          : router.replace({
+              pathname: '/user/login',
+            });
+        return new Promise(resolve => resolve(true));
       }
     },
   },
+
   reducers: {
     modelSwitch(state, { payload }) {
       return {

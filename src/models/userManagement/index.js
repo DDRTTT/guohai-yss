@@ -20,7 +20,6 @@ import {
   SAVE_QUICK_AUTH_API,
   updateRole,
   updateUserInfo,
-  fetchUserWithdraw,
 } from '@/services/userManagement';
 import { getDeptAPI, getDictList, handleClassRole } from '@/services/datum';
 import { getAllAuthorizeById as getAuthorizeById } from '@/services/role';
@@ -94,7 +93,7 @@ export default {
     *updateUserInfo({ payload }, { call }) {
       const res = yield call(updateUserInfo, payload);
       if (res && res.status === 200) {
-        if (res?.data?.status === '9999') {
+        if (res?.data?.status === '999') {
           message.warn(res?.data?.errMsg ?? '该用户登录名已被使用！');
         } else {
           message.success('操作成功');
@@ -375,16 +374,6 @@ export default {
         if (payload.freeze === 0) {
           message.success('解冻用户成功');
         }
-        return true;
-      }
-      message.warn(res.message);
-    },
-
-    // 注销
-    *handleUserWithdraw({ payload }, { call }) {
-      const res = yield call(fetchUserWithdraw, payload);
-      if (res && res.status === 200) {
-        message.success('注销用户成功');
         return true;
       }
       message.warn(res.message);

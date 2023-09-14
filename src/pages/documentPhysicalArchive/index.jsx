@@ -5,10 +5,10 @@ import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import {
   Button,
-  Table,
   Form,
   Card,
   Tag,
+  Modal,
   Dropdown,
   Tooltip,
   Menu,
@@ -16,8 +16,8 @@ import {
   Layout,
   Breadcrumb,
   Icon,
-  Upload,
 } from 'antd';
+import { Table } from '@/components';
 import { handleClearQuickJumperValue } from './util';
 import FileHistoryVersion from '@/components/FileHistoryVersion';
 import Preview from '@/components/Preview';
@@ -27,9 +27,8 @@ import FuzzySearch from './component/FuzzySearch';
 import SelfTree from '@/components/SelfTree';
 import ReviewModal from './component/ReviewModal';
 import FileBoxNumber from './component/FileBoxNumber';
-import { downloadFile } from '@/utils/download';
-import { getAuthToken } from '@/utils/session';
 
+const { confirm } = Modal;
 const { Sider, Content } = Layout;
 const fuzzySearchRef = React.createRef();
 class Index extends Component {
@@ -59,21 +58,6 @@ class Index extends Component {
         render: text => <Tag>{text}</Tag>,
       },
       {
-        key: 'awpPathName',
-        title: '底稿目录',
-        width: 250,
-        dataIndex: 'awpPathName',
-        sorter: true,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: text => (
-          <Tooltip placement="topLeft" title={text}>
-            <span>{text}</span>
-          </Tooltip>
-        ),
-      },
-      {
         key: 'handleStatus',
         title: '办理状态',
         dataIndex: 'handleStatus',
@@ -82,10 +66,10 @@ class Index extends Component {
         render: text => <Tag>{text}</Tag>,
       },
       {
-        key: 'fileBoxNum',
+        key: 'fileNum',
         title: '档案盒号',
         width: 150,
-        dataIndex: 'fileBoxNum',
+        dataIndex: 'fileNum',
         sorter: true,
         ellipsis: {
           showTitle: false,
@@ -131,10 +115,7 @@ class Index extends Component {
         render: (text, record) => {
           return (
             <>
-              <DownloadFile
-                buttonType="link"
-                record={[{ ...record, awpFileNumber: record.fileNum }]}
-              />
+              <DownloadFile buttonType="link" record={[record]} />
               <Button type="link" size="small" onClick={() => this.handlePreview(record)}>
                 查看
               </Button>
@@ -173,10 +154,10 @@ class Index extends Component {
     submiting: false,
     ableSubmit: false,
     ableReview: false,
-    haveBoxNumNoInput: false,
+    ableFileBoxNumber: false,
+    ablePhysicalArchive: false,
     ableRevoke: false,
     isRevoking: false,
-    uploadBtnLoading: false,
   };
 
   componentDidMount() {
@@ -210,7 +191,7 @@ class Index extends Component {
 
   /**
    * 获取表格数据
-   * * */
+   * **/
   handleGetTableData = (params, type = '') => {
     const {
       dispatch,
@@ -233,22 +214,44 @@ class Index extends Component {
       callback: res => {
         const { data } = res;
         if (data && data.total > 0) {
-          const { handleStatus, state, relationBoxNumSize, revoke } = data.rows[0];
+          const {
+            handleStatus,
+            state,
+            relationBoxNumSize,
+            processInstanceId,
+            revoke,
+          } = data.rows[0];
           this.state.params = payload;
 
           // 第一个节点：提交
           if (checked == 0 && data) {
             this.setState({
-              ableSubmit: data.total !== 0,
-              haveBoxNumNoInput: relationBoxNumSize === data.total, // 是否存在未录入的档案盒号，相当表示不存在
+              ableSubmit: data && data.total !== 0,
             });
           }
 
           if (checked == 5 && data) {
             this.setState({
+              ablePhysicalArchive: relationBoxNumSize === data.total, // 第一个节点提交之后不可以在提交
               ableReview: state !== '已归档' && handleStatus === '待办理', // 第二个、第三个审批节点：审批
               ableSubmit: state === '已归档' && handleStatus === '待办理', // 撤销之后可以重新提交
-              haveBoxNumNoInput: relationBoxNumSize === data.total,
+            });
+
+            dispatch({
+              type: 'documentPhysicalArchive/getTaskQueryProcessIdReq',
+              payload: {
+                processInstanceId,
+              },
+              callback: result => {
+                if (result.data) {
+                  // 最后一个节点：录入档案盒号、审批（切记后端修改流程模板name，前端也要修改，通过流程模板name判断）
+                  // 最后一个节点的判断条件，流程模板name及文件的办理状态，ablePhysicalArchive 档案盒号全部录入完成，可进行最后的归档入库操作
+                  this.setState({
+                    ableFileBoxNumber:
+                      handleStatus === '待办理' && result.data[0].name === '办公室行政部门确认归档', //判断是否是最后一个节点
+                  });
+                }
+              },
             });
           }
 
@@ -273,7 +276,7 @@ class Index extends Component {
 
   /**
    * 获取目录树数据
-   * * */
+   * **/
   handleGetSysTreeData = () => {
     const { dispatch } = this.props;
     const {
@@ -289,7 +292,7 @@ class Index extends Component {
 
   /**
    * 获取流转历史所需的taskId
-   * * */
+   * **/
   handleGetTaskId = ({ processInstanceId }) => {
     const { dispatch } = this.props;
     dispatch({
@@ -330,11 +333,11 @@ class Index extends Component {
         });
       });
 
-      Object.keys(selectedRows).forEach(key => {
+      for (let key in selectedRows) {
         if (!selectedRowKeys.includes(key)) {
           delete selectedRows[key];
         }
-      });
+      }
     } else {
       selectedRows = {};
     }
@@ -369,28 +372,28 @@ class Index extends Component {
 
   /**
    * 显示预览框
-   * * */
+   * **/
   handlePreview = record => {
     this.setState(
       {
         previewShow: true,
       },
       () => {
-        this.previewChild.handlePreview({ ...record, awpFileNumber: record.fileNum });
+        this.previewChild.handlePreview(record);
       },
     );
   };
 
   /**
    * 切换
-   * * */
+   * **/
   handleToggle = () => {
     this.setState(({ expand }) => ({ expand: !expand }));
   };
 
   /**
    * 返回
-   * * */
+   * **/
   handleBackPage = () => {
     const {
       dispatch,
@@ -400,7 +403,7 @@ class Index extends Component {
     } = this.props;
     dispatch(
       routerRedux.push({
-        pathname: '/projectManagement/documentManagement',
+        pathname: '/projectManagement/archiveTaskHandleList/index',
         query: { radioType },
       }),
     );
@@ -408,10 +411,15 @@ class Index extends Component {
 
   /**
    * 处理审批通过和审批拒绝的提交参数
-   * * */
+   * **/
   handleReviewSubmitParams = () => {
     const { selectedRows } = this.state;
-    return Object.values(selectedRows).map(item => item);
+    const arr = [];
+    for (let key in selectedRows) {
+      arr.push(selectedRows[key]);
+    }
+
+    return arr;
   };
 
   /**
@@ -430,7 +438,7 @@ class Index extends Component {
 
   /**
    * 提交
-   * * */
+   * **/
   handleSubmit = () => {
     const {
       dispatch,
@@ -461,7 +469,7 @@ class Index extends Component {
 
   /**
    * 撤销
-   * * */
+   * **/
   handleRevoke = () => {
     const {
       dispatch,
@@ -496,43 +504,6 @@ class Index extends Component {
     });
   };
 
-  // 导出
-  handleCanDownload = () => {
-    const {
-      dispatch,
-      location: {
-        query: { proCode },
-      },
-    } = this.props;
-    dispatch({
-      type: 'documentPhysicalArchive/getDownload',
-      payload: proCode,
-      callback: res => {
-        downloadFile(res, '文档清单.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        message.success('导出成功 !');
-      },
-    });
-  };
-
-  uploadChange = info => {
-    if (info.file.status === 'uploading') {
-      this.setState({ uploadBtnLoading: true });
-    }
-    if (info.file.status === 'done') {
-      if (info?.file?.response?.status === 200) {
-        message.success(`${info.file.name} 导入成功`);
-        this.handleGetTableData(this.state.initParams);
-      } else {
-        message.warn(`${info.file.response.message}`);
-      }
-      this.setState({ uploadBtnLoading: false });
-    }
-    if (info.file.status === 'error') {
-      message.warn(`${info.file.name} 导入失败，请稍后再试`);
-      this.setState({ uploadBtnLoading: false });
-    }
-  };
-
   render() {
     const {
       expand,
@@ -545,10 +516,10 @@ class Index extends Component {
       submiting,
       ableSubmit,
       ableReview,
-      haveBoxNumNoInput,
+      ableFileBoxNumber,
+      ablePhysicalArchive,
       ableRevoke,
       isRevoking,
-      uploadBtnLoading,
     } = this.state;
     const {
       loading,
@@ -560,18 +531,6 @@ class Index extends Component {
       selectedRowKeys,
       onChange: this.handleRowSelectChange,
     };
-
-   
-
-  // 导入
-  const uploadContractProps = {
-    action: '/ams/yss-awp-server/awp/task/import',
-    name: 'multipartFile',
-    method: 'post',
-    headers: {
-      Token: getAuthToken(),
-    },
-  };
 
     return (
       <Card
@@ -587,56 +546,29 @@ class Index extends Component {
         }
         extra={
           <>
+            {/* 页面来源：项目文档管理 物理归档入库 */}
             {ableSubmit ? (
-              <>
-                <Action code="documentManagement:import">
-                  <Upload
-                    {...uploadContractProps}
-                    accept=".xlsx"
-                    onChange={this.uploadChange}
-                    showUploadList={false}
-                  >
-                    <Button
-                      loading={uploadBtnLoading}
-                      disabled={uploadBtnLoading}
-                      style={{ marginRight: 8 }}
-                    >
-                      导入
-                    </Button>
-                  </Upload>
-                </Action>
-
-                <Action code="documentManagement:export">
-                  <Button
-                    style={{ marginRight: '12px' }}
-                    type="primary"
-                    onClick={this.handleCanDownload}
-                  >
-                    全部导出
-                  </Button>
-                </Action>
-                {/* 第一个节点：提交，档案盒号已完全录入完成 */}
-                {/* 录入档案盒号 */}
-                <Action code="documentManagement:physicalArchiveFileBoxNumber">
-                  <FileBoxNumber
-                    record={this.handleReviewSubmitParams()}
-                    updateTable={() => this.handleGetTableData(this.state.params)}
-                  />
-                </Action>
-                <Action code="documentManagement:physicalArchiveSubmit">
-                  <Button
-                    style={{ marginRight: '12px' }}
-                    type="primary"
-                    disabled={!haveBoxNumNoInput}
-                    loading={submiting}
-                    onClick={this.handleSubmit}
-                  >
-                    全部提交
-                  </Button>
-                </Action>
-              </>
+              <Action code="documentManagement:physicalArchiveSubmit">
+                <Button
+                  style={{ marginRight: '12px' }}
+                  type="primary"
+                  loading={submiting}
+                  onClick={this.handleSubmit}
+                >
+                  提交
+                </Button>
+              </Action>
             ) : null}
-            {/* 第一个节点：提交之后发起人可进行撤销 */}
+            {/* 页面来源：项目任务管理 状态为入库中 审核 */}
+            {(ableReview && !ableFileBoxNumber) ||
+            (ableReview && ableFileBoxNumber && ablePhysicalArchive) ? (
+              <Action code="documentManagement:physicalArchiveReview">
+                <ReviewModal
+                  taskId={taskId}
+                  updateTable={() => this.handleGetTableData(this.state.params)}
+                />
+              </Action>
+            ) : null}
             {ableRevoke ? (
               <Action code="documentManagement:physicalArchiveRevoke">
                 <Button
@@ -646,15 +578,6 @@ class Index extends Component {
                 >
                   撤销
                 </Button>
-              </Action>
-            ) : null}
-            {/* 第二、三、四个节点：审核 */}
-            {ableReview ? (
-              <Action code="documentManagement:physicalArchiveReview">
-                <ReviewModal
-                  taskId={taskId}
-                  updateTable={() => this.handleGetTableData(this.state.params)}
-                />
               </Action>
             ) : null}
             <Button onClick={this.handleBackPage}>取消</Button>
@@ -739,13 +662,20 @@ class Index extends Component {
                 overlay={
                   <Menu>
                     <Menu.Item key="0">
+                      {ableFileBoxNumber ? (
+                        <Action code="documentManagement:physicalArchiveFileBoxNumber">
+                          <FileBoxNumber
+                            record={this.handleReviewSubmitParams()}
+                            updateTable={() => this.handleGetTableData(this.state.params)}
+                          />
+                        </Action>
+                      ) : null}
+                    </Menu.Item>
+                    <Menu.Item key="1">
                       <DownloadFile
                         buttonType="link"
                         buttonText="批量下载"
-                        record={this.handleReviewSubmitParams().map(item => ({
-                          ...item,
-                          awpFileNumber: item.fileNum,
-                        }))}
+                        record={this.handleReviewSubmitParams()}
                         success={this.handleRowSelectChange}
                       />
                     </Menu.Item>

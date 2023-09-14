@@ -35,42 +35,6 @@ let pointTansY = 60;
 // 拐弯的弧度
 let angle = 18;
 
-// 重制初始化属性
-
-function resetDefaultSet() {
-  // 高度之间的间隔
-  ySpace = 10;
-  // 阶段背景默认宽度
-  defaultWidth = 1000;
-  // 阶段背景的基础高度
-  phaseBasedHight = 80;
-  // 阶段里面高度的留白
-  phaseInnerSpace = 30;
-  // 舞台边缘的留白
-  whiteSpace = 50;
-  // 舞台的宽度
-  stageWidth = 1000;
-  // 圆点的半径
-  circleRadius = 10;
-  // 圆点的直径
-  circleDiameter = circleRadius * 2;
-  // 流程连接的线预留的距离
-  processLineSpace = 70;
-  // 分叉限制 超过多少以后改变方向
-  forkLimt = 7;
-  // 竖着排列的点容器的高度
-  colWrapHeight = 120;
-  // 线的颜色
-  lineColor = '#C6CEDA';
-  // 背景之间的高度
-  bgSpc = 8;
-  // 竖着的点向上便宜的距离
-  pointTansY = 60;
-
-  // 拐弯的弧度
-  let angle = 18;
-}
-
 // 预设的bg的颜色
 const preSetBgColorList = [
   'rgba(255, 243, 247, 0.8)',
@@ -1294,12 +1258,11 @@ export default class processLineMap {
   }
 
   setParam() {
-    resetDefaultSet();
-    scale = (this.canvas.parentNode.clientWidth / stageWidth).toFixed(2) - 0.03;
+    scale = this.canvas.parentNode.clientWidth / stageWidth;
     if (scale >= 1) {
       scale = 1;
-    } else if (scale <= 0.1) {
-      scale = 0.1;
+    } else if (scale <= 0.8) {
+      scale = 0.8;
     }
     stageWidth *= scale;
     // 设置cavas的宽度

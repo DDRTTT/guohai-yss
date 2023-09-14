@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Button,
+  Card,
   Col,
   Divider,
   Form,
@@ -10,6 +11,7 @@ import {
   Radio,
   Row,
   Select,
+  Table,
   Tooltip,
 } from 'antd';
 
@@ -20,7 +22,7 @@ import { errorBoundary } from '@/layouts/ErrorBoundary';
 import AddAccount from './addAccount';
 import styles from './index.less';
 import { handleChangeLabel } from '@/pages/productBillboard/baseFunc';
-import { Card, Table, PageContainers } from '@/components';
+import { PageContainers } from '@/components';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -360,7 +362,7 @@ class RegistrationForm extends React.Component {
                     record.salesAccountBizTypeList &&
                     record.salesAccountBizTypeList
                       .map(item => {
-                        return dicList?.X019?.find(sonItem => sonItem.code == item).name;
+                        return dicList.X019.find(sonItem => sonItem.code == item).name;
                       })
                       .join(',')
                   }
@@ -379,7 +381,7 @@ class RegistrationForm extends React.Component {
                     {record.salesAccountBizTypeList &&
                       record.salesAccountBizTypeList
                         .map(item => {
-                          return dicList?.X019?.find(sonItem => sonItem.code == item).name;
+                          return dicList.X019.find(sonItem => sonItem.code == item).name;
                         })
                         .join(',')}
                   </span>
@@ -535,157 +537,174 @@ class RegistrationForm extends React.Component {
       };
       return (
         <Form>
-          <Card 
-            title="销售机构信息"
-            extra={[<Button type="primary" onClick={() => this.addSave()}>
-              保存
-            </Button>,
-            <Button type="" className={styles.button} onClick={() => this.addCancel()}>
-              取消
-            </Button>]}
-          >
+          <div style={{ marginBottom: 10 }}>
+            <Row>
+              <Col span={6}>
+                <span className={styles.title}> </span>
+              </Col>
+              <Col span={18} style={{ textAlign: 'right', marginBottom: 10 }}>
+                <Button type="primary" onClick={() => this.addSave()}>
+                  保存
+                </Button>
+                <Button type="" className={styles.button} onClick={() => this.addCancel()}>
+                  取消
+                </Button>
+              </Col>
+            </Row>
+          </div>
+          <div className={styles.box}>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col md={8}>
-                  <FormItem name="sellerNameFull" label="销售机构名称:" {...formItemLayout}>
-                    {getFieldDecorator('sellerNameFull', {
-                      initialValue: salesOrgInfoElement.sellerNameFull,
-                      rules: [{ required: true, message: '请输入销售机构简称', whitespace: true }],
-                    })(<Input allowClear placeholder="请输入" />)}
-                  </FormItem>
-                </Col>
-                <Col md={8}>
-                  <FormItem name="sellerName" label="销售机构简称:" {...formItemLayout}>
-                    {getFieldDecorator('sellerName', {
-                      initialValue: salesOrgInfoElement.sellerName,
-                      rules: [{ required: true, message: '请输入销售机构简称', whitespace: true }],
-                    })(<Input allowClear placeholder="请输入" />)}
-                  </FormItem>
-                </Col>
-                <Col md={8}>
-                  <FormItem name="sellerCode" label="销售商代码:" {...formItemLayout}>
-                    {getFieldDecorator('sellerCode', {
-                      initialValue: salesOrgInfoElement.sellerCode,
-                      rules: [{ required: true, message: '请输入销售商代码', whitespace: true }],
-                    })(<Input allowClear placeholder="请输入" />)}
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col md={8}>
-                  <FormItem name="sellerType" label="销售商类型:" {...formItemLayout}>
-                    {getFieldDecorator('sellerType', {
-                      initialValue: salesOrgInfoElement.sellerType,
-                      rules: [{ required: true, message: '请选择' }],
-                    })(
-                      <Radio.Group onChange={this.onRadioChange}>
-                        {sellerList &&
-                          sellerList.length > 0 &&
-                          sellerList.map(item => (
-                            <Radio key={item.code} value={item.code}>
-                              {item.name}
-                            </Radio>
-                          ))}
-                      </Radio.Group>,
-                    )}
-                  </FormItem>
-                </Col>
-                <Col md={8}>
-                  <FormItem label="渠道类型:" {...formItemLayout}>
-                    {getFieldDecorator('channelType', {
-                      initialValue: salesOrgInfoElement.channelType,
-                      rules: [{ required: true, message: '请选择渠道类型' }],
-                    })(
-                      <Select allowClear placeholder="请选择">
-                        {channelList &&
-                          channelList.length > 0 &&
-                          channelList.map(item => (
-                            <Option key={item.code} value={item.code}>
-                              {item.name}
-                            </Option>
-                          ))}
-                      </Select>,
-                    )}
-                  </FormItem>
-                </Col>
-                <Col span={8}>
-                  <Row>
-                    <Col span={24}>
-                      <FormItem name="zdSettlePlace" label="中登结算地点:" {...formItemLayout}>
-                        {getFieldDecorator('zdSettlePlace', {
-                          initialValue: salesOrgInfoElement.zdSettlePlace,
-                        })(
-                          <Radio.Group>
-                            {/* <Radio.Group> */}
-                            {zdSettleList &&
-                              zdSettleList.length > 0 &&
-                              zdSettleList.map(item => (
-                                <Radio key={item.code} value={item.code}>
-                                  {item.name}
-                                </Radio>
-                              ))}
-                          </Radio.Group>,
-                        )}
-                      </FormItem>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col md={8}>
-                  <FormItem name="customerPhone" label="客服电话:" {...formItemLayout}>
-                    {getFieldDecorator('customerPhone', {
-                      rules: [
-                        {
-                          pattern: /(^1[0-9]{10}$)|(^\+\d{13}$)/,
-                          message: '请输入正确的电话',
-                        },
-                      ],
-                      initialValue: salesOrgInfoElement.customerPhone,
-                    })(<Input allowClear placeholder="请输入" />)}
-                  </FormItem>
-                </Col>
-                <Col md={8}>
-                  <FormItem name="website" label="网址:" {...formItemLayout}>
-                    {getFieldDecorator('website', {
-                      rules: [
-                        {
-                          pattern: /^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/,
-                          message: '请输入正确的网址',
-                        },
-                      ],
-                      initialValue: salesOrgInfoElement.website,
-                    })(<Input allowClear placeholder="请输入" />)}
-                  </FormItem>
-                </Col>
-                <Col md={8}></Col>
-              </Row>
-              <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                <Col md={24}>
-                  <Row>
-                    <Col span={2} style={{ textAlign: 'right', marginLeft: 20 }}>
-                      备注：
-                    </Col>
-                    <Col span={20}>
-                      <FormItem label="" {...formItemLayout}>
-                        {getFieldDecorator('remarks', { initialValue: salesOrgInfoElement.remarks })(
-                          <TextArea maxLength={256} rows={10} allowClear placeholder="请输入" />,
-                        )}
-                      </FormItem>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>  
-          </Card>
-          <Card 
-            title={<>
-              账户信息
-              <Tooltip title="账户业务类型：资管清算岗在使用销售商往来账户信息时需要有明确的业务类型，销售机构维护时必须明确“申购付款账户”、“认购退款收款账户”、“赎回分红款收款账户”、“销售服务费收款账户”这四类业务类型">
-                <Icon style={{ marginLeft: '10px' }} type="info-circle" />
-              </Tooltip>
-            </>}
-            extra={<Button type="primary" onClick={() => this.onShowAddAccount()}>新增</Button>}
-            className="margin_t16"
-          >
+              <Col md={10}>销售机构信息</Col>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={8}>
+                <FormItem name="sellerNameFull" label="销售机构名称:" {...formItemLayout}>
+                  {getFieldDecorator('sellerNameFull', {
+                    initialValue: salesOrgInfoElement.sellerNameFull,
+                    rules: [{ required: true, message: '请输入销售机构简称', whitespace: true }],
+                  })(<Input allowClear placeholder="请输入" />)}
+                </FormItem>
+              </Col>
+              <Col md={8}>
+                <FormItem name="sellerName" label="销售机构简称:" {...formItemLayout}>
+                  {getFieldDecorator('sellerName', {
+                    initialValue: salesOrgInfoElement.sellerName,
+                    rules: [{ required: true, message: '请输入销售机构简称', whitespace: true }],
+                  })(<Input allowClear placeholder="请输入" />)}
+                </FormItem>
+              </Col>
+              <Col md={8}>
+                <FormItem name="sellerCode" label="销售商代码:" {...formItemLayout}>
+                  {getFieldDecorator('sellerCode', {
+                    initialValue: salesOrgInfoElement.sellerCode,
+                    rules: [{ required: true, message: '请输入销售商代码', whitespace: true }],
+                  })(<Input allowClear placeholder="请输入" />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={8}>
+                <FormItem name="sellerType" label="销售商类型:" {...formItemLayout}>
+                  {getFieldDecorator('sellerType', {
+                    initialValue: salesOrgInfoElement.sellerType,
+                    rules: [{ required: true, message: '请选择' }],
+                  })(
+                    <Radio.Group onChange={this.onRadioChange}>
+                      {sellerList &&
+                        sellerList.length > 0 &&
+                        sellerList.map(item => (
+                          <Radio key={item.code} value={item.code}>
+                            {item.name}
+                          </Radio>
+                        ))}
+                    </Radio.Group>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={8}>
+                <FormItem label="渠道类型:" {...formItemLayout}>
+                  {getFieldDecorator('channelType', {
+                    initialValue: salesOrgInfoElement.channelType,
+                    rules: [{ required: true, message: '请选择渠道类型' }],
+                  })(
+                    <Select allowClear placeholder="请选择">
+                      {channelList &&
+                        channelList.length > 0 &&
+                        channelList.map(item => (
+                          <Option key={item.code} value={item.code}>
+                            {item.name}
+                          </Option>
+                        ))}
+                    </Select>,
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={8}>
+                <Row>
+                  <Col span={24}>
+                    <FormItem name="zdSettlePlace" label="中登结算地点:" {...formItemLayout}>
+                      {getFieldDecorator('zdSettlePlace', {
+                        initialValue: salesOrgInfoElement.zdSettlePlace,
+                      })(
+                        <Radio.Group>
+                          {/* <Radio.Group> */}
+                          {zdSettleList &&
+                            zdSettleList.length > 0 &&
+                            zdSettleList.map(item => (
+                              <Radio key={item.code} value={item.code}>
+                                {item.name}
+                              </Radio>
+                            ))}
+                        </Radio.Group>,
+                      )}
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={8}>
+                <FormItem name="customerPhone" label="客服电话:" {...formItemLayout}>
+                  {getFieldDecorator('customerPhone', {
+                    rules: [
+                      {
+                        pattern: /(^1[0-9]{10}$)|(^\+\d{13}$)/,
+                        message: '请输入正确的电话',
+                      },
+                    ],
+                    initialValue: salesOrgInfoElement.customerPhone,
+                  })(<Input allowClear placeholder="请输入" />)}
+                </FormItem>
+              </Col>
+              <Col md={8}>
+                <FormItem name="website" label="网址:" {...formItemLayout}>
+                  {getFieldDecorator('website', {
+                    rules: [
+                      {
+                        pattern: /^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/,
+                        message: '请输入正确的网址',
+                      },
+                    ],
+                    initialValue: salesOrgInfoElement.website,
+                  })(<Input allowClear placeholder="请输入" />)}
+                </FormItem>
+              </Col>
+              <Col md={8}></Col>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={24}>
+                <Row>
+                  <Col span={2} style={{ textAlign: 'right', marginLeft: 20 }}>
+                    备注：
+                  </Col>
+                  <Col span={20}>
+                    <FormItem label="" {...formItemLayout}>
+                      {getFieldDecorator('remarks', { initialValue: salesOrgInfoElement.remarks })(
+                        <TextArea maxLength={256} rows={10} allowClear placeholder="请输入" />,
+                      )}
+                    </FormItem>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={12} className={styles.accInfo}>
+                账户信息
+                <Tooltip title="账户业务类型：资管清算岗在使用销售商往来账户信息时需要有明确的业务类型，销售机构维护时必须明确“申购付款账户”、“认购退款收款账户”、“赎回分红款收款账户”、“销售服务费收款账户”这四类业务类型">
+                  <Icon style={{ marginLeft: '10px' }} type="info-circle" />
+                </Tooltip>
+              </Col>
+            </Row>
+            <div style={{ textAlign: 'right' }}>
+              <div
+                className={styles.addBtn}
+                onClick={() => {
+                  this.onShowAddAccount();
+                }}
+              >
+                新增
+              </div>
+            </div>
             {baseTable()}
             <AddAccount
               businessTypeList={dicList.X019}
@@ -694,7 +713,7 @@ class RegistrationForm extends React.Component {
               updateAccountList={this.setAccountList}
               editAccount={this.state.editAccount}
             />
-          </Card>
+          </div>
         </Form>
       );
     };
@@ -716,7 +735,7 @@ class RegistrationForm extends React.Component {
           },
         ]}
       >
-        {baseForm()}
+        <Card>{baseForm()}</Card>
       </PageContainers>
     );
   }

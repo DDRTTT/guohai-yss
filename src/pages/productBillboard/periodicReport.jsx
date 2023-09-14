@@ -2,11 +2,11 @@
  * 产品看板-查看产品-产品数据-定期报告
  */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Table, Button, message } from 'antd';
-import { connect, routerRedux } from 'dva';
+import { message } from 'antd';
+import { Table } from '@/components';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
-import styles from './index.less';
 import { tableRowConfig } from '@/pages/investorReview/func';
 import { handleChangeLabel } from '@/pages/productBillboard/baseFunc';
 

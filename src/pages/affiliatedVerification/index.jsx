@@ -53,12 +53,11 @@ class Index extends Component {
     searchData: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'productName',
+        key: 'productName',
         sorter: true,
         ...tableRowConfig,
-        width: 250,
       },
       {
         title: '产品代码',
@@ -119,118 +118,7 @@ class Index extends Component {
         title: '操作',
         fixed: 'right',
         width: 240,
-        align: 'center',
         render: (text, record) => {
-          const moreActions = [
-            {
-              text: '修改',
-              code: 'affiliatedVerification:update',
-              onClick: record => this.groupOperate(record, 'edit'),
-            },
-            {
-              text: '复制',
-              code: 'affiliatedVerification:copy',
-              onClick: record => this.groupOperate(record, 'copy'),
-            },
-            {
-              text: '提交',
-              code: 'affiliatedVerification:commit',
-              onClick: record => this.groupOperate(record, 'submit'),
-            },
-            {
-              text: '删除',
-              onClick: record => this.groupOperate(record, 'del'),
-              code: 'affiliatedVerification:deleteApi',
-            },
-          ];
-
-          const joinedActions = [
-            {
-              text: '办理',
-              code: 'affiliatedVerification:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'affiliatedVerification:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '撤销',
-              code: 'affiliatedVerification:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-            {
-              text: '更多',
-              code: 'affiliatedVerification:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const lookOverActions = [
-            {
-              text: '审阅',
-              code: 'lookOver',
-              onClick: record => this.groupOperate(record, 'lookOver'),
-            },
-          ];
-
-          const joinActions = [
-            {
-              text: '办理',
-              code: 'affiliatedVerification:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'affiliatedVerification:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '更多',
-              code: 'affiliatedVerification:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const colActions = [
-            {
-              text: '修改',
-              code: 'affiliatedVerification:update',
-              onClick: record => this.groupOperate(record, 'edit'),
-            },
-          ];
-
-          const initActions = [
-            {
-              text: '详情',
-              code: 'affiliatedVerification:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'affiliatedVerification:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-            {
-              text: '撤销',
-              code: 'affiliatedVerification:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-          ];
-
-          const inActions = [
-            {
-              text: '详情',
-              code: 'affiliatedVerification:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'affiliatedVerification:transferHistory',
-              onClick: record => handleShowTransferHistory(record),
-            },
-          ];
           if (this.state.taskTypeCode === 'T001_1' && record.circulateFlag === '0') {
             return this.renderColActions(lookOverActions, text, record);
           } else {
@@ -708,6 +596,116 @@ class Index extends Component {
     const {
       affiliatedVerification: { statusList, proTypeList, productList },
     } = this.props;
+    const moreActions = [
+      {
+        text: '修改',
+        code: 'affiliatedVerification:update',
+        onClick: record => this.groupOperate(record, 'edit'),
+      },
+      {
+        text: '复制',
+        code: 'affiliatedVerification:copy',
+        onClick: record => this.groupOperate(record, 'copy'),
+      },
+      {
+        text: '提交',
+        code: 'affiliatedVerification:commit',
+        onClick: record => this.groupOperate(record, 'submit'),
+      },
+      {
+        text: '删除',
+        onClick: record => this.groupOperate(record, 'del'),
+        code: 'affiliatedVerification:deleteApi',
+      },
+    ];
+
+    const joinedActions = [
+      {
+        text: '办理',
+        code: 'affiliatedVerification:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'affiliatedVerification:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '撤销',
+        code: 'affiliatedVerification:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+      {
+        text: '更多',
+        code: 'affiliatedVerification:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const lookOverActions = [
+      {
+        text: '审阅',
+        code: 'lookOver',
+        onClick: record => this.groupOperate(record, 'lookOver'),
+      },
+    ];
+
+    const joinActions = [
+      {
+        text: '办理',
+        code: 'affiliatedVerification:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'affiliatedVerification:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '更多',
+        code: 'affiliatedVerification:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const colActions = [
+      {
+        text: '修改',
+        code: 'affiliatedVerification:update',
+        onClick: record => this.groupOperate(record, 'edit'),
+      },
+    ];
+
+    const initActions = [
+      {
+        text: '详情',
+        code: 'affiliatedVerification:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'affiliatedVerification:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+      {
+        text: '撤销',
+        code: 'affiliatedVerification:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+    ];
+
+    const inActions = [
+      {
+        text: '详情',
+        code: 'affiliatedVerification:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'affiliatedVerification:transferHistory',
+        onClick: record => handleShowTransferHistory(record),
+      },
+    ];
 
     const layout = {
       labelAlign: 'right',
@@ -753,7 +751,7 @@ class Index extends Component {
             dataSource={tableList}
             columns={columns}
             pagination={false}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 }}
             onChange={this.handleTableChange}
             loading={loading}
             rowKey="taskId"
@@ -785,7 +783,7 @@ class Index extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -793,7 +791,7 @@ class Index extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeList,
       },
       {
@@ -801,7 +799,7 @@ class Index extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

@@ -22,7 +22,7 @@ const FuzzySearch = forwardRef(
     const handleBlurSearch = keyWords => {
       handleGetTableData({
         ...initParams,
-        keyWords,
+        keyWords: keyWords.replace(/\s/g, ''),
       });
     };
     // 重置

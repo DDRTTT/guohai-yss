@@ -1,13 +1,13 @@
 // 交易单元管理
 
 import React, { useEffect, useState } from 'react';
-import { Tooltip, Button, Modal } from 'antd';
+import { Tooltip } from 'antd';
 import { connect } from 'dva';
 import { getPaginationConfig } from '@/pages/investorReview/func';
 import Action from '@/utils/hocUtil';
 import router from 'umi/router';
-import { Table } from '@/components';
-import List from '@/components/List';
+import { Table, Card, CommonSearch  } from '@/components';
+import List from "@/components/List"
 
 const commonColAttr = (name = '') => {
   return {
@@ -19,8 +19,8 @@ const commonColAttr = (name = '') => {
           {text
             ? text.toString().replace(/null/g, '-')
             : text === '' || text === undefined
-            ? '-'
-            : 0}
+              ? '-'
+              : 0}
         </Tooltip>
       );
     },
@@ -48,7 +48,7 @@ const Index = props => {
     columns: [
       {
         dataIndex: 'trusteeshipId',
-        title: '托管人/适用托管人',
+        title: '托管人/交易单元所属',
         sorter: true,
         width: 400,
         ...commonColAttr('trusteeshipIdName'),
@@ -64,7 +64,7 @@ const Index = props => {
         dataIndex: 'clearNo',
         title: '上海清算编号',
         sorter: true,
-        width: 200,
+        width: 120,
         ...commonColAttr(),
       },
       {
@@ -85,32 +85,32 @@ const Index = props => {
         dataIndex: 'settlementMode',
         title: '结算模式',
         sorter: true,
+        width: 200,
         ...commonColAttr('settlementModeName'),
       },
       {
         dataIndex: 'action',
         title: '操作',
         fixed: 'right',
-        width: 240,
-        render: (text, record) => {
+        render: (_, { trusteeshipId, applyPro, settlementMode }) => {
           return (
-            <>
-              <Action key="tradingUnitManager:show" code="tradingUnitManager:show">
-                <Button onClick={() => goDetailPage(record)} type="link">
-                  查看
-                </Button>
-              </Action>
-              <Action key="tradingUnitManager:update" code="tradingUnitManager:update">
-                <Button onClick={() => goUpdatePage(record)} type="link">
-                  修改
-                </Button>
-              </Action>
-              <Action key="tradingUnitManager:delete" code="tradingUnitManager:delete">
-                <Button onClick={() => deleteRow(record)} type="link">
-                  删除
-                </Button>
-              </Action>
-            </>
+            <Action code="tradingUnitManager:show">
+              <a
+                style={{ margin: '0 5px' }}
+                onClick={() =>
+                  router.push({
+                    pathname: '/productDataManage/tradingUnitManager/index/detail',
+                    query: {
+                      trusteeshipId,
+                      applyPro,
+                      settlementMode,
+                    },
+                  })
+                }
+              >
+                查看
+              </a>
+            </Action>
           );
         },
       },
@@ -148,19 +148,19 @@ const Index = props => {
   const formItemData = [
     {
       name: 'trusteeshipIds',
-      label: '托管人/适用托管人',
+      label: '托管人/交易单元所属',
       width: 10,
       type: 'select',
       readSet: { name: 'orgName', code: 'id' },
       option: hostingList,
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
     },
     // {
     //   name: 'market',
     //   label: '交易市场',
     //   type: 'select',
     //   option: codeList['T003'],
-    //   config: { mode: 'tags' },
+    //   config: { mode: 'multiple', maxTagCount: 1 },
     // },
     {
       name: 'unitNum',
@@ -220,77 +220,20 @@ const Index = props => {
       pageNum: 1,
       searchData: {},
       fuzzy: undefined,
-      field: '',
+      field:"",
       direction: '',
     });
-  };
-
+  }
+ 
   /**
    * 模糊搜索的回调
    * @param {string} param 模糊搜索传回来的字符串
    */
-  const handlerFuzzySearch = param => {
+   const handlerFuzzySearch = param => {
     assign({
       pageNum: 1,
       fuzzy: param,
       searchData: undefined,
-    });
-  };
-
-  // 跳转至查看页面
-  const goDetailPage = row => {
-    const { trusteeshipId, applyPro, settlementMode } = row;
-    return router.push(
-      `/dynamicPage/pages/交易单元管理/8aaa82287e4c5163017e75f012900002/查看?trusteeshipId=${trusteeshipId}&applyPro=${applyPro}&settlementMode=${settlementMode}`,
-    );
-  };
-
-  // 跳转至修改页面
-  const goUpdatePage = row => {
-    const { trusteeshipId, applyPro, settlementMode } = row;
-    return router.push(
-      `/dynamicPage/pages/交易单元管理/8aaa82287e4c5163017e75419a690001/修改?trusteeshipId=${trusteeshipId}&applyPro=${applyPro}&settlementMode=${settlementMode}`,
-    );
-  };
-
-  // 新增
-  const addRow = () => {
-    return router.push(`/dynamicPage/pages/交易单元管理/8aaa82287e4c5163017e7181c6320000/新增`);
-  };
-
-  // 调用删除api
-  const handleDeletApi = row => {
-    const { pid, trusteeshipId, applyPro, settlementMode } = row;
-    dispatch({
-      type: 'tradingUnitManager/deleteTrandingBoothInfo',
-      payload: {
-        pid,
-        trusteeshipId,
-        applyPro,
-        settlementMode,
-      },
-      callback: () => {
-        // 删除成功后，重新刷新列表数据
-        if (state.pageNum === 1) {
-          getTableList();
-        }
-        assign({
-          pageNum: 1,
-        });
-      },
-    });
-  };
-
-  // 确认删除提示框
-  const deleteRow = row => {
-    Modal.confirm({
-      title: '请确认是否删除?',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        // 调用删除接口
-        handleDeletApi(row);
-      },
     });
   };
 
@@ -339,15 +282,8 @@ const Index = props => {
         resetFn={handleReset}
         searchInputWidth="350"
         loading={props.tableLoading}
-        searchPlaceholder="请输入托管人/适用托管人"
+        searchPlaceholder="请输入托管人/交易单元所属"
         fuzzySearch={handlerFuzzySearch}
-        extra={
-          <Action key="tradingUnitManager:add" code="tradingUnitManager:add">
-            <Button onClick={addRow} type="primary">
-              新增
-            </Button>
-          </Action>
-        }
         tableList={
           <Table
             rowKey={(item, index) => `${index}`}
@@ -355,7 +291,7 @@ const Index = props => {
             dataSource={tableList.rows}
             columns={state.columns}
             onChange={tableChange}
-            scroll={{ x: true }}
+            scroll={{ x: state.columns.length * 160 + 200 }}
             pagination={getPaginationConfig(tableList.total, state.pageSize, {
               current: state.pageNum,
             })}

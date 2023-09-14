@@ -35,18 +35,18 @@ class Index extends Component {
     fieldsValue: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
-        width: 300,
+        width: 400,
         ellipsis: {
           showTitle: false,
         },
-        render: proFname => {
+        render: proName => {
           return (
-            <Tooltip title={proFname}>
-              <span>{proFname || '-'}</span>
+            <Tooltip title={proName}>
+              <span>{proName || '-'}</span>
             </Tooltip>
           );
         },
@@ -56,7 +56,7 @@ class Index extends Component {
         dataIndex: 'proCode',
         key: 'proCode',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -73,7 +73,7 @@ class Index extends Component {
         dataIndex: 'proTypeName',
         key: 'proTypeName',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -90,7 +90,7 @@ class Index extends Component {
         dataIndex: 'investmentManager',
         key: 'investmentManager',
         sorter: true,
-        width: 220,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -107,7 +107,7 @@ class Index extends Component {
         dataIndex: 'proCdate',
         key: 'proCdate',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -124,7 +124,7 @@ class Index extends Component {
         key: 'expectTime',
         dataIndex: 'expectTime',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -141,7 +141,7 @@ class Index extends Component {
         key: 'taskTime',
         dataIndex: 'taskTime',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -159,7 +159,7 @@ class Index extends Component {
         key: 'operStatusName',
         dataIndex: 'operStatusName',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -174,104 +174,96 @@ class Index extends Component {
       {
         title: '操作',
         // Width: 280,
-        fixed: 'right',
         key: 'action',
         dataIndex: 'action',
-        align: 'center',
+        fixed: 'right',
         render: (text, record) => {
           const { taskType } = this.state;
           return (
             <span>
               <Action code="investorConference:edit">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskType === 'T001_1' || taskType === 'T001_4') &&
                       record.operStatusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'edit');
                   }}
                 >
                   修改
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:copy">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskType === 'T001_1' || taskType === 'T001_4') &&
                       record.operStatusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'copy');
                   }}
                 >
                   复制
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:submit">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskType === 'T001_1' || taskType === 'T001_4') &&
                       record.operStatusName === '待提交'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'submit');
                   }}
                 >
                   提交
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:delete">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display: record.operStatusName === '待提交' ? 'inline-block' : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'delete');
                   }}
                 >
                   删除
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:handle">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       (taskType === 'T001_1' || taskType === 'T001_4') &&
                       record.operStatusName === '流程中'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'handle');
                   }}
                 >
                   办理
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:view">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       ((taskType === 'T001_1' || taskType === 'T001_4') &&
@@ -280,18 +272,17 @@ class Index extends Component {
                       taskType === 'T001_5'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'view');
                   }}
                 >
                   详情
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:history">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       ((taskType === 'T001_1' || taskType === 'T001_4') &&
@@ -300,30 +291,30 @@ class Index extends Component {
                       taskType === 'T001_5'
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     handleShowTransferHistory(record);
                   }}
                 >
                   流转历史
-                </Button>
+                </a>
               </Action>
               <Action code="investorConference:cancel">
-                <Button
-                  type="link"
-                  size="small"
+                <a
                   style={{
                     display:
                       record.operStatusName === '流程中' && record.revoke == 1
                         ? 'inline-block'
                         : 'none',
+                    marginRight: 10,
                   }}
                   onClick={() => {
                     this.groupOperate(record, 'cancel');
                   }}
                 >
                   撤销
-                </Button>
+                </a>
               </Action>
               {/* <Dropdown overlay={this.HandleGetMenu(val, record)} trigger={['click']}> */}
               {/* <Action code="investorConference:more"> */}
@@ -335,6 +326,7 @@ class Index extends Component {
                     record.operStatusName === '流程中'
                       ? 'inline-block'
                       : 'none',
+                  marginRight: 10,
                 }}
                 // onClick={this.groupOperate(record, 'more')}
               >
@@ -692,6 +684,7 @@ class Index extends Component {
         }
       });
   };
+
   /**
    * 批量处理接口调用成功以后的回调
    */
@@ -869,7 +862,7 @@ class Index extends Component {
             onChange={this.handleTableChange}
             pagination={false}
             loading={loading}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 + 200 }}
           />
           {tableList && tableList.length !== 0 ? (
             <Row style={{ paddingTop: 20 }}>
@@ -910,7 +903,7 @@ class Index extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple', filterOption: this.productFilterOption },
+        config: { mode: 'multiple', maxTagCount: 1, filterOption: this.productFilterOption },
         option: productDropList,
       },
       {
@@ -918,7 +911,7 @@ class Index extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple', optionFilterProp: 'children' },
+        config: { mode: 'multiple', maxTagCount: 1, optionFilterProp: 'children' },
         option: productTypeList,
       },
       {
@@ -926,7 +919,7 @@ class Index extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo' },
-        config: { mode: 'multiple', optionFilterProp: 'children' },
+        config: { mode: 'multiple', maxTagCount: 1, optionFilterProp: 'children' },
         option: investManagerNameList,
       },
       {
@@ -934,7 +927,7 @@ class Index extends Component {
         label: '产品状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple', optionFilterProp: 'children' },
+        config: { mode: 'multiple', maxTagCount: 1, optionFilterProp: 'children' },
         option: opts && opts.S001,
       },
     ];

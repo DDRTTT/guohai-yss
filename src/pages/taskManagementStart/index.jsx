@@ -28,6 +28,11 @@ class Index extends Component {
   };
 
   componentWillMount() {
+    // 点击编辑后获取到的数据
+    if (document.getElementsByClassName('ant-layout')) {
+      document.getElementsByClassName('ant-layout')[2].scrollTop = 0;
+    }
+
     const date = this.props.location.query;
     if (date) {
       this.props.dispatch({
@@ -49,7 +54,7 @@ class Index extends Component {
 
   render() {
     const { disabled, queryDate, type, id } = this.state;
-    return <OrderForm dis={ disabled } queryDate={ queryDate } type={ type } id={ id } />;
+    return <OrderForm dis={disabled} queryDate={queryDate} type={type} id={id} />;
   }
 }
 

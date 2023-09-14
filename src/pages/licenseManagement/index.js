@@ -26,7 +26,6 @@ import ExtendLicence from './extendLicence';
 import FinalRejection from './finalRejection';
 import { Table } from '@/components';
 import List from '@/components/List';
-import Gird from '@/components/Gird';
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -323,18 +322,87 @@ export default class Index extends BaseCrudComponent {
     const {
       licenseManagement: { receiptDetailData },
     } = this.props;
-
-    const drawerConfig = [
-      { label: '机构ID', value: 'orgId' },
-      { label: '使用类型', value: 'typeName' },
-      { label: '手机号码', value: 'mobile' },
-      { label: '申请时间', value: 'createTime' },
-      { label: '申请说明', value: 'applyDesc' },
-    ]
     const { issueType } = this.state;
     return (
       <div className={styles.receiptStyle}>
-        <Gird config={drawerConfig} col={2} info={receiptDetailData} Col={2}/>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <div style={{ lineHeight: '24px' }}>
+            <Col
+              sm={24}
+              md={5}
+              xxl={5}
+              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+            >
+              <span className={styles.receiptLabel}>机构ID:</span>
+            </Col>
+            <Col sm={24} md={19} xxl={19} style={{ paddingLeft: 0, paddingRight: 24 }}>
+              <span className={styles.receiptWord}>
+                {receiptDetailData.orgId ? receiptDetailData.orgId : '暂无'}
+              </span>
+            </Col>
+          </div>
+          <div style={{ lineHeight: '24px' }}>
+            <Col
+              sm={24}
+              md={5}
+              xxl={5}
+              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+            >
+              <span className={styles.receiptLabel}>使用类型:</span>
+            </Col>
+            <Col sm={24} md={19} xxl={19} style={{ paddingLeft: 0, paddingRight: 24 }}>
+              <span className={styles.receiptWord}>
+                {receiptDetailData.typeName ? receiptDetailData.typeName : '暂无'}
+              </span>
+            </Col>
+          </div>
+          <div style={{ lineHeight: '24px' }}>
+            <Col
+              sm={24}
+              md={5}
+              xxl={5}
+              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+            >
+              <span className={styles.receiptLabel}>手机号码:</span>
+            </Col>
+            <Col sm={24} md={19} xxl={19} style={{ paddingLeft: 0, paddingRight: 24 }}>
+              <span className={styles.receiptWord}>
+                {receiptDetailData.mobile ? receiptDetailData.mobile : '暂无'}
+              </span>
+            </Col>
+          </div>
+          <div style={{ lineHeight: '24px' }}>
+            <Col
+              sm={24}
+              md={5}
+              xxl={5}
+              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+            >
+              <span className={styles.receiptLabel}>申请时间:</span>
+            </Col>
+            <Col sm={24} md={19} xxl={19} style={{ paddingLeft: 0, paddingRight: 24 }}>
+              <span className={styles.receiptWord}>
+                {receiptDetailData.createTime ? receiptDetailData.createTime : '暂无'}
+              </span>
+            </Col>
+          </div>
+
+          <div style={{ lineHeight: '24px' }}>
+            <Col
+              sm={24}
+              md={5}
+              xxl={5}
+              style={{ paddingLeft: 0, paddingRight: 0, textAlign: 'right' }}
+            >
+              <span className={styles.receiptLabel}>申请说明:</span>
+            </Col>
+            <Col sm={24} md={19} xxl={19} style={{ paddingLeft: 0, paddingRight: 24 }}>
+              <span className={styles.receiptWord}>
+                {receiptDetailData.applyDesc ? receiptDetailData.applyDesc : '暂无'}
+              </span>
+            </Col>
+          </div>
+        </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }} className={styles.receiptCol}>
           {issueType ? null : (
             <Button

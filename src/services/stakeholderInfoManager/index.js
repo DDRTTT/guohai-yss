@@ -23,11 +23,11 @@ export function queryType(params) {
     params,
   });
 }
-// 根据搜索用的姓名列表--修复BUG，需更换接口
+// 根据搜索用的姓名列表
 export function searchNameListApi(params) {
   deletNUllProperty(params);
-  return request.post(`/ams-base-parameter/employee/getemployeeDetailByCon`, {
-    data: params,
+  return request.get(`${uri}/stakeholderInfo/getList`, {
+    params,
   });
 }
 // 获取产品下拉列表

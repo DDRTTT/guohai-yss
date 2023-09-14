@@ -419,17 +419,14 @@ const Index = ({
 
   // 表单查询
   const handlerSearch = fieldsValue => {
-    setPageNum(1);
     setSearchData(fieldsValue);
   };
   // 搜索查询
   const searchQuery = val => {
-    setPageNum(1);
     fetchList({ keyWords: val, pageNum: 1 });
   };
   // 重置
   const handleReset = () => {
-    setPageNum(1);
     setField('');
     setDirection('');
     setSearchData({});
@@ -456,7 +453,7 @@ const Index = ({
   return (
     <>
       <List
-        pageCode="myInvestor"
+        pageCode="investorsManagement"
         dynamicHeaderCallback={callBackHandler}
         columns={columns}
         taskTypeCode={null}

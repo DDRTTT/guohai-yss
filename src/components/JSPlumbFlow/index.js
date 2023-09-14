@@ -1314,7 +1314,7 @@ class Index extends Component {
                   value={flowInfo.proCode ? flowInfo.proCode : this.state.proCode}
                   disabled={!!edit}
                 >
-                  {(wordDictionary.A002 || []).map(item => {
+                  {(wordDictionary || []).map(item => {
                     return (
                       <Select.Option key={item.code} value={item.code}>
                         {item.name}

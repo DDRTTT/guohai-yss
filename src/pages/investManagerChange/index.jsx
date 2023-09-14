@@ -17,6 +17,7 @@ const { TabPane } = Tabs;
 const dictList = {
   codeList: 'S001',
 };
+
 @Form.create()
 class InvestManagerChange extends Component {
   state = {
@@ -35,12 +36,12 @@ class InvestManagerChange extends Component {
     seachData: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
         sorter: true,
         ...tableRowConfig,
-        width: 320,
+        width: 400,
       },
       {
         title: '产品代码',
@@ -48,6 +49,7 @@ class InvestManagerChange extends Component {
         key: 'proCode',
         sorter: true,
         ...tableRowConfig,
+        width: 400,
       },
       {
         title: '原投资经理',
@@ -55,7 +57,7 @@ class InvestManagerChange extends Component {
         key: 'oriInvestManagerName',
         sorter: true,
         ...tableRowConfig,
-        width: 280,
+        width: 200,
       },
       {
         title: '拟任投资经理',
@@ -63,7 +65,7 @@ class InvestManagerChange extends Component {
         key: 'appointInvestManagerName',
         sorter: true,
         ...tableRowConfig,
-        width: 280,
+        width: 200,
       },
       {
         title: '任务到达时间',
@@ -71,6 +73,7 @@ class InvestManagerChange extends Component {
         sorter: true,
         key: 'taskTime',
         ...tableRowConfig,
+        width: 200,
       },
       {
         title: '状态',
@@ -78,123 +81,14 @@ class InvestManagerChange extends Component {
         key: 'statusName',
         sorter: true,
         ...tableRowConfig,
+        width: 200,
       },
       {
         key: 'taskId',
         dataIndex: 'taskId',
         title: '操作',
         fixed: 'right',
-        align: 'center',
         render: (text, record) => {
-          const moreActions = [
-            {
-              text: '修改',
-              code: 'investManagerChange:update',
-              onClick: record => this.groupOperate(record, 'edit'),
-            },
-            {
-              text: '复制',
-              code: 'investManagerChange:copy',
-              onClick: record => this.groupOperate(record, 'copy'),
-            },
-            {
-              text: '提交',
-              code: 'investManagerChange:commit',
-              onClick: record => this.groupOperate(record, 'submit'),
-            },
-            {
-              text: '删除',
-              code: 'investManagerChange:deleteApi',
-              onClick: record => this.groupOperate(record, 'del'),
-            },
-          ];
-
-          const lookOverActions = [
-            {
-              text: '审阅',
-              code: 'lookOver',
-              onClick: record => this.groupOperate(record, 'lookOver'),
-            },
-          ];
-
-          const joinedActions = [
-            {
-              text: '办理',
-              code: 'investManagerChange:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'investManagerChange:transferHistory',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-            {
-              text: '撤销',
-              code: 'investManagerChange:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-            {
-              text: '更多',
-              code: 'investManagerChange:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          const joinActions = [
-            {
-              text: '办理',
-              code: 'investManagerChange:check',
-              onClick: record => this.groupOperate(record, 'handle'),
-            },
-            {
-              text: '流转历史',
-              code: 'investManagerChange:transferHistory',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-            {
-              text: '更多',
-              code: 'investManagerChange:more',
-              onClick: record => this.groupOperate(record, 'more'),
-            },
-          ];
-
-          // const colActions = [
-          //   {
-          //     text: '修改',
-          //     code: 'investManagerChange:update',
-          //     onClick: record => this.groupOperate(record, 'edit'),
-          //   },
-          // ];
-
-          const initActions = [
-            {
-              text: '详情',
-              code: 'investManagerChange:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'investManagerChange:transferHistory',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-            {
-              text: '撤销',
-              code: 'investManagerChange:backOut',
-              onClick: record => this.groupOperate(record, 'cancel'),
-            },
-          ];
-          const inActions = [
-            {
-              text: '详情',
-              code: 'investManagerChange:details',
-              onClick: record => this.groupOperate(record, 'view'),
-            },
-            {
-              text: '流转历史',
-              code: 'investManagerChange:transferHistory',
-              onClick: record => this.groupOperate(record, 'history'),
-            },
-          ];
           if (this.state.taskTypeCode === 'T001_1' && record.circulateFlag === '0') {
             return this.renderColActions(lookOverActions, text, record);
           } else {
@@ -424,9 +318,9 @@ class InvestManagerChange extends Component {
             this.actionButtonMore(record)
           ) : (
             <Action code={btn.code}>
-              <Button type="link" size="small" onClick={() => btn.onClick(record)}>
+              <a onClick={() => btn.onClick(record)} type="link" style={{ marginRight: 10 }}>
                 {btn.text}
-              </Button>
+              </a>
             </Action>
           ),
         )}
@@ -442,7 +336,6 @@ class InvestManagerChange extends Component {
     this.setState(
       {
         page: 1,
-        limit: 10,
         seachData: formItems || {},
       },
       () => this.getTableDataList(),
@@ -454,7 +347,6 @@ class InvestManagerChange extends Component {
     this.setState(
       {
         page: 1,
-        limit: 10,
         oField: '',
         direct: '',
         seachData: {},
@@ -475,8 +367,6 @@ class InvestManagerChange extends Component {
     this.setState(
       {
         keyWords: val,
-        page: 1,
-        limit: 10,
       },
       () => {
         this.getTableDataList();
@@ -570,7 +460,7 @@ class InvestManagerChange extends Component {
     } else if (mark === 'handle') {
       params.mode = 'deal';
       params.id = record.id;
-      params.proCode = record.proCode;
+      params.proCode = record.seriesOrProCode;
       dispatch(
         routerRedux.push({
           pathname: '/processCenter/taskDeal',
@@ -694,6 +584,116 @@ class InvestManagerChange extends Component {
 
     const { tableList, oTotal, page, taskTypeCode, columns } = this.state;
 
+    const moreActions = [
+      {
+        text: '修改',
+        code: 'investManagerChange:update',
+        onClick: record => this.groupOperate(record, 'edit'),
+      },
+      {
+        text: '复制',
+        code: 'investManagerChange:copy',
+        onClick: record => this.groupOperate(record, 'copy'),
+      },
+      {
+        text: '提交',
+        code: 'investManagerChange:commit',
+        onClick: record => this.groupOperate(record, 'submit'),
+      },
+      {
+        text: '删除',
+        code: 'investManagerChange:deleteApi',
+        onClick: record => this.groupOperate(record, 'del'),
+      },
+    ];
+
+    const lookOverActions = [
+      {
+        text: '审阅',
+        code: 'lookOver',
+        onClick: record => this.groupOperate(record, 'lookOver'),
+      },
+    ];
+
+    const joinedActions = [
+      {
+        text: '办理',
+        code: 'investManagerChange:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'investManagerChange:transferHistory',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+      {
+        text: '撤销',
+        code: 'investManagerChange:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+      {
+        text: '更多',
+        code: 'investManagerChange:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    const joinActions = [
+      {
+        text: '办理',
+        code: 'investManagerChange:check',
+        onClick: record => this.groupOperate(record, 'handle'),
+      },
+      {
+        text: '流转历史',
+        code: 'investManagerChange:transferHistory',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+      {
+        text: '更多',
+        code: 'investManagerChange:more',
+        onClick: record => this.groupOperate(record, 'more'),
+      },
+    ];
+
+    // const colActions = [
+    //   {
+    //     text: '修改',
+    //     code: 'investManagerChange:update',
+    //     onClick: record => this.groupOperate(record, 'edit'),
+    //   },
+    // ];
+
+    const initActions = [
+      {
+        text: '详情',
+        code: 'investManagerChange:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'investManagerChange:transferHistory',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+      {
+        text: '撤销',
+        code: 'investManagerChange:backOut',
+        onClick: record => this.groupOperate(record, 'cancel'),
+      },
+    ];
+    const inActions = [
+      {
+        text: '详情',
+        code: 'investManagerChange:details',
+        onClick: record => this.groupOperate(record, 'view'),
+      },
+      {
+        text: '流转历史',
+        code: 'investManagerChange:transferHistory',
+        onClick: record => this.groupOperate(record, 'history'),
+      },
+    ];
+
     const layout = {
       labelAlign: 'right',
       labelCol: { span: 8 },
@@ -723,6 +723,7 @@ class InvestManagerChange extends Component {
       },
       selectedRowKeys: this.state.selectedRowKeys,
     };
+
     const baseTable = () => {
       return (
         <>
@@ -731,7 +732,7 @@ class InvestManagerChange extends Component {
             dataSource={tableList}
             columns={columns}
             pagination={false}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 + 440 }}
             onChange={this.handleTableChange}
             loading={loading}
             rowKey="taskId"
@@ -759,11 +760,11 @@ class InvestManagerChange extends Component {
 
     const formItemData = [
       {
-        name: 'proCodeList',
+        name: 'proCode',
         label: '产品名称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -771,7 +772,7 @@ class InvestManagerChange extends Component {
         label: '原投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo', bracket: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investManagerList,
       },
       {
@@ -779,14 +780,14 @@ class InvestManagerChange extends Component {
         label: '拟任投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo', bracket: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investManagerList,
       },
       {
         name: 'statusCodes',
         label: '状态',
         type: 'select',
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

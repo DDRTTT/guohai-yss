@@ -19,7 +19,7 @@ export function superiorOrg(innerFlag) {
   return request(`${uri}/organization/getOrgNameForTree?type=${innerFlag}`);
 }
 
-//查看信息
+//查看信息（客户经理/信披岗-获取登录人部门）
 export function details(params) {
   return request(`${uri}/organization/query/baseInfo?orgId=${params}`);
 }

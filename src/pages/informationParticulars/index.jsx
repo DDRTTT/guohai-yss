@@ -3,8 +3,7 @@
  * Create on 2020/9/15.
  */
 import React, { Component } from 'react';
-import { Form, Button, Input, Select, DatePicker, Radio, Table } from 'antd';
-import router from 'umi/router';
+import { Form, Button, Input, Select, DatePicker, Radio } from 'antd';
 
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
@@ -13,7 +12,6 @@ import style from './index.less';
 import FormTable from '../../components/addInfomation/informationParticularsTable';
 
 const { Option } = Select;
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const { TextArea } = Input;
 
 function onChange(date, dateString) {

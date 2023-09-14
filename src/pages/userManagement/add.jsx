@@ -20,7 +20,8 @@ const dirCode = 'attributionSystem,SysUserType,authorizationStrategy,roleName,ma
 const Done = () => {
   return (
     <Result
-      className={styles.registerResult}
+      className=  {`${styles.resMargin} ${styles.registerResult}`}
+      // className='styles.resMargin styles.registerResult'
       type="success"
       title={
         <div className={styles.title}>
@@ -37,7 +38,6 @@ const Done = () => {
           </div>
         </div>
       }
-      style={{ marginTop: 56 }}
     />
   );
 };
@@ -132,7 +132,7 @@ const Index = ({
       dispatch({
         type: 'userManagement/fetchGetDept',
         payload: {
-          orgId: userInfo?.orgId, // 机构ID
+          orgId: userInfo?.orgId, //机构ID
           orgKind: 2,
         },
       });
@@ -235,7 +235,7 @@ const Index = ({
         mobile: item.phoneNumber,
         email: item.mailbox,
         deptId: `${item.depId}`,
-        type: '02', // 默认选择业务员
+        type: '02', //默认选择业务员
       });
     });
   };
@@ -273,7 +273,7 @@ const Index = ({
       label: '机构名称',
       type: 'TreeSelect',
       width: 12,
-      style: { display: userInfo?.orgId === 0 ? 'block' : 'none' },
+      style:{display: (userInfo.orgId === 0 ? 'block' : 'none')},
       rules: [{ required: true, message: '请选择机构名称' }],
       config: {
         dropdownStyle: { maxHeight: 400, overflow: 'auto' },
@@ -311,17 +311,18 @@ const Index = ({
       config: {
         onChange: e => handleGetRole(e),
       },
+      rules: [{ required: userInfo?.orgId === 0 ? false : true, message: '请选择用户' }],
       ...defaultConfig,
     },
     {
       name: 'username',
       label: '用户名',
-      style: { display: 'none' },
+      className : styles.displayStyle2,
     },
     {
       name: 'oaUsernum',
       label: '员工编号',
-      style: { display: 'none' },
+      className : styles.displayStyle2,
     },
     {
       name: 'usercode',
@@ -378,6 +379,16 @@ const Index = ({
       },
     },
     {
+      name: 'principal',
+      label: '是否部门负责人',
+      type: 'radio',
+      ...defaultConfig,
+      option: [
+        { name: '是', code: 1 },
+        { name: '否', code: 0 },
+      ],
+    },
+    {
       name: 'assistMgtDept',
       label: '协管部门',
       type: 'select',
@@ -392,7 +403,7 @@ const Index = ({
       name: 'type',
       label: '用户类型',
       type: 'select',
-      style: { display: 'none' },
+      className : styles.displayStyle2,
       ...defaultConfig,
       // rules: [{ required: true, message: '请选择用户类型' }],
       option: [
@@ -457,7 +468,7 @@ const Index = ({
     >
       <div className={styles.addPage} id="area">
         <Card>
-          <Steps style={{ marginBottom: '30px' }} current={current}>
+          <Steps className={styles.stepsStyle } current={current}>
             <Step title="用户信息" />
             <Step title="完成" />
           </Steps>
@@ -478,7 +489,7 @@ const Index = ({
                           },
                         ],
                       })(
-                        <Checkbox.Group style={{ width: '100%' }}>
+                        <Checkbox.Group className={styles.checkboxStyle }>
                           {attributionSystem
                             ?.filter(item => GET_USER_SYSID?.includes(item.code))
                             .map(item => (
@@ -510,12 +521,7 @@ const Index = ({
                 </Row>
               </Form>
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: '20px',
-                }}
+                className={styles.current0Style }
               >
                 <Button
                   onClick={() => {
@@ -525,7 +531,7 @@ const Index = ({
                   取消
                 </Button>
                 <Button
-                  style={{ marginLeft: '20px' }}
+                  className={styles.current0btn }
                   type="primary"
                   onClick={handleSubmit}
                   loading={authorizeLoading}
@@ -538,14 +544,13 @@ const Index = ({
           {current === 1 && (
             <>
               <Done />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className={styles.current1Style }>
                 <Button className={styles.btn} type="primary" onClick={prev}>
                   再次创建
                 </Button>
                 <Button
-                  className={styles.btn}
+                  className=  {`${styles.btn} ${styles.current1btn}`}
                   type="primary"
-                  style={{ marginLeft: '10px' }}
                   onClick={() => router.goBack()}
                 >
                   返回

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import Action from '@/utils/hocUtil';
 import { Button, Modal, Input, message } from 'antd';
 
 class ReviewModal extends Component {
@@ -64,17 +65,11 @@ class ReviewModal extends Component {
   };
 
   render() {
-    const { record = [] } = this.props;
     const { show, fileBoxNum } = this.state;
 
     return (
       <span>
-        <Button
-          type="primary"
-          style={{ marginRight: '12px' }}
-          disabled={record.length === 0}
-          onClick={this.handleModalShow}
-        >
+        <Button type="link" size="small" onClick={this.handleModalShow}>
           档案盒号录入
         </Button>
         <Modal
@@ -87,12 +82,7 @@ class ReviewModal extends Component {
           onOk={this.handleReview}
           onCancel={this.handleModalHide}
         >
-          <Input
-            placeholder="请输入档案盒号"
-            value={fileBoxNum}
-            maxLength={32}
-            onChange={this.handleChange}
-          />
+          <Input placeholder="请输入档案盒号" value={fileBoxNum} onChange={this.handleChange} />
         </Modal>
       </span>
     );

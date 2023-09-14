@@ -1,13 +1,12 @@
 import {
+  queryPage,
+  delRole,
   addrole,
+  getrolebyroleid,
   check,
   dellist,
-  delRole,
-  getrolebyroleid,
-  queryPage,
 } from '@/services/functionManagement/index';
 import { message } from 'antd';
-
 export default {
   namespace: 'functionManagement',
   state: {
@@ -54,35 +53,38 @@ export default {
     /**
      * 审核
      */
-    *check({ payload }, { call }) {
+    *check({ payload }, { put, call }) {
+      console.log(payload);
       const res = yield call(check, payload);
       if (res && res.status === 200) {
         return true;
+      } else {
+        message.error(res.message);
       }
-      message.error(res.message);
     },
     /**
      * 删除角色
      */
-    *delRole({ payload }, { call }) {
+    *delRole({ payload }, { put, call }) {
       const res = yield call(delRole, payload);
       if (res && res.status === 200) {
         return true;
+      } else {
+        message.error(res.message);
       }
-      message.error(res.message);
     },
     /**
      * 添加角色
      */
-    *addrole({ payload }, { call }) {
+    *addrole({ payload }, { put, call }) {
       const res = yield call(addrole, payload);
       if (res && res.status === 200) {
-        if (res?.data?.status === '0000') {
+        if(res?.data?.status === "0000"){
           return true;
         }
-        message.warn(res?.data?.errMsg);
+        message.error(res?.data?.errMsg);
       } else {
-        message.warn(res.message);
+        message.error(res.message);
       }
     },
     /**
@@ -95,19 +97,21 @@ export default {
           type: 'setRoleDetail',
           payLoad: res.data[0],
         });
-        return res.data[0];
+        return res.data[0]
+      } else {
+        message.error(res.message);
       }
-      message.error(res.message);
     },
     /**
      * 批量删除
      */
-    *dellist({ payload }, { call }) {
+    *dellist({ payload }, { put, call }) {
       const res = yield call(dellist, payload);
       if (res && res.status === 200) {
         return true;
+      } else {
+        message.error(res.message);
       }
-      message.error(res.message);
     },
   },
 };

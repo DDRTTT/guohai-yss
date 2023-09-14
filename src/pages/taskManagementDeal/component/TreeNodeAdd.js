@@ -1,3 +1,8 @@
+/**
+ * 目录树：新增
+ * author: jiaqiuhua
+ * date: 2021/03/17
+ * * */
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { Input, Form, Modal, TreeSelect, message } from 'antd';
 
@@ -6,7 +11,7 @@ const TreeNodeAdd = forwardRef(
   (
     {
       props: { dispatch, saveTreeData, clickMsgData, taskId, proCode, opType },
-      form: { getFieldDecorator, resetFields, validateFields, setFieldsValue },
+      form: { getFieldDecorator, resetFields, validateFields, getFieldsValue, setFieldsValue },
       newAddTreeSuccess,
     },
     ref,
@@ -65,9 +70,9 @@ const TreeNodeAdd = forwardRef(
                 message.warn(`${pathName} 节点为不适用目录，不能作为父级目录~`);
                 resolve(false);
                 return;
-              default:
-                // 'ok'
+              case 'ok':
                 resolve(true);
+                return;
             }
           }
         });

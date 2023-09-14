@@ -39,11 +39,11 @@ function encrypt(word, pwd) {
  */
 function decrypt(word, pwd) {
   const key = CryptoJS.enc.Utf8.parse(pwd);
-  const decrypt = CryptoJS.AES.decrypt(word, key, {
+  const decrypts = CryptoJS.AES.decrypt(word, key, {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7,
   });
-  return CryptoJS.enc.Utf8.stringify(decrypt).toString();
+  return CryptoJS.enc.Utf8.stringify(decrypts).toString();
 }
 
 // 加密入口函数
@@ -61,20 +61,20 @@ export function decryptText(encrypted, todecryptPwd) {
 
 // 加密数据格式化
 function encryptFormat(enContent) {
-  enContent = enContent.replace(/\r\n/g, '_r');
-  enContent = enContent.replace(/\//g, '_a');
-  enContent = enContent.replace(/\+/g, '_b');
-  enContent = enContent.replace(/\=/g, '_c');
-  enContent = enContent.replace(/\n/g, '_n');
-  return enContent;
+  return enContent
+    .replace(/\r\n/g, '_r')
+    .replace(/\//g, '_a')
+    .replace(/\+/g, '_b')
+    .replace(/\=/g, '_c')
+    .replace(/\n/g, '_n');
 }
 
 // 解密数据格式化
 function decryptFormat(deContent) {
-  deContent = deContent.replace(/_r/g, '\r\n');
-  deContent = deContent.replace(/_a/g, '/');
-  deContent = deContent.replace(/_b/g, '+');
-  deContent = deContent.replace(/_c/g, '=');
-  deContent = deContent.replace(/_n/g, '\n');
-  return deContent;
+  return deContent
+    .replace(/_r/g, '')
+    .replace(/_a/g, '/')
+    .replace(/_b/g, '+')
+    .replace(/_c/g, '=')
+    .replace(/_n/g, '');
 }

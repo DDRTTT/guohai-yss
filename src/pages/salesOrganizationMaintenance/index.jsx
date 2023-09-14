@@ -72,15 +72,15 @@ const Index = props => {
         ...tableRowConfig,
       },
       {
-        key: 'statusName',
-        dataIndex: 'statusName',
-        title: '状态',
-        ...tableRowConfig,
-      },
-      {
         key: 'taskTime',
         dataIndex: 'taskTime',
         title: '任务到达时间',
+        ...tableRowConfig,
+      },
+      {
+        key: 'statusName',
+        dataIndex: 'statusName',
+        title: '状态',
         ...tableRowConfig,
       },
       {
@@ -143,7 +143,7 @@ const Index = props => {
     {
       name: 'statusCodes',
       type: 'select',
-      config: { mode: 'multiple'},
+      config: { mode: 'multiple', maxTagCount: 1 },
       label: '状态',
       option: codeList['S001'],
     },
@@ -193,6 +193,7 @@ const Index = props => {
       type: 'investorReview/getDicsByTypes',
       payload: ['S001'],
     });
+    // hideTaskTime(taskTypeCodeRef.current, state.columns, 'taskTime');
   }, []);
   //   监控数值变化
   useEffect(() => {
@@ -244,13 +245,13 @@ const Index = props => {
       searchData: {},
       fuzzy: undefined,
       direction: '',
-      field: ''
+      field: '',
     });
-  }
+  };
   /**
- * 模糊搜索的回调
- * @param {string} param 模糊搜索传回来的字符串
- */
+   * 模糊搜索的回调
+   * @param {string} param 模糊搜索传回来的字符串
+   */
   const handlerFuzzySearch = param => {
     assign({
       pageNum: 1,
@@ -258,6 +259,7 @@ const Index = props => {
       searchData: undefined,
     });
   };
+
   // 设置tab栏额外的按钮
   const setOperations = () => {
     return (
@@ -291,8 +293,9 @@ const Index = props => {
       searchData: {},
       fuzzy: undefined,
       direction: '',
-      field: ''
+      field: '',
     });
+    // hideTaskTime(_key, state.columns, 'taskTime');
   };
 
   /**
@@ -347,11 +350,11 @@ const Index = props => {
     assign({ selectedRowKeys: [] });
   };
 
-   const callBackHandler = value => {
-     assign({
-       columns: value,
-     });
-   };
+  const callBackHandler = value => {
+    assign({
+      columns: value,
+    });
+  };
   return (
     <>
       <List

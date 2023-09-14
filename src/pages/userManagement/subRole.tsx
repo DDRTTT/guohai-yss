@@ -27,11 +27,11 @@ interface tagType {
 
 interface propsType {
   sysId: string;
-  handleRoleBySysId?: (p: string) => unknown;
+  handleRoleBySysId?: (p: string) => {};
   roleBySys: tagType[];
   selectTagList: tagType[];
-  setSelectTagList: (p: any[]) => unknown;
-  showModal: (id: any) => unknown;
+  setSelectTagList: (p: any[]) => {};
+  showModal: (id: any) => {};
 }
 
 /**
@@ -120,7 +120,7 @@ const SubRole = ({
               </Tag>
             ))}
         </div>
-        <div style={{ minWidth: 60, margin: 8 }}>
+        {/* <div style={{ minWidth: 60, margin: 8 }}>
           <Button
             onClick={() => {
               showModal(sysId);
@@ -129,7 +129,7 @@ const SubRole = ({
           >
             预览权限
           </Button>
-        </div>
+        </div> */}
       </div>
       <Modal
         title="添加角色"

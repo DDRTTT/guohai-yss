@@ -5,15 +5,12 @@ import { routerRedux } from 'dva/router';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MoreOperation from '@/components/moreOperation';
-import { Button, Col, Form, Icon, Input, Modal, Row, Select, Tabs, Tooltip } from 'antd';
+import { Button, Form, Modal, Tooltip } from 'antd';
 import styles from './index.less';
 import { handleTableCss } from '../manuscriptBasic/func';
 import { handleShowTransferHistory } from '@/utils/transferHistory';
 import { Table } from '@/components';
 import List from '@/components/List';
-
-const { Search } = Input;
-const { TabPane } = Tabs;
 
 @Form.create()
 class BonusFlow extends React.Component {
@@ -46,10 +43,10 @@ class BonusFlow extends React.Component {
       // table 表头
       columns: [
         {
-          title: '产品简称',
-          dataIndex: 'proFname',
+          title: '产品全称',
+          dataIndex: 'proName',
           sorter: true,
-          width: 350,
+          width: 400,
           render: text => {
             return (
               <Tooltip title={text}>
@@ -57,8 +54,8 @@ class BonusFlow extends React.Component {
                   {text
                     ? text.toString().replace(/null/g, '-')
                     : text === '' || text === undefined
-                      ? '-'
-                      : 0}
+                    ? '-'
+                    : 0}
                 </span>
               </Tooltip>
             );
@@ -69,7 +66,7 @@ class BonusFlow extends React.Component {
           title: '产品代码',
           dataIndex: 'proCode',
           sorter: true,
-          width: 150,
+          width: 200,
           render: text => {
             return handleTableCss(text);
           },
@@ -78,7 +75,7 @@ class BonusFlow extends React.Component {
           title: '产品类型',
           dataIndex: 'proType',
           sorter: true,
-          width: 150,
+          width: 200,
           render: text => {
             return handleTableCss(text);
           },
@@ -87,7 +84,8 @@ class BonusFlow extends React.Component {
           title: '收益分配基准日',
           dataIndex: 'baseDate',
           sorter: true,
-          width: 180,
+          width: 200,
+          align: 'center',
           render: text => {
             return handleTableCss(text);
           },
@@ -96,8 +94,11 @@ class BonusFlow extends React.Component {
           title: '利润分配比例',
           dataIndex: 'profitSharingProp',
           sorter: true,
-          width: 150,
+          width: 200,
           align: 'right',
+          // render: text => {
+          //   return handleTableCss(text);
+          // },
           render: (_, record) => {
             return (
               <Tooltip
@@ -119,18 +120,28 @@ class BonusFlow extends React.Component {
                   {record.profitSharingProp
                     ? `${(record.profitSharingProp * 100).toFixed(2)}%`
                     : record.profitSharingProp === ''
-                      ? '-'
-                      : '0%'}
+                    ? '-'
+                    : '0%'}
                 </span>
               </Tooltip>
             );
           },
         },
+        // {
+        //   title: '金额',
+        //   dataIndex: 'amountOfMoney',
+        //   sorter: true,
+        //   width: 200,
+        //   render: text => {
+        //     return handleTableCss(text);
+        //   },
+        // },
         {
           title: '任务到达时间',
           dataIndex: 'taskTime',
           sorter: true,
-          width: 180,
+          width: 200,
+          align: 'center',
           render: text => {
             return handleTableCss(text);
           },
@@ -139,17 +150,16 @@ class BonusFlow extends React.Component {
           title: '状态',
           dataIndex: 'operStatusName',
           sorter: true,
-          width: 150,
+          width: 200,
           render: text => {
             return handleTableCss(text);
           },
         },
         {
           title: '操作',
+          fixed: 'right',
           key: 'action',
           dataIndex: 'action',
-          fixed: 'right',
-          align: 'center',
           render: (text, record) => {
             // 待提交 S001_1   流程中S001_2  已结束 S001_3
             // 代办 T001_1 未提交 T001_3
@@ -160,36 +170,33 @@ class BonusFlow extends React.Component {
                   content = (
                     <>
                       <Action code="bonusFlow:update">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => this.dealTask(record, 'edit')}
                         >
                           修改
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="bonusFlow:copy">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => this.dealTask(record, 'copy')}
                         >
                           复制
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="bonusFlow:commit">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => this.dealTask(record, 'submit')}
                         >
                           提交
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="bonusFlow:delete">
-                        <Button type="link" size="small" onClick={() => this.deleteInfo(record)}>
+                        <a style={{ marginRight: 10 }} onClick={() => this.deleteInfo(record)}>
                           删除
-                        </Button>
+                        </a>
                       </Action>
                     </>
                   );
@@ -198,23 +205,21 @@ class BonusFlow extends React.Component {
                   content = (
                     <>
                       <Action code="bonusFlow:check">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => this.dealTask(record, 'handle')}
                         >
                           {' '}
                           办理{' '}
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="bonusFlow:transferHistory">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => handleShowTransferHistory(record)}
                         >
                           流转历史
-                        </Button>
+                        </a>
                       </Action>
                       {this.revokeShow(record)}
                       <MoreOperation record={record} fn={this.handleGetTableList} />
@@ -225,22 +230,20 @@ class BonusFlow extends React.Component {
                   content = (
                     <>
                       <Action code="bonusFlow:details">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => this.dealTask(record, 'details')}
                         >
                           详情
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="bonusFlow:transferHistory">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
+                          style={{ marginRight: 10 }}
                           onClick={() => handleShowTransferHistory(record)}
                         >
                           流转历史
-                        </Button>
+                        </a>
                       </Action>
                     </>
                   );
@@ -251,18 +254,14 @@ class BonusFlow extends React.Component {
             content = (
               <>
                 <Action code="bonusFlow:details">
-                  <Button type="link" size="small" onClick={() => this.dealTask(record, 'details')}>
+                  <a style={{ marginRight: 10 }} onClick={() => this.dealTask(record, 'details')}>
                     详情
-                  </Button>
+                  </a>
                 </Action>
                 <Action code="bonusFlow:transferHistory">
-                  <Button
-                    type="link"
-                    size="small"
-                    onClick={() => handleShowTransferHistory(record)}
-                  >
+                  <a style={{ marginRight: 10 }} onClick={() => handleShowTransferHistory(record)}>
                     流转历史
-                  </Button>
+                  </a>
                 </Action>
                 {this.revokeShow(record)}
               </>
@@ -299,13 +298,13 @@ class BonusFlow extends React.Component {
   // 判断撤销按钮是否显示
   revokeShow(record) {
     if (record.operStatus === 'S001_2') {
-      if (record.revoke == 1) {
+      if (record.revoke === 1 || record.revoke === '1') {
         return (
           <>
             <Action code="bonusFlow:cancel">
-              <Button type="link" size="small" onClick={() => this.handleCanBackOut(record)}>
+              <a style={{ marginRight: 10 }} onClick={() => this.handleCanBackOut(record)}>
                 撤销
-              </Button>
+              </a>
             </Action>
           </>
         );
@@ -363,13 +362,13 @@ class BonusFlow extends React.Component {
       // 办理
       params.mode = 'deal';
       params.id = record.id;
-      (params.proCode = record.proCode),
-        dispatch(
-          routerRedux.push({
-            pathname: '/processCenter/taskDeal',
-            query: { ...params },
-          }),
-        );
+      params.proCode = record.proCode;
+      dispatch(
+        routerRedux.push({
+          pathname: '/processCenter/taskDeal',
+          query: { ...params },
+        }),
+      );
     } else if (mark === 'edit') {
       // 修改
       // dispatch(
@@ -466,7 +465,7 @@ class BonusFlow extends React.Component {
   /**
    * @method  handleGetTableList 请求table的数据
    */
-  handleGetTableList = val => {
+  handleGetTableList(val) {
     const {
       bonusFlow: { tableList },
       dispatch,
@@ -512,7 +511,7 @@ class BonusFlow extends React.Component {
       tableVal: tableList.rows,
       total: tableList.total,
     });
-  };
+  }
 
   /**
    * 方法说明  产品名称/产品代码查询
@@ -634,14 +633,14 @@ class BonusFlow extends React.Component {
    * @method handleSearchBtn 详细搜索
    */
   handleSearchBtn = seachData => {
-    this.setState({ seachData: seachData || {}, pageNum: 1, pageSize: 10 }, () => {
+    this.setState({ seachData: seachData || {} }, () => {
       this.handleGetTableList('query');
     });
   };
 
   // 重置
   handleReset = () => {
-    this.setState({ seachData: {}, field: '', direction: '', pageNum: 1, pageSize: 10 }, () => {
+    this.setState({ seachData: {}, field: '', direction: '' }, () => {
       this.handleGetTableList('query');
     });
   };
@@ -654,8 +653,6 @@ class BonusFlow extends React.Component {
     this.setState(
       {
         fuzzy: val,
-        pageNum: 1,
-        pageSize: 10,
       },
       () => {
         this.handleGetTableList('fuzzy');
@@ -731,7 +728,7 @@ class BonusFlow extends React.Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -739,7 +736,7 @@ class BonusFlow extends React.Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productType,
       },
       {
@@ -747,7 +744,7 @@ class BonusFlow extends React.Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: opts && opts.S001,
       },
     ];
@@ -800,7 +797,7 @@ class BonusFlow extends React.Component {
                 columns={columns}
                 dataSource={tableList.rows}
                 onChange={this.handleTableChange}
-                scroll={{ x: true }}
+                scroll={{ x: columns.length * 200 + 200 }}
                 loading={loading}
                 rowKey="taskId"
               />

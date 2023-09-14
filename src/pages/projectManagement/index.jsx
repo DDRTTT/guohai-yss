@@ -3,7 +3,8 @@
  * Create on 2020/9/14.
  */
 import React, { Component } from 'react';
-import { Form, Table, Button } from 'antd';
+import { Form, Button } from 'antd';
+import { Table } from '@/components';
 import router from 'umi/router';
 
 import { connect } from 'dva';

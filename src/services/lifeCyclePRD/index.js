@@ -120,8 +120,3 @@ export async function handleGetProductTreeAPI() {
 export async function handleGetProductTreeNodesAPI(params) {
   return request(`${uri}/businessArchive/lifeTree/getSecNodes?${stringify(params)}`);
 }
-
-// 产品全称
-export async function handleGetProNameAPI() {
-  return request(`/yss-lifecycle-flow/product/review/effectiveSeriesAPros`);
-}

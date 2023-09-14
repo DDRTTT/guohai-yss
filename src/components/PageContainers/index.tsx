@@ -24,6 +24,8 @@ export interface PageContainerProps {
   backText?: string | boolean;
   // 是否有footer组件
   footer?: React.ReactNode;
+  // 查询内容过滤项
+  filter?: React.ReactNode;
   // 自定义面包屑（针对子页面无法查找路由情况）
   breadcrumb?: breadcrumbProps[];
   // 面包屑样式
@@ -39,6 +41,7 @@ const PageContainer: React.FC<PageContainerProps> = props => {
     onBack = () => window.history.back(),
     backText = '返回',
     footer,
+    filter,
     breadcrumb = [],
     breadcrumbStyle = {},
     fuzz,
@@ -93,6 +96,14 @@ const PageContainer: React.FC<PageContainerProps> = props => {
     return null;
   };
 
+
+  const renderFilter = (filter: React.ReactNode) => {
+    if (filter) {
+      return <div className={styles.contentFilter}>{filter}</div>;
+    }
+    return null;
+  };
+
   // antd类名前缀
   const prefixedClassName = `pageContainer`;
   const className = classNames(prefixedClassName, props.className);
@@ -100,15 +111,16 @@ const PageContainer: React.FC<PageContainerProps> = props => {
   return (
     <>
       <div className={styles[className]}>
-        <div className={styles.contentBreadcrumb}>
+        <div className={styles.contentBreadcrumb} style={breadcrumbStyle}>
           {backIconDom}
-          <span className={styles.breadcrumb} style={breadcrumbStyle}>
+          <span className={styles.breadcrumb}>
             <Breadcrumb breadcrumbArray={breadcrumb} />
           </span>
         </div>
         {title && title}
         {renderFooter(footer)}
         {renderFuzz(fuzz)}
+        {filter && renderFilter(filter)}
       </div>
       {children}
     </>

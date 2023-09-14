@@ -4,13 +4,21 @@ import {
   handlehandleServiceModule,
   // handleLineChart,
   handleLogDetails,
+  handleLogDetails2,
   handleLogStack,
+  handleLogStack2,
   // handlePieChart,
   handleSearchGroup,
+  searchBusGroup,
+  searchStackGroup,
   handleSearchtimevaguedata,
+  handleSearchtimevaguedata2,
   // handleStatislog,
   handleVocabularyDictionary,
 } from '@/services/operationLog';
+import { queryRule, queryRule2 } from '@/services/resources';
+import { getOrgDropDownListAPI } from '@/services/institutionalInfoManager/modify';
+import { message } from 'antd';
 // import { getDateStr, isEmptyObject } from '../../utils/utils';
 export interface DataState {
   requestData: string;
@@ -31,10 +39,15 @@ export interface ModalState {
     data: DataState;
   };
   saveSearchGroup: saveSearchGroupState;
+  saveStackGroup: saveSearchGroupState;
   saveNewTable: saveSearchGroupState;
+  saveBusTable: saveSearchGroupState;
   saveStackLog: saveStackLogState;
+  saveBusGroup: saveStackLogState;
   saveServiceModuleSelect: [];
   saveVocabularyDic: [];
+  resourceData: { rows: []; total: number };
+  departLeaderList: [];
 }
 
 export interface ModelType {
@@ -45,16 +58,29 @@ export interface ModelType {
     serviceModuleSelect: Effect;
     vocabularyDic: Effect;
     searchgroup2: Effect;
+    searchBusGroupList: Effect;
+    searchStackGroupList: Effect;
     fetchLogDetails: Effect;
     fetchStackLog: Effect;
+    fetchStackLog2: Effect;
+    getResourceData: Effect;
+    getResourceData2: Effect;
+    getOrgDropDownList: Effect;
+    logListTable2: Effect;
+    fetchLogDetails2: Effect;
   };
   reducers: {
     saveNewTable: Reducer<ModalState>;
+    saveBusTable: Reducer<ModalState>;
     saveServiceModuleSelect: Reducer<ModalState>;
     saveVocabularyDic: Reducer<ModalState>;
     saveSearchGroup: Reducer<ModalState>;
+    saveStackGroup: Reducer<ModalState>;
+    saveBusGroup: Reducer<ModalState>;
     saveLogDetails: Reducer<ModalState>;
     saveStackLog: Reducer<ModalState>;
+    saveListFetch: any;
+    setDepartLeaderList: any;
   };
 }
 
@@ -85,6 +111,14 @@ const Model: ModelType = {
       total: '',
       rows: [],
     },
+    saveStackGroup: {
+      total: '',
+      rows: [],
+    },
+    saveBusGroup: {
+      total: '',
+      rows: [],
+    },
     saveServiceModuleSelect: [],
     saveLogDetails: {
       data: {
@@ -96,10 +130,19 @@ const Model: ModelType = {
       total: '',
       rows: [],
     },
+    saveBusTable: {
+      total: '',
+      rows: [],
+    },
     saveStackLog: {
       total: '',
       rows: '',
     },
+    resourceData: {
+      rows: [],
+      total: 0,
+    },
+    departLeaderList: [],
   },
 
   effects: {
@@ -139,6 +182,38 @@ const Model: ModelType = {
     //     });
     //   }
     // },
+    //获取机构人员列表
+    *getOrgDropDownList({ payload }, { call, put }) {
+      const response = yield call(getOrgDropDownListAPI, payload);
+      if (response && response.status === 200) {
+        yield put({
+          type: 'setDepartLeaderList',
+          payload: response.data,
+        });
+      } else {
+        message.error('查询失败');
+      }
+    },
+
+    *getResourceData({ payload }, { call, put, select }) {
+      const response = yield call(queryRule, payload);
+      if (response && response.status === 200) {
+        yield put({
+          type: 'saveListFetch',
+          payload: response.data,
+        });
+      }
+    },
+
+    *getResourceData2({ payload }, { call, put, select }) {
+      const response = yield call(queryRule2, payload);
+      if (response && response.status === 200) {
+        yield put({
+          type: 'saveListFetch',
+          payload: response.data,
+        });
+      }
+    },
 
     // 服务模块
     *logListTable({ payload }, { call, put }) {
@@ -146,6 +221,17 @@ const Model: ModelType = {
       if (res && res.status === 200 && res.message === 'success') {
         yield put({
           type: 'saveNewTable',
+          payload: res.data,
+        });
+      }
+    },
+
+    // 操作日志列表
+    *logListTable2({ payload }, { call, put }) {
+      const res = yield call(handleSearchtimevaguedata2, payload);
+      if (res && res.status === 200 && res.message === 'success') {
+        yield put({
+          type: 'saveBusTable',
           payload: res.data,
         });
       }
@@ -271,6 +357,37 @@ const Model: ModelType = {
       }
     },
 
+    // 操作日志
+    *searchBusGroupList({ payload }, { call, put }) {
+      const res = yield call(searchBusGroup, payload);
+      const name = payload.group[0].groupName;
+      if (res && res.data && res.data[name]) {
+        const item = res.data[name];
+        item.rows = res.data[name].buckets;
+        item.total = res.data[name].buckets.length;
+
+        yield put({
+          type: 'saveBusGroup',
+          payload: item,
+        });
+      }
+    },
+
+    *searchStackGroupList({ payload }, { call, put }) {
+      const res = yield call(searchStackGroup, payload);
+      const name = payload.group[0].groupName;
+      if (res && res.data && res.data[name]) {
+        const item = res.data[name];
+        item.rows = res.data[name].buckets;
+        item.total = res.data[name].buckets.length;
+
+        yield put({
+          type: 'saveStackGroup',
+          payload: item,
+        });
+      }
+    },
+
     *fetchLogDetails({ payload }, { call, put }) {
       const res = yield call(handleLogDetails, payload);
       if (res.data) {
@@ -281,8 +398,27 @@ const Model: ModelType = {
       }
     },
 
+    *fetchLogDetails2({ payload }, { call, put }) {
+      const res = yield call(handleLogDetails2, payload);
+      if (res.data) {
+        yield put({
+          type: 'saveLogDetails',
+          payload: res.data,
+        });
+      }
+    },
+
     *fetchStackLog({ payload }, { call, put }) {
       const res = yield call(handleLogStack, payload);
+      if (res && res.data && res.status === 200 && res.message === 'success') {
+        yield put({
+          type: 'saveStackLog',
+          payload: res.data,
+        });
+      }
+    },
+    *fetchStackLog2({ payload }, { call, put }) {
+      const res = yield call(handleLogStack2, payload);
       if (res && res.data && res.status === 200 && res.message === 'success') {
         yield put({
           type: 'saveStackLog',
@@ -338,10 +474,28 @@ const Model: ModelType = {
   },
 
   reducers: {
+    setDepartLeaderList(state: any, { payload }: any) {
+      return {
+        ...state,
+        departLeaderList: payload,
+      };
+    },
+    saveListFetch(state: any, action: { payload: any }) {
+      return {
+        ...state,
+        resourceData: action.payload,
+      };
+    },
     saveNewTable(state, { payload }) {
       return {
         ...(state as ModalState),
         saveNewTable: payload,
+      };
+    },
+    saveBusTable(state, { payload }) {
+      return {
+        ...(state as ModalState),
+        saveBusTable: payload,
       };
     },
     saveVocabularyDic(state, { payload }) {
@@ -354,6 +508,18 @@ const Model: ModelType = {
       return {
         ...(state as ModalState),
         saveSearchGroup: payload,
+      };
+    },
+    saveStackGroup(state, { payload }) {
+      return {
+        ...(state as ModalState),
+        saveStackGroup: payload,
+      };
+    },
+    saveBusGroup(state, { payload }) {
+      return {
+        ...(state as ModalState),
+        saveBusGroup: payload,
       };
     },
     saveLogDetails(state, { payload }) {

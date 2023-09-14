@@ -8,9 +8,6 @@ import {
   getFileRevokeApi,
   getHandleInfoFileNamesApi,
   getSendReminderApi,
-  getFileDeleteHandleApi,
-  getFileDeleteNotPassHandleApi,
-  getFileDeleteFileDelReasonByFileIdApi,
 } from '@/services/archiveTaskHandleList/review';
 import { getNginxIP } from '@/services/global';
 
@@ -70,15 +67,23 @@ const model = {
     },
 
     // 审核通过
-    *getProcessAuditReq({ payload, callback }, { call }) {
+    *getProcessAuditReq({ payload, callback }, { call, put }) {
       const res = yield call(getProcessAuditApi, payload);
-      return res;
+      if (res && res.status === 200) {
+        callback && callback();
+      } else {
+        message.error(res.message);
+      }
     },
 
     // 审核拒绝
-    *getAuditNoPassedReq({ payload, callback }, { call }) {
+    *getAuditNoPassedReq({ payload, callback }, { call, put }) {
       const res = yield call(getAuditNoPassedApi, payload);
-      return res;
+      if (res && res.status === 200) {
+        callback && callback();
+      } else {
+        message.error(res.message);
+      }
     },
 
     // 文件撤销
@@ -120,29 +125,10 @@ const model = {
     },
 
     // 待审核文档 催办
-    *getSendReminderReq({ payload }, { call }) {
+    *getSendReminderReq({ payload, callback }, { call }) {
       const res = yield call(getSendReminderApi, payload);
       if (res && res.status === 200) {
         message.success('催办成功~');
-      } else {
-        message.error(res.message);
-      }
-    },
-
-    *getFileDeleteHandleReq({ payload }, { call }) {
-      const res = yield call(getFileDeleteHandleApi, payload);
-      return res;
-    },
-
-    *getFileDeleteNotPassHandleReq({ payload }, { call }) {
-      const res = yield call(getFileDeleteNotPassHandleApi, payload);
-      return res;
-    },
-
-    *getFileDeleteFileDelReasonByFileIdReq({ payload, callback }, { call }) {
-      const res = yield call(getFileDeleteFileDelReasonByFileIdApi, payload);
-      if (res && res.status === 200) {
-        callback(res);
       } else {
         message.error(res.message);
       }

@@ -38,10 +38,10 @@ class SalesChannel extends Component {
     fieldsValue: {},
     columns: [
       {
-        title: '产品简称',
-        dataIndex: 'proFname',
-        key: 'proFname',
-        width: 300,
+        title: '产品全称',
+        dataIndex: 'proName',
+        key: 'proName',
+        width: 400,
         render: text => {
           return (
             <Tooltip title={text}>
@@ -49,8 +49,8 @@ class SalesChannel extends Component {
                 {text
                   ? text.toString().replace(/null/g, '-')
                   : text === '' || text === undefined
-                    ? '-'
-                    : 0}
+                  ? '-'
+                  : 0}
               </span>
             </Tooltip>
           );
@@ -61,7 +61,7 @@ class SalesChannel extends Component {
         title: '产品代码',
         dataIndex: 'proCode',
         // sorter: true,
-        width: 200,
+        // width: 200,
         key: 'proCode',
         render: text => {
           return handleTableCss(text);
@@ -71,7 +71,7 @@ class SalesChannel extends Component {
         title: '产品类型',
         dataIndex: 'proType',
         sorter: true,
-        width: 200,
+        // width: 200,
         key: 'proType',
         render: (_, record) => {
           return (
@@ -106,18 +106,15 @@ class SalesChannel extends Component {
         title: '任务到达时间',
         dataIndex: 'taskTime',
         sorter: true,
-        width: 180,
         key: 'taskTime',
-        render: text => {
-          return handleTableCss(text);
-        },
+        ...tableRowConfig,
       },
       {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
         sorter: true,
-        width: 150,
+        width: 180,
         ellipsis: true,
         render: (_, record) => {
           return (
@@ -142,117 +139,21 @@ class SalesChannel extends Component {
         key: 'id',
         dataIndex: 'id',
         title: '操作',
-        // width: 300,
+        width: 300,
         fixed: 'right',
-        align: 'center',
         render: (text, record) => {
-          const {taskTypeCode} = this.state;
-          const moreActions = [
-            {
-              text: '修改',
-              onClick: record => this.groupOperate(record, 'edit'),
-              code: 'maintainSalesChannels:update',
-            },
-            {
-              text: '复制',
-              onClick: record => this.groupOperate(record, 'copy'),
-              code: 'maintainSalesChannels:copy',
-            },
-            {
-              text: '提交',
-              onClick: record => this.groupOperate(record, 'submit'),
-              code: 'maintainSalesChannels:commit',
-            },
-            // {
-            //   text: '流程图',
-            //   onClick: record => this.groupOperate(record, 'chart'),
-            //   code: 'maintainSalesChannels:processImage',
-            // },
-            {
-              text: '删除',
-              onClick: record => this.deleteInfo(record),
-              code: 'maintainSalesChannels:delete',
-            },
-          ];
-
-          const joinedActions = [
-            {
-              text: '办理',
-              onClick: record => this.groupOperate(record, 'handle'),
-              code: 'maintainSalesChannels:check',
-            },
-            {
-              text: '流转历史',
-              onClick: record => this.groupOperate(record, 'history'),
-              code: 'maintainSalesChannels:transferHistory',
-            },
-            {
-              text: '撤销',
-              onClick: record => this.handleCanBackOut(record),
-              code: 'maintainSalesChannels:cancel',
-            },
-            {
-              text: '更多',
-              onClick: record => this.groupOperate(record, 'more'),
-              code: 'maintainSalesChannels:more',
-            },
-          ];
-          const revoke = [
-            {
-              text: '办理',
-              onClick: record => this.groupOperate(record, 'handle'),
-              code: 'maintainSalesChannels:check',
-            },
-            {
-              text: '流转历史',
-              onClick: record => this.groupOperate(record, 'history'),
-              code: 'maintainSalesChannels:transferHistory',
-            },
-            {
-              text: '更多',
-              onClick: record => this.groupOperate(record, 'more'),
-              code: 'maintainSalesChannels:more',
-            },
-          ];
-
-          const launch = [
-            {
-              text: '详情',
-              onClick: record => this.groupOperate(record, 'look'),
-              code: 'maintainSalesChannels:details',
-            },
-            {
-              text: '流转历史',
-              onClick: record => this.groupOperate(record, 'history'),
-              code: 'maintainSalesChannels:transferHistory',
-            },
-            {
-              text: '撤销',
-              onClick: record => this.handleCanBackOut(record),
-              code: 'maintainSalesChannels:cancel',
-            },
-          ];
-
-          const initActions = [
-            {
-              text: '详情',
-              onClick: record => this.groupOperate(record, 'look'),
-              code: 'maintainSalesChannels:details',
-            },
-            {
-              text: '流转历史',
-              onClick: record => this.groupOperate(record, 'history'),
-              code: 'maintainSalesChannels:transferHistory',
-            },
-          ];
+          const { taskTypeCode } = this.state;
           if (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') {
             // 待提交
             if (taskTypeCode === 'T001_1' && record.circulateFlag === '0') {
               // return this.renderColActions(reads, text, record);
               return (
-                <Button type="link" size="small" onClick={() => this.groupOperate(record, 'read')}>
+                <a
+                  style={{ marginRight: '10px' }}
+                  onClick={() => this.groupOperate(record, 'read')}
+                >
                   审阅
-                </Button>
+                </a>
               );
             }
             if (record.status === 'S001_1') {
@@ -260,7 +161,7 @@ class SalesChannel extends Component {
             }
             if (record.status === 'S001_2') {
               // 流程中
-              if (record.revoke == 1) {
+              if (record.revoke === 1 || record.revoke === '1') {
                 return this.renderColActions(joinedActions, text, record);
               }
               return this.renderColActions(revoke, text, record);
@@ -269,7 +170,7 @@ class SalesChannel extends Component {
               return this.renderColActions(initActions, text, record);
             }
           } else {
-            if (record.status === 'S001_2' && record.revoke == 1) {
+            if (record.status === 'S001_2' && (record.revoke === 1 || record.revoke === '1')) {
               return this.renderColActions(launch, text, record);
             }
             return this.renderColActions(initActions, text, record);
@@ -298,7 +199,7 @@ class SalesChannel extends Component {
    * @param keyWords {string} 关键字
    * @param query {string}
    */
-  getTableDataList = (query, fuzzy) => {
+  getTableDataList(query) {
     const { dispatch } = this.props;
     const { direct, oField, page, limit, taskTypeCode, fieldsValue } = this.state;
     if (query) {
@@ -319,12 +220,9 @@ class SalesChannel extends Component {
       params.field = oField;
     }
     if (query) {
-      // delete params.keyWords;// 不能这么写，会导致模糊查询(seachTableData)永远不会生效，因为没有传 keyWords! 代码逻辑好乱，只能乱上乱..
+      delete params.keyWords;
       params.pageNum = 1;
       params.pageSize = 10;
-    }
-    if(query && !fuzzy) {// 乱上乱的解决方案（不影响其他代码）：单独给 seachTableData 增加标识 fuzzy 为true；其他不传默认为undefined，还是可以保证 delete params.keyWords
-      delete params.keyWords;
     }
     if (params.direction === 'ascend') {
       params.direction = 'asc';
@@ -351,6 +249,7 @@ class SalesChannel extends Component {
       proCode: val,
     });
   };
+
   // 产品代码change
   proCodeChange = val => {
     this.props.form.setFieldsValue({
@@ -445,6 +344,7 @@ class SalesChannel extends Component {
       },
     );
   };
+
   // 页码change
   sizeChange = (current, size) => {
     this.setState(
@@ -469,7 +369,7 @@ class SalesChannel extends Component {
         keyWords: val,
       },
       () => {
-        this.getTableDataList('query', true);// 为解决模糊查询不生效问题
+        this.getTableDataList();
       },
     );
   };
@@ -495,9 +395,9 @@ class SalesChannel extends Component {
             this.actionButtonMore(record)
           ) : (
             <Action code={btn.code}>
-              <Button type="link" size="small" onClick={() => btn.onClick(record)}>
+              <a style={{ marginRight: '10px' }} onClick={() => btn.onClick(record)}>
                 {btn.text}
-              </Button>
+              </a>
             </Action>
           ),
         )}
@@ -544,6 +444,7 @@ class SalesChannel extends Component {
       },
     });
   }
+
   /**
    * 操作列 事件
    * @method groupOperate
@@ -635,6 +536,7 @@ class SalesChannel extends Component {
       );
     }
   }
+
   /**
    * 批量操作
    * @method actionButton
@@ -759,6 +661,105 @@ class SalesChannel extends Component {
 
     const { tableList, oTotal, page, taskTypeCode, selectedRowKeys, columns } = this.state;
 
+    const moreActions = [
+      {
+        text: '修改',
+        onClick: record => this.groupOperate(record, 'edit'),
+        code: 'maintainSalesChannels:update',
+      },
+      {
+        text: '复制',
+        onClick: record => this.groupOperate(record, 'copy'),
+        code: 'maintainSalesChannels:copy',
+      },
+      {
+        text: '提交',
+        onClick: record => this.groupOperate(record, 'submit'),
+        code: 'maintainSalesChannels:commit',
+      },
+      // {
+      //   text: '流程图',
+      //   onClick: record => this.groupOperate(record, 'chart'),
+      //   code: 'maintainSalesChannels:processImage',
+      // },
+      {
+        text: '删除',
+        onClick: record => this.deleteInfo(record),
+        code: 'maintainSalesChannels:delete',
+      },
+    ];
+
+    const joinedActions = [
+      {
+        text: '办理',
+        onClick: record => this.groupOperate(record, 'handle'),
+        code: 'maintainSalesChannels:check',
+      },
+      {
+        text: '流转历史',
+        onClick: record => this.groupOperate(record, 'history'),
+        code: 'maintainSalesChannels:transferHistory',
+      },
+      {
+        text: '撤销',
+        onClick: record => this.handleCanBackOut(record),
+        code: 'maintainSalesChannels:cancel',
+      },
+      {
+        text: '更多',
+        onClick: record => this.groupOperate(record, 'more'),
+        code: 'maintainSalesChannels:more',
+      },
+    ];
+    const revoke = [
+      {
+        text: '办理',
+        onClick: record => this.groupOperate(record, 'handle'),
+        code: 'maintainSalesChannels:check',
+      },
+      {
+        text: '流转历史',
+        onClick: record => this.groupOperate(record, 'history'),
+        code: 'maintainSalesChannels:transferHistory',
+      },
+      {
+        text: '更多',
+        onClick: record => this.groupOperate(record, 'more'),
+        code: 'maintainSalesChannels:more',
+      },
+    ];
+
+    const launch = [
+      {
+        text: '详情',
+        onClick: record => this.groupOperate(record, 'look'),
+        code: 'maintainSalesChannels:details',
+      },
+      {
+        text: '流转历史',
+        onClick: record => this.groupOperate(record, 'history'),
+        code: 'maintainSalesChannels:transferHistory',
+      },
+      {
+        text: '撤销',
+        onClick: record => this.handleCanBackOut(record),
+        code: 'maintainSalesChannels:cancel',
+      },
+    ];
+
+    const initActions = [
+      {
+        text: '详情',
+        onClick: record => this.groupOperate(record, 'look'),
+        code: 'maintainSalesChannels:details',
+      },
+      {
+        text: '流转历史',
+        onClick: record => this.groupOperate(record, 'history'),
+        code: 'maintainSalesChannels:transferHistory',
+      },
+    ];
+
     const rowSelection = {
       selectedRowKeys,
       onChange: (selectedRowKeys, selectRows) => {
@@ -815,7 +816,7 @@ class SalesChannel extends Component {
             dataSource={tableList}
             columns={columns}
             pagination={false}
-            scroll={{ x: true }}
+            scroll={{ x: columns.length * 200 + 520 }}
             onChange={this.handleTableChange}
             loading={loading}
             rowKey="taskId"
@@ -861,7 +862,7 @@ class SalesChannel extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -869,7 +870,7 @@ class SalesChannel extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'label', code: 'value' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: proTypeList,
       },
       {
@@ -877,7 +878,7 @@ class SalesChannel extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

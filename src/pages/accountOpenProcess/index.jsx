@@ -10,7 +10,7 @@ import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import moment from 'moment';
 import { handleShowTransferHistory } from '@/utils/transferHistory';
-import { Card, CommonSearch, Table } from '@/components';
+import { Table } from '@/components';
 import List from '@/components/List';
 
 const { TabPane } = Tabs;
@@ -20,297 +20,6 @@ const codeList = 'A001, A003, S001';
 
 @Form.create()
 class Index extends Component {
-  state = {
-    taskTypeCode: this.props.publicTas,
-    isOpenFrame: false,
-    tableList: [],
-    oTotal: 10,
-    page: 1,
-    limit: 10,
-    direct: '',
-    oField: '',
-    loading: false,
-    // checkedArr: [],
-    selectedRowKeys: [],
-    selectedRows: [],
-    batchList: [],
-    searchFormData: {},
-    keyWords: '',
-    columns: [
-      {
-        key: 'businessTypeName',
-        dataIndex: 'businessTypeName',
-        title: '业务类型',
-        width: 120,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'accountTypeName',
-        dataIndex: 'accountTypeName',
-        title: '账户类型',
-        width: 120,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'accountName',
-        dataIndex: 'accountName',
-        title: '账户名称',
-        sorter: true,
-        width: 300,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-        ellipsis: true,
-      },
-      {
-        key: 'proFname',
-        dataIndex: 'proFname',
-        title: '产品简称',
-        sorter: true,
-        width: 220,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-        ellipsis: true,
-      },
-      {
-        key: 'proCode',
-        dataIndex: 'proCode',
-        title: '产品代码',
-        width: 150,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-        ellipsis: true,
-      },
-      {
-        key: 'accountStatus',
-        dataIndex: 'accountStatus',
-        title: '账户状态',
-        width: 120,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-        ellipsis: true,
-      },
-      {
-        key: 'needRecord',
-        dataIndex: 'needRecord',
-        title: '是否需要备案',
-        width: 150,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'taskTime',
-        dataIndex: 'taskTime',
-        title: '任务到达时间',
-        width: 180,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'taskName',
-        dataIndex: 'taskName',
-        title: '任务名称',
-        width: 200,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'status',
-        dataIndex: 'status',
-        title: '状态',
-        width: 100,
-        sorter: true,
-        render: text => {
-          return (
-            <Tooltip title={text}>
-              {text
-                ? text.toString().replace(/null/g, '-')
-                : text === '' || text === undefined
-                ? '-'
-                : 0}
-            </Tooltip>
-          );
-        },
-      },
-      {
-        key: 'id',
-        dataIndex: 'id',
-        title: '操作',
-        fixed: 'right',
-        width: 260,
-        align: 'center',
-        render: (text, record) => {
-          const { taskTypeCode } = this.state;
-
-          const editBtn = {
-            text: '修改',
-            flag: 'edit',
-            onClick: record => this.groupOperate(record, 'edit'),
-          };
-          // const copyBtn = {
-          //   text: '复制',
-          //   flag: 'copy',
-          //   onClick: record => this.groupOperate(record, 'copy'),
-          // };
-          const submitBtn = {
-            text: '提交',
-            flag: 'submit',
-            onClick: record => this.groupOperate(record, 'submit'),
-          };
-          const deleteBtn = {
-            text: '删除',
-            flag: 'delete',
-            onClick: record => this.groupOperate(record, 'delete'),
-          };
-          const handleBtn = {
-            text: '办理',
-            flag: 'handle',
-            onClick: record => this.groupOperate(record, 'handle'),
-          };
-          const historyBtn = {
-            text: '流转历史',
-            flag: 'history',
-            // onClick: record => this.groupOperate(record, 'history'),
-            onClick: record => handleShowTransferHistory(record),
-          };
-          const cancelBtn = {
-            text: '撤销',
-            flag: 'cancel',
-            onClick: record => this.groupOperate(record, 'cancel'),
-          };
-          const viewBtn = {
-            text: '详情',
-            flag: 'view',
-            onClick: record => this.groupOperate(record, 'view'),
-          };
-          const moreBtn = {
-            text: '更多',
-            onClick: record => this.groupOperate(record, 'more'),
-          };
-          let content;
-          if (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') {
-            switch (record.statusCode) {
-              case 'S001_1':
-                content = [editBtn, submitBtn, deleteBtn];
-                break;
-              case 'S001_2':
-                content = [handleBtn, historyBtn];
-                if (record.revoke.toString() === '1') content.push(cancelBtn);
-                content.push(moreBtn);
-                break;
-              case 'S001_3':
-                content = [viewBtn, historyBtn];
-                break;
-            }
-          } else {
-            switch (record.statusCode) {
-              case 'S001_1':
-                content = [viewBtn, historyBtn];
-                break;
-              case 'S001_2':
-                content = [viewBtn, historyBtn];
-                if (record.revoke.toString() === '1') content.push(cancelBtn);
-                break;
-              case 'S001_3':
-                content = [viewBtn, historyBtn];
-                break;
-            }
-          }
-          return this.renderColActions(content, text, record);
-        },
-      },
-    ],
-  };
-
   componentDidMount() {
     this.getTableData();
     this.getAccountList();
@@ -372,11 +81,11 @@ class Index extends Component {
    * @param key {string}
    */
   changeTabs = key => {
-    this.setState({ taskTypeCode: key });
     this.props.dispatch({
       type: 'publicModel/setPublicTas',
       payload: key,
     });
+    this.setState({ taskTypeCode: key });
     this.handleReset();
   };
 
@@ -403,7 +112,7 @@ class Index extends Component {
    * 方法说明 表格数据查询
    * @method getTableData
    */
-  getTableData = () => {
+  getTableData() {
     const { dispatch } = this.props;
     const { direct, oField, page, limit, taskTypeCode, searchFormData, keyWords } = this.state;
     this.setState({
@@ -435,18 +144,18 @@ class Index extends Component {
         loading: false,
       });
       if (res !== undefined) {
-        res.data.rows.forEach(item => {
+        res?.data?.rows?.forEach(item => {
           if (item.taskTime !== undefined) {
-            item.taskTime = moment(item.taskTime).format('YYYY-MM-DD HH:mm:ss');
+            item.taskTime = moment(item?.taskTime).format('YYYY-MM-DD HH:mm:ss');
           }
         });
         this.setState({
-          tableList: res.data.rows,
-          oTotal: res.data.total,
+          tableList: res?.data?.rows,
+          oTotal: res?.data?.total,
         });
       }
     });
-  };
+  }
 
   /**
    * 方法说明  排序change
@@ -483,6 +192,7 @@ class Index extends Component {
       },
     );
   };
+
   // 页码change
   pageChange = (current, size) => {
     this.setState(
@@ -539,7 +249,7 @@ class Index extends Component {
   };
 
   /**
-   * 方法说明  产品全称/产品代码查询
+   * 方法说明  产品名称/产品代码查询
    * @method getProductList
    */
   getProductList = () => {
@@ -598,6 +308,20 @@ class Index extends Component {
       },
     );
   };
+
+  /**
+   *
+   * 批量复核事件
+   * @method recheck
+   */
+  recheck = () => {
+    const idArr = [];
+    this.state.selectedRows.forEach(item => {
+      if (item.id !== undefined) {
+        idArr.push(item.id);
+      }
+    });
+  };
   // /**
   //  * 批量操作
   //  * @method actionButton
@@ -625,20 +349,6 @@ class Index extends Component {
   // };
 
   /**
-   *
-   * 批量复核事件
-   * @method recheck
-   */
-  recheck = () => {
-    const idArr = [];
-    this.state.selectedRows.forEach(item => {
-      if (item.id !== undefined) {
-        idArr.push(item.id);
-      }
-    });
-  };
-
-  /**
    * @method renderColActions
    */
   renderColActions = (colActions, text, record) => {
@@ -653,18 +363,314 @@ class Index extends Component {
                 opertations={{ tabs: this.state.taskTypeCode, status: record.statusCode }}
               />
             ) : (
-              <Action
-                key={`accountOpenProcess:${btn.flag}`}
-                code={`accountOpenProcess:${btn.flag}`}
-              >
-                <Button onClick={() => btn.onClick(record)} type="link" size="small">
-                  {btn.text}
-                </Button>
-              </Action>
-            ),
+                <Action
+                  key={`accountOpenProcess:${btn.flag}`}
+                  code={`accountOpenProcess:${btn.flag}`}
+                >
+                  <Button onClick={() => btn.onClick(record)} type="link" size="small">
+                    {btn.text}
+                  </Button>
+                </Action>
+              ),
           )}
       </ButtonGroup>
     );
+  };
+
+  state = {
+    taskTypeCode: this.props.publicTas,
+    isOpenFrame: false,
+    tableList: [],
+    oTotal: 10,
+    page: 1,
+    limit: 10,
+    direct: '',
+    oField: '',
+    loading: false,
+    // checkedArr: [],
+    selectedRowKeys: [],
+    selectedRows: [],
+    batchList: [],
+    searchFormData: {},
+    keyWords: '',
+    columns: [
+      {
+        key: 'businessTypeName',
+        dataIndex: 'businessTypeName',
+        title: '业务类型',
+        width: 120,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'accountTypeName',
+        dataIndex: 'accountTypeName',
+        title: '账户类型',
+        width: 120,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'accountName',
+        dataIndex: 'accountName',
+        title: '账户名称',
+        sorter: true,
+        width: 200,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+        ellipsis: true,
+      },
+      {
+        key: 'proName',
+        dataIndex: 'proName',
+        title: '产品全称',
+        sorter: true,
+        width: 400,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+        ellipsis: true,
+      },
+      {
+        key: 'proCode',
+        dataIndex: 'proCode',
+        title: '产品代码',
+        width: 150,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+        ellipsis: true,
+      },
+      {
+        key: 'accountStatus',
+        dataIndex: 'accountStatus',
+        title: '账户状态',
+        width: 120,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+        ellipsis: true,
+      },
+      {
+        key: 'needRecord',
+        dataIndex: 'needRecord',
+        title: '是否需要备案',
+        width: 150,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'taskName',
+        dataIndex: 'taskName',
+        title: '任务名称',
+        width: 200,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'taskTime',
+        dataIndex: 'taskTime',
+        title: '任务到达时间',
+        width: 180,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'status',
+        dataIndex: 'status',
+        title: '状态',
+        width: 100,
+        sorter: true,
+        render: text => {
+          return (
+            <Tooltip title={text}>
+              {text
+                ? text.toString().replace(/null/g, '-')
+                : text === '' || text === undefined
+                  ? '-'
+                  : 0}
+            </Tooltip>
+          );
+        },
+      },
+      {
+        key: 'id',
+        dataIndex: 'id',
+        title: '操作',
+        fixed: 'right',
+        width: 240,
+        render: (text, record) => {
+          const columnTooltip = (text, record) => {
+            return (
+              <Tooltip title={text} placement="topLeft">
+                <span>{text}</span>
+              </Tooltip>
+            );
+          };
+          const editBtn = {
+            text: '修改',
+            flag: 'edit',
+            onClick: record => this.groupOperate(record, 'edit'),
+          };
+          // const copyBtn = {
+          //   text: '复制',
+          //   flag: 'copy',
+          //   onClick: record => this.groupOperate(record, 'copy'),
+          // };
+          const submitBtn = {
+            text: '提交',
+            flag: 'submit',
+            onClick: record => this.groupOperate(record, 'submit'),
+          };
+          const deleteBtn = {
+            text: '删除',
+            flag: 'delete',
+            onClick: record => this.groupOperate(record, 'delete'),
+          };
+          const handleBtn = {
+            text: '办理',
+            flag: 'handle',
+            onClick: record => this.groupOperate(record, 'handle'),
+          };
+          const historyBtn = {
+            text: '流转历史',
+            flag: 'history',
+            // onClick: record => this.groupOperate(record, 'history'),
+            onClick: record => handleShowTransferHistory(record),
+          };
+          const cancelBtn = {
+            text: '撤销',
+            flag: 'cancel',
+            onClick: record => this.groupOperate(record, 'cancel'),
+          };
+          const viewBtn = {
+            text: '详情',
+            flag: 'view',
+            onClick: record => this.groupOperate(record, 'view'),
+          };
+          const moreBtn = {
+            text: '更多',
+            onClick: record => this.groupOperate(record, 'more'),
+          };
+          const { taskTypeCode } = this.state;
+          let content;
+          if (taskTypeCode === 'T001_1' || taskTypeCode === 'T001_4') {
+            switch (record.statusCode) {
+              case 'S001_1':
+                content = [editBtn, submitBtn, deleteBtn];
+                break;
+              case 'S001_2':
+                content = [handleBtn, historyBtn];
+                if (record.revoke.toString() === '1') content.push(cancelBtn);
+                content.push(moreBtn);
+                break;
+              case 'S001_3':
+                content = [viewBtn, historyBtn];
+                break;
+            }
+          } else {
+            switch (record.statusCode) {
+              case 'S001_1':
+                content = [viewBtn, historyBtn];
+                break;
+              case 'S001_2':
+                content = [viewBtn, historyBtn];
+                if (record.revoke.toString() === '1') content.push(cancelBtn);
+                break;
+              case 'S001_3':
+                content = [viewBtn, historyBtn];
+                break;
+            }
+          }
+          return this.renderColActions(content, text, record);
+        },
+      },
+    ],
   };
 
   /**
@@ -683,20 +689,14 @@ class Index extends Component {
       taskDefinitionKey: record.taskDefinitionKey,
       id: record.id,
       proCode: record.proCode,
-      processDefinitionKey: 'ib30ea93a2164a05995347e3e24be4b0', // 添加流程key，为了在用印登记的时候，过滤审批人（卢凯）使用
     };
     if (mark === 'edit') {
-      const assembleFlag = record.assembleFlag || '';
-      const proCode = record.proCode || '';
       this.props.fnLink(
         'accountOpenProcess:edit',
-        `?id=${record.id}&proCode=${proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}&assembleFlag=${assembleFlag}`,
+        `?id=${record.id}&proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}`,
       );
     } else if (mark === 'handle') {
       params.mode = 'deal';
-      // productReviewed 用来判断用户是输入的产品代码，还是通过下拉选择产品
-      // 1：选择，0：是手动输入产品代码
-      params.productReviewed = record.productReviewed;
       dispatch(
         routerRedux.push({
           pathname: '/processCenter/taskDeal',
@@ -741,11 +741,9 @@ class Index extends Component {
    */
 
   openSubmitModal = record => {
-    const assembleFlag = record.assembleFlag || '';
-    const proCode = record.proCode || '';
     this.props.fnLink(
       'accountOpenProcess:submit',
-      `?id=${record.id}&proCode=${proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}&assembleFlag=${assembleFlag}`,
+      `?id=${record.id}&proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}`,
     );
   };
 
@@ -765,16 +763,13 @@ class Index extends Component {
       },
     });
   }
+
   /**
    * 删除
    * @param {} record
    */
-  deleteTask = row => {
-    const { assembleFlag, id } = row;
-    const keyName = assembleFlag && assembleFlag === '1' ? 'assembleIds' : 'oldIds';
-    const payload = {
-      [keyName]: [id],
-    };
+  deleteTask = record => {
+    const payload = [record.id];
     this.props.dispatch({
       type: 'accountOpenProcess/deleteTask',
       payload,
@@ -820,22 +815,11 @@ class Index extends Component {
    */
   handlerBatchSubmit = () => {
     const { selectedRows } = this.state;
-    let assembleIds = [];
-    let oldIds = [];
-    selectedRows.map(item => {
-      if (item.assembleFlag === '1') {
-        assembleIds.push(item.id);
-      } else {
-        oldIds.push(item.id);
-      }
-    });
+    const ids = selectedRows.map(item => item.id);
     this.props
       .dispatch({
         type: 'accountOpenProcess/getCommitBatch',
-        payload: {
-          assembleIds,
-          oldIds,
-        },
+        payload: ids,
       })
       .then(() => {
         this.getTableData();
@@ -867,7 +851,9 @@ class Index extends Component {
   };
 
   callBackHandler = value => {
-    this.setState({ columns: value });
+    this.setState({
+      columns: value,
+    });
   };
 
   render() {
@@ -897,7 +883,7 @@ class Index extends Component {
             pagination={false}
             onChange={this.handleTableChange}
             loading={loading}
-            scroll={{ x: true }}
+            scroll={{ x: 1990 }}
           />
           {tableList && tableList.length !== 0 ? (
             <Row style={{ paddingTop: 20 }}>
@@ -926,8 +912,8 @@ class Index extends Component {
               />
             </Row>
           ) : (
-            ''
-          )}
+              ''
+            )}
         </>
       );
     };
@@ -946,7 +932,7 @@ class Index extends Component {
         label: '账户类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: accountTypeList,
       },
       {
@@ -956,10 +942,10 @@ class Index extends Component {
       },
       {
         name: 'productCodes',
-        label: '产品全称',
+        label: '产品名称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productList,
       },
       {
@@ -967,7 +953,7 @@ class Index extends Component {
         label: '账户状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: accountStatusList,
       },
       {
@@ -975,7 +961,7 @@ class Index extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: processStateList,
       },
       {
@@ -983,7 +969,7 @@ class Index extends Component {
         label: '任务节点',
         type: 'select',
         readSet: { name: 'nodeName', code: 'nodeId' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: nodeList,
       },
     ];

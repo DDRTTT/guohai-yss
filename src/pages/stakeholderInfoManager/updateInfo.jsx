@@ -167,7 +167,7 @@ const Index = props => {
       config: {
         disabled: spicalDisabled().disabled,
         rules: [{ required: true, message: '请选择干系人类别' }],
-        onChange: e => {
+        onChange:e =>{
           handlerCategoryChange(e)
         }
       },
@@ -208,8 +208,8 @@ const Index = props => {
             payload:
               categoryType == 1
                 ? {
-                  orgId: e,
-                }
+                    orgId: e,
+                  }
                 : {},
             categoryType,
           });
@@ -312,13 +312,13 @@ const Index = props => {
       config: { ...defultConfig, placeholder: getDisabled() ? '' : '请选择日期' },
       unRender: !!categoryType,
     },
-    // {
-    //   name: 'appointmentDate',
-    //   label: '任职公告日期',
-    //   type: 'datepicker',
-    //   config: { ...defultConfig, placeholder: getDisabled() ? '' : '请选择日期' },
-    //   unRender: !!categoryType,
-    // },
+    {
+      name: 'appointmentDate',
+      label: '任职公告日期',
+      type: 'datepicker',
+      config: { ...defultConfig, placeholder: getDisabled() ? '' : '请选择日期' },
+      unRender: !!categoryType,
+    },
     {
       name: 'departureDate',
       label: '离任日期',
@@ -341,28 +341,28 @@ const Index = props => {
         },
       ],
     },
-    // {
-    //   name: 'departureNoticeDate',
-    //   label: '离任公告日期',
-    //   type: 'datepicker',
-    //   config: { ...defultConfig, placeholder: getDisabled() ? '' : '请选择日期' },
-    //   unRender: !!categoryType,
-    //   rules: [
-    //     {
-    //       validator: (rule, value, callback) => {
-    //         if (!value) callback();
-    //         try {
-    //           if (value.isSameOrBefore(getFieldsValue(['appointmentDate']).appointmentDate)) {
-    //             callback('离任公告日期不能小于任职公告日期');
-    //           }
-    //         } catch (error) {
-    //           callback();
-    //         }
-    //         callback();
-    //       },
-    //     },
-    //   ],
-    // },
+    {
+      name: 'departureNoticeDate',
+      label: '离任公告日期',
+      type: 'datepicker',
+      config: { ...defultConfig, placeholder: getDisabled() ? '' : '请选择日期' },
+      unRender: !!categoryType,
+      rules: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value) callback();
+            try {
+              if (value.isSameOrBefore(getFieldsValue(['appointmentDate']).appointmentDate)) {
+                callback('离任公告日期不能小于任职公告日期');
+              }
+            } catch (error) {
+              callback();
+            }
+            callback();
+          },
+        },
+      ],
+    },
     // {
     //   name: 'officeHours',
     //   label: '办公时间',
@@ -404,8 +404,8 @@ const Index = props => {
               item.type != 'datepicker'
                 ? res.stakeholderInfoVo[item.name]
                 : res.stakeholderInfoVo[item.name]
-                  ? moment(res.stakeholderInfoVo[item.name])
-                  : '';
+                ? moment(res.stakeholderInfoVo[item.name])
+                : '';
           });
           deletNUllProperty(obj);
           const tempCategory = res.stakeholderInfoVo.category;
@@ -427,8 +427,8 @@ const Index = props => {
             payload:
               tempCategory * 1 == 1
                 ? {
-                  orgId: res.stakeholderInfoVo.agencyName,
-                }
+                    orgId: res.stakeholderInfoVo.agencyName,
+                  }
                 : {},
             categoryType: tempCategory,
           });
@@ -464,7 +464,8 @@ const Index = props => {
   //   类别切换
   const handlerCategoryChange = e => {
     setCategoryType(e.target.value);
-    form.resetFields(stakeholderInfo.map(item => item.name).filter(i => i !== 'category'));// 不能将类别category重置（否则导致：传参中此值为undefined，且样式异常）
+    // form.resetFields(['stakeholderType', 'agencyName', 'name']);
+    form.resetFields(stakeholderInfo.map(item => item.name));
     // 清空姓名的下拉框选项
     dispatch({
       type: 'stakeholderInfoManager/setResetList',
@@ -477,6 +478,11 @@ const Index = props => {
         flag: e.target.value,
       },
     });
+    // // 获取机构下拉
+    // dispatch({
+    //   type: 'stakeholderInfoManager/getOrgNameList',
+    //   categoryType: e.target.value,
+    // });
   };
   // 字节长度校验
   const handleParentNameValidator = (rule, value, callback) => {
@@ -488,6 +494,7 @@ const Index = props => {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
+  console.log(props);
   return (
     <PageContainers
       breadcrumb={[
@@ -523,11 +530,37 @@ const Index = props => {
             </Button>,
           ]}
         >
-          <div className="scollWrap none-scroll-bar">
-            <Form {...layout} className={'info-form'}>
-              <h1 className={'font-w600'}>产品信息</h1>
+          <div className="scollWrap">
+            <Form {...layout}>
+              <h1 style={{ fontSize: 16, marginTop: '20px', marginLeft: '20px' }}>产品信息</h1>
               <CustomFormItem formItemList={productInfo} form={form} />
-              <h1 className={'font-w600'}>干系人信息</h1>
+              <h1 style={{ fontSize: 16, marginTop: '20px', marginLeft: '20px', clear: 'both' }}>
+                干系人信息
+              </h1>
+              {/*              <Col span={8}>
+                <Form.Item
+                  label="类别"
+                  required={true}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  {getFieldDecorator('category', {
+                    rules: [{ required: true, message: '请选择干系人类别' }],
+                  })(
+                    <Radio.Group
+                      onChange={handlerCategoryChange}
+                      disabled={spicalDisabled().disabled}
+                    >
+                      <Radio key="1" value={0}>
+                        内部干系人
+                      </Radio>
+                      <Radio key="2" value={1}>
+                        外部干系人
+                      </Radio>
+                    </Radio.Group>,
+                  )}
+                </Form.Item>
+              </Col> */}
               <CustomFormItem formItemList={stakeholderInfo} form={form} />
               <Col span={24}>
                 <Form.Item label="办公时间" labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Card, Col, Form, Input, Modal, Row, Tree } from 'antd';
+import { Button, Card, Col, Form, Input, message, Modal, Row, Tree } from 'antd';
 import { getCurrentMenu } from '@/utils/hocUtil';
 import BaseCrudComponent from '@/components/BaseCrudComponent';
 import CrudComponent from '@/components/CrudComponent';
@@ -24,6 +24,7 @@ export default class Menu extends BaseCrudComponent {
     currentSelectAction: {},
     title: '新增',
     Search: '',
+    selectedRowKeys: [],
   };
 
   componentWillUnmount() {
@@ -203,13 +204,32 @@ export default class Menu extends BaseCrudComponent {
               onSearch={value => this.getURL(value)}
               enterButton
             />
-            <div style={{ width: 526, marginLeft: -87 }}>
+            <div className={styles.qurry}>
               {formItemCreate(getFieldDecorator, url_data, 1, 'uri')}
             </div>
           </div>
         </div>
       );
     }
+  };
+
+  authHandler = roleType => {
+    if (this.state.selectedRowKeys.length <= 0) {
+      message.error('请先选择功能点');
+      return;
+    }
+    this.props.dispatch({
+      type: `menu/getAddAuthPointToAdmin`,
+      payload: {
+        roleType:roleType+'',
+        pointType: '1',
+        rolePoint: this.state.selectedRowKeys,
+      },
+    });
+  };
+
+  onSelectChange = rows => {
+    this.setState({ selectedRowKeys: rows });
   };
 
   render() {
@@ -229,7 +249,7 @@ export default class Menu extends BaseCrudComponent {
       form,
       selectNode,
     } = this.props;
-    const { currentSelectNode, currentSelectAction, title } = this.state;
+    const { currentSelectNode, currentSelectAction, title, selectedRowKeys } = this.state;
     const { getFieldDecorator } = form;
 
     const columns = [
@@ -257,6 +277,16 @@ export default class Menu extends BaseCrudComponent {
     ];
 
     const gridButtons = [
+      {
+        text: '添加到功能权限',
+        code: 'funAuthAction',
+        onClick: () => this.authHandler(1),
+      },
+      {
+        text: '添加到授权权限',
+        code: 'authAuthAction',
+        onClick: () => this.authHandler(2),
+      },
       {
         text: '新增',
         code: 'addAction',
@@ -288,8 +318,10 @@ export default class Menu extends BaseCrudComponent {
       menuCode: 'personMenu',
       space: 'menu',
       tableExtra: {
-        rowSelection: null,
+        // rowSelection: null,
+        rowSelection: { selectedRowKeys, onChange: this.onSelectChange },
         scroll: { x: columns.length * 150 + 500 },
+        rowKey: 'id',
       },
       forbiddenDefaultActions: true,
       doGridSearch: this.doDataSearch,
@@ -357,7 +389,7 @@ export default class Menu extends BaseCrudComponent {
         <Row gutter={24}>
           <Col xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card
-              style={{ marginBottom: 24 }}
+              className={styles.Card2}
               title={`${currentSelectNode ? currentSelectNode.title : ''} 功能点列表`}
               bordered={false}
             >
@@ -379,19 +411,19 @@ export default class Menu extends BaseCrudComponent {
             <Card className={styles.card1}>
               {formItemCreate(getFieldDecorator, actionDetail, 2)}
               {this.getURLFROM()}
-              <div style={{ textAlign: 'center' }}>
+              <div className={styles.modalDiv}>
                 <span className="submitButtons">
                   <Button
                     htmlType="submit"
                     type="primary"
-                    style={{ marginRight: '20px', height: 28 }}
+                    className={styles.modalSave}
                     loading={loading}
                   >
                     保存
                   </Button>
                   <Button
                     type="danger"
-                    style={{ height: 28 }}
+                    className={styles.modalCancel}
                     onClick={() => this.handleModalVisible()}
                   >
                     取消

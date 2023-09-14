@@ -3,26 +3,25 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-// import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import ProLayout from '@ant-design/pro-layout';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'umi';
 import { connect } from 'dva';
-import { Button, Icon, Layout, message, Result, Spin } from 'antd';
+import { Button, Icon, Layout, message, Result, Spin, Drawer, Tooltip } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import TokenModal from '@/components/TokenModal';
 // import waterMark from '@/utils/waterMark';
 import { getAuthorityFromRouter, handleChooseTree } from '@/utils/utils';
+import { HistoricalComparison } from '@/components';
 import { bootstrap, singleSpa } from '@/single-spa-core/Register';
-import { getSession, USER_INFO } from '@/utils/session';
+import { getSession } from '@/utils/session';
 import ic_cpzx from '@/assets/index/ic_cpzx.png';
 import BasicHeader from './BasicHeader';
 import styles from './BasicLayout.less';
 import cloneDeep from 'lodash/cloneDeep';
 import projectConfig from '../../projects.config';
 import { getAuthToken } from '@/utils/cookie';
-import router from 'umi/router';
 
 // message全局提示
 message.config({
@@ -70,6 +69,8 @@ const BasicLayout = props => {
       query: { sysid, userid },
     },
     SAVE_DATA_DICTIONARY: { iframeMatchCode = [], iframeHost = [] },
+    SAVE_ES_QUERY_BY_ID,
+    drawerVisible,
   } = props;
 
   const menuDataRender1 = () => {
@@ -90,10 +91,76 @@ const BasicLayout = props => {
         contentDom.style.paddingLeft = '0px';
       }
     } else if (siderDom && siderDom.style) {
+      // // 将global.less中important设置的样式拿到这里来添加，放在那边当左侧边栏展开收起的时候样式会有影响
+      // siderDom.style.flex = '0 0 206px';
+      // siderDom.style.width = '206px';
+      // siderDom.style.minWidth = '206px';
+      // siderDom.style.maxWidth = '206px';
       siderDom.style.display = 'block';
-      contentDom.style.paddingLeft = '256px';
+      contentDom.style.paddingLeft = '206px';
     }
   };
+
+  useEffect(() => {
+    let nongShangIPPORT = 'http://10.20.84.162:9080';
+
+    let url = ``;
+
+    // 指令信息查询
+    if (window.location.pathname === '/acs/acs-commandcenter/commandbasicinfo.ctrl') {
+      url = `http://192.168.7.133:9082/acs/acs-commandcenter/commandbasicinfo.ctrl?method=toListView&_appFunctionId=21031513505782000711&_location=%E6%8C%87%E4%BB%A4%E4%B8%AD%E5%BF%83%2C%E6%8C%87%E4%BB%A4%E6%93%8D%E4%BD%9C%E4%B8%AD%E5%BF%83(1.0.7)%2C%E6%8C%87%E4%BB%A4%E7%8A%B6%E6%80%81%E7%9B%91%E6%8E%A7&__wid__=21011313523391000475-21031513505782000711`;
+      window.open(url);
+    }
+    // 产品信息查询
+    if (window.location.pathname === '/acs/acs-parameters/product.ctrl') {
+      url = `http://192.168.7.133:9082/acs/acs-parameters/product.ctrl?method=toListView&_appFunctionId=20090814221679001350&_location=%E5%9F%BA%E7%A1%80%E4%BF%A1%E6%81%AF%2C%E4%BA%A7%E5%93%81%E6%88%90%E7%AB%8B%2C%E4%BA%A7%E5%93%81%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86&__wid__=20072409433389016632-20090814221679001350`;
+      window.open(url);
+    }
+
+    // ----------------------------------农商银行------------------------------
+
+    // 文件分拣信息管理
+    if (window.location.pathname === '/sofa/acs-commandcenter/commandemail.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-commandcenter/commandemail.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 指令待办
+    if (window.location.pathname === '/sofa/acs-commandcenter/backlog.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-commandcenter/backlog.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 流程业务配置
+    if (window.location.pathname === '/sofa/acs-commandcenter/flowBusiness.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-commandcenter/flowBusiness.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 电子印鉴信息管理
+    if (window.location.pathname === '/sofa/acs-electronicsealcenter/electronicseal.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-electronicsealcenter/electronicseal.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 电子印鉴业务流程管理中心
+    if (window.location.pathname === '/sofa/acs-electronicsealcenter/electronicBusinessSeal.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-electronicsealcenter/electronicBusinessSeal.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 报表印鉴批量申请设置中心
+    if (window.location.pathname === '/sofa/acs-electronicsealcenter/reportBatch.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-electronicsealcenter/reportBatch.ctrl?method=toListView`;
+      window.open(url);
+    }
+
+    // 用印信息查询
+    if (window.location.pathname === '/sofa/acs-electronicsealcenter/seaLinformation.ctrl') {
+      url = `${nongShangIPPORT}/sofa/acs-electronicsealcenter/seaLinformation.ctrl?method=toListView`;
+      window.open(url);
+    }
+  }, [window.location.pathname]);
 
   useEffect(() => {
     if (dispatch) {
@@ -122,9 +189,9 @@ const BasicLayout = props => {
           type: 'global/handleTokenExchange',
         });
       }
-      dispatch({
-        type: 'global/handleGetNginxIP',
-      });
+      // dispatch({
+      //   type: 'global/handleGetNginxIP',
+      // });
     }
     bootstrap();
     handleStyle();
@@ -139,7 +206,7 @@ const BasicLayout = props => {
 
   useEffect(() => {
     handleIframe();
-  }, [window.location.pathname, iframeMatchCode]);
+  }, [window.location.pathname, window.location.search, iframeMatchCode]);
 
   /**
    * init variables
@@ -163,9 +230,7 @@ const BasicLayout = props => {
   const handle = () => {
     const pathArr = [];
     projectConfig.map(item => pathArr.push(...item.path));
-    const time = new Date().getTime();
-    const path = location.pathname + `?time=${time}`;
-    console.log("spa_test", path);
+    const path = location.pathname;
     const p = path.split('/')[1];
     if (pathArr.includes(p) && singleSpa.getMountedApps().length === 0) {
       return (
@@ -187,7 +252,7 @@ const BasicLayout = props => {
   };
 
   const handleIframe = () => {
-    // 报表嵌入
+    // 报表嵌入 ----------------------------------------------------------------
     let local;
     const token = getAuthToken();
     const RWHost = `${iframeHost[0]?.code}`;
@@ -206,7 +271,7 @@ const BasicLayout = props => {
     ) {
       local = `${RWHost}/jgbs?ssologin=true&tag_url=${pathname}&auth_token=${token}`;
     }
-    // 头寸嵌入
+    // 头寸嵌入 ----------------------------------------------------------------
     // host
     const TCHost = `${iframeHost[1]?.code}`;
     // url
@@ -217,40 +282,68 @@ const BasicLayout = props => {
       local = `${TCHost}/index.html#/user-data-auth?sysid=7&menuCode=M00003&token=${token}`;
     }
 
+    // 盘点系统嵌入 ----------------------------------------------------------------
+    // host
+    const PDHost = `${iframeHost[2]?.code}`;
+    // url
+    const matchPDPath = window?.location?.pathname.split('/')[2];
+    // code
+    const matchPDCode = `${iframeMatchCode[2]?.code}`;
+    if (sysId === '13') {
+      if (matchPDCode?.split(',')?.includes(matchPDPath) && PDHost && token) {
+        if (pathname.includes('tkpd')) {
+          const pathName = pathname.replace('tkpd', '');
+          // local = `${PDHost}${pathname.split('tkpd')[1]}`;
+          local = `${PDHost}${pathName}${window.location.search}`;
+        }
+        // local = `${PDHost}/${pathname}${window.location.search}`;
+      }
+
+      // const pathName = window.location.pathname.split('/');
+      // const len = pathName.length;
+      // const resid = pathName[len - 1];
+      // const nodeid = pathName[len - 3];
+      // const commandid = pathName[len - 2];
+      // const page = pathName[len - 1];
+      // if (pathName.includes('smartBiLogin')) {
+      //   if (pathName.includes('openresource')) {
+      //     local = `${PDHost}/tk/smartBiLogin/loginByToken/url=http://219.141.235.67:23098/smartbi/vision/openresource.jsp?resid=${resid}`;
+      //   }
+      //   local = `${PDHost}/tk/smartBiLogin/loginByToken/url=http://219.141.235.67:23098/smartbi/smartbix/?integrated=true&showheader=false&l=zh_CN&nodeid=${nodeid}&commandid=${commandid}#/page/${page}`;
+      // }
+    }
     setIframeLocal(local);
   };
 
+  const linkToMenu = () => {
+    sessionStorage.removeItem('keyValueSearch')
+  }
+
   const Text = (
-    <span
+    <div
       style={{
-        height: '21px',
+        width: '100%',
+        height: '100%',
         fontSize: '17px',
         fontFamily: 'Source Han SansCN',
         fontWeight: 400,
         color: '#95A4BC',
       }}
     >
-      <img style={{ width: 17, height: 17 }} src={ic_cpzx} alt="logo" />
-      <span style={{ marginLeft: '11px', display: !collapsed ? 'inline-block' : 'none' }}>
-        {title}
-      </span>
-    </span>
+      <Tooltip title={title}>
+        <img style={{ width: 17, height: 17 }} src={ic_cpzx} alt="logo" />
+        <span style={{
+          width: `calc(100% - 38px)`,
+          verticalAlign: 'middle',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          marginLeft: '11px', display: !collapsed ? 'inline-block' : 'none' }}>
+          {title}
+        </span>
+      </Tooltip>
+    </div>
   );
-
-  const handleRefreshToken = () => {
-    const userInfo = JSON.parse(getSession(USER_INFO));
-    dispatch({
-      type: 'global/GET_REFRESH_TOKEN_API_WITH_USERID',
-      payload: {
-        userId: userInfo?.id,
-      },
-    }).then(res => {
-      if (res) {
-        router.push('/workspace');
-      }
-    });
-  };
-
   return (
     <div className={styles.content}>
       <Layout>
@@ -258,9 +351,8 @@ const BasicLayout = props => {
         <ProLayout // logo={logo}
           menuHeaderRender={() => (
             <div className={styles.collapesd}>
-              <div style={{ height: '100%' }}>
-                {/* <Link to="/">{Text}</Link> */}
-                <a onClick={handleRefreshToken}>{Text}</a>
+              <div style={{ height: '100%', width: '100%' }}>
+                <Link to="/">{Text}</Link>
               </div>
               <div
                 style={{ height: '100%', marginTop: 3, color: 'rgb(149, 164, 188)', width: 31 }}
@@ -275,8 +367,7 @@ const BasicLayout = props => {
             if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
               return defaultDom;
             }
-
-            return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+            return <Link title= {menuItemProps.title} to={menuItemProps.path} onClick={linkToMenu}> {defaultDom} </Link>;
           }}
           breadcrumbRender={(routers = []) => [
             {
@@ -299,6 +390,10 @@ const BasicLayout = props => {
           rightContentRender={() => <RightContent />}
           {...props}
           {...settings}
+          siderFlex="206px"
+          siderWidth="206px"
+          siderMinWidth="206px"
+          siderMaxWidth="206px"
           headerRender={false}
         >
           <Spin spinning={!refreshToken}>
@@ -326,6 +421,20 @@ const BasicLayout = props => {
           </Spin>
         </ProLayout>
         <TokenModal currentUser={currentUser} dispatch={dispatch} />
+        <Drawer
+          title="变更详情"
+          placement={'bottom'}
+          onClose={() =>
+            dispatch({
+              type: 'global/drawerVisible',
+              payload: false,
+            })
+          }
+          visible={drawerVisible}
+          height={'80%'}
+        >
+          <HistoricalComparison data={SAVE_ES_QUERY_BY_ID} />
+        </Drawer>
       </Layout>
     </div>
   );
@@ -333,7 +442,9 @@ const BasicLayout = props => {
 
 export default connect(({ global, user, settings }) => ({
   SAVE_DATA_DICTIONARY: global.SAVE_DATA_DICTIONARY,
+  SAVE_ES_QUERY_BY_ID: global.SAVE_ES_QUERY_BY_ID,
   collapsed: global.collapsed,
+  drawerVisible: global.drawerVisible,
   settings,
   saveMenu: user.saveMenu,
   currentUser: user.currentUser,

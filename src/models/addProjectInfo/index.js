@@ -159,7 +159,7 @@ export default {
       if (response && response.status === 200) {
         callback && callback(response);
       } else {
-        message.error(response.message);
+        message.error(res.message);
       }
     },
   },

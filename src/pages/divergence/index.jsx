@@ -115,9 +115,9 @@ class DiverGence extends Component {
       {
         title: '操作',
         fixed: 'right',
-        // width: 260,
         key: 'action',
         dataIndex: 'action',
+        // width: 260,
         render: (text, record) => {
           // 待提交 S001_1   流程中S001_2  已结束 S001_3
           // 代办 T001_1 未提交 T001_3
@@ -125,9 +125,9 @@ class DiverGence extends Component {
           if (this.state.taskTypeCode === 'T001_1' && record.circulateFlag === '0') {
             content = (
               <>
-                <Button type="link" size="small" onClick={() => this.dealTask(record, 'lookOver')}>
+                <a onClick={() => this.dealTask(record, 'lookOver')} className={styles.rightBtn}>
                   详情
-                </Button>
+                </a>
                 {this.revokeBtn(record)}
               </>
             );
@@ -138,42 +138,38 @@ class DiverGence extends Component {
                   content = (
                     <>
                       <Action code="divergence:update">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => this.dealTask(record, 'edit')}
+                          className={styles.rightBtn}
                         >
                           修改
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="divergence:copy">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => this.dealTask(record, 'copy')}
+                          className={styles.rightBtn}
                         >
                           复制
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="divergence:commit">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => this.dealTask(record, 'submit')}
+                          className={styles.rightBtn}
                         >
                           提交
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="divergence:deleteApi">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => {
                             this.dealTask(record, 'del');
                           }}
+                          className={styles.rightBtn}
                         >
                           删除
-                        </Button>
+                        </a>
                       </Action>
                     </>
                   );
@@ -182,22 +178,20 @@ class DiverGence extends Component {
                   content = (
                     <>
                       <Action code="divergence:check">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => this.dealTask(record, 'handle')}
+                          className={styles.rightBtn}
                         >
                           办理
-                        </Button>
+                        </a>
                       </Action>
                       <Action code="divergence:transferHistory">
-                        <Button
-                          type="link"
-                          size="small"
+                        <a
                           onClick={() => this.dealTask(record, 'history')}
+                          className={styles.rightBtn}
                         >
                           流转历史
-                        </Button>
+                        </a>
                       </Action>
                       {this.revokeBtn(record)}
                       <MoreOperation record={record} fn={this.handleGetTableList} />
@@ -211,14 +205,14 @@ class DiverGence extends Component {
             content = (
               <>
                 <Action code="divergence:details">
-                  <Button type="link" size="small" onClick={() => this.dealTask(record, 'view')}>
+                  <a onClick={() => this.dealTask(record, 'view')} className={styles.rightBtn}>
                     详情
-                  </Button>
+                  </a>
                 </Action>
                 <Action code="divergence:transferHistory">
-                  <Button type="link" size="small" onClick={() => this.dealTask(record, 'history')}>
+                  <a onClick={() => this.dealTask(record, 'history')} className={styles.rightBtn}>
                     流转历史
-                  </Button>
+                  </a>
                 </Action>
                 {this.revokeBtn(record)}
               </>
@@ -306,7 +300,6 @@ class DiverGence extends Component {
   seachTableData = val => {
     this.setState(
       {
-        pageNum: 1,
         fuzzy: val,
       },
       () => {
@@ -407,15 +400,14 @@ class DiverGence extends Component {
     if (record.operStatus === 'S001_2' && record.revoke && record.revoke * 1 === 1) {
       return (
         <Action code="divergence:backOut">
-          <Button
-            type="link"
-            size="small"
+          <a
             onClick={() => {
               this.dealTask(record, 'cancel');
             }}
+            className={styles.rightBtn}
           >
             撤销
-          </Button>
+          </a>
         </Action>
       );
     }
@@ -615,7 +607,7 @@ class DiverGence extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: statusList,
       },
     ];

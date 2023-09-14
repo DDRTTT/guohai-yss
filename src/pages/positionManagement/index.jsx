@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import styles from './index.less';
@@ -52,13 +52,14 @@ const PositionManagement = ({
 }) => {
   const [authModal, setAuthModal] = useState(false);
   const [viewType, setViewType] = useState(false);
+  const [viewTitle, setViewTitle] = useState('新建岗位');
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowsIdStr, setSelectedRowsIdStr] = useState([]);
   const [baseInfo, setBaseInfo] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [queryStr, setQueryStr] = useState('');
-
+  
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -102,6 +103,7 @@ const PositionManagement = ({
   // 新建角色
   const handleNewMember = () => {
     // 查看模式
+    setViewTitle('新建岗位');
     setViewType(false);
     setAuthModal(true);
     // 重置详情数据
@@ -171,6 +173,11 @@ const PositionManagement = ({
 
   // 修改
   const handleShowDrawer = (record, viewType) => {
+    if (viewType) {
+      setViewTitle('查看岗位');
+    } else {
+      setViewTitle('修改岗位');
+    }
     // 查看模式
     setViewType(viewType);
     // 显示弹框
@@ -223,31 +230,31 @@ const PositionManagement = ({
       key: 'operating',
       align: 'center',
       render: (_, record) => [
-        <span key={record.id} style={{ margin: 5 }}>
+        <span key={record.id} className={styles.handleStyle }>
           <a onClick={() => handleShowDrawer(record, true)}>查看</a>
         </span>,
         <Action key="positionManagement:modify" code="positionManagement:modify">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.handleStyle }>
               <a onClick={() => handleShowDrawer(record, false)}>修改</a>
             </span>
           )}
         </Action>,
         <Action key="positionManagement:review" code="positionManagement:review">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.handleStyle }>
               <a onClick={() => handleReview({ record, check: 1 })}>复核</a>
             </span>
           )}
           {record.checked === 1 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.handleStyle }>
               <a onClick={() => handleReview({ record, check: 0 })}>反复核</a>
             </span>
           )}
         </Action>,
         <Action key="positionManagement:delete" code="positionManagement:delete">
           {record.checked === 0 && (
-            <span style={{ margin: 5 }}>
+            <span className={styles.handleStyle }>
               <Popconfirm title="确认删除吗?" onConfirm={() => handleDelete(record)}>
                 <a>删除</a>
               </Popconfirm>
@@ -358,69 +365,67 @@ const PositionManagement = ({
 
   return (
     <div className={styles.base}>
-      <div className={styles.content}>
-        <List
-          formItemData={formItemData}
-          // 查询按钮
-          advancSearch={handleList}
-          searchPlaceholder="请输入岗位名称"
-          // 模糊查询
-          fuzzySearch={e => setQueryStr(e)}
-          loading={fetchLoading}
-          resetFn={() => {
-            resetFields();
-            setCurrentPage(1);
-            setPageSize(10);
-            setQueryStr('');
-            handleList();
-          }}
-          extra={
-            <Action key="positionManagement:add" code="positionManagement:add">
-              <Button onClick={handleNewMember} type="primary">
-                新建岗位
-              </Button>
-            </Action>
-          }
-          tableList={
-            <>
-              <Table
-                rowKey={record => record.id}
-                bordered={false}
-                columns={columns}
-                dataSource={saveList.dataList}
-                loading={saveLoading || updateLoading || fetchLoading}
-                onChange={handleStandardTableChange}
-                rowSelection={rowSelection}
-                pagination={paginationProps}
-              />
-              <div style={{ marginTop: -45 }}>
-                <Dropdown
-                  overlay={
-                    <Menu onClick={handleMenuClick}>
-                      {ActionBool('positionManagement:delete') && (
-                        <Menu.Item key="0">删除</Menu.Item>
-                      )}
-                      {ActionBool('positionManagement:review') && [
-                        <Menu.Item key="1">复核</Menu.Item>,
-                        <Menu.Item key="2">反复核</Menu.Item>,
-                      ]}
-                    </Menu>
-                  }
-                  placement="topLeft"
-                >
-                  <Button style={{ marginRight: 10, width: 100, height: 26 }}>
-                    批量操作
-                    <Icon type="up" />
-                  </Button>
-                </Dropdown>
-              </div>
-            </>
-          }
-        />
-      </div>
+      <List
+        formItemData={formItemData}
+        // 查询按钮
+        advancSearch={handleList}
+        searchPlaceholder="请输入岗位名称"
+        // 模糊查询
+        fuzzySearch={e => setQueryStr(e)}
+        loading={fetchLoading}
+        resetFn={() => {
+          resetFields();
+          setCurrentPage(1);
+          setPageSize(10);
+          setQueryStr('');
+          handleList();
+        }}
+        extra={
+          <Action key="positionManagement:add" code="positionManagement:add">
+            <Button onClick={handleNewMember} type="primary">
+              新建岗位
+            </Button>
+          </Action>
+        }
+        tableList={
+          <>
+            <Table
+              rowKey={record => record.id}
+              bordered={false}
+              columns={columns}
+              dataSource={saveList.dataList}
+              loading={saveLoading || updateLoading || fetchLoading}
+              onChange={handleStandardTableChange}
+              rowSelection={rowSelection}
+              pagination={paginationProps}
+            />
+            <div className={styles.addStyle }>
+              <Dropdown
+                overlay={
+                  <Menu onClick={handleMenuClick}>
+                    {ActionBool('positionManagement:delete') && (
+                      <Menu.Item key="0">删除</Menu.Item>
+                    )}
+                    {ActionBool('positionManagement:review') && [
+                      <Menu.Item key="1">复核</Menu.Item>,
+                      <Menu.Item key="2">反复核</Menu.Item>,
+                    ]}
+                  </Menu>
+                }
+                placement="topLeft"
+              >
+                <Button className={styles.butStyle }>
+                  批量操作
+                  <Icon type="up" />
+                </Button>
+              </Dropdown>
+            </div>
+          </>
+        }
+      />
 
       <Modal
-        title="新建岗位"
+        title={viewTitle}
         visible={authModal}
         onOk={handleSubmit}
         onCancel={() => setAuthModal(false)}

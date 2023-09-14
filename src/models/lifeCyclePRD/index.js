@@ -19,7 +19,6 @@ import {
   handleGetProductTreeNodesAPI,
   handleGetChildListAPI,
   handleGetFileTypeByDocAPI,
-  handleGetProNameAPI,
 } from '@/services/lifeCyclePRD';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
@@ -66,7 +65,6 @@ export default {
     breakdown: [], // 明细分类
     documentTags: [], // 标签
     saveUploadPersonFetch: [], //上传人
-    proNameList: [], // 产品全称
   },
 
   effects: {
@@ -353,18 +351,6 @@ export default {
       }
       return newData;
     },
-    // 查询产品全称下拉选项
-    *handleGetProNameAPI({ payload }, { call, put }) {
-      const response = yield call(handleGetProNameAPI, payload);
-      if (response && response.status === 200) {
-        yield put({
-          type: 'getProNameList',
-          payload: response.data ? response.data.rows : [],
-        });
-      } else {
-        message.error(response.message);
-      }
-    },
   },
 
   reducers: {
@@ -442,13 +428,6 @@ export default {
       return {
         ...state,
         saveUploadPersonFetch: payload,
-      };
-    },
-    // 产品全称
-    getProNameList(state, { payload }) {
-      return {
-        ...state,
-        proNameList: payload,
       };
     },
   },

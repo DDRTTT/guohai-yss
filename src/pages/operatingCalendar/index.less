@@ -287,13 +287,9 @@
           padding-right: 12px;
         }
       }
-      .miniicon{
-        color: rgba(51,51,51);
-      }
     }
   }
 }
-
 
 .productView {
   :global {
@@ -349,15 +345,6 @@
 
 .taskItem {
   :global {
-    .tradingDayItem {
-      list-style:disc;
-      &:not(:first-child) {
-        margin-top: 10px;
-      }
-      .rest {
-        margin-left: 20px;
-      }
-    }
     .title {
       font-size: 14px;
       font-weight: bold;
@@ -374,7 +361,7 @@
       .statusTag {
         padding: 1px 4px;
         color: #2f6aff;
-        background: rgba(6, 14, 34, 0.1);
+        background: rgba(47, 106, 255, 0.1);
         border: 1px solid rgba(47, 106, 255, 0.6);
         border-radius: 4px;
         font-weight: normal;
@@ -384,7 +371,6 @@
 
     .ant-card-body {
       width: 100%;
-      padding: 16px !important;
     }
     .rate {
       span {
@@ -411,14 +397,6 @@
       white-space: nowrap;
     }
 
-    // 产品事项 样式
-    .productMatters {
-      margin: 0 !important;
-      padding: 10px 0 4px !important;
-      font-size: 14px !important;
-      color: #333 !important;
-      font-weight: bold;
-    }
     .desc {
       // display: flex;
       // line-height: 10px;
@@ -487,14 +465,14 @@
         }
       }
       .tody {
-        color: @primary-color;
+        color: @primary-color;;
         font-weight: 500;
         vertical-align: top;
         border-left: unset;
       }
       .titleWord {
         // // color: @blodColor;
-        color: @primary-color;
+        color: @primary-color;;
         padding-left: 16px;
         padding-right: 16px;
         border: @normalBorder;
@@ -671,7 +649,7 @@
       display: flex;
       flex-wrap: wrap;
       .ant-card {
-        width: 240px;
+        width: 352px;
         margin-right: 16px;
         margin-bottom: 16px;
       }

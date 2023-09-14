@@ -1,7 +1,15 @@
+@import '~antd/lib/style/themes/default.less';
+
 .statistics{
     padding: 8px;
 }
-
+.list{
+    :global {
+        .ant-card-head{
+            min-height: 60px;
+        }
+    }
+}
 .statistics_col{
     height: 120px;
     display: flex;
@@ -40,7 +48,7 @@
     padding: 16px 0;
     margin: -20px -17px 0 -17px;
     background-color: #eff3fa;
-    margin-top: -10px;
+    margin-top: -20px;
 }
 
 

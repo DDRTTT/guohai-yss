@@ -4,79 +4,84 @@
 .index {
   user-select: none;
 
-  .publicTabs {
-    display: flex;
-    width: 150px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-
-    p {
-      float: left;
-      width: 74px;
-      height: 32px;
-      margin-bottom: 0;
-      color: #666;
-      line-height: 32px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .selectTabs {
-      color: #fff;
-      background: #3384d5;
-    }
-
-    p:nth-child(1) {
-      border-right: 1px solid #d9d9d9;
-    }
-  }
-
-  .publicTitle {
-    color: #000;
-    font-size: 18px;
-  }
-
-  .seniorsearch {
-    float: right;
-  }
-
-  .searchForm {
-    margin-top: 20px;
-  }
-
-  .searchLabel {
-    color: #3384d5;
-    cursor: pointer;
-  }
-
   .resetWord {
     margin-left: 16px;
-    color: #4b92da;
-    font-size: 14px;
     text-decoration: underline;
-  }
-
-  .resetCancel {
-    color: #333;
-    font-size: 14px;
   }
 }
 
 .receiptStyle {
-  font-size: 14px;
+  .receiptLine {
+    line-height: 30px;
+
+    .receiptCols {
+      padding-left: 0;
+      padding-right: 0;
+      text-align: right;
+    }
+    .receiptCol2 {
+      padding-left: 0;
+      padding-right: 24px;
+    }
+  }
 
   .receiptLabel {
     margin-right: 10px;
-    color: #666;
     line-height: 24px;
   }
 
   .receiptCol {
     margin-top: 50px;
+    .receiptQuit {
+      margin-right: 24px;
+      float: right;
+      margin-left: 10px;
+    }
   }
 
   .receiptWord {
-    color: #333;
     line-height: 24px;
   }
+}
+
+.batchStyle {
+  margin-top: -45px;
+  z-index: 1;
+  .buttons {
+    margin-right: 10px;
+    width: 100px;
+    height: 26px;
+  }
+}
+
+
+
+  .treeStyle {
+    width: 80% !important;
+    float: left !important;
+  }
+
+
+  .colStyle {
+    width: 80%
+  }
+  .rowStyle {
+    text-align: right;
+    margin-top: 30px;
+    .butStyle1{
+      margin-right: 10px;
+    }
+    .butStyle2{
+      margin-right: 30px;
+    }
+  }
+
+
+
+
+.handleStyle {
+  .aStyle {
+    padding-right: 10px
+  }
+
 }

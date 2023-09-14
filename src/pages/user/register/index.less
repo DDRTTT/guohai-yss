@@ -1,0 +1,443 @@
+@import "../../../../node_modules/antd/lib/style/themes/default.less";
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    border: none;
+}
+
+/** header区样式 **/
+.header {
+    height: 80px;
+    line-height: 80px;
+    background: #6395df;
+    /* 当浏览器不支持渐变 */
+    //background: -webkit-linear-gradient(#1675e8, #0059c9); /* Safari 5.1 - 6.0 */
+    //background: -o-linear-gradient(#1675e8, #0059c9); /* Opera 11.1 - 12.0 */
+    //background: -moz-linear-gradient(#1675e8, #0059c9); /* Firefox 3.6 - 15 */
+    //background: linear-gradient(#1675e8, #0059c9); /* 标准的语法 */
+}
+
+.main {
+    width: 1166px;
+    margin: 0 auto;
+}
+
+.header_pic {
+    width: 310px;
+
+    img {
+        width: 100%;
+        height: auto;
+        padding: 16px 20px;
+    }
+}
+
+.header_right {
+    text-align: right;
+    font-size: 24px;
+    color: #7db7ff;
+
+    a {
+        color: #fff;
+    }
+
+    a:hover {
+        border-bottom: 2px #fff solid;
+    }
+}
+
+/** content区样式 **/
+.content {
+    padding-top: 56px;
+
+    .main {
+        width: 794px;
+        margin: 0 auto;
+
+        :global {
+            .ant-tabs-nav-container {
+                font-size: 16px;
+            }
+        }
+
+        .icon_pic {
+            width: 58px;
+            height: 100%;
+            margin-right: 18px;
+        }
+    }
+}
+
+/** 表格样式 **/
+.input_box,
+.input_box_phone,
+.input_box_captcha,
+.input_box_submit,
+.last_input_box,
+.input_box_code,
+.input_box_captcha2 {
+    text-align: center;
+    position: relative;
+
+    :global {
+        .ant-form-item-control-wrapper {
+            width: 384px;
+            margin-bottom: 16px;
+        }
+
+        .has-feedback {
+            display: block;
+        }
+
+        .ant-input-group-addon {
+            border-radius: 0;
+            background-color: #fff;
+            font-size: 14px;
+            border-right: 0;
+            padding: 0;
+            width: 92px;
+        }
+
+        .ant-input {
+            height: 52px;
+            font-size: 14px;
+            border-radius: 0;
+            border-left: 0;
+            padding: 4px 11px 4px 16px;
+        }
+
+        .ant-btn-primary {
+            width: 384px;
+            line-height: 52px;
+            height: 52px;
+            border-radius: 52px;
+            font-size: 20px;
+        }
+
+        .ant-checkbox-wrapper {
+            font-size: 14px;
+        }
+
+        .ant-input-group-wrapper {
+            top: 0;
+        }
+    }
+
+    .getCaptcha {
+        position: absolute;
+        //top: -11px;
+        right: 0;
+        z-index: 100;
+        width: 106px;
+        height: 52px;
+        font-size: 14px;
+        border-radius: 0;
+    }
+}
+
+.input_box_phone {
+    :global {
+        .ant-input-group-addon {
+            border-right: 1px #d9d9d9 solid;
+        }
+    }
+}
+
+.input_box_captcha {
+    :global {
+        .ant-input {
+            padding: 4px 114px 4px 16px;
+        }
+    }
+}
+
+.input_box_submit {
+    :global {
+        .ant-form-item-control-wrapper {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.last_input_box {
+    :global {
+        .ant-form-item-control-wrapper {
+            margin-bottom: 0;
+        }
+
+        .ant-form-item-control {
+            line-height: 22px;
+        }
+
+        .ant-form-explain {
+            height: 25px;
+        }
+    }
+}
+
+.success,
+.warning,
+.error {
+    transition: color 0.3s;
+}
+
+.success {
+    color: @success-color;
+}
+
+.warning {
+    color: @warning-color;
+}
+
+.error {
+    color: @error-color;
+}
+
+.progress-pass>.progress {
+    :global {
+        .ant-progress-bg {
+            background-color: @warning-color;
+        }
+    }
+}
+
+/** 个人用户注册成功页面样式 **/
+.PersonalSuccess,
+.CompanySuccess {
+    width: 384px;
+    text-align: center;
+    padding-top: 134px;
+
+    h3 {
+        font-size: 24px;
+        color: #333;
+        line-height: 30px;
+        margin-bottom: 6px;
+
+        .success_icon {
+            color: #9ccc17;
+            font-size: 30px;
+            padding-right: 18px;
+        }
+    }
+
+    p {
+        font-size: 14px;
+        color: #999;
+        padding: 0 34px 68px 70px;
+    }
+}
+
+/** 机构注册页面样式第一个页面 **/
+.companyFirst,
+.companySecond {
+    width: 384px;
+}
+
+.Step_bar {
+    padding: 0 11% 40px 11%;
+}
+
+.Step_blue,
+.Step_gray {
+    text-align: center;
+    position: relative;
+
+    p {
+        line-height: 22px;
+        width: 22px;
+        border-radius: 22px;
+        display: inline-block;
+    }
+
+    .gray_line {
+        position: absolute;
+        top: 0;
+        left: -30px;
+        width: 60%;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+
+.Step_blue {
+    p {
+        background-color: @primary-color;
+        color: #fff;
+    }
+
+    h4 {
+        color: @primary-color;
+    }
+}
+
+.Step_gray {
+    p {
+        border: 1px #999 solid;
+        color: #999;
+        line-height: 20px;
+    }
+
+    h4 {
+        color: #999;
+    }
+}
+
+/** 机构注册页面样式第二个页面 **/
+.input_box {
+    .companyTypeSpan {
+        line-height: 50px;
+        width: 92px;
+        display: inline-block;
+        border: 1px #d9d9d9 solid;
+        border-right: none;
+        font-size: 14px;
+    }
+
+    .companyTypeSelect {
+        width: 292px;
+        font-size: 14px;
+
+        :global {
+            .ant-select-selection {
+                border-radius: 0;
+                border-left: none;
+
+                .ant-select-selection__rendered {
+                    line-height: 50px;
+                }
+            }
+
+            .ant-select-selection--single {
+                height: 52px;
+            }
+        }
+    }
+}
+
+/** 机构注册成功页面样式 **/
+.CompanySuccess {
+    padding-top: 0;
+
+    .Step_bar {
+        padding: 0 11% 76px 11%;
+
+        p {
+            font-size: 12px;
+            padding: 0;
+        }
+    }
+}
+
+/** 忘记密码页面第1个页面 **/
+.PhoneForgetFirst {
+    width: 384px;
+    margin: 0 auto;
+    padding-top: 140px;
+}
+
+.TipInformation {
+    color: #666;
+    font-size: 14px;
+
+    span {
+        color: red;
+        padding-right: 4px;
+    }
+}
+
+.input_box_code,
+.input_box_captcha2 {
+    :global {
+        .ant-form-item-control-wrapper {
+            width: 270px;
+        }
+    }
+
+    .codeShow {
+        position: absolute;
+        top: -10px;
+        right: -114px;
+        width: 78px;
+        height: 40px;
+        line-height: 40px;
+        background-color: #ea99db;
+        font-family: Arial;
+        font-size: 18px;
+        font-style: italic;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .codeBtn {
+        position: absolute;
+        top: -11px;
+        right: -244px;
+        color: @primary-color;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .codeBtn:hover {
+        color: #1364c5;
+    }
+}
+
+/** 忘记密码页面第2个页面 **/
+.PhoneForgetSecond {
+    width: 474px;
+    margin: 0 auto;
+    padding-top: 170px;
+}
+
+.TipInformationBig {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.input_box_captcha2 {
+    .getCaptcha {
+        position: absolute;
+        top: -11px;
+        right: -184px;
+        width: 154px;
+        height: 42px;
+        font-size: 14px;
+        border-radius: 0;
+    }
+}
+
+/** 忘记密码页面第3个页面 **/
+.PhoneForgetThird {
+    width: 384px;
+    margin: 0 auto;
+    padding-top: 140px;
+
+    .TipInformation {
+        color: #666;
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 1166px) {
+    .main {
+        width: 100%;
+        padding: 0 2%;
+    }
+}

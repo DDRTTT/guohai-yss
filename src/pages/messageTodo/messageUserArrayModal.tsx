@@ -4,7 +4,8 @@ import styles from './index.less';
 import { ColumnProps } from 'antd/es/table';
 import { MessageTodoState } from '@/models/messageTodo';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
-import { Form, Modal, Button, Row, Col, Input, Select, message, Table } from 'antd';
+import { Form, Modal, Button, Row, Col, Input, Select, message } from 'antd';
+import { Table } from '@/components';
 
 interface Columns {
   index: number;
@@ -121,8 +122,8 @@ const Index = (props: any) => {
           loading={buttonLoading}
           onClick={handleSumbitModalForm}
           style={{
-            background: '#5e7ce0',
-            border: '1px solid #5e7ce0',
+            background: '#2450A5',
+            border: '1px solid #2450A5',
             marginRight: '38px',
           }}
         >

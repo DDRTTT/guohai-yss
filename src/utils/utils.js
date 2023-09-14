@@ -190,6 +190,20 @@ export function uuid() {
   return s.join('');
 }
 
+// 根据文件后缀名返回畅写编辑器 documentType 属性值
+export const getDocumentType = (ext) => {
+  if (
+    '.doc.docx.docm.dot.dotx.dotm.odt.fodt.ott.rtf.txt.html.htm.mht.pdf.djvu.fb2.epub.xps'.indexOf(
+      ext,
+    ) !== -1
+  )
+    return 'text';
+  if ('.xls.xlsx.xlsm.xlt.xltx.xltm.ods.fods.ots.csv'.indexOf(ext) !== -1) return 'spreadsheet';
+  if ('.pps.ppsx.ppsm.ppt.pptx.pptm.pot.potx.potm.odp.fodp.otp'.indexOf(ext) !== -1)
+    return 'presentation';
+  return null;
+};
+
 /**
  * 删除没用的属性
  *
@@ -531,37 +545,35 @@ export const exChangeWidgetType = code => {
   return name;
 }
 
-/**
-* 通过 id 获取 name 
-* @params idStr：id组成的字符串，一个或多个（英文逗号隔开）
-* @params arr：结构类似[{empNo: '46', name: '单6672'}] or [{id: xx, code:xx, name:xx}]
-* @params id：对照的目标字段
-* @params name：返回的目标字段
-* @result nameStr：名称字符串，一个或多个（中文逗号隔开）
-*/
-export function getNamebyId(idStr, arr, id, name) {
-  if (idStr === 'null' || !idStr) {
-    return ''
-  } else {
-    let nameStr = '', nameArr = [];
-    if (idStr.indexOf(',') < 0) {// 返回单个人
-      arr.forEach(item => {
-        if (item[id] == idStr) {
-          nameStr = item[name];
-        }
-      })
-      return nameStr;
-    } else {// 返回多个人，逗号隔开
-      const idArr = idStr.split(',');
-      idArr.forEach(item => {
-        arr.forEach(i => {
-          if (i[id] == item) {
-            nameArr.push(i[name])
-          }
-        })
-      })
-      nameStr = nameArr.join('，');
-      return nameStr;
+// 千分位
+export function thousandthFormatter(value) {
+  let currency = value + '';
+  let result = 0;
+  if (currency) {
+    // 对整数部分进行千分位格式化.
+    for (let i = 0; i < Math.floor((currency.length - (1 + i)) / 3); i++) {
+      currency =
+        currency.substring(0, currency.length - (4 * i + 3)) +
+        ',' +
+        currency.substring(currency.length - (4 * i + 3));
+    }
+    result = currency;
+  }
+  return result;
+}
+
+
+// 参数转换函数，用于将参数对象转化为流程模板参数数组
+export function transDataToParams(dataObj, keyList) {
+  const queryParams = [];
+  for(const key in dataObj){
+    if(keyList.find(key)){
+      const value = dataObj[key] instanceof Array ? dataObj[key].toString() : dataObj[key];
+      queryParams.push({
+        code: key,
+        value
+      });
     }
   }
+  return queryParams;
 }

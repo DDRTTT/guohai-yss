@@ -34,13 +34,11 @@ import { CheckColorItem, TemplateWrap } from './setPanel/strategyComponent';
 import { cloneDeep } from 'lodash';
 import { getMenu } from '@/utils/session';
 import { recursiveGetData } from '@/utils/utils';
-import  { ActionBool } from '@/utils/hocUtil';
 
 import { AddTaskMenuPropsItem, homeState } from './operatingCalendar.d';
 import { priorityEnum, taskTypeEnum } from './staticEnum';
 import { PageContainers } from '@/components';
 
-import CalendarDataTra from './calendarDataTransfer'
 const { SubMenu } = Menu;
 
 const styles = require('./index.less');
@@ -64,7 +62,7 @@ class Index extends React.Component<any, homeState> {
       //  * 当前tab 全部 运营日历 排期表
       currentTab: '',
       //  * 当前运营日历的类型视图 月 周 日
-      currentView: 'customList',
+      currentView: 'dayGridMonth',
       // currentView: 'customList',
       //  * 运营日历的日类型视图
       currentCalendarDayView: 'calendar',
@@ -123,6 +121,7 @@ class Index extends React.Component<any, homeState> {
     // 延期设置的时间
     this.yanqiDate = '';
   }
+
   /**
    * 初始化获取交易所和设置交易所筛选的初始值
    */
@@ -376,15 +375,16 @@ class Index extends React.Component<any, homeState> {
         if (currentCalendarDayView == 'calendar') {
           await this.getData();
           // TODO 写死的地方
-          // if (currentTab != 'tradingCalendar') {
-          this.getTaskList();
-          // }
+          if (currentTab != 'tradingCalendar') {
+            this.getTaskList();
+          }
         } else {
           // SingleCustomerEvents.getInstance().dispatchEvent(currentCalendarDayView, startTime);
         }
       },
     );
   };
+
   /**
    * 切换日历的日月周
    */
@@ -401,6 +401,7 @@ class Index extends React.Component<any, homeState> {
       this.upDataTaskList,
     );
   };
+
   /**
    * 切换运营日历的日类型视图
    */
@@ -412,6 +413,7 @@ class Index extends React.Component<any, homeState> {
       this.upDataTaskList,
     );
   };
+
   /**
    * 切换tab的时候
    */
@@ -445,6 +447,7 @@ class Index extends React.Component<any, homeState> {
     this.state.calendarApi.today();
     this.upDataTaskList();
   };
+
   /**
    * 上一个
    */
@@ -452,6 +455,7 @@ class Index extends React.Component<any, homeState> {
     this.state.calendarApi.prev();
     this.upDataTaskList();
   };
+
   /**
    * 下一个
    */
@@ -459,6 +463,7 @@ class Index extends React.Component<any, homeState> {
     this.state.calendarApi.next();
     this.upDataTaskList();
   };
+
   /**
    * 获取数据
    */
@@ -495,6 +500,7 @@ class Index extends React.Component<any, homeState> {
     //   this.getTaskList();
     // }
   };
+
   /**
    * 初始化任务列表
    */
@@ -540,6 +546,7 @@ class Index extends React.Component<any, homeState> {
       },
     });
   };
+
   /**
    *获取筛选选项
    * @memberof Index
@@ -571,6 +578,7 @@ class Index extends React.Component<any, homeState> {
       },
     });
   };
+
   /**
    * 计算是否显示日历组件
    * 因为判断显示的条件太多,不如判断隐藏的条件
@@ -582,6 +590,7 @@ class Index extends React.Component<any, homeState> {
     }
     return false;
   };
+
   /**
    * 计算content区域是否显示loading
    */
@@ -597,6 +606,7 @@ class Index extends React.Component<any, homeState> {
       (this.state.currentView == 'customList' && taskListLoading)
     );
   };
+
   /**
    * 筛选抽屉的关闭回调函数
    */
@@ -605,6 +615,7 @@ class Index extends React.Component<any, homeState> {
       filtrateVisible: false,
     });
   };
+
   /**
    * 自己写的日历组件点击日期的回调
    */
@@ -612,6 +623,7 @@ class Index extends React.Component<any, homeState> {
     this.state.calendarApi.gotoDate(date);
     this.upDataTaskList();
   };
+
   /**
    * 筛选返回回来值
    */
@@ -623,6 +635,7 @@ class Index extends React.Component<any, homeState> {
       this.upDataTaskList,
     );
   };
+
   /**
    *事项设置确认
    */
@@ -639,6 +652,7 @@ class Index extends React.Component<any, homeState> {
         this.upDataTaskList();
       });
   };
+
   /**
    * 事项设置切换选项
    */
@@ -647,6 +661,7 @@ class Index extends React.Component<any, homeState> {
       matterValue: e.target.value,
     });
   };
+
   /**
    *显示事项设置面板
    */
@@ -678,6 +693,7 @@ class Index extends React.Component<any, homeState> {
       }
     });
   };
+
   //   处理数据
   dispostData = data => {
     const { list, name } = data;
@@ -703,6 +719,7 @@ class Index extends React.Component<any, homeState> {
     });
     return tempList;
   };
+
   /**
    * 事项设置切换模版的回调
    */
@@ -799,10 +816,12 @@ class Index extends React.Component<any, homeState> {
         break;
     }
   };
+
   // 延期时间的选择
   yanqiChange = key => {
     this.yanqiChange = moment(key).format('YYYY-MM-DD hh:mm:ss');
   };
+
   // 点击标题输入时间
   handlerDateInputVisible = () => {
     jumpDateStr = this.state.clickDate;
@@ -810,6 +829,7 @@ class Index extends React.Component<any, homeState> {
       dateTitleInputVisible: true,
     });
   };
+
   // 跳转时间的change事件
   handleTitleInput = (e: any) => {
     if (!e.target) {
@@ -893,10 +913,9 @@ class Index extends React.Component<any, homeState> {
     } // 如果是日的话,要显示任务的数据
     else if (currentView === 'customList' && currentCalendarDayView == 'calendar') {
       const _data = taskList || [];
-
       let tempData = _data.map((sonItem: any) => {
         return {
-          title: JSON.stringify({ ...sonItem, flag: currentTab }),
+          title: JSON.stringify(sonItem),
           start: sonItem.executeTime,
           color: 'transparent',
           textColor: 'black',
@@ -905,7 +924,6 @@ class Index extends React.Component<any, homeState> {
       tempData = flatMap(tempData);
       eventList = tempData;
     }
-
     return (
       <PageContainers>
         <Spin spinning={tabListLoading || allSubInfoLoading}>
@@ -913,17 +931,6 @@ class Index extends React.Component<any, homeState> {
             <Spin spinning={this.computedSpinLoading()}>
               <Card
                 className={styles.homeCard}
-                extra={ 
-                  ActionBool('operatingCalendar:set') &&
-                  <Button 
-                    onClick={() => {
-                      router.push('/taskCenter/operatingCalendar/index/openDaySetting');
-                    }}
-                    type="primary"
-                  >
-                    开放日设置
-                  </Button>
-                }
                 title={
                   <Tabs
                     activeKey={currentTab}
@@ -1030,7 +1037,6 @@ class Index extends React.Component<any, homeState> {
                             <Icon type="filter" />
                             {/* 筛选 */}
                           </Button>
-                            <CalendarDataTra/>
                         </>
                       )}
                     </div>

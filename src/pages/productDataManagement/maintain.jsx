@@ -224,7 +224,7 @@ const Index = ({ dispatch, listLoading }) => {
       label: '数据主体',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dataSubjectList,
     },
     {
@@ -232,7 +232,7 @@ const Index = ({ dispatch, listLoading }) => {
       label: '主题一级',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dataThemeLevelOneList,
     },
     {
@@ -240,7 +240,7 @@ const Index = ({ dispatch, listLoading }) => {
       label: '主题二级',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dataThemeLevelTwoList,
     },
     {
@@ -248,7 +248,7 @@ const Index = ({ dispatch, listLoading }) => {
       label: '主题三级',
       type: 'select',
       readSet: { name: 'name', code: 'code' },
-      config: { mode: 'multiple' },
+      config: { mode: 'multiple', maxTagCount: 1 },
       option: dataThemeLevelThreeList,
     },
   ];
@@ -277,7 +277,7 @@ const Index = ({ dispatch, listLoading }) => {
       const style = { float: 'right', marginRight: '8px' };
       return (
         <div style={{ height: '30px' }}>
-          <Button style={style} onClick={() => handleExportAll()} type="primary">
+          <Button style={style} onClick={() => handleExportAll()}>
             全部导出
           </Button>
           <Button

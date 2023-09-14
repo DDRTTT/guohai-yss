@@ -1,3 +1,6 @@
+@import '../../../node_modules/antd/lib/style/themes/default.less';
+@import '../../utils/utils.less';
+
 .base {
   :global {
     .steps-action {
@@ -10,63 +13,16 @@
   }
 }
 
-.registerResult {
-  :global {
-    .anticon {
-      font-size: 64px;
-    }
-  }
+.handleStyle {
+  margin: 5px;
+}
 
-  .title {
-    margin-top: 32px;
-    font-size: 20px;
-    line-height: 28px;
-
-    .message {
-      color: rgba(0, 0, 0, 0.447058823529412);
-      font-size: 14px;
-    }
-  }
-
-  .description {
-    background: #f0f2f5;
-
-    .content {
-      width: 200px;
-      padding: 12px 0;
-      text-align: left;
-    }
-  }
-
-  .actions {
-    margin-top: 40px;
-
-    a + a {
-      margin-left: 8px;
-    }
+.addStyle {
+  margin-top: -45px;
+  .butStyle {
+    margin-right: 10px;
+    width: 100px;
+    height: 26px;
   }
 }
 
-.tableStyle {
-  margin-top: 40px;
-
-  :global {
-    .ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td {
-      padding: 16px 16px;
-    }
-  }
-
-  //权限列表样式修改
-  .authList {
-    height: 50px;
-    background-color: #f4f4f4;
-    //line-height: 50px;
-
-    .roleAuth {
-      float: left;
-      margin: 14px;
-      padding: 0;
-      color: #797979;
-    }
-  }
-}

@@ -1,6 +1,5 @@
 import {
   Button,
-  Table,
   Modal,
   Select,
   Form,
@@ -10,10 +9,9 @@ import {
   Col,
   DatePicker,
   message,
-  Tooltip,
 } from 'antd';
 import moment from 'moment';
-import { connect, routerRedux } from 'dva';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { handleFilterOption, datePickerFormat } from '@/pages/archiveTaskHandleList/util';
 
@@ -108,11 +106,11 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
       const formItemLayout = {
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 10 },
+          sm: { span: 8 },
         },
         wrapperCol: {
           xs: { span: 24 },
-          sm: { span: 14 },
+          sm: { span: 16 },
         },
       };
 
@@ -129,7 +127,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
         >
           <Form>
             <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="账户类型：" {...formItemLayout}>
                   {getFieldDecorator('clientType', {
                     initialValue: saveDetail.clientType || '0',
@@ -147,7 +145,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="是否机构自有资金：" {...formItemLayout}>
                   {getFieldDecorator('isInstituteOwnFunds', {
                     initialValue: saveDetail.isInstituteOwnFunds,
@@ -166,7 +164,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="客户类型：" {...formItemLayout}>
                   {getFieldDecorator('guestType', {
                     initialValue: saveDetail.guestType,
@@ -189,7 +187,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="子客户类型：" {...formItemLayout}>
                   {getFieldDecorator('subGuestType', {
                     initialValue: saveDetail.subGuestType,
@@ -211,7 +209,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="产品资金来源类型：" {...formItemLayout}>
                   {getFieldDecorator('fundSourceType', {
                     initialValue: saveDetail.fundSourceType,
@@ -234,7 +232,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="产品资金来源子类型：" {...formItemLayout}>
                   {getFieldDecorator('subFundSourceType', {
                     initialValue: saveDetail.subFundSourceType,
@@ -256,7 +254,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="中基协投资者类型：" {...formItemLayout}>
                   {getFieldDecorator('amacInvestorType', {
                     initialValue: saveDetail.amacInvestorType,
@@ -278,7 +276,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="中基协是否为电子签名：" {...formItemLayout}>
                   {getFieldDecorator('isAmacESignature', {
                     initialValue: saveDetail.isAmacESignature,
@@ -295,7 +293,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="中基协是否为管理人关联方：" {...formItemLayout}>
                   {getFieldDecorator('isAmacManagerRelation', {
                     initialValue: saveDetail.isAmacManagerRelation,
@@ -312,7 +310,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="交易确认日期：" {...formItemLayout}>
                   {getFieldDecorator('tradeConfirmDate', {
                     initialValue: saveDetail.tradeConfirmDate
@@ -322,7 +320,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   })(<DatePicker style={{ width: '100%' }} placeholder={'请选择交易确认日期'} />)}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="投资者与产品关系：" {...formItemLayout}>
                   {getFieldDecorator('investorProRel', {
                     initialValue: saveDetail.investorProRel,
@@ -343,7 +341,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   )}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="投资者类型：" {...formItemLayout}>
                   {getFieldDecorator('investorType', {
                     initialValue: saveDetail.investorType,
@@ -366,7 +364,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                 </Form.Item>
               </Col>
               {clientType === '2' ? (
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item label="上层产品管理人名称：" {...formItemLayout}>
                     {getFieldDecorator('superProManagerName', {
                       initialValue: saveDetail.superProManagerName,
@@ -375,7 +373,7 @@ const MakeUpModalForm = Form.create({ name: 'form_in_modal' })(
                   </Form.Item>
                 </Col>
               ) : null}
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item label="资金来源中本公司或关联方情况：" {...formItemLayout}>
                   {getFieldDecorator('sourcesFunds', {
                     initialValue: saveDetail.sourcesFunds,

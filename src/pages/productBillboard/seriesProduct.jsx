@@ -2,12 +2,11 @@
  * 产品看板-查看系列-系列产品
  */
 import React, { useContext, useEffect, useRef } from 'react';
-import { Table, Button, message } from 'antd';
+import { Button } from 'antd';
+import { Table } from '@/components';
 import { connect, routerRedux } from 'dva';
-import router from 'umi/router';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
-import styles from './index.less';
 import { handleChangeLabel } from '@/pages/productBillboard/baseFunc';
 
 const SeriesProduct = ({ dispatch, listLoading, productBillboard: { seriesProductData } }) => {

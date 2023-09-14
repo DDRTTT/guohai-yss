@@ -1,22 +1,8 @@
-@import '~antd/es/style/themes/default.less';
 .content {
+  // min-height: 1024px;
+  height: calc(100vh - 255px);
+  overflow-y: auto;
   background: #fff;
-  :global {
-    .ant-tabs-tab{
-      width: 194px;
-      height: 48px;
-      line-height: 48px;
-      text-align: left !important;
-      padding: 0 24px !important;
-    }
-    .ant-tabs-tab-active{
-      background-color: #E9EDFA;
-    }
-    .ant-card-bordered {
-      box-shadow: 0 0 0 0;
-      border-bottom: 0px;
-    }
-  }
 
   .writeMore {
     width: 250px;
@@ -71,7 +57,7 @@
     }
 
     .ant-tabs-content {
-      margin-left: 191px !important;
+      margin-left: 130px !important;
     }
 
     .ant-divider {
@@ -169,24 +155,6 @@
   :global {
     .ant-spin-container {
       height: 100%;
-    }
-  }
-}
-
-.mTabs{
-  :global {
-    .ant-tabs-tab{
-      width: auto;
-      height: 48px;
-      line-height: 48px;
-      text-align: left !important;
-      padding: 0 24px !important;
-    }
-    .ant-tabs-tab-active{
-      background-color: #E9EDFA;
-    }
-    .ant-tabs-tabpane{
-      padding: 16px;
     }
   }
 }

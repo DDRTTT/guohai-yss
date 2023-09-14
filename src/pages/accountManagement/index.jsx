@@ -6,8 +6,6 @@ import {
   Menu,
   Dropdown,
   Button,
-  Table,
-  message,
   Select,
   Form,
   Row,
@@ -17,8 +15,8 @@ import {
   Card,
   Breadcrumb,
 } from 'antd';
+import { Table } from '@/components';
 import { routerRedux } from 'dva/router';
-import router from 'umi/router';
 import Action, { linkHoc } from '@/utils/hocUtil';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { connect } from 'dva';

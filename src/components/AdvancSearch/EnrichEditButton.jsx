@@ -45,7 +45,7 @@ const EnrichEditButton = props => {
           {item.list.map((option, optionIndex) => {
             return (
               <Menu.Item key={optionIndex}>
-                <Button type="link" size="small"
+                <a
                   style={{ textAlign: 'center' }}
                   onClick={() => {
                     item.batchHandler
@@ -54,7 +54,7 @@ const EnrichEditButton = props => {
                   }}
                 >
                   {typeof option === 'string' ? option : option['label']}
-                </Button>
+                </a>
               </Menu.Item>
             );
           })}
@@ -74,7 +74,7 @@ const EnrichEditButton = props => {
       );
     } else {
       button = (
-        <Button type="link" size="small"
+        <a
           style={moreBtnStyle}
           onClick={() => {
             if (item.handler) {
@@ -87,7 +87,7 @@ const EnrichEditButton = props => {
           {...item.config}
         >
           {item.label}
-        </Button>
+        </a>
       );
     }
     return pageName && item.code ? (

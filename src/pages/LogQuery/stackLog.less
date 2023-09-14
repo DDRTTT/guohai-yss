@@ -1,9 +1,10 @@
+@areabgColor: #fff;
+
 .content {
   .area {
     min-height: 400px;
     overflow-y: auto;
-    color: #000;
-    background: #fff;
+    background: @areabgColor;
   }
 
   .pagination {
@@ -23,7 +24,7 @@
           width: 112px;
         }
 
-        > .ant-form-item-label {
+        >.ant-form-item-label {
           width: auto;
           padding-right: 8px;
         }

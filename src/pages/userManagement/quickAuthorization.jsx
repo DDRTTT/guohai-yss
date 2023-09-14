@@ -133,10 +133,11 @@ const Index = ({
 
   const [selectTagList, setSelectTagList] = useState([]);
   const [sysId, setSysId] = useState('');
+  const [spinLoading, setSpinLoading] = useState(false);
 
   const [show, setShow] = useState(false);
   const [check, setCheck] = useState();
-  const [setCurrentTagId] = useState('');
+  const [currentTagId,setCurrentTagId] = useState('');
   // 权限预览
   const [authModal, setAuthModal] = useState(false);
   // 已关联功能组件
@@ -154,10 +155,9 @@ const Index = ({
   const [parameter, setParameter] = useState({});
   const [selectedKeys, setSelectedKeys] = useState([]);
   // Tree
-  const [allProductCheckTreePro, setAllProductCheckTreePro] = useState([]);
+  const [setAllProductCheckTreePro] = useState([]);
   const [checkTreePro, setCheckTreePro] = useState([]);
-  const [checkGroupTreePro, setCheckGroupTreePro] = useState([]);// 由setGroupCheckTreePro 改为 setCheckGroupTreePro
-  const [treeNodes, setTreeNodes] = useState({ proTypes: [], groups: [] }); // 产品中心：产品分类、我的分组左侧树的选中情况
+  const [checkGroupTreePro, setGroupCheckTreePro] = useState([]);
   // Table
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // proCodes
   // // 分组
@@ -175,7 +175,10 @@ const Index = ({
   // 添加分组和产品弹框
   const [addNewGroupWithProModal, setAddNewGroupWithProModal] = useState(false);
   const [proCondition, setProCondition] = useState('');
-  const [pageSize, setPageSize] = useState(10);
+  const [pagination] = useState({
+    pageSize: 9999999,
+    currentPage: 1,
+  });
 
   const [leftTreeValue, setLeftTreeValue] = useState('');
   const [keyWords, setKeyWords] = useState('');
@@ -186,6 +189,10 @@ const Index = ({
   const [parameter2, setParameter2] = useState({});
   // 分页
   const [current2, setCurrent2] = useState(1);
+  const [pagination2] = useState({
+    pageSize: 10,
+    currentPage: 1,
+  });
   // ----------------------------------------------------------------
   const changePageTabs = e => {
     // 重新加载功能组件和岗位组件数据
@@ -201,12 +208,6 @@ const Index = ({
   }
 
   useEffect(() => {
-    const proTypes = checkTreePro && checkTreePro.length > 0 ? checkTreePro.filter(item => !item.includes('-')) : [];// 过滤父节点key（传参不需要）
-    const groups = checkGroupTreePro && checkGroupTreePro.length > 0 ? checkGroupTreePro.filter(item => !item.includes('-')) : [];
-    setTreeNodes({ proTypes, groups }); // 用于区分是否可以setSelectedRowKeys([]);且return
-  }, [checkTreePro, checkGroupTreePro])
-
-  useEffect(() => {
     document.addEventListener('visibilitychange', changePageTabs, false);
     return () => document.removeEventListener('visibilitychange', changePageTabs, false)
   })
@@ -220,36 +221,36 @@ const Index = ({
   }, [SAVE_TEMP_PRO]);
 
   useEffect(() => {
-    if (sysId === '1') {
+    if (sysId === '1' || sysId === '12') {
       // 产品分页
-      handleAllProduct({ pageSize, currentPage: current, ...parameter, proCondition });
+      handleAllProduct({ ...pagination, currentPage: current, ...parameter, proCondition });
     }
     if (sysId === '4') {
       // 底稿产品分页
-      handleDGAllProduct({ pageSize, currentPage: current, keyWords, proType });
+      handleDGAllProduct({ ...pagination, currentPage: current, keyWords, proType });
     }
-  }, [current, parameter, proCondition, keyWords, proType, pageSize]);// 添加pageSize的原因：根据客户要求，分页增加了每页展示条数的选择，当每页展示条数改变时，表格数据需要重新请求并加载 
+  }, [current, parameter, proCondition, keyWords, proType]);
 
   useEffect(() => {
     // 产品分页
     handleAllProduct2({
-      pageSize,
+      ...pagination2,
       currentPage: current2,
       ...parameter2,
       proCondition: proCondition2,
     });
-  }, [current2, parameter2, proCondition2, pageSize]);
+  }, [current2, parameter2, proCondition2]);
 
   useEffect(() => {
-    if (sysId === '1') {// 产品中心
+    if (sysId === '1' || sysId === '12') {// 产品中心
       setSelectedRowKeys(proCodes ?? []);
       setCheckTreePro(proTypes ?? []);
-      setCheckGroupTreePro(proGroups ?? []);
+      setGroupCheckTreePro(proGroups ?? []);
     }
     if (sysId === '4') {// 底稿系统
       setSelectedRowKeys(projectsDg);
       setCheckTreePro(proTypeDg);
-      // setCheckGroupTreePro(proGroups ?? []);
+      // setGroupCheckTreePro(proGroups ?? []);
     }
   }, [proCodes, proTypes, projectsDg, proTypeDg]);
 
@@ -294,54 +295,56 @@ const Index = ({
     });
     if (sysId) {
       // 查询功能组件
-      dispatch({
-        type: 'roleManagement/fetchHasRole',
-        payload: sysId,
-      });
-
-      // 权限树查询
-      dispatch({
-        type: 'roleManagement/fetchGetAuthTree',
-        payload: sysId,
-      });
-
-      // 岗位树查询
-      dispatch({
-        type: 'roleManagement/fetchGetPositionsTree',
-        payload: { sysId },
-      });
+      if(tabsChange != '1'){
+        dispatch({
+          type: 'roleManagement/fetchHasRole',
+          payload: sysId,
+        });
+        // 所属部门
+        dispatch({
+          type: 'userManagement/fetchGetDept',
+          payload: {
+            orgId: userInfo?.orgId, // 机构ID
+            orgKind: 2,
+          },
+        });
+        // 岗位树查询
+        dispatch({
+          type: 'roleManagement/fetchGetPositionsTree',
+          payload: { sysId },
+        });
+        // 权限树查询
+        dispatch({
+          type: 'roleManagement/fetchGetAuthTree',
+          payload: sysId,
+        });
+      }
+      
       // 根据归属系统查询可用的角色组件集合
       dispatch({
         type: 'userManagement/queryBySys',
         payload: sysId,
       });
-      // 所属部门
-      dispatch({
-        type: 'userManagement/fetchGetDept',
-        payload: {
-          orgId: userInfo?.orgId, // 机构ID
-          orgKind: 2,
-        },
-      });
 
       setFieldsValue({ sysId });
-
-      if (sysId === '1') {
-        // 产品类树
-        dispatch({
-          type: `roleManagement/GET_PRO_TREE_FETCH`,
-        });
-        // 产品分页
-        handleAllProduct({ pageSize, currentPage: current, ...parameter, proCondition });
-      }
-      if (sysId === '4') {
-        // 底稿产品类树
-        dispatch({
-          type: `roleManagement/GET_DG_PRO_TREE_FETCH`,
-        });
-        // 底稿产品分页
-        handleDGAllProduct({ pageSize, currentPage: current });
-      }
+      if(tabsChange != '1') {
+        if (sysId === '1' || sysId === '12') {
+          // 产品类树
+          dispatch({
+            type: `roleManagement/GET_PRO_TREE_FETCH`,
+          });
+          // 产品分页
+          handleAllProduct({ ...pagination, currentPage: current, ...parameter, proCondition });
+        }
+        if (sysId === '4') {
+          // 底稿产品类树
+          dispatch({
+            type: `roleManagement/GET_DG_PRO_TREE_FETCH`,
+          });
+          // 底稿产品分页
+          handleDGAllProduct({ ...pagination, currentPage: current });
+        }
+      } 
     }
   }, [sysId]);
 
@@ -349,6 +352,7 @@ const Index = ({
     if (!userauthed || JSON.stringify(userauthed) === '{}') return;
     setAssociatedJob(userauthed.positions);
     setAssociatedFunction(userauthed.userRole);
+    // setStrategyCodes(userauthed.strategyCodes);
   }, [userauthed]);
 
   useEffect(() => {
@@ -370,7 +374,8 @@ const Index = ({
       dispatch({
         type: 'userManagement/queryRoleComByUser',
         payload: { userId, sysId },
-      });
+      }).then(()=>{setSpinLoading(false)});
+      
   }, [userId, sysId]);
 
   cloneDeepAuthorizationStrategy?.map(item => {
@@ -442,10 +447,15 @@ const Index = ({
   };
 
   // 分页
-  const handleStandardTableChange = (current) => setCurrent(current);
+  const handleStandardTableChange = ({ current }) => setCurrent(current);
 
   // columns
   const columns = [
+    {
+      title: '序号',
+      render: (text, record, index) => `${index + 1}`,
+      align: 'center'
+    },
     {
       title: '产品代码',
       dataIndex: 'proCode',
@@ -465,35 +475,7 @@ const Index = ({
 
   const rowSelection = {
     selectedRowKeys,
-    // onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
-    onSelect: (record, selected, selectedRows, nativeEvent) => {
-      if (selected) {// 选中，先检测原回显的selectedRowKeys中是否有，没有才将选中的push进去
-        const code = record.proCode;
-        let rowKeys = selectedRowKeys;
-        if (!rowKeys.includes(code)) {
-          rowKeys.push(code);
-          setSelectedRowKeys(rowKeys);
-        }
-      } else {// 如果取消选中，则需要在原回显的selectedRowKeys中过滤掉，否则取消选中，再保存，还是会给后台传参，即bug描述中所说的：授权不生效！
-        const code = record.proCode;
-        const rowKeys = selectedRowKeys.filter(item => item !== code);
-        setSelectedRowKeys(rowKeys);
-      }
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      let rowKeys = selectedRowKeys;// 全选/全不选，需要在原来的 selectedRowKeys 基础上增加，或者删除
-      if (selected) {// 表格全选
-        selectedRows.forEach(item => {
-          rowKeys.push(item.proCode)
-        })
-        rowKeys = Array.from(new Set(rowKeys));// 去重
-        setSelectedRowKeys(rowKeys);
-      } else {// 表格全不选
-        rowKeys = rowKeys.filter(m => changeRows.every(n => n.proCode !== m))
-        rowKeys = rowKeys ? rowKeys : [];
-        setSelectedRowKeys(rowKeys);
-      }
-    },
+    onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
   };
 
   const layout = {
@@ -513,15 +495,10 @@ const Index = ({
     });
   };
 
-  const handleStandardTableChange2 = (current) => setCurrent2(current);
+  const handleStandardTableChange2 = ({ current }) => setCurrent2(current);
 
   const handlePagination2 = {
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '40', '80'],
-    onShowSizeChange: handleSizeChange,
-    onChange: handleStandardTableChange2,
     showQuickJumper: true,
-    pageSize: pageSize,
     current: current2,
     total: SAVE_PRO_PAGINATION2?.total ?? 0,
     showTotal: () => `共 ${SAVE_PRO_PAGINATION2?.total} 条数据`,
@@ -634,6 +611,7 @@ const Index = ({
   // TODO: 2、已选择组件  4、功能组件 授权组件
   // 切换用户归属系统
   const handleJobChange = e => {
+    console.log(e);
     const search = parse(window.location.search, { ignoreQueryPrefix: true });
     const orgId = sessionStorage.getItem('saveOrgId') || search.orgId;
     const memberId = sessionStorage.getItem('saveMemberId') || search.saveMemberId;
@@ -688,11 +666,11 @@ const Index = ({
     return [node?.key];
   };
 
-  const onTreeSelect = (selectedKeys, e, key) => {
-    const k = e.selected ? key : undefined;
+  const onTreeSelect = (selectedKeys, info, key) => {
+    const k = info.selected ? key : undefined;
 
     // 修复分类分组切换时，分页不重置
-    const selectedNodes = e.selectedNodes[0]?.key;
+    const selectedNodes = info.selectedNodes[0]?.key;
     if (currentPages.current !== selectedNodes) {
       setCurrent(1);
     }
@@ -704,12 +682,12 @@ const Index = ({
         setParameter({});
         break;
       case 'proType':
-        const proTypeList = childrenNode(e?.selectedNodes[0], [], 'key');
+        const proTypeList = childrenNode(info?.selectedNodes[0], [], 'key');
         setParameter({ proTypeList });
         sysId === '4' && Array.isArray(proTypeList) && setProType(proTypeList.join());
         break;
       case 'myGroup':
-        const groupList = childrenNode(e?.selectedNodes[0], [], 'key');
+        const groupList = childrenNode(info?.selectedNodes[0], [], 'key');
         setMyGroupSelect(groupList);
         setParameter({ groupList });
         break;
@@ -737,143 +715,50 @@ const Index = ({
           type: `roleManagement/CHECK_GROUP_FETCH`,
           payload: values.fatherName,
         }).then(boolean => {
-          if (boolean) {
-            setAddNewGroupWithProModal(true);
-            setProCondition2('');
-            setParameter2({});
-            setCurrent2(1);
-          }
+          // 产品分页
+          // setProCondition('');
+          // setParameter({});
+          // setPagination({
+          //   pageSize: 10,
+          //   currentPage: 1,
+          // });
+          // setCurrent(1);
+          // handleAllProduct({ ...pagination, currentPage: current, ...parameter, proCondition });
+          if (boolean) setAddNewGroupWithProModal(true);
         });
       }
     });
   };
 
-  const handleOnCheck = (checkedKeys, e, key) => {// key为前端标识：proType/myGroup
-    const filterCheckedKeys = checkedKeys.filter(item => !item.includes('-'));// 过滤父节点key（传参不需要）
-    setCurrent(1);
-    setSelectedKeys(checkedKeys);
-
-    switch (key) {
+  const handleOnCheck = (checkedKeys, e, target) => {
+    switch (target) {
       case 'allProduct':
         setAllProductCheckTreePro(checkedKeys);
         break;
-      case 'proType':
-        setCheckTreePro(checkedKeys);
-        if (sysId === '1') {// 产品中心，可以直接调取获取proCode接口，实现右侧选中和数据存储
-          if (filterCheckedKeys.length === 0) {// 当刷新表格数据接口、返回proCode结口传 proTypeList: []时（即父级tree全不选），报500（因为接口目前支持proTypeList要么不传，传必须是非空数组），传{}，默认展示产品类型所有数据
-            if (treeNodes.groups.length === 0) {
-              setParameter({});
-              setSelectedRowKeys([]);
-            } else {
-              // 根据选中效果，刷新表格数据
-              setParameter({ groupList: treeNodes.groups });
-              // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-              dispatch({
-                type: 'roleManagement/getProCodeByConditions',
-                payload: { groupList: treeNodes.groups }
-              }).then(res => {
-                const proCodes = res.data;
-                setSelectedRowKeys(proCodes);
-              })
-            }
-          } else {
-            // 根据选中效果，刷新表格数据
-            const params = treeNodes.groups.length > 0 ? { proTypeList: filterCheckedKeys, groupList: treeNodes.groups } : { proTypeList: filterCheckedKeys };
-            setParameter(params);
-            // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-            dispatch({
-              type: 'roleManagement/getProCodeByConditions',
-              payload: params
-            }).then(res => {
-              const proCodes = res.data;
-              setSelectedRowKeys(proCodes);
-            })
-          }
-        } else {// 底稿系统，需要根据已有接口组装proCode，赋值给 selectedRowKeys(此处需区分checked)
-          /**
-           * 20220715版优化：左侧选中，右侧表格展示合集
-           * 接口优化（连飞龙）：支持 proType 传多个，逗号隔开
-           */
-          if (e.checked) {// 如果选中    
-            let proCodes = [];
-            const proType = filterCheckedKeys.join(',');
-            setProType(proType);// 更新右侧表格数据
-            setPageSize(10000);
-            setCurrent(1);
-            dispatch({
-              type: 'roleManagement/getDGProducts',
-              payload: { pageSize: 10000, currentPage: 1, keyWords, proType }// pageSize 给极大值，一次获取所有数据，实现跨分页全选
-            }).then(res => {
-              const rows = res?.rows;
-              if (rows && rows.length > 0) {
-                rows.forEach(item => {
-                  proCodes.push(item.proCode);
-                })
-              }
-              setSelectedRowKeys(proCodes);
-            })
-          } else {// 取消选中
-            if (filterCheckedKeys.length === 0) {
-              setPageSize(10);
-              setCurrent(1);
-              setProType('');
-              setSelectedRowKeys([]);
-            } else {
-              let noCodes = []; // 取消选中的 proCodes 集合
-              const soloProType = e.node ? e.node.props.eventKey : '';// 当前取消选中的项
-              const proType = filterCheckedKeys.join(',');// 取消选中后，仍然选中的项
-              setProType(proType);// 更新右侧表格数据
-              setPageSize(10000);
-              setCurrent(1);
-              dispatch({
-                type: 'roleManagement/getDGProducts',
-                payload: { pageSize: 10000, currentPage: 1, keyWords, proType: soloProType }
-              }).then(res => {
-                const rows = res?.rows;
-                if (rows && rows.length > 0) {
-                  rows.forEach(item => {
-                    noCodes.push(item.proCode);
-                  })
-                  let rowKeys = selectedRowKeys.filter(m => noCodes.every(n => n !== m));// 仅当取消选中项返回非空数组，才从rowKeys 中过滤；否则 rowKeys 保持不变
-                  rowKeys = rowKeys ? rowKeys : [];
-                  setSelectedRowKeys(rowKeys);
+      case 'Tree':
+        // console.log(checkedKeys, e, target);
+        const arr = [];
+        if(checkedKeys.length > 0) {
+          checkedKeys.forEach(item => {
+            if (SAVE_PRO_PAGINATION?.rows) {
+              const data = JSON.parse(JSON.stringify(SAVE_PRO_PAGINATION?.rows));
+              data.forEach(ele => {
+                if (item == ele.proType) {
+                  arr.push(ele.proCode);
+                  setSelectedRowKeys(arr)
                 }
               })
             }
-          }
+          })
+        } else {
+          setSelectedRowKeys([])
         }
+        
+        // console.log(SAVE_PRO_PAGINATION?.rows, selectedRowKeys);
+        setCheckTreePro(checkedKeys);
         break;
       case 'myGroup':
-        setCheckGroupTreePro(checkedKeys);
-        if (filterCheckedKeys.length === 0) {// 当刷新表格数据接口、返回proCode结口传 groupList: []时（即父级tree全不选），报500（因为接口目前支持proTypeList要么不传，传必须是非空数组-感觉接口设计有问题），传{}，默认展示产品类型所有数据
-          if (treeNodes.proTypes.length === 0) {// 产品类型也无选中项，则页面初始化（左侧树和右侧表格都初始化）
-            setParameter({});
-            setSelectedRowKeys([]);
-          } else {// 产品类型有之前选中的，需要回显
-            // 根据选中效果，刷新表格数据
-            setParameter({ proTypeList: treeNodes.proTypes });
-            // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-            dispatch({
-              type: 'roleManagement/getProCodeByConditions',
-              payload: { proTypeList: treeNodes.proTypes }
-            }).then(res => {
-              const proCodes = res.data;
-              setSelectedRowKeys(proCodes);
-            })
-          }
-        } else {
-          // 根据选中效果，刷新表格数据
-          const params = treeNodes.proTypes.length > 0 ? { proTypeList: treeNodes.proTypes, groupList: filterCheckedKeys } : { groupList: filterCheckedKeys };
-          setParameter(params);
-          // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-          dispatch({
-            type: 'roleManagement/getProCodeByConditions',
-            payload: params
-          }).then(res => {
-            const proCodes = res.data;
-            setSelectedRowKeys(proCodes);
-          })
-        }
+        setGroupCheckTreePro(checkedKeys);
         break;
       default:
         break;
@@ -1034,28 +919,27 @@ const Index = ({
     }
 
     const chooseAuth = cloneDeep(dataPage);
-    const userRole = chooseAuth.userRole;// id为3，标识：[产品中心]对应的默认组件；id为4，标识：[底稿系统]对应的默认组件（不应过滤掉）
+    const userRole = chooseAuth.userRole.filter(item => item.id !== 3 && item.id !== 4);
     const chooseProductType = checkTreePro.filter(item => !item.includes('-'));
     const chooseProductGroup = checkGroupTreePro.filter(item => !item.includes('-'));
     chooseAuth.strategyCodes = saveAuthorizationStrategy;
     chooseAuth.currentSysId = sysId;
 
-    const boolAnd = // boolAnd为true, 标识：产品、产品类型、我的分组全不选
+    const boolAnd =
       selectedRowKeys.length === 0 &&
       chooseProductType.length === 0 &&
       chooseProductGroup.length === 0;
 
-    const boolOr = // boolOr为true, 标识：产品、产品类型、我的分组至少选其一
+    const boolOr =
       selectedRowKeys.length !== 0 ||
       chooseProductType.length !== 0 ||
       chooseProductGroup.length !== 0;
 
-    // 不选功能组件  不选产品
+    // 不选角色  不选产品
     if (userRole.length === 0 && boolAnd) {
       // 底稿系统特殊处理
       chooseAuth.projects.projects = [];// 右侧表格选中的项目集合
       chooseAuth.projects.proType = [];// 左侧树选中的项目id
-
       dispatch({
         type: 'userManagement/SAVE_QUICK_AUTH_FETCH',
         payload: {
@@ -1065,7 +949,7 @@ const Index = ({
       });
     }
 
-    // 不选功能组件  只选产品
+    // 不选角色  只选产品
     if (userRole.length === 0 && boolOr) {
       tempRole.proCodes = selectedRowKeys;
       tempRole.proTypes = chooseProductType;
@@ -1088,18 +972,20 @@ const Index = ({
         payload: chooseAuth,
       });
     }
-    // 只选功能组件  不选产品
-    // 选功能组件  选产品
+
+    // 只选角色  不选产品
+    // 选角色  选产品
     if ((userRole.length !== 0 && boolAnd) || (userRole.length !== 0 && boolOr)) {
-      if (sysId === '4') {// 底稿系统（后台只会关注参数projects)需特殊处理
+      if (sysId === '4') {// 底稿系统需特殊处理
         chooseAuth.projects.projects = selectedRowKeys;
         chooseAuth.projects.proType = chooseProductType;
       }
-      userRole.forEach(item => {// 产品中心，后台只会关注参数userRole
+      userRole.forEach(item => {
         item.proCodes = selectedRowKeys;
         item.proTypes = chooseProductType;
         item.groups = chooseProductGroup;
       });
+
       dispatch({
         type: 'userManagement/SAVE_QUICK_AUTH_FETCH',
         payload: chooseAuth,
@@ -1125,7 +1011,6 @@ const Index = ({
     window.open('/authority/functionManagement/detail?isDetail=0', "_blank");
   }
 
-
   const productInfo = [
     {
       name: 'sysId',
@@ -1135,8 +1020,9 @@ const Index = ({
       // option: attributionSystem || [],
       option: attributionSystem?.filter(item => GET_USER_SYSID.includes(item.code)),
       width: 24,
-      config: { onChange: e => setSysId(e.target.value) },
+      config: { onChange: e => {setSysId(e.target.value);setSpinLoading(true)} },
       extra: (
+      <Spin spinning={spinLoading}>
         <SubRole
           sysId={sysId}
           // 根据归属系统查询可用角色组件集合
@@ -1145,16 +1031,11 @@ const Index = ({
           selectTagList={selectTagList}
           showModal={() => setAuthModal(true)}
         />
+        </Spin>
       ),
       initialValue: sysId,
     },
   ];
-
-  function handleSizeChange(currentPage, size) {
-    setPageSize(size);
-    setCurrent(1);
-    setCurrent2(1);
-  }
 
   return (
     <div className={styles.cont}>
@@ -1260,20 +1141,20 @@ const Index = ({
                             color={color}
                           >
                             {tag.name}
-                            <Icon
+                            {/* <Icon
                               onClick={e => {
                                 e.stopPropagation();
                                 closeTage(tag, index);
                               }}
                               type="close"
-                            />
+                            /> */}
                           </Tag>
                         </span>
                       );
                     })}
                 </div>
               </Card>
-              <Card bordered loading={loading} className={styles.roleAllStyle}>
+              {/* <Card bordered loading={loading} className={styles.roleAllStyle}>
                 <div style={{ float: 'left' }}>功能组件：</div>
                 <div
                   style={{ display: tags && tags['02'].length > 7 ? 'block' : 'none' }}
@@ -1309,9 +1190,8 @@ const Index = ({
                       );
                     })}
                 </div>
-              </Card>
-              {/* 当归属系统是产品中心，或底稿系统时，渲染此代码 */}
-              {(sysId === '1' || sysId === '4') && (
+              </Card> */}
+              {(sysId === '1' || sysId === '4' || sysId === '12') && (
                 <div style={{ border: '1px solid #e8e8e8', display: 'flex' }}>
                   <div style={{ background: '#fff', width: 200 }}>
                     <div className={styles.slider} id="slider">
@@ -1324,7 +1204,7 @@ const Index = ({
                                   placeholder="请输入产品代码或产品名称"
                                   allowClear={true}
                                   onSearch={value => {
-                                    if (sysId === '1') {
+                                    if (sysId === '1' || sysId === '12') {
                                       setProCondition(value);
                                     }
                                     if (sysId === '4') {
@@ -1340,28 +1220,32 @@ const Index = ({
 
                           <Tree
                             checkable
-                            onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'proType')}
-                            onSelect={(selectedKeys, e) => onTreeSelect(selectedKeys, e, 'proType')}
+                            onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'Tree')}
+                            onSelect={(selectedKeys, info) =>
+                              onTreeSelect(selectedKeys, info, 'proType')
+                            }
                             selectedKeys={selectedKeys}
                             checkedKeys={checkTreePro}
                           >
-                            {sysId === '1' && renderTreeNodes(SAVE_PRO_TREE, 'spare')}
+                            {(sysId === '1' || sysId === '12') && renderTreeNodes(SAVE_PRO_TREE, 'spare')}
                             {sysId === '4' && renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
                           </Tree>
                           {/* 底稿没有处理分组功能 */}
-                          {sysId === '1' && (
+                          {/* {(sysId === '1' || sysId === '12') && (
                             <Tree
                               checkable
                               onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'myGroup')}
-                              onSelect={(selectedKeys, e) => onTreeSelect(selectedKeys, e, 'myGroup')}
+                              onSelect={(selectedKeys, info) =>
+                                onTreeSelect(selectedKeys, info, 'myGroup')
+                              }
                               selectedKeys={selectedKeys}
                               checkedKeys={checkGroupTreePro}
                             >
                               {renderTreeNodes(myGroup, 'value')}
                             </Tree>
-                          )}
+                          )} */}
                         </Col>
-                        {sysId === '1' && [
+                        {/* {(sysId === '1' || sysId === '12') && [
                           <Col span={8}>
                             <div className={styles.box} onClick={() => setAddNewGroupModal(true)}>
                               <Tooltip title="添加分组">
@@ -1402,7 +1286,7 @@ const Index = ({
                               </Tooltip>
                             </div>
                           </Col>,
-                        ]}
+                        ]} */}
                       </Row>
                     </div>
                   </div>
@@ -1413,18 +1297,15 @@ const Index = ({
                       columns={columns}
                       dataSource={SAVE_PRO_PAGINATION?.rows ?? []}
                       loading={GET_PRO_PAGINATION_FETCH_LOADING}
-                      pagination={{
-                        showSizeChanger: true,
-                        pageSizeOptions: ['10', '20', '40', '80', '10000'],
-                        onShowSizeChange: handleSizeChange,
-                        onChange: handleStandardTableChange,// handleStandardTableChange必须作为pagination的属性，不能直接作为Table的属性，否则分页会有问题
-                        showQuickJumper: true,
-                        current,
-                        pageSize: pageSize,
-                        total: SAVE_PRO_PAGINATION?.total ?? 0,
-                        showTotal: () => `共 ${SAVE_PRO_PAGINATION?.total} 条数据`,
-                      }}
+                      pagination={false}
+                      // {
+                      //   showQuickJumper: true,
+                      //   current,
+                      //   total: SAVE_PRO_PAGINATION?.total ?? 0,
+                      //   showTotal: () => `共 ${SAVE_PRO_PAGINATION?.total} 条数据`,
+                      // }
                       rowSelection={rowSelection}
+                      // onChange={handleStandardTableChange}
                     />
                   </div>
                 </div>
@@ -1486,7 +1367,7 @@ const Index = ({
         />
       )}
       <Modal
-        zIndex={100}
+        zIndex={4}
         key="4"
         destroyOnClose
         style={{ width: '90%' }}
@@ -1548,7 +1429,6 @@ const Index = ({
             type: 'roleManagement/SAVE_TEMP_PRO',
             payload: [],
           });
-          setLeftTreeValue('');
         }}
         mask={false}
       >
@@ -1572,13 +1452,8 @@ const Index = ({
                 treeDefaultExpandAll
                 value={leftTreeValue}
                 onChange={e => {
-                  if (e) {// 防止清空查询条件时，给后台传 [null]
-                    setParameter2({ proTypeList: [e] });
-                  } else {
-                    setParameter2({});// 清空查询条件时，赋初始值
-                  }
+                  setParameter2({ proTypeList: [e] });
                   setLeftTreeValue(e);
-                  setCurrent2(1);
                 }}
               >
                 {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
@@ -1619,11 +1494,29 @@ const Index = ({
                   }
                 },
               }}
+              onChange={handleStandardTableChange2}
             />
           </Col>
           <Col span={1} />
           <Col span={11} style={{ position: 'relative' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+              {/* <Search
+                allowClear
+                placeholder="请输入产品代码或产品名称"
+                onSearch={value => console.log(value)}
+                style={{ width: 200 }}
+              />
+                           <TreeSelect
+                allowClear
+                style={{ width: 200 }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                placeholder="请选择"
+                treeDefaultExpandAll
+                value={rightTreeValue}
+                onChange={e => setRightTreeValue(e)}
+              >
+                {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
+              </TreeSelect> */}
             </div>
             <div
               style={{
@@ -1717,13 +1610,8 @@ const Index = ({
                   treeDefaultExpandAll
                   value={leftTreeValue}
                   onChange={e => {
-                    if (e) {// 防止清空查询条件时，给后台传 [null]
-                      setParameter2({ proTypeList: [e] });
-                    } else {
-                      setParameter2({});// 清空查询条件时，赋初始值
-                    }
+                    setParameter2({ proTypeList: [e] });
                     setLeftTreeValue(e);
-                    setCurrent2(1);
                   }}
                 >
                   {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
@@ -1762,11 +1650,18 @@ const Index = ({
                     }
                   },
                 }}
+                onChange={handleStandardTableChange2}
               />
             </Col>
             <Col span={1} />
             <Col span={11} style={{ position: 'relative' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+                {/*                <Search
+                  allowClear
+                  placeholder="请输入产品代码或产品名称"
+                  onSearch={value => console.log(value)}
+                  style={{ width: 200 }}
+                /> */}
               </div>
               <div
                 style={{

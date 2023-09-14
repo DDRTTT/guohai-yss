@@ -1,16 +1,16 @@
 /**
  * 产品看板-查看产品-产品数据-监管要素
  */
-import React, { useContext, useEffect } from 'react';
-import { Table, Button, message, Row, Col, Tooltip } from 'antd';
-import { connect, routerRedux } from 'dva';
+import React, { useContext } from 'react';
+import { Row, Col } from 'antd';
+import { connect } from 'dva';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import MyContext from './myContext';
 import styles from './index.less';
 import { handleAddCustomTooltip, handleChangeThousands } from './baseFunc';
 
-const ProductMessageRegulationConstituents = ({ dispatch, productBillboard: { RC } }) => {
-  const { proCodeArguments, codeListCodeData, codeListData } = useContext(MyContext); // 子组件接受的数据
+const ProductMessageRegulationConstituents = ({ productBillboard: { RC } }) => {
+  const { codeListCodeData, codeListData } = useContext(MyContext); // 子组件接受的数据
 
   const fispItemInfo = {
     privateFund: '是否私募基金',

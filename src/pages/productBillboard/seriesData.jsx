@@ -13,8 +13,6 @@ import SubordinateSeries from './subordinateSeries';
 import SeriesProduct from './seriesProduct';
 import { handleAddCustomTooltip } from './baseFunc';
 import { PageContainers } from '@/components';
-import Gird from '@/components/Gird';
-import TimeLine from './timeLine';
 
 const { TabPane } = Tabs;
 
@@ -414,100 +412,15 @@ const SeriesData = ({ dispatch, productBillboard: { productBillboardServicesOver
    *产品数据渲染
    */
   const handleAddData = (data, wordsChange) => {
-    // console.log('data',"---",data);
-    // console.log('productData',"---",productData);
-    console.log("codeListData", "---", codeListData);
-    // console.log("investmentManagerObj","---",investmentManagerObj);
-
-    const drawerConfig = () => {
-      return [
-        { label: '系列全称', value: 'proName', rule: !(data.proName) },
-        { label: '系列号', value: 'proCode', rule: !(data.proCode) },
-        {
-          label: '管理人',
-          value: 'proCustodian',
-          type: 'select',
-          option: proCustodianList.current,
-          optionConfig: { name: 'orgName', code: 'id' },
-          handle: () => {
-            handleGoTrusBankPages(data.proCustodian)
-          },
-          rule: !(data.proCustodian)
-        },
-        { label: '产品类型', value: 'proTypeName', rule: !(data.proTypeName) },
-        {
-          label: '运作方式',
-          value: 'operationWay',
-          optionType: "object",
-          option: codeListData,
-          rule: !(data.operationWay)
-        },
-        {
-          label: '风险等级',
-          value: 'proRisk',
-          optionType: "object",
-          option: codeListData,
-          rule: !(data.proRisk)
-        },
-        {
-          label: '投资类型',
-          value: 'proArchivalType',
-          optionType: "object",
-          option: codeListData,
-          rule: !(data.proArchivalType)
-        },
-        {
-          label: '产品归属部门',
-          value: 'proBelongDepartment',
-          type: 'multiple',
-          option: orgBelongObj.current,
-          optionConfig: { name: 'deptName', code: 'id' },
-          rule: !(data.proBelongDepartment)
-        },
-        {
-          label: '投资经理',
-          value: 'investmentManager',
-          type: 'multiple',
-          option: investmentManagerObj.current,
-          optionConfig: { name: 'name', code: 'empNo' },
-          rule: !(data.investmentManager)
-        },
-        {
-          label: '是否结构化产品',
-          value: 'isStructpro',
-          type: 'select',
-          option: [{ code: '0', name: '否' }, { code: '1', name: '是' }],
-          rule: !(data.isStructpro)
-        },
-        {
-          label: '是否允许自有资金参与',
-          value: 'canOwnfundParticipation',
-          type: 'select',
-          option: [{ code: '0', name: '否' }, { code: '1', name: '是' }],
-          rule: !(data.canOwnfundParticipation)
-        },
-
-        { label: '销售机构名称', value: 'sellerNameFull', rule: !(data.sellerNameFull) },
-        {
-          label: '客户类型',
-          value: 'customerType',
-          optionType: "object",
-          option: codeListData,
-          rule: !(data.customerType)
-        },
-        { label: '上级系列', value: 'upstairsSeries', rule: !(data.upstairsSeries) },
-      ]
-    }
     const arr = [];
     if (data) {
       for (const key in data) {
-        // console.log(wordsChange(data[key], productData[key]),"============");
         if (typeof productData[key] !== 'undefined') {
           arr.push(
             <Col span={6} className={styles.titleRowColBody}>
               <span className={styles.dataName}>{productData[key]}</span>
               {handleAddCustomTooltip(wordsChange(data[key], productData[key]), 10)}
-            </Col>
+            </Col>,
           );
         } else if (typeof productTrusBank[key] !== 'undefined') {
           arr.push(
@@ -531,12 +444,18 @@ const SeriesData = ({ dispatch, productBillboard: { productBillboardServicesOver
       }
     }
     return (
-      <div className={styles.bodyData} style={{ height: 'calc(100vh - 136px)', overflowY: 'auto' }}>
+      <div className={styles.bodyData} style={{ height: 'calc(100vh - 200px)', overflowY: 'auto' }}>
         <Row>
           <h2 style={{ fontSize: '24px', paddingBottom: '10px', fontWeight: 'bold' }}>
             {handleIfProductOverviewTitle('proName', 'proCode')}
           </h2>
-          <Gird config={drawerConfig()} info={data} />
+          {arr}
+          <Button
+            style={{ position: 'relative', left: '18%', bottom: '135px' }}
+            onClick={handleGoProductBillboard}
+          >
+            返回
+          </Button>
         </Row>
         {handleAddTabs()}
       </div>
@@ -570,11 +489,6 @@ const SeriesData = ({ dispatch, productBillboard: { productBillboardServicesOver
         <TabPane tab="评审记录" key="3" className={styles.tabsTabPane}>
           <MyContext.Provider value={{ proCodeArguments }}>
             <ReviewRecord />
-          </MyContext.Provider>
-        </TabPane>
-        <TabPane tab="时间轴" key="4" className={styles.tabsTabPane}>
-          <MyContext.Provider value={{ proCodeArguments }}>
-            <TimeLine />
           </MyContext.Provider>
         </TabPane>
       </Tabs>

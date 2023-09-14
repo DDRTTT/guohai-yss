@@ -41,9 +41,7 @@ const Detail = ({
             )}
           </div>
           <hr style={{ opacity: 0.6 }} />
-          <div style={{ padding: '20px', minHeight: '300px' }} dangerouslySetInnerHTML={{
-            __html: `<p>${data.content || ''}</p>`
-          }}></div>
+          <p style={{ padding: '20px', minHeight: '300px' }}>{data.content || ''}</p>
           {name[1] === '业务提醒' ? (
             <p>
               <div

@@ -14,7 +14,6 @@ import { Table } from '@/components';
 import List from '@/components/List';
 import { eutrapelia, tableRowConfig } from '@/pages/investorReview/func';
 import { setSession, USER_INFO } from '@/utils/session';
-import { download } from '@/utils/download';
 
 const { confirm } = Modal;
 
@@ -63,8 +62,8 @@ const Index = ({
   const [associatedJobs, setAssociatedJob] = useState([]);
   // 数据策略组件
   const [strategyCodes, setStrategyCodes] = useState([]);
-  // 批量冻结和解冻是否可操作（当多选项中，但凡有一项已注销的用户，则值置为true）
-  const [hasWithdraw, setHasWithdraw] = useState(false);
+  // // 当前record的sys集合
+  // const [sysIdMap, setSysIdMap] = useState([]);
 
   const cloneDeepAuthorizationStrategy = cloneDeep(authorizationStrategy);
 
@@ -152,6 +151,11 @@ const Index = ({
       type: 'roleManagement/fetchGetAuthTree',
       payload: sysId,
     });
+    // 根据归属系统查询可用的角色组件集合
+    dispatch({
+      type: 'userManagement/queryBySys',
+      payload: sysId,
+    });
     // 所属部门
     dispatch({
       type: 'userManagement/fetchGetDept',
@@ -165,14 +169,6 @@ const Index = ({
     });
     setFieldsValue({ sysId });
   }, [sysId]);
-
-  useEffect(() => {// 修复0617全系统自测bug: 【ID1006354】用户管理-接口报错（接口yss-base-admin/rolecom/queryBySys 前端参数sysIds为空，需将接口yss-base-admin/user/getUserSysIds返回的数据，作为sysIds的值传入）
-    // 根据归属系统查询可用的角色组件集合
-    dispatch({
-      type: 'userManagement/queryBySys',
-      payload: GET_USER_SYSID,
-    });
-  }, [sysId, GET_USER_SYSID])
 
   useEffect(() => {
     if (!userauthed || JSON.stringify(userauthed) === '{}') return;
@@ -305,31 +301,6 @@ const Index = ({
     });
   };
 
-  // 注销用户
-  const handleWithdraw = payload =>
-    dispatch({
-      type: `userManagement/handleUserWithdraw`,
-      payload,
-    }).then(bool => {
-      if (bool) {
-        handleList();
-        handleResetSelect();
-      }
-    });
-
-  const showWithdrawConfirm = id => {
-    confirm({
-      title: '确认注销吗?',
-      content: '注销为不可逆操作',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        handleWithdraw({ freeze: 2, userIds: id });
-      },
-    });
-  };
-
   const handleOperaAuthorization = record => {
     const { sysId, id, orgId } = record;
     dispatch({
@@ -403,7 +374,6 @@ const Index = ({
       key: 'mobile',
       ...tableRowConfig,
       sorter: false,
-      width: 130,
     },
     {
       title: '邮箱',
@@ -418,21 +388,20 @@ const Index = ({
       key: 'deleted',
       ...tableRowConfig,
       sorter: false,
-      width: 110,
       render: (text, record) =>
-        eutrapelia(record.deleted === 0 ? (record.freezed === 1 ? '冻结' : record.freezed === 2 ? '注销' : '正常') : '删除'),
+        eutrapelia(record.deleted === 0 ? (record.freezed === 1 ? '冻结' : '正常') : '删除'),
     },
     {
       title: '操作',
       dataIndex: 'operating',
       key: 'operating',
-      width: '320px',
+      width: '300px',
       align: 'center',
       fixed: 'right',
       render: (text, record) => {
         return (
           <span>
-            <span style={{ margin: 5 }}>
+            <span className={styles.tabBtnStyle}>
               <a
                 onClick={() => {
                   router.push(
@@ -445,12 +414,12 @@ const Index = ({
             </span>
             {record.freezed === 0 && [
               <Action key="userManagement:changeRole" code="userManagement:changeRole">
-                <span style={{ margin: 5 }}>
+                <span className={styles.tabBtnStyle}>
                   <a onClick={() => handleOperaAuthorization(record)}>角色变更</a>
                 </span>
               </Action>,
               <Action key="userManagement:reset" code="userManagement:reset">
-                <span style={{ margin: 5 }}>
+                <span className={styles.tabBtnStyle}>
                   <Popconfirm title="确认重置密码?" onConfirm={() => restUserCode(record)}>
                     <a>重置密码</a>
                   </Popconfirm>
@@ -460,27 +429,20 @@ const Index = ({
 
             <Action key="userManagement:freeze" code="userManagement:freeze">
               {record.freezed === 0 && (
-                <span style={{ margin: 5 }}>
+                <span className={styles.tabBtnStyle}>
                   <a onClick={() => handleFreeze({ freeze: 1, userIds: record.id })}>冻结</a>
                 </span>
               )}
               {record.freezed === 1 && (
-                <span style={{ margin: 5 }}>
+                <span className={styles.tabBtnStyle}>
                   <a onClick={() => handleFreeze({ freeze: 0, userIds: record.id })}>解冻</a>
                 </span>
               )}
             </Action>
-            <Action key="userManagement:withdraw" code="userManagement:withdraw">
-              {record.freezed !== 2 && (
-                <span style={{ margin: 5 }}>
-                  <a onClick={() => showWithdrawConfirm(record.id)}>注销</a>
-                </span>
-              )}
-            </Action>
             <Action key="userManagement:delMember" code="userManagement:delMember">
-              <span style={{ margin: 5 }}>
+              <span className={styles.tabBtnStyle}>
                 <a
-                  style={{ color: '#D9001B' }}
+                  className={styles.delBtn}
                   onClick={() => showDeleteConfirm({ list: record.id })}
                 >
                   删除
@@ -496,8 +458,6 @@ const Index = ({
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
-      const flag = selectedRows.some(item => item.freezed === 2);
-      setHasWithdraw(flag);
       setSelectedRowKeys(selectedRowKeys);
       setSelectedRows(selectedRows);
     },
@@ -530,17 +490,6 @@ const Index = ({
         name: 'orgName',
         code: 'id',
       },
-    },
-    {
-      name: 'freezed',
-      label: '使用状态',
-      type: 'select',
-      option: [
-        { code: 0, name: '正常' },
-        { code: 1, name: '冻结' },
-        { code: 2, name: '注销' }
-      ],
-      readSet: { name: 'name', code: 'code' },
     },
   ];
 
@@ -604,26 +553,6 @@ const Index = ({
     setAssociatedFunction([]);
   };
 
-  // 时间戳获取
-  function handleGetDate() {
-    const d = new Date();
-    const ye = d.getFullYear();
-    const mo = (d.getMonth() + 1).toString().padStart(2, '0');
-    const da = d.getDate().toString().padStart(2, '0');
-    const time = ye + mo + da;
-    return time;
-  };
-
-  // 导出-按查询条件
-  function handleExport() {
-    download('/ams/yss-base-admin/user/exportExcel?', {
-      body: { ...searchForm, queryStr },
-      name: `用户管理信息_${handleGetDate()}`,
-      method: 'GET',
-      fileType: '.xlsx',
-    });
-  };
-
   return (
     <>
       <div className={styles.content}>
@@ -644,16 +573,9 @@ const Index = ({
             handleList();
           }}
           extra={
-            <>
-              <Button onClick={handleExport} type="primary" className={styles.defaultButton} style={{ marginRight: 10 }}>
-                导出
+              <Button onClick={handleNewMember} type="primary" className={styles.defaultButton}>
+                新建用户
               </Button>
-              <Action key="userManagement:add" code="userManagement:add">
-                <Button onClick={handleNewMember} type="primary" className={styles.defaultButton}>
-                  新建用户
-                </Button>
-              </Action>
-            </>
           }
           tableList={
             <>
@@ -668,7 +590,7 @@ const Index = ({
                 pagination={paginationProps}
                 scroll={{ x: columns.length * 200 }}
               />
-              <div style={{ marginTop: -45 }}>
+              <div className={styles.addTable}>
                 <Dropdown
                   overlay={
                     <Menu onClick={handleMenuClick}>
@@ -678,10 +600,10 @@ const Index = ({
                         </Menu.Item>
                       )}
                       {ActionBool('userManagement:freeze') && [
-                        <Menu.Item key="1" className={styles.action} disabled={hasWithdraw}>
+                        <Menu.Item key="1" className={styles.action}>
                           冻结
                         </Menu.Item>,
-                        <Menu.Item key="2" className={styles.action} disabled={hasWithdraw}>
+                        <Menu.Item key="2" className={styles.action}>
                           解冻
                         </Menu.Item>,
                       ]}
@@ -689,7 +611,7 @@ const Index = ({
                   }
                   placement="topLeft"
                 >
-                  <Button style={{ marginRight: 10, width: 100, height: 26 }}>
+                  <Button className={styles.batch}>
                     批量操作
                     <Icon type="up" />
                   </Button>

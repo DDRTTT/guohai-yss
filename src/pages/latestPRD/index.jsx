@@ -10,21 +10,18 @@ import {
   Form,
   Icon,
   Input,
-  Menu,
   Row,
   Select,
-  Table,
   message,
   Modal,
   Checkbox,
   DatePicker,
-  TreeSelect,
   Tooltip,
   Layout,
   Breadcrumb,
 } from 'antd';
+import { Table } from '@/components';
 import { routerRedux } from 'dva/router';
-import SelfTree from '@/components/SelfTree';
 import { downloadNoToken, filePreview } from '@/utils/download';
 import { cloneDeep } from 'lodash';
 import styles from '@/pages/lifeCyclePRD/index.less';

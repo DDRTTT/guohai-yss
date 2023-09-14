@@ -58,12 +58,11 @@ export default class addRole extends PureComponent {
         if (newV.actionsList && newV.actionsList.length > 0) {
           dispatch({
             type: 'role/addRole',
-            payload: { ...newV, sysId: firstSysId, checked: 1 },
+            payload: { ...newV, sysId: firstSysId },
           }).then(res => {
-            this.setState({ addRoleLoading: false });
-            if (res && res.status === 200 && res.data?.status === '0000') {
+            if (res && res.status === 200) {
               this.cancelQuotationOpt();
-              this.setState({ selectedActions: [] });
+              this.setState({ addRoleLoading: false, selectedActions: [] });
             }
           });
         } else {

@@ -366,14 +366,14 @@ class Index extends Component {
       } else {
         message.warn(`${info.file.name} 导入失败，请稍后再试`);
         this.setState({
-          upLoading: false,
+          uploadBtnLoading: false,
         });
       }
     }
     if (info.file.status === 'error') {
       message.warn(`${info.file.name} 导入失败，请稍后再试`);
       this.setState({
-        upLoading: false,
+        uploadBtnLoading: false,
       });
     }
   };

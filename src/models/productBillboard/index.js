@@ -46,8 +46,6 @@ import {
   getStakeholderAPI,
   getStatisticsAPI,
   getSubordinateSeriesAPI,
-  reqRegulatoryElements,
-  reqAllUsers,
 } from '@/services/productBillboard/index';
 import { message } from 'antd';
 
@@ -111,7 +109,7 @@ export default {
       }
     },
 
-    *getProTypeFunc({ }, { call, put }) {
+    *getProTypeFunc({}, { call, put }) {
       const response = yield call(getProTypeAPI);
       if (response && response.status === 200) {
         yield put({
@@ -175,7 +173,7 @@ export default {
     },
 
     // 获取产品全称/代码下拉列表数据
-    *getProNameAndCodeFunc({ }, { call, put }) {
+    *getProNameAndCodeFunc({}, { call, put }) {
       const response = yield call(getProNameAndCodeAPI);
       if (response && response.status === 200) {
         yield put({
@@ -187,7 +185,7 @@ export default {
     },
 
     // 获取系列全称/号下拉列表数据
-    *getSeriesNameFunc({ }, { call, put }) {
+    *getSeriesNameFunc({}, { call, put }) {
       const response = yield call(getSeriesNameCodeAPI);
       if (response && response.status === 200) {
         yield put({
@@ -199,7 +197,7 @@ export default {
     },
 
     // 获取产品看板阶段概述信息
-    *getProductStageFunc({ }, { call, put }) {
+    *getProductStageFunc({}, { call, put }) {
       const response = yield call(getProductStageAPI);
       if (response && response.status === 200) {
         yield put({
@@ -319,7 +317,7 @@ export default {
         message.success('修改成功!', 1);
         if (callback) callback(response.data);
       } else {
-        message.success(`修改成功!  提示信息 : ${response.message}`, 1);
+        message.error(response.message, 1);
       }
     },
 
@@ -693,36 +691,6 @@ export default {
       } else {
       }
     },
-
-    // 获取监管要素(表格信息)
-    *getRegulatoryElements({ payload, callback }, { call, put }) {
-      const res = yield call(reqRegulatoryElements, payload);
-      if (res && res.status === 200) {
-        return res.data
-      } else {
-        if (res.message) {
-          message.warn(res.message);
-        } else {
-          message.warn('监管要素查询失败')
-        }
-      }
-    },
-
-    // 获取所有用户信息-监管要素操作人id转name
-    *getAllUsers({ payload, callback }, { call, put }) {
-      const res = yield call(reqAllUsers, payload);
-      if (res && res.status === 200) {
-        return res.data
-      } else {
-        if (res.message) {
-          message.warn(res.message);
-        } else {
-          console.log('接口yss-base-admin/user/users-all请求失败')
-        }
-      }
-    },
-
-
   },
 
   reducers: {

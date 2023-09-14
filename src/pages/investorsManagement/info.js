@@ -17,11 +17,11 @@ import {
   Row,
   Select,
   Spin,
-  Table,
   Tabs,
   TreeSelect,
   Upload,
 } from 'antd';
+import { Table } from '@/components';
 import BaseCrudComponent from '@/components/BaseCrudComponent';
 import styles from './index.less';
 import moment from 'moment';

@@ -107,7 +107,7 @@ class Index extends Component {
           ]}
         />
         <Card title={`${title}产品要素-表结构信息`}>
-          <div style={{ padding: '0 40px' }}>
+          <div className={styles.structCard}>
             <Spin spinning={loading}>
               <Form>
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -229,15 +229,15 @@ class Index extends Component {
                   </Col>
                 </Row>
 
-                <div style={{ marginBottom: 10 }}>
+                <div className={styles.structDiv}>
                   <Row>
-                    <Col span={24} style={{ marginBottom: 10 }} style={{ textAlign: 'right' }}>
-                      <Button style={{ marginRight: 8 }} onClick={this.jumpBack}>
+                    <Col span={24} className={styles.structcol}>
+                      <Button className={styles.structBtn} onClick={this.jumpBack}>
                         取消
                       </Button>
                       <Button
                         type="primary"
-                        style={{ marginRight: 8 }}
+                        className={styles.structBtn}
                         loading={loading}
                         onClick={this.save}
                       >

@@ -1,8 +1,6 @@
-import React, { useState, useEffect, Component } from 'react';
-import { Tree, Input, Icon, Tooltip, message, Menu, Dropdown } from 'antd';
+import React, { Component } from 'react';
+import { Icon, Input, message, Tooltip, Tree } from 'antd';
 import { cloneDeep } from 'lodash';
-import styles from './index.less';
-import { connect } from 'dva';
 // 共享状态
 const { TreeNode } = Tree;
 const { Search } = Input;
@@ -285,7 +283,7 @@ class Index extends Component {
       dataSource: info.node.props.dataRef.source,
       applicability: info.node.props.dataRef.applicability,
       title: info.node.props.dataRef.title,
-      isLeaf: info.node.props.dataRef.children ? false : true,
+      isLeaf: !info.node.props.dataRef.children,
     };
     if (curCheckedKeys.length > 1 || !curCheckedKeys.length) {
       clickData = {};
@@ -301,7 +299,7 @@ class Index extends Component {
         orderNum: newArr[0].props.dataRef.orderNum,
         dataSource: newArr[0].props.dataRef.source,
         applicability: newArr[0].props.dataRef.applicability,
-        isLeaf: newArr[0].props.dataRef.children ? false : true,
+        isLeaf: !newArr[0].props.dataRef.children,
       };
     }
     this.props.getClickMsg(this, clickData);
@@ -319,7 +317,7 @@ class Index extends Component {
         key: item.key,
         value: item.props.dataRef.source,
         applicability: item.props.dataRef.applicability,
-        isLeaf: item.props.dataRef.children ? false : true,
+        isLeaf: !item.props.dataRef.children,
       });
     });
 
@@ -335,7 +333,7 @@ class Index extends Component {
         orderNum: info.selectedNodes[0].props.dataRef.orderNum,
         dataSource: info.selectedNodes[0].props.dataRef.source,
         applicability: info.selectedNodes[0].props.dataRef.applicability,
-        isLeaf: info.selectedNodes[0].props.dataRef.children ? false : true,
+        isLeaf: !info.selectedNodes[0].props.dataRef.children,
       };
     }
     this.props.getClickMsg(this, newData);

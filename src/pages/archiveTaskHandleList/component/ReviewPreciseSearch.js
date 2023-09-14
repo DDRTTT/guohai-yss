@@ -1,3 +1,7 @@
+/**
+ * 精确搜索
+ * author: jiaqiuhua
+ * * */
 import React from 'react';
 import { Button, Col, Row, Form, Select, Icon } from 'antd';
 import { handleFilterOption } from '@/pages/archiveTaskHandleList/util';
@@ -30,23 +34,23 @@ const PreciseSearch = ({
     data = [],
     label = '',
   }) => (
-    <Form.Item label={ label } { ...formItemLayout }>
-      { getFieldDecorator(name)(
+    <Form.Item label={label} {...formItemLayout}>
+      {getFieldDecorator(name)(
         <Select
-          placeholder={ `请选择${label}` }
-          mode={ mode }
-          showArrow={ showArrow }
-          allowClear={ allowClear }
-          filterOption={ handleFilterOption }
+          placeholder={`请选择${label}`}
+          mode={mode}
+          showArrow={showArrow}
+          allowClear={allowClear}
+          filterOption={handleFilterOption}
         >
-          { name &&
+          {name &&
             data.map(item => (
-              <Select.Option key={ `${item.code || item.id}` } title={ item.name || item.value }>
-                { item.name || item.value }
+              <Select.Option key={`${item.code || item.id}`} title={item.name || item.value}>
+                {item.name || item.value}
               </Select.Option>
-            )) }
+            ))}
         </Select>,
-      ) }
+      )}
     </Form.Item>
   );
   // select下拉数据源
@@ -152,31 +156,31 @@ const PreciseSearch = ({
 
   return (
     <Form>
-      <Row gutter={ { md: 8, lg: 24, xl: 48 } }>
-        { formSelectData.map((item, index) => (
-          <Col span={ 8 } key={ index }>
+      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        {formSelectData.map((item, index) => (
+          <Col span={8} key={index}>
             <FormSelect
-              label={ item.label }
-              name={ item.name }
-              data={ formSelectDataObject[item.name] }
+              label={item.label}
+              name={item.name}
+              data={formSelectDataObject[item.name]}
             />
           </Col>
-        )) }
+        ))}
       </Row>
       <Row
-        gutter={ { md: 8, lg: 24, xl: 48 } }
+        gutter={{ md: 8, lg: 24, xl: 48 }}
         type="flex"
         justify="end"
-        style={ { marginBottom: '24px' } }
+        style={{ marginBottom: '24px' }}
       >
-        <Col md={ 8 } style={ { textAlign: 'right' } }>
-          <Button type="primary" onClick={ handleSearch }>
+        <Col md={8} style={{ textAlign: 'right' }}>
+          <Button type="primary" onClick={handleSearch}>
             查询
           </Button>
-          <Button style={ { margin: '0 23px 0 10px' } } onClick={ handleReset }>
+          <Button style={{ margin: '0 23px 0 10px' }} onClick={handleReset}>
             重置
           </Button>
-          <a onClick={ handleToggle }>
+          <a onClick={handleToggle}>
             收起
             <Icon type="up" />
           </a>

@@ -70,6 +70,7 @@ export default class OAdetail extends BaseCrudComponent {
       payload: {},
     });
   }
+
   /**
    * 获取当前机构全部用户列表（OA）
    * @method getOAPersonList
@@ -81,6 +82,7 @@ export default class OAdetail extends BaseCrudComponent {
       payload: {},
     });
   }
+
   /**
    * 获取审批人下拉列表
    * @method getOAPersonList
@@ -92,6 +94,7 @@ export default class OAdetail extends BaseCrudComponent {
       payload: {},
     });
   }
+
   /**
    * 获取产品实名注册子流程模块代码和名称的映射关系
    * @method getOAPersonList
@@ -103,6 +106,7 @@ export default class OAdetail extends BaseCrudComponent {
       payload: {},
     });
   }
+
   // 详情数据查询
   getDetailForm() {
     this.setState({

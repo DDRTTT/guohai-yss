@@ -19,107 +19,69 @@ import request from '@/utils/request';
 const Option = Select.Option;
 const ApplyModalForm = Form.create({ name: 'form_in_modal' })(
   class extends React.Component {
-      state = {
-        applyList: [],
-        tradingPlaces: '',
-        otherTradingPlaces: '',
-        declareTime: '',
-        flag: 'add',
-        modifyIndex: -1,
-        columns:[
-          {
-            key: 'tradingPlaces',
-            title: '交易场所',
-            dataIndex: 'tradingPlaces',
-            align: 'center',
-            ellipsis: {
-              showTitle: false,
-            },
-            render: tradingPlaces => this.getTradingPlaces(tradingPlaces),
+    state = {
+      applyList: [],
+      tradingPlaces: '',
+      otherTradingPlaces: '',
+      declareTime: '',
+      flag: 'add',
+      modifyIndex: -1,
+      columns: [
+        {
+          key: 'tradingPlaces',
+          title: '交易场所',
+          dataIndex: 'tradingPlaces',
+          align: 'center',
+          ellipsis: {
+            showTitle: false,
           },
-          {
-            key: 'otherTradingPlaces',
-            title: '其他交易场所',
-            dataIndex: 'otherTradingPlaces',
-            align: 'center',
-            ellipsis: {
-              showTitle: false,
-            },
-            render: (otherTradingPlaces, record) => (
-              <Tooltip
-                placement="topLeft"
-                title={record.tradingPlaces === '2007' ? otherTradingPlaces : ''}
-              >
-                <span>{record.tradingPlaces === '2007' ? otherTradingPlaces : ''}</span>
-              </Tooltip>
-            ),
+          render: tradingPlaces => this.getTradingPlaces(tradingPlaces),
+        },
+        {
+          key: 'otherTradingPlaces',
+          title: '其他交易场所',
+          dataIndex: 'otherTradingPlaces',
+          align: 'center',
+          ellipsis: {
+            showTitle: false,
           },
-          {
-            key: 'declareTime',
-            title: '申报受理日期',
-            dataIndex: 'declareTime',
-            width: 130,
-            align: 'center',
-            render: declareTime => <span>{declareTime.slice(0, 10)}</span>,
-          },
-        ],
-        columnsCopy:[
-          {
-            key: 'tradingPlaces',
-            title: '交易场所',
-            dataIndex: 'tradingPlaces',
-            align: 'center',
-            ellipsis: {
-              showTitle: false,
-            },
-            render: tradingPlaces => this.getTradingPlaces(tradingPlaces),
-          },
-          {
-            key: 'otherTradingPlaces',
-            title: '其他交易场所',
-            dataIndex: 'otherTradingPlaces',
-            align: 'center',
-            ellipsis: {
-              showTitle: false,
-            },
-            render: (otherTradingPlaces, record) => (
-              <Tooltip
-                placement="topLeft"
-                title={record.tradingPlaces === '2007' ? otherTradingPlaces : ''}
-              >
-                <span>{record.tradingPlaces === '2007' ? otherTradingPlaces : ''}</span>
-              </Tooltip>
-            ),
-          },
-          {
-            key: 'declareTime',
-            title: '申报受理日期',
-            dataIndex: 'declareTime',
-            width: 130,
-            align: 'center',
-            render: declareTime => <span>{declareTime.slice(0, 10)}</span>,
-          },
-          {
-            key: 'id',
-            title: '操作',
-            dataIndex: 'id',
-            width: 125,
-            align: 'center',
-            fixed: 'right',
-            render: (id, record) => (
-              <>
-                <Button onClick={() => this.modifyApplyInfo(record)} type="link" size="small">
-                  修改
-                </Button>
-                <Button onClick={() => this.deleteApplyInfo(record)} type="link" size="small">
-                  删除
-                </Button>
-              </>
-            ),
-          },
-        ],
-      };
-
+          render: (otherTradingPlaces, record) => (
+            <Tooltip
+              placement="topLeft"
+              title={record.tradingPlaces === '2007' ? otherTradingPlaces : ''}
+            >
+              <span>{record.tradingPlaces === '2007' ? otherTradingPlaces : ''}</span>
+            </Tooltip>
+          ),
+        },
+        {
+          key: 'declareTime',
+          title: '申报受理日期',
+          dataIndex: 'declareTime',
+          width: 130,
+          align: 'center',
+          render: declareTime => <span>{declareTime.slice(0, 10)}</span>,
+        },
+        {
+          key: 'id',
+          title: '操作',
+          dataIndex: 'id',
+          width: 125,
+          align: 'center',
+          fixed: 'right',
+          render: (id, record) => (
+            <>
+              <Button onClick={() => this.modifyApplyInfo(record)} type="link" size="small">
+                修改
+              </Button>
+              <Button onClick={() => this.deleteApplyInfo(record)} type="link" size="small">
+                删除
+              </Button>
+            </>
+          ),
+        },
+      ],
+    };
 
     getTradingPlaces = tradingPlaces => {
       const { tradingPlacesList } = this.props.data;
@@ -220,8 +182,8 @@ const ApplyModalForm = Form.create({ name: 'form_in_modal' })(
     };
 
     render() {
-      const { applyList, tradingPlaces, columns, flag, columnsCopy } = this.state;
-      const { visible, onCancel, onCreate, form, data,seriesCode } = this.props;
+      const { applyList, tradingPlaces, columns, flag } = this.state;
+      const { visible, onCancel, onCreate, form, data } = this.props;
       const { productFilterOption, tradingPlacesList } = data;
       const { getFieldDecorator } = form;
       const layout = {
@@ -236,24 +198,11 @@ const ApplyModalForm = Form.create({ name: 'form_in_modal' })(
           id="applyModal"
           visible={visible}
           title="补录信息"
-          // okText="确定"
+          okText="确定"
           onCancel={onCancel}
-          // onOk={() => onCreate(applyList)}
-          footer={seriesCode?[
-            <Button onClick={onCancel}>
-              取消
-            </Button>,
-          ]:[
-            <Button onClick={onCancel}>
-              取消
-            </Button>,
-            <Button type="primary" onClick={() => onCreate(applyList)}>
-              确定
-            </Button>,
-          ]}
-
+          onOk={() => onCreate(applyList)}
         >
-          {this.props.seriesCode?null:<Form {...layout} className={styles.applyForm}>
+          <Form {...layout} className={styles.applyForm}>
             <Row>
               <Col span={12}>
                 <Form.Item label="交易场所:">
@@ -295,19 +244,16 @@ const ApplyModalForm = Form.create({ name: 'form_in_modal' })(
                 </Form.Item>
               </Col>
             </Row>
-          </Form>}
-          {
-            this.props.seriesCode?null:<Button
+          </Form>
+          <Button
             type="primary"
             onClick={this.addApplyInfo}
             style={{ float: 'right', marginBottom: 10, zIndex: 999 }}
           >
             {flag === 'add' ? '添加一条申报信息' : '修改'}
           </Button>
-          }
-
           <Table
-            columns={seriesCode?columns:columnsCopy}
+            columns={columns}
             dataSource={applyList}
             // scroll={{ x: 1100 }}
             bordered
@@ -321,7 +267,7 @@ const ApplyModalForm = Form.create({ name: 'form_in_modal' })(
 
 class ApplyModal extends React.Component {
   state = {
-    visible: false
+    visible: false,
   };
 
   showModal = () => {
@@ -330,23 +276,16 @@ class ApplyModal extends React.Component {
       `/yss-awp-server/product/getReportOrPublish?proCode=${this.props.proCode}&type=report`,
     ).then(res => {
       if (res?.status === 200) {
-        if (res.data){
+        if (res.data)
           this.formRef.setState({
             applyList: res.data,
           });
-          if (!res.data.length&&this.props.seriesCode){
-            message.warn('由于项目关联的系列未维护申报数据，目前暂时无法获取相关信息')
-          }
-        }
       } else {
         message.warn(res.message);
       }
-      if (this.props.seriesCode&&!res.data.length){
-        this.setState({ visible: false });
-      }else{
-        this.setState({ visible: true });
-      }
     });
+
+    this.setState({ visible: true });
   };
 
   handleCancel = () => {
@@ -384,7 +323,7 @@ class ApplyModal extends React.Component {
   };
 
   render() {
-    const { data,seriesCode } = this.props;
+    const { data } = this.props;
 
     return (
       <>
@@ -397,7 +336,6 @@ class ApplyModal extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           data={data}
-          seriesCode={seriesCode}
         />
       </>
     );

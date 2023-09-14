@@ -14,6 +14,7 @@ import {
   Menu,
   Row,
   Select,
+  Table,
   message,
   Modal,
   Pagination,
@@ -32,7 +33,6 @@ import { getPath } from './func';
 import { downloadNoToken, filePreview } from '@/utils/download';
 import styles from './index.less';
 import { cloneDeep } from 'lodash';
-import { Table } from '@/components';
 import staticInstance from '@/utils/staticInstance';
 import png from '@/assets/electronic/picture.png';
 import file from '@/assets/electronic/file.png';
@@ -66,7 +66,6 @@ const Index = ({
     documentType,
     breakdown,
     documentTags,
-    proNameList,
   },
 }) => {
   // tabs code
@@ -117,7 +116,6 @@ const Index = ({
     documentTypeReq();
     breakdownReq();
     documentTagsReq();
-    proNameReq();
   }, []);
 
   // 展开搜索表单创建
@@ -309,14 +307,6 @@ const Index = ({
     });
   };
 
-  // 产品全称
-  const proNameReq = () => {
-    dispatch({
-      type: 'lifeCyclePRD/handleGetProNameAPI',
-      payload: null,
-    });
-  };
-
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: true,
@@ -479,13 +469,6 @@ const Index = ({
 
   const columns = [
     {
-      title: '产品全称',
-      dataIndex: 'proName',
-      key: 'proName',
-      sorter: true,
-      width: 400,
-    },
-    {
       title: '文档名称',
       dataIndex: 'fileName',
       key: 'fileName',
@@ -575,21 +558,6 @@ const Index = ({
       dataIndex: 'lastEditorPeople',
       key: 'lastEditorPeople',
       sorter: true,
-    },
-    {
-      title: '操作',
-      dataIndex: 'id',
-      key: 'id',
-      width: 91,
-      align: 'center',
-      fixed: 'right',
-      render: (text, record) => {
-        return (
-          <Button onClick={() => handleDownLoad(record)} type="link">
-            下载
-          </Button>
-        );
-      },
     },
   ];
 
@@ -1102,19 +1070,19 @@ const Index = ({
           </Row>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div className={styles.wrapButton}>
-              <Button className={styles.listButtons} onClick={handleDownLoad}>
+              <Button type="primary" className={styles.listButtons} onClick={handleDownLoad}>
                 下载
               </Button>
-              <Button className={styles.listButtons} onClick={handleCheck}>
+              <Button type="primary" className={styles.listButtons} onClick={handleCheck}>
                 查看
               </Button>
-              <Button className={styles.listButtons} onClick={handleVersion}>
+              <Button type="primary" className={styles.listButtons} onClick={handleVersion}>
                 文档版本
               </Button>
-              <Button className={styles.listButtons} onClick={handleRecord}>
+              <Button type="primary" className={styles.listButtons} onClick={handleRecord}>
                 流转记录
               </Button>
-              <Button className={styles.listButtons} onClick={handleSyncManage}>
+              <Button type="primary" className={styles.listButtons} onClick={handleSyncManage}>
                 同步至个人文档
               </Button>
             </div>
@@ -1201,7 +1169,7 @@ const Index = ({
           tagData={documentTags}
           selectData={selectData}
           handleSyncBack={syncBack}
-        />
+        ></SyncToPersonal>
         <Drawer
           title="生命周期文档"
           placement="right"
@@ -1220,13 +1188,6 @@ const Index = ({
                 xl: 48,
               }}
             >
-              <Col md={24} sm={24}>
-                <FormItem label="产品全称">
-                  {getFieldDecorator('proCodesCon')(
-                    handleMapList(proNameList, 'proCode', 'proName', 'multiple'),
-                  )}
-                </FormItem>
-              </Col>
               {leftTreeClickData && leftTreeClickData.code ? null : (
                 <Col md={24} sm={24}>
                   <FormItem label="档案大类" className={styles.commonItemCss}>
@@ -1238,7 +1199,14 @@ const Index = ({
               )}
               {leftTreeClickData && leftTreeClickData.label === '3' ? null : (
                 <Col md={24} sm={24}>
-                  <FormItem label="文档类型">
+                  <FormItem
+                    label="文档类型"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                    }}
+                  >
                     {getFieldDecorator('documentTypeList')(
                       handleMapList(documentType, 'FCODE', 'FNAME', 'multiple'),
                     )}
@@ -1246,7 +1214,14 @@ const Index = ({
                 </Col>
               )}
               <Col md={24} sm={24}>
-                <FormItem label="明细分类">
+                <FormItem
+                  label="明细分类"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                >
                   {getFieldDecorator('fileTypeList')(
                     handleMapList(breakdown, 'code', 'name', 'multiple'),
                   )}
@@ -1285,9 +1260,9 @@ const Index = ({
               )}
             </FormItem>
           </Col> */}
-              {leftTreeClickData && leftTreeClickData.code ? <Col md={24} sm={24} /> : null}
+              {leftTreeClickData && leftTreeClickData.code ? <Col md={24} sm={24}></Col> : null}
               {leftTreeClickData && leftTreeClickData.label === '3' ? (
-                <Col md={24} sm={24} />
+                <Col md={24} sm={24}></Col>
               ) : null}
               <Col
                 md={24}

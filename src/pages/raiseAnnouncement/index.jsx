@@ -33,18 +33,18 @@ class RaiseAnnouncement extends Component {
     sortField: '',
     columns: [
       {
-        key: 'proFname',
-        title: '产品简称',
-        dataIndex: 'proFname',
+        key: 'proName',
+        title: '产品全称',
+        dataIndex: 'proName',
         sorter: true,
-        width: 300,
+        width: 400,
         ellipsis: {
           showTitle: false,
         },
-        render: (proFname, record) => {
+        render: (proName, record) => {
           return (
-            <Tooltip title={proFname}>
-              <span>{proFname ? proFname : '-'}</span>
+            <Tooltip title={proName}>
+              <span>{proName ? proName : '-'}</span>
             </Tooltip>
           );
         },
@@ -54,7 +54,7 @@ class RaiseAnnouncement extends Component {
         title: '产品代码',
         dataIndex: 'proCode',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -71,7 +71,7 @@ class RaiseAnnouncement extends Component {
         title: '产品类型',
         dataIndex: 'proTypeName',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -88,7 +88,7 @@ class RaiseAnnouncement extends Component {
         title: '投资经理',
         dataIndex: 'investmentManager',
         sorter: true,
-        width: 250,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -105,7 +105,7 @@ class RaiseAnnouncement extends Component {
         title: '募集开始日',
         dataIndex: 'raiseSdate',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -122,7 +122,7 @@ class RaiseAnnouncement extends Component {
         title: '募集计划结束日',
         dataIndex: 'raiseEdateExpect',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -139,7 +139,7 @@ class RaiseAnnouncement extends Component {
         title: '任务到达时间',
         dataIndex: 'taskTime',
         sorter: true,
-        width: 180,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -156,7 +156,7 @@ class RaiseAnnouncement extends Component {
         title: '状态',
         dataIndex: 'operStatusName',
         sorter: true,
-        width: 150,
+        width: 200,
         ellipsis: {
           showTitle: false,
         },
@@ -173,7 +173,6 @@ class RaiseAnnouncement extends Component {
         title: '操作',
         dataIndex: 'option',
         // width: 250,
-        align: 'center',
         fixed: 'right',
         render: (val, record) => {
           const { taskType } = this.state;
@@ -184,12 +183,11 @@ class RaiseAnnouncement extends Component {
                   style={{
                     display:
                       (taskType == 'T001_1' || taskType == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.updateTable(val, record);
                   }}
@@ -202,12 +200,11 @@ class RaiseAnnouncement extends Component {
                   style={{
                     display:
                       (taskType == 'T001_1' || taskType == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.copyTable(val, record);
                   }}
@@ -220,12 +217,11 @@ class RaiseAnnouncement extends Component {
                   style={{
                     display:
                       (taskType == 'T001_1' || taskType == 'T001_4') &&
-                        record.operStatusName == '待提交'
+                      record.operStatusName == '待提交'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.submitTable(val, record);
                   }}
@@ -239,7 +235,6 @@ class RaiseAnnouncement extends Component {
                     display: record.operStatusName == '待提交' ? 'inline-block' : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.deleteTable(val, record);
                   }}
@@ -252,12 +247,11 @@ class RaiseAnnouncement extends Component {
                   style={{
                     display:
                       (taskType == 'T001_1' || taskType == 'T001_4') &&
-                        record.operStatusName == '流程中'
+                      record.operStatusName == '流程中'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.handleTable(val, record);
                   }}
@@ -271,13 +265,12 @@ class RaiseAnnouncement extends Component {
                     display:
                       ((taskType == 'T001_1' || taskType == 'T001_4') &&
                         record.operStatusName == '已结束') ||
-                        taskType == 'T001_3' ||
-                        taskType == 'T001_5'
+                      taskType == 'T001_3' ||
+                      taskType == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.lookDetail(val, record);
                   }}
@@ -291,13 +284,12 @@ class RaiseAnnouncement extends Component {
                     display:
                       ((taskType == 'T001_1' || taskType == 'T001_4') &&
                         record.operStatusName != '待提交') ||
-                        taskType == 'T001_3' ||
-                        taskType == 'T001_5'
+                      taskType == 'T001_3' ||
+                      taskType == 'T001_5'
                         ? 'inline-block'
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     handleShowTransferHistory(record);
                   }}
@@ -314,7 +306,6 @@ class RaiseAnnouncement extends Component {
                         : 'none',
                     marginRight: 10,
                   }}
-                  className="color526ECC"
                   onClick={() => {
                     this.revokeTable(val, record);
                   }}
@@ -325,16 +316,16 @@ class RaiseAnnouncement extends Component {
               {/* <Dropdown overlay={this.HandleGetMenu(val, record)} trigger={['click']}> */}
               {/* <Action code="raiseAnnouncement:more"> */}
               <a
-                className="ant-dropdown-link color526ECC"
+                className="ant-dropdown-link"
                 style={{
                   display:
                     (taskType == 'T001_1' || taskType == 'T001_4') &&
-                      record.operStatusName == '流程中'
+                    record.operStatusName == '流程中'
                       ? 'inline-block'
                       : 'none',
                   marginRight: 10,
                 }}
-              // onClick={e => e.preventDefault()}
+                // onClick={e => e.preventDefault()}
               >
                 {/* 更多 */}
                 <MoreOperation record={record} fn={this.getTableList} />
@@ -453,8 +444,6 @@ class RaiseAnnouncement extends Component {
     this.setState(
       {
         keyWords: value,
-        pageNum: 1,
-        pageSize: 10,
       },
       () => {
         this.handleGetTableList();
@@ -676,6 +665,7 @@ class RaiseAnnouncement extends Component {
       `?id=${record.id}&proCode=${record.proCode}&processInstanceId=${record.processInstanceId}&processInstId=${record.processInstanceId}`,
     );
   }
+
   /**
    *
    * @method 复制
@@ -767,6 +757,7 @@ class RaiseAnnouncement extends Component {
       }),
     );
   }
+
   /**
    * @method 删除
    * @param {*} val
@@ -799,6 +790,7 @@ class RaiseAnnouncement extends Component {
       },
     });
   }
+
   /**
    * @method 撤销
    * @param {*} val
@@ -852,6 +844,7 @@ class RaiseAnnouncement extends Component {
   callBackHandler = value => {
     this.setState({ columns: value });
   };
+
   /**
    * @method 渲染模板
    */
@@ -883,7 +876,7 @@ class RaiseAnnouncement extends Component {
         label: '产品全称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productDropList,
       },
       {
@@ -891,7 +884,7 @@ class RaiseAnnouncement extends Component {
         label: '产品类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: [
           { name: '小集合', code: 'A002_2' },
           { name: '大集合', code: 'A002_3' },
@@ -902,7 +895,7 @@ class RaiseAnnouncement extends Component {
         label: '投资经理',
         type: 'select',
         readSet: { name: 'name', code: 'empNo' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: investManagerNameList,
       },
       {
@@ -910,7 +903,7 @@ class RaiseAnnouncement extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.S001List,
       },
     ];
@@ -952,7 +945,7 @@ class RaiseAnnouncement extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 300 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1003,7 +996,7 @@ class RaiseAnnouncement extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1054,7 +1047,7 @@ class RaiseAnnouncement extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />
@@ -1105,7 +1098,7 @@ class RaiseAnnouncement extends Component {
                     dataSource={dataSource}
                     loading={loading}
                     columns={columns}
-                    scroll={{ x: true }}
+                    scroll={{ x: columns.length * 200 + 100 }}
                     pagination={false}
                     onChange={this.changeTable}
                   />

@@ -1,9 +1,8 @@
 /**
  * 产品看板-查看产品-产品数据
  */
-import React, { useContext, useRef, useEffect, useState } from 'react';
-import { Tabs, Row, Col, Table, Button, Spin, Modal, Input, DatePicker } from 'antd';
-import moment from 'moment/moment';
+import React, { useContext, useRef } from 'react';
+import { Tabs, Row, Col, Spin, Modal } from 'antd';
 import { errorBoundary } from '@/layouts/ErrorBoundary';
 import { connect, routerRedux } from 'dva';
 import MyContext from './myContext';
@@ -312,7 +311,7 @@ const ProductMessage = ({
    */
   const handleAddTabs = () => {
     return (
-      <Tabs defaultActiveKey="基础信息" tabPosition="right" onChange={handleCutTabs} className={styles.mTabs}>
+      <Tabs defaultActiveKey="基础信息" tabPosition="right" onChange={handleCutTabs}>
         <TabPane tab="基础信息" key="productInfo">
           <MyContext.Provider
             value={{

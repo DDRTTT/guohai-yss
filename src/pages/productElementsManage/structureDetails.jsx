@@ -28,14 +28,14 @@ class Index extends Component {
     const { record } = this.state;
     return (
       <>
-        <Card style={{ marginBottom: 20 }}>
-          <Breadcrumb style={{ marginTop: 7, }} >
+        <Card className={styles.detailCard}>
+          <Breadcrumb className={styles.breadcrumb} >
             <Breadcrumb.Item>产品要素管理</Breadcrumb.Item>
             <Breadcrumb.Item>查看产品要素表结构信息</Breadcrumb.Item>
           </Breadcrumb>
         </Card>
         <Card title='查看产品要素-表结构信息' extra={<a onClick={this.jumpBack}>返回</a>} >
-          <div style={{ padding: '0 40px' }}>
+          <div className={styles.detailCard1}>
             <Descriptions>
               <Descriptions.Item label="表名">--</Descriptions.Item>
               <Descriptions.Item label="数据库字段名">--</Descriptions.Item>

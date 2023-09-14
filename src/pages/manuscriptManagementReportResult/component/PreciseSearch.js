@@ -1,8 +1,15 @@
+/**
+ * 精确搜索
+ * author: jiaqiuhua
+ * * */
 import React from 'react';
 import { Breadcrumb, Button, Col, Row, Form, Select, Icon, DatePicker } from 'antd';
 import { handleFilterOption, datePickerFormat } from '@/pages/archiveTaskHandleList/util';
 import styles from './index.less';
 
+/**
+ * 组件：表单精确搜索
+ * **/
 const PreciseSearch = ({
   props: {
     form: { getFieldDecorator, resetFields, validateFields },

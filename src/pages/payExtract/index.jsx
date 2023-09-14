@@ -42,14 +42,15 @@ export default class Index extends Component {
       ...recoveryState,
       columns: [
         {
-          key: 'proFname',
-          dataIndex: 'proFname',
-          width: 250,
-          title: '产品简称',
-          render: (proFname, record) => {
+          key: 'proName',
+          dataIndex: 'proName',
+          width: 400,
+          title: '产品全称',
+          // render: columnTooltip,
+          render: (proName, record) => {
             return (
-              <Tooltip title={proFname}>
-                <span>{proFname ? proFname : '-'}</span>
+              <Tooltip title={proName}>
+                <span>{proName ? proName : '-'}</span>
               </Tooltip>
             );
           },
@@ -58,8 +59,9 @@ export default class Index extends Component {
         },
         {
           key: 'proCode',
-          width: 130,
+          width: 150,
           dataIndex: 'proCode',
+          // render: columnTooltip,
           render: (proCode, record) => {
             return (
               <Tooltip title={proCode}>
@@ -73,7 +75,7 @@ export default class Index extends Component {
         },
         {
           key: 'proType',
-          width: 130,
+          width: 120,
           dataIndex: 'proType',
           title: '产品类型',
           sorter: true,
@@ -87,7 +89,7 @@ export default class Index extends Component {
         },
         {
           key: 'clientType',
-          width: 150,
+          width: 120,
           dataIndex: 'clientType',
           title: '客户类型',
           sorter: true,
@@ -117,7 +119,7 @@ export default class Index extends Component {
         },
         {
           key: 'businessType',
-          width: 130,
+          width: 120,
           align: 'center',
           dataIndex: 'businessType',
           title: '业务类型',
@@ -148,7 +150,7 @@ export default class Index extends Component {
         },
         {
           key: 'affirmDate',
-          width: 130,
+          width: 120,
           dataIndex: 'affirmDate',
           title: '确认日期',
           sorter: true,
@@ -177,7 +179,7 @@ export default class Index extends Component {
         {
           key: 'operStatusName',
           dataIndex: 'operStatusName',
-          width: 130,
+          width: 100,
           title: '状态',
           sorter: true,
           render: (operStatusName, record) => {
@@ -190,10 +192,10 @@ export default class Index extends Component {
         },
         {
           title: '操作',
+          width: 250,
+          fixed: 'right',
           key: 'action',
           dataIndex: 'action',
-          fixed: 'right',
-          align: 'center',
           render: (text, record) => {
             // 待提交 S001_1   流程中S001_2  已结束 S001_3
             const { taskTypeCode } = this.state;
@@ -323,6 +325,25 @@ export default class Index extends Component {
     this.initTableData();
   }
 
+  columnTooltip = (text, record) => {
+    return (
+      <Tooltip title={text} placement="topLeft">
+        <span>{text}</span>
+      </Tooltip>
+    );
+  };
+  // 数字转带千分位字符串
+  numToString = num => {
+    let result = num;
+    if (num && !isNaN(num)) {
+      result = num.toFixed(2).replace(/(\d)(?=(\d{3})+\b)/g, '$1,');
+    }
+    if (typeof str === 'string') {
+      result = num.toLocaleString();
+    }
+    return result;
+  };
+
   /**
    * 初始化产品名称数据
    * * */
@@ -439,25 +460,22 @@ export default class Index extends Component {
     formValues.operStatus = formValues.operStatus ? formValues.operStatus.join() : '';
     formValues.clientName = formValues.clientName ? formValues.clientName.join() : '';
     formValues.proCode = formValues.proCode ? formValues.proCode.join() : '';
-    this.setState({ formValues, currentPage: 1, pageSize: 10 }, () => {
+    this.setState({ formValues }, () => {
       this.getTableData();
     });
   };
 
   // 重置
   handleReset = () => {
-    this.setState(
-      { formValues: {}, direction: '', field: '', keyWords: '', currentPage: 1, pageSize: 10 },
-      () => {
-        this.getTableData();
-      },
-    );
+    this.setState({ formValues: {}, direction: '', field: '', keyWords: '' }, () => {
+      this.getTableData();
+    });
   };
 
   /**
    *查询表格数据
    */
-  getTableData = () => {
+  getTableData() {
     const { pageSize, currentPage, taskTypeCode, formValues, direction, field } = this.state;
     const params = {
       keyWords: this.state.keyWords,
@@ -474,7 +492,7 @@ export default class Index extends Component {
         params,
       },
     });
-  };
+  }
 
   /**
    *
@@ -484,8 +502,6 @@ export default class Index extends Component {
     this.setState(
       {
         keyWords: keywords,
-        currentPage: 1,
-        pageSize: 10,
       },
       () => {
         this.getTableData();
@@ -849,29 +865,11 @@ export default class Index extends Component {
     this.setState({ columns: value });
   };
 
-  // 数字转带千分位字符串
-  numToString = num => {
-    let result = num;
-    if (num && !isNaN(num)) {
-      result = num.toFixed(2).replace(/(\d)(?=(\d{3})+\b)/g, '$1,');
-    }
-    if (typeof str === 'string') {
-      result = num.toLocaleString();
-    }
-    return result;
-  };
-
   render() {
     const { dataSource } = this.props.payExtract;
     const { tableLoading } = this.props;
     const { selectedRowKeys, taskTypeCode, batchList, columns } = this.state;
-    const columnTooltip = (text, record) => {
-      return (
-        <Tooltip title={text} placement="topLeft">
-          <span>{text}</span>
-        </Tooltip>
-      );
-    };
+
     const layout = {
       labelAlign: 'right',
       labelCol: { span: 8 },
@@ -889,7 +887,7 @@ export default class Index extends Component {
           dataSource={dataSource.rows}
           columns={columns}
           pagination={false}
-          scroll={{ x: true }}
+          scroll={{ x: 1500 }}
           loading={tableLoading}
           onChange={this.onTableChange}
         />
@@ -903,7 +901,7 @@ export default class Index extends Component {
         label: '产品名称',
         type: 'select',
         readSet: { name: 'proName', code: 'proCode', bracket: 'proCode' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: productName,
       },
       {
@@ -911,7 +909,7 @@ export default class Index extends Component {
         label: '客户类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.I009List,
       },
       {
@@ -919,7 +917,7 @@ export default class Index extends Component {
         label: '委托人',
         type: 'select',
         readSet: { name: 'clientName', code: 'id' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: clientDropList,
       },
       {
@@ -927,7 +925,7 @@ export default class Index extends Component {
         label: '业务类型',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.T005List,
       },
       {
@@ -935,7 +933,7 @@ export default class Index extends Component {
         label: '状态',
         type: 'select',
         readSet: { name: 'name', code: 'code' },
-        config: { mode: 'multiple' },
+        config: { mode: 'multiple', maxTagCount: 1 },
         option: dicts.S001List,
       },
     ];

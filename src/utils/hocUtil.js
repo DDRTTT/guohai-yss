@@ -8,7 +8,7 @@ let cache = {};
 
 const delay = (fn = () => {}, timer = void 0) => {
   return new Promise(resolve => {
-    setTimeout(item => {
+    setTimeout(() => {
       resolve();
       fn();
     }, timer);
@@ -20,9 +20,7 @@ const delay = (fn = () => {}, timer = void 0) => {
  * 必设属性：code 功能点唯一标识【menuCode:actionCode】 <br/>
  * 被 Action 包裹的组件只有在当前登录用户拥有 code 功能点权限时才会被渲染
  */
-export default authorizeHoc(props => {
-  return props.children;
-});
+export default authorizeHoc(props => props.children);
 
 /**
  * 权限验证器
@@ -33,15 +31,16 @@ export function authorizeHoc(WrappedComponent) {
   return connect(({ user }) => ({
     authorizes: user.authorizes,
   }))(({ authorizes, code, children }) => {
-    let visible = false;
+    let visible;
     const currentMenu = getCurrentMenu(authorizes, 'code', code.split(':')[0]);
     if (currentMenu) {
-      visible = currentMenu.actions;
-      visible ? (visible = visible.some(item => item.code === code)) : '';
+      let actions = currentMenu.actions;
+      actions && (visible = actions.some(item => item.code === code));
     }
     return visible ? <WrappedComponent key={code} children={children} /> : <></>;
   });
 }
+
 export function ActionBool(code) {
   let authorizes = JSON.parse(getSession('USER_MENU'));
   let visible = false;
@@ -66,7 +65,9 @@ export function getCurrentMenu(authorizes, key, value) {
   if (getSession(str)) {
     const o = JSON.parse(getSession(str));
     const { actions } = o;
-    for (const item of actions) obj[item.code] = `${item.uriFlag}${item.tabUri}`;
+    for (const item of actions) {
+      obj[item.code] = `${item.uriFlag}${item.tabUri}`;
+    }
     return o;
   }
   if (authorizes && Array.isArray(authorizes)) {

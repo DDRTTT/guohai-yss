@@ -105,7 +105,6 @@ export default class addInBatches extends Component {
   handleFileChange = info => {
     const { fileType } = this.state;
 
-    let arr;
     let fileList = info.fileList;
     fileList = fileList.filter(file => {
       if (file.response) {
@@ -357,12 +356,12 @@ export default class addInBatches extends Component {
                     <Col md={20} sm={24} style={{ paddingLeft: 0, paddingRight: 0 }}>
                       <div className={styless.uploadFile}>
                         <div style={{ marginBottom: 20 }}>
-                          <a href="javascript:;" onClick={this.visibleDownload}>
+                          <a href="javascript:" onClick={this.visibleDownload}>
                             下载模板
                           </a>
                         </div>
                         <div style={{ marginBottom: 20 }}>
-                          <a href="javascript:;" onClick={this.visibleUpLoad}>
+                          <a href="javascript:" onClick={this.visibleUpLoad}>
                             选择上传类型
                           </a>
                         </div>

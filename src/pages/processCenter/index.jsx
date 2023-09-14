@@ -270,17 +270,16 @@ const Single = ({
       title: '流程状态',
       dataIndex: 'processStatus',
       key: 'processStatus',
-      width: 140,
       render: text =>
         text &&
         text.length !== 0 &&
         text.map(item => {
           return item === '正常' ? (
-            <div className="success">{item}</div>
+            <Tag color="green">{item}</Tag>
           ) : item === '将要超时' ? (
-            <div className="warning">{item}</div>
+            <Tag color="orange">{item}</Tag>
           ) : item === '超时' || item === '催办' ? (
-            <div className="error">{item}</div>
+            <Tag color="red">{item}</Tag>
           ) : (
             ''
           );
@@ -290,17 +289,16 @@ const Single = ({
       title: '任务节点状态',
       dataIndex: 'taskStatus',
       key: 'taskStatus',
-      width: 140,
       render: text =>
         text &&
         text.length !== 0 &&
         text.map(item => {
           return item === '正常' ? (
-            <div className="success">{item}</div>
+            <Tag color="green">{item}</Tag>
           ) : item === '将要超时' ? (
-            <div className="warning">{item}</div>
+            <Tag color="orange">{item}</Tag>
           ) : item === '超时' || item === '催办' ? (
-            <div className="error">{item}</div>
+            <Tag color="red">{item}</Tag>
           ) : (
             ''
           );

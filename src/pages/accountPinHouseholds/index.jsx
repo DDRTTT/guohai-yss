@@ -615,168 +615,8 @@ const Index = ({
     },
     {
       title: '操作',
-      dataIndex: '操作',
-      key: '操作',
-      fixed: 'right',
-      render: (_, record) => {
-        switch (taskTypeCodeData.current) {
-          case 'T001_1':
-            switch (record.status) {
-              case '待提交':
-                return (
-                  <div>
-                    {handleAddButtonUpdate(record)}
-                    {handleAddButtonCommit(record)}
-                    {handleAddButtonDelete(record)}
-                  </div>
-                );
-              case '流程中':
-                if (record.revoke.toString() === '1') {
-                  return (
-                    <div>
-                      {handleAddButtonCheck(record)}
-                      {handleAddButtonTransferHistory(record)}
-                      {handleAddButtonBackOut(record)}
-                      <span style={{ paddingLeft: '-5px' }}>
-                        <MoreOperation record={record} fn={handleGetListData} />
-                      </span>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div>
-                      {handleAddButtonCheck(record)}
-                      {handleAddButtonTransferHistory(record)}
-                      <span style={{ paddingLeft: '-5px' }}>
-                        <MoreOperation record={record} fn={handleGetListData} />
-                      </span>
-                    </div>
-                  );
-                }
-              default:
-                '';
-            }
-          case 'T001_3':
-            switch (record.status) {
-              case '流程中':
-                if (record.revoke.toString() === '1') {
-                  return (
-                    <div>
-                      {handleAddButtonDetails(record)}
-                      {handleAddButtonTransferHistory(record)}
-                      {handleAddButtonBackOut(record)}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div>
-                      {handleAddButtonDetails(record)}
-                      {handleAddButtonTransferHistory(record)}
-                    </div>
-                  );
-                }
-              case '已结束':
-                return (
-                  <div>
-                    {handleAddButtonDetails(record)}
-                    {handleAddButtonTransferHistory(record)}
-                  </div>
-                );
-              default:
-                return '';
-            }
-          case 'T001_4':
-            return (
-              <div>
-                {handleAddButtonUpdate(record)}
-                {handleAddButtonCommit(record)}
-                {handleAddButtonDelete(record)}
-              </div>
-            );
-          case 'T001_5':
-            switch (record.status) {
-              case '流程中':
-                if (record.revoke.toString() === '1') {
-                  return (
-                    <div>
-                      {handleAddButtonDetails(record)}
-                      {handleAddButtonTransferHistory(record)}
-                      {handleAddButtonBackOut(record)}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div>
-                      {handleAddButtonDetails(record)}
-                      {handleAddButtonTransferHistory(record)}
-                    </div>
-                  );
-                }
-              case '已结束':
-                return (
-                  <div>
-                    {handleAddButtonDetails(record)}
-                    {handleAddButtonTransferHistory(record)}
-                  </div>
-                );
-              default:
-                return '';
-            }
-          default:
-            return '';
-        }
-      },
-    },
-  ];
-
-  // 表头(无时间)
-  const columnsNoTime = [
-    {
-      title: '账户类型',
-      dataIndex: 'accountTypeName',
-      key: 'accountTypeName',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '账户名称',
-      dataIndex: 'accountName',
-      key: 'accountName',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '产品全称',
-      dataIndex: 'proName',
-      key: 'proName',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '产品代码',
-      dataIndex: 'proCode',
-      key: 'proCode',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '是否需要备案',
-      dataIndex: 'needRecord',
-      key: 'needRecord',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      sorter: true,
-      ...tableRowConfig,
-    },
-    {
-      title: '操作',
-      dataIndex: '操作',
-      key: '操作',
+      key: 'action',
+      dataIndex: 'action',
       fixed: 'right',
       render: (_, record) => {
         switch (taskTypeCodeData.current) {
@@ -1060,13 +900,13 @@ const Index = ({
             {tableData(columns)}
           </TabPane>
           <TabPane tab="我发起" key="T001_3">
-            {tableData(columnsNoTime)}
+            {tableData(columns)}
           </TabPane>
           <TabPane tab="未提交" key="T001_4">
             {tableData(columns)}
           </TabPane>
           <TabPane tab="已办理" key="T001_5">
-            {tableData(columnsNoTime)}
+            {tableData(columns)}
           </TabPane>
         </Tabs>
       </Card>

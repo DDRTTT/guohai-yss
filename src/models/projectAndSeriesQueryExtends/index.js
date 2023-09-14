@@ -3,8 +3,6 @@ import {
   getSysTreeApi,
   getFileListApi,
   batchDelProExtendArchivedFileApi,
-  batchExtendArchivedFileApi,
-  downloadError
 } from '@/services/projectAndSeriesQueryExtends';
 import { cloneDeep } from 'lodash';
 
@@ -48,7 +46,7 @@ const model = {
     },
 
     // 获取已归档可继承的文档
-    *getFileListReq({ payload, callback }, { call, put }) {
+    *getFileListReq({ payload }, { call, put }) {
       const res = yield call(getFileListApi, payload);
       if (res && res.status === 200) {
         yield put({
@@ -62,32 +60,15 @@ const model = {
                 },
           },
         });
-        callback && callback();
       } else {
         message.error(res.message);
-      }
-    },
-
-    // 全部继承
-    *batchExtendArchivedFileReq({ payload, callback }, { call }) {
-      const res = yield call(batchExtendArchivedFileApi, payload);
-      if (typeof callback === 'function') {
-        callback(res);
-      }
-    },
-    *downloadErrorFile({ payload, callback }, { call }) {
-      const res = yield call(downloadError, payload);
-      if (typeof callback === 'function') {
-        callback(res);
       }
     },
 
     // 移除继承
     *batchDelProExtendArchivedFileReq({ payload, callback }, { call }) {
       const res = yield call(batchDelProExtendArchivedFileApi, payload);
-      if (typeof callback === 'function') {
-        callback(res);
-      }
+      callback && callback(res);
     },
   },
   reducers: {

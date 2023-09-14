@@ -78,7 +78,7 @@ const Done = errorBoundary(
   }))(DoneCom),
 );
 
-const RoleInfo = (// 点击去关联产品的弹窗页
+const RoleInfo = (
   {
     form: {
       getFieldDecorator,
@@ -126,8 +126,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   // Tree
   const [checkAllProductTreePro, setAllProductCheckTreePro] = useState([]);
   const [checkTreePro, setCheckTreePro] = useState([]);
-  const [checkGroupTreePro, setCheckGroupTreePro] = useState([]);// 由setGroupCheckTreePro 改为 setCheckGroupTreePro
-  const [treeNodes, setTreeNodes] = useState({ proTypes: [], groups: [] }); // 产品中心：产品分类、我的分组左侧树的选中情况
+  const [checkGroupTreePro, setGroupCheckTreePro] = useState([]);
   // Table
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // proCodes
   // 分组
@@ -145,10 +144,14 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   // 添加分组和产品弹框
   const [addNewGroupWithProModal, setAddNewGroupWithProModal] = useState(false);
   // 要授权产品的功能组件
+  const [checkedFunction, setCheckedFunction] = useState('');
   const [functionName, setFunctionName] = useState('');
   const [resultProData, setResultProData] = useState({});
   const [proCondition, setProCondition] = useState('');
-  const [pageSize, setPageSize] = useState(10);
+  const [pagination] = useState({
+    pageSize: 10,
+    currentPage: 1,
+  });
 
   const [leftTreeValue, setLeftTreeValue] = useState('');
   const [rightTreeValue, setRightTreeValue] = useState('');
@@ -160,6 +163,10 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   const [parameter2, setParameter2] = useState({});
   // 分页
   const [current2, setCurrent2] = useState(1);
+  const [pagination2] = useState({
+    pageSize: 10,
+    currentPage: 1,
+  });
   const sysIdStr = `${sysId}`;
 
   const changePageTabs = e => {
@@ -169,12 +176,6 @@ const RoleInfo = (// 点击去关联产品的弹窗页
       handleGetStationComponentData();
     }
   };
-
-  useEffect(() => {
-    const proTypes = checkTreePro && checkTreePro.length > 0 ? checkTreePro.filter(item => !item.includes('-')) : [];// 过滤父节点key（传参不需要）
-    const groups = checkGroupTreePro && checkGroupTreePro.length > 0 ? checkGroupTreePro.filter(item => !item.includes('-')) : [];
-    setTreeNodes({ proTypes, groups }); // 用于区分是否可以setSelectedRowKeys([]);且return
-  }, [checkTreePro, checkGroupTreePro])
 
   useEffect(() => {
     document.addEventListener('visibilitychange', changePageTabs, false);
@@ -195,25 +196,25 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   }, [SAVE_TEMP_PRO]);
 
   useEffect(() => {
-    if (sysIdStr === '1') {
+    if (sysIdStr === '1' || sysIdStr === '12') {
       // 产品分页
-      handleAllProduct({ pageSize, currentPage: current, ...parameter, proCondition });
+      handleAllProduct({ ...pagination, currentPage: current, ...parameter, proCondition });
     }
     if (sysIdStr === '4') {
       // 底稿产品分页
-      handleDGAllProduct({ pageSize, currentPage: current, keyWords, proType });
+      handleDGAllProduct({ ...pagination, currentPage: current, keyWords, proType });
     }
-  }, [current, parameter, proCondition, keyWords, proType, pageSize]);
+  }, [current, parameter, proCondition, keyWords, proType]);
 
   useEffect(() => {
     // 产品分页
     handleAllProduct2({
-      pageSize,
+      ...pagination2,
       currentPage: current2,
       ...parameter2,
       proCondition: proCondition2,
     });
-  }, [current2, parameter2, proCondition2, pageSize]);
+  }, [current2, parameter2, proCondition2]);
 
   useEffect(() => {
     const functions = saveRoleDetail?.functions ?? [];
@@ -223,6 +224,18 @@ const RoleInfo = (// 点击去关联产品的弹窗页
     functions.forEach(item => (functionsExistObj[item?.id] = item));
     setResultProData(functionsExistObj);
   }, [saveRoleDetail]);
+
+  useEffect(() => {
+    setFieldsValue({ checkedFunction: functionLabel[0]?.id });
+    const functionId = functionLabel[0]?.id;
+    const functionNames = functionLabel[0]?.name;
+    setCheckedFunction(functionId);
+    setFunctionName(functionNames);
+    // 反显已选择的产品
+    setSelectedRowKeys(resultProData[functionId]?.proCodes ?? []);
+    setCheckTreePro(resultProData[functionId]?.proTypes ?? []);
+    setGroupCheckTreePro(resultProData[functionId]?.groups ?? []);
+  }, [functionLabel]);
 
   useImperativeHandle(ref, () => ({
     handleSubmit: (setCurrent, updateId) => handleSubmit(setCurrent, updateId),
@@ -235,13 +248,12 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   const handleDealSelectMap = (
     data,
     Com,
-    changeHandle = () => { },
+    changeHandle = () => {},
     key = 'code',
     value = 'code',
     name = 'name',
     ret,
   ) => {
-    data = sysId === '1' ? data.filter(i => i.name !== '产品中心便捷授权隐藏组件') : data.filter(i => i.name !== '底稿系统便捷授权隐藏组件');
     return (
       data &&
       data.length !== 0 &&
@@ -309,9 +321,6 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   };
 
   const handleToArr = (item, fn = null, code = 'id') => {
-    if (item && item.length && item.length > 0) {
-      item = sysId === '1' ? item.filter(i => i.name !== '产品中心便捷授权隐藏组件') : item.filter(i => i.name !== '底稿系统便捷授权隐藏组件');
-    }
     const arr = [];
     if (item && Array.isArray(item)) {
       if (fn) {
@@ -389,36 +398,20 @@ const RoleInfo = (// 点击去关联产品的弹窗页
     },
   ];
 
-  const handleStandardTableChange = (current) => setCurrent(current);
+  const handleStandardTableChange = ({ current }) => setCurrent(current);
 
-  const handleStandardTableChange2 = (current) => setCurrent2(current);
-
-  function handleSizeChange(currentPage, size) {
-    setPageSize(size);
-    setCurrent(1);
-    setCurrent2(1);
-  }
+  const handleStandardTableChange2 = ({ current }) => setCurrent2(current);
 
   const handlePagination = {
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '40', '80'],
-    onShowSizeChange: handleSizeChange,
-    onChange: handleStandardTableChange,// handleStandardTableChange必须作为pagination的属性，不能直接作为Table的属性，否则分页会有问题
     showQuickJumper: true,
     current,
-    pageSize,
     total: SAVE_PRO_PAGINATION?.total ?? 0,
     showTotal: () => `共 ${SAVE_PRO_PAGINATION?.total} 条数据`,
   };
 
   const handlePagination2 = {
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '40', '80'],
-    onShowSizeChange: handleSizeChange,
-    onChange: handleStandardTableChange2,
     showQuickJumper: true,
     current: current2,
-    pageSize,
     total: SAVE_PRO_PAGINATION2?.total ?? 0,
     showTotal: () => `共 ${SAVE_PRO_PAGINATION2?.total} 条数据`,
   };
@@ -490,11 +483,11 @@ const RoleInfo = (// 点击去关联产品的弹窗页
     return [node?.key];
   };
 
-  const onTreeSelect = (selectedKeys, e, key) => {
-    const k = e.selected ? key : undefined;
+  const onTreeSelect = (selectedKeys, info, key) => {
+    const k = info.selected ? key : undefined;
 
     // 修复分类分组切换时，分页不重置
-    const selectedNodes = e.selectedNodes[0]?.key;
+    const selectedNodes = info.selectedNodes[0]?.key;
     if (currentPages.current !== selectedNodes) {
       setCurrent(1);
     }
@@ -506,12 +499,12 @@ const RoleInfo = (// 点击去关联产品的弹窗页
         setParameter({});
         break;
       case 'proType':
-        const proTypeList = childrenNode(e?.selectedNodes[0], [], 'key');
+        const proTypeList = childrenNode(info?.selectedNodes[0], [], 'key');
         setParameter({ proTypeList });
         sysIdStr === '4' && Array.isArray(proTypeList) && setProType(proTypeList.join());
         break;
       case 'myGroup':
-        const groupList = childrenNode(e?.selectedNodes[0], [], 'key');
+        const groupList = childrenNode(info?.selectedNodes[0], [], 'key');
         setMyGroupSelect(groupList);
         setParameter({ groupList });
         break;
@@ -532,34 +525,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
 
   const rowSelection = {
     selectedRowKeys,
-    onSelect: (record, selected, selectedRows, nativeEvent) => {
-      if (selected) {// 选中，先检测原回显的selectedRowKeys中是否有，没有才将选中的push进去
-        const code = record.proCode;
-        let rowKeys = selectedRowKeys;
-        if (!rowKeys.includes(code)) {
-          rowKeys.push(code);
-          setSelectedRowKeys(rowKeys);
-        }
-      } else {// 如果取消选中，则需要在原回显的selectedRowKeys中过滤掉，否则取消选中，再保存，还是会给后台传参，即bug描述中所说的：授权不生效！
-        const code = record.proCode;
-        const rowKeys = selectedRowKeys.filter(item => item !== code);
-        setSelectedRowKeys(rowKeys);
-      }
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      let rowKeys = selectedRowKeys;// 全选/全不选，需要在原来的 selectedRowKeys 基础上增加，或者删除
-      if (selected) {// 表格全选
-        selectedRows.forEach(item => {
-          rowKeys.push(item.proCode)
-        })
-        rowKeys = Array.from(new Set(rowKeys));// 去重
-        setSelectedRowKeys(rowKeys);
-      } else {// 表格全不选
-        rowKeys = rowKeys.filter(m => changeRows.every(n => n.proCode !== m));
-        rowKeys = rowKeys ? rowKeys : [];
-        setSelectedRowKeys(rowKeys);
-      }
-    },
+    onChange: selectedRowKeys => setSelectedRowKeys(selectedRowKeys),
   };
 
   // 仅保存组
@@ -609,132 +575,16 @@ const RoleInfo = (// 点击去关联产品的弹窗页
     });
   };
 
-  const handleOnCheck = (checkedKeys, e, key) => {// key为前端标识：proType/myGroup
-    const filterCheckedKeys = checkedKeys.filter(item => !item.includes('-'));// 过滤父节点key（传参不需要）
-    setCurrent(1);
-    setSelectedKeys(checkedKeys);
-
-    switch (key) {
+  const handleOnCheck = (checkedKeys, e, target) => {
+    switch (target) {
       case 'allProduct':
         setAllProductCheckTreePro(checkedKeys);
         break;
-      case 'proType':
+      case 'Tree':
         setCheckTreePro(checkedKeys);
-        if (sysId === '1') {// 产品中心，可以直接调取获取proCode接口，实现右侧选中和数据存储
-          if (filterCheckedKeys.length === 0) {// 当刷新表格数据接口、返回proCode结口传 proTypeList: []时（即父级tree全不选），报500（因为接口目前支持proTypeList要么不传，传必须是非空数组），传{}，默认展示产品类型所有数据
-            if (treeNodes.groups.length === 0) {
-              setParameter({});
-              setSelectedRowKeys([]);
-            } else {
-              // 根据选中效果，刷新表格数据
-              setParameter({ groupList: treeNodes.groups });
-              // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-              dispatch({
-                type: 'roleManagement/getProCodeByConditions',
-                payload: { groupList: treeNodes.groups }
-              }).then(res => {
-                const proCodes = res.data;
-                setSelectedRowKeys(proCodes);
-              })
-            }
-          } else {
-            // 根据选中效果，刷新表格数据
-            const params = treeNodes.groups.length > 0 ? { proTypeList: filterCheckedKeys, groupList: treeNodes.groups } : { proTypeList: filterCheckedKeys };
-            setParameter(params);
-            // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-            dispatch({
-              type: 'roleManagement/getProCodeByConditions',
-              payload: params
-            }).then(res => {
-              const proCodes = res.data;
-              setSelectedRowKeys(proCodes);
-            })
-          }
-        } else {// 底稿系统，需要根据已有接口组装proCode，赋值给 selectedRowKeys(此处需区分checked)
-          /**
-           * 20220715版优化：左侧选中，右侧表格展示合集
-           * 接口优化（连飞龙）：支持 proType 传多个，逗号隔开
-           */
-          if (e.checked) {// 如果选中    
-            let proCodes = [];
-            const proType = filterCheckedKeys.join(',');
-            setProType(proType);// 更新右侧表格数据
-            setPageSize(10000);
-            setCurrent(1);
-            dispatch({
-              type: 'roleManagement/getDGProducts',
-              payload: { pageSize: 10000, currentPage: 1, keyWords, proType }// pageSize 给极大值，一次获取所有数据，实现跨分页全选
-            }).then(res => {
-              const rows = res?.rows;
-              if (rows && rows.length > 0) {
-                rows.forEach(item => {
-                  proCodes.push(item.proCode);
-                })
-              }
-              setSelectedRowKeys(proCodes);
-            })
-          } else {// 取消选中
-            if (filterCheckedKeys.length === 0) {
-              setPageSize(10);
-              setCurrent(1);
-              setProType('');
-              setSelectedRowKeys([]);
-            } else {
-              let noCodes = []; // 取消选中的 proCodes 集合
-              const soloProType = e.node ? e.node.props.eventKey : '';// 当前取消选中的项
-              const proType = filterCheckedKeys.join(',');// 取消选中后，仍然选中的项
-              setProType(proType);// 更新右侧表格数据
-              setPageSize(10000);
-              setCurrent(1);
-              dispatch({
-                type: 'roleManagement/getDGProducts',
-                payload: { pageSize: 10000, currentPage: 1, keyWords, proType: soloProType }
-              }).then(res => {
-                const rows = res?.rows;
-                if (rows && rows.length > 0) {
-                  rows.forEach(item => {
-                    noCodes.push(item.proCode);
-                  })
-                  let rowKeys = selectedRowKeys.filter(m => noCodes.every(n => n !== m));// 仅当取消选中项返回非空数组，才从rowKeys 中过滤；否则 rowKeys 保持不变
-                  rowKeys = rowKeys ? rowKeys : [];
-                  setSelectedRowKeys(rowKeys);
-                }
-              })
-            }
-          }
-        }
         break;
       case 'myGroup':
-        setCheckGroupTreePro(checkedKeys);
-        if (filterCheckedKeys.length === 0) {// 当刷新表格数据接口、返回proCode结口传 groupList: []时（即父级tree全不选），报500（因为接口目前支持proTypeList要么不传，传必须是非空数组-感觉接口设计有问题，导致前端要做很多逻辑限制！不然一旦groupList或者proTypeList传了空数组，就报500！），传{}，默认展示产品类型所有数据
-          if (treeNodes.proTypes.length === 0) {// 产品类型也无选中项，则页面初始化（左侧树和右侧表格都初始化）
-            setParameter({});
-            setSelectedRowKeys([]);
-          } else {// 产品类型有之前选中的，需要回显
-            // 根据选中效果，刷新表格数据
-            setParameter({ proTypeList: treeNodes.proTypes });
-            // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-            dispatch({
-              type: 'roleManagement/getProCodeByConditions',
-              payload: { proTypeList: treeNodes.proTypes }
-            }).then(res => {
-              const proCodes = res.data;
-              setSelectedRowKeys(proCodes);
-            })
-          }
-        } else {
-          // 根据选中效果，刷新表格数据
-          const params = treeNodes.proTypes.length > 0 ? { proTypeList: treeNodes.proTypes, groupList: filterCheckedKeys } : { groupList: filterCheckedKeys };
-          setParameter(params);
-          // 请求获取对应的所有符合条件的proCode，并赋值给 selectedRowKeys，用数据驱动页面回显效果
-          dispatch({
-            type: 'roleManagement/getProCodeByConditions',
-            payload: params
-          }).then(res => {
-            const proCodes = res.data;
-            setSelectedRowKeys(proCodes);
-          })
-        }
+        setGroupCheckTreePro(checkedKeys);
         break;
       default:
         break;
@@ -853,7 +703,6 @@ const RoleInfo = (// 点击去关联产品的弹窗页
   const addStationComponents = () => {
     window.open('/authority/positionManagement', '_blank');
   };
-
   return [
     <Form {...formItemLayout} id="area" key="1">
       <Form.Item label="归属系统">
@@ -963,15 +812,15 @@ const RoleInfo = (// 点击去关联产品的弹窗页
               setResultProData(b);
             }}
           >
-            {
-              handleDealSelectMap(
-                [...(tags['01'] || []), ...(tags['02'] || [])],
-                Option,
-                null,
-                'id',
-                'id',
-              )
-            }
+            {sysId
+              ? handleDealSelectMap(
+                  [...(tags['01'] || []), ...(tags['02'] || [])],
+                  Option,
+                  null,
+                  'id',
+                  'id',
+                )
+              : []}
           </Select>,
         )}
         <Icon className={styles.plusBtn} type="plus-circle" onClick={addFunctionalComponents} />
@@ -987,12 +836,13 @@ const RoleInfo = (// 点击去关联产品的弹窗页
             getPopupContainer={() => document.getElementById('area')}
             optionFilterProp="children"
           >
-            {handleDealSelectMap(savePositionsList, Option, null, 'id', 'id')}
+            {sysId ? handleDealSelectMap(savePositionsList, Option, null, 'id', 'id') : []}
           </Select>,
         )}
         <Icon className={styles.plusBtn} type="plus-circle" onClick={addStationComponents} />
       </Form.Item>
-      {!!strategy && (
+      {/* 招募说明书的sysId=1 的时候不展示数据策略组件 */}
+      {!!strategy && sysId!=='1' && (
         <Form.Item label="数据策略组件">
           {getFieldDecorator('dataStrategies', {
             rules: [{ required: !!strategy, message: '请选择数据策略组件' }],
@@ -1000,7 +850,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
           })(<CheckboxGroup options={strategy} />)}
         </Form.Item>
       )}
-      {!!strategy && (
+      {/* {!!strategy && (
         <Form.Item label="产品关联">
           <a
             onClick={() => {
@@ -1015,33 +865,25 @@ const RoleInfo = (// 点击去关联产品的弹窗页
               setProCondition('');
               setParameter({});
               setSelectedKeys([]);
-              if (sysIdStr === '1') {
+              if (sysIdStr === '1' || sysIdStr === '12') {
                 // 产品分页
                 handleAllProduct({
-                  pageSize,
+                  ...pagination,
                   currentPage: current,
                   ...parameter,
                   proCondition,
                 });
-                const functionId = 3;
-                setSelectedRowKeys(resultProData[functionId]?.proCodes ?? []);
-                setCheckTreePro(resultProData[functionId]?.proTypes ?? []);// 产品分类树的回显
-                setCheckGroupTreePro(resultProData[functionId]?.groups ?? []);// 我的分组树的回显
               }
               if (sysIdStr === '4') {
                 // 底稿产品分页
-                handleDGAllProduct({ pageSize, currentPage: current, keyWords, proType });
-                const functionId = 4;
-                setSelectedRowKeys(resultProData[functionId]?.proCodes ?? []);
-                setCheckTreePro(resultProData[functionId]?.proTypes ?? []);// 产品分类树的回显
-                setCheckGroupTreePro(resultProData[functionId]?.groups ?? []);// 我的分组树的回显
+                handleDGAllProduct({ ...pagination, currentPage: current, keyWords, proType });
               }
             }}
           >
             点击去关联产品
           </a>
         </Form.Item>
-      )}
+      )}  */}
     </Form>,
     <Modal
       destroyOnClose
@@ -1073,7 +915,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
       </Form>
     </Modal>,
     <Modal
-      zIndex={99}
+      zIndex={999}
       key="3"
       destroyOnClose
       width={'70%'}
@@ -1087,30 +929,35 @@ const RoleInfo = (// 点击去关联产品的弹窗页
         const proTypes = checkTreePro.filter(item => !item.includes('-'));
         // 产品分组
         const groups = checkGroupTreePro.filter(item => !item.includes('-'));
-        const checkedFunction = sysId === '1' ? 3 : 4;
         const addProData = {
           proCodes,
           proTypes,
           groups,
         };
-        // 确认关联的逻辑调整: 已选择组件仅展示，当新建/修改角色选择【产品中心】时，id 传 3；选择【底稿系统】时， id 传 4
-        setResultProData({
-          ...resultProData,
-          [checkedFunction]: { ...addProData, id: checkedFunction },
-        });
-        setAddProduct(false);
-        setAllProductCheckTreePro([]);
-        setCheckTreePro([]);
-        setCheckGroupTreePro([]);
-        setSelectedRowKeys([]);
-        const text = flagType === 'update' ? '更新角色' : '创建角色';
-        message.success(`产品关联成功，${text}后生效`);
-
+        if (
+          checkedFunction &&
+          (proCodes?.length !== 0 || proTypes?.length !== 0 || groups?.length !== 0)
+        ) {
+          setResultProData({
+            ...resultProData,
+            [checkedFunction]: { ...addProData, id: checkedFunction },
+          });
+          setAddProduct(false);
+          setAllProductCheckTreePro([]);
+          setCheckTreePro([]);
+          setGroupCheckTreePro([]);
+          setSelectedRowKeys([]);
+          setCheckedFunction('');
+          const text = flagType === 'update' ? '更新角色' : '创建角色';
+          message.success(`${functionName}组件与产品关联成功，${text}后生效`);
+        } else {
+          message.warn('请选择组和产品，再确认关联');
+        }
       }}
       onCancel={() => {
         setAllProductCheckTreePro([]);
         setCheckTreePro([]);
-        setCheckGroupTreePro([]);
+        setGroupCheckTreePro([]);
         setSelectedRowKeys([]);
         setAddProduct(false);
       }}
@@ -1120,7 +967,23 @@ const RoleInfo = (// 点击去关联产品的弹窗页
           <Col span={24}>
             <Form>
               <Form.Item label="已选择组件">
-                {handleDealSelectMap(functionLabel, Tag, null, 'id', 'id', 'name')}
+                {getFieldDecorator('checkedFunction')(
+                  <Radio.Group
+                    onChange={e => {
+                      console.log(functionLabel);
+                      const functionId = e.target.value;
+                      const functionNames = e.target.dataname;
+                      setCheckedFunction(functionId);
+                      setFunctionName(functionNames);
+                      // 反显已选择的产品
+                      setSelectedRowKeys(resultProData[functionId]?.proCodes ?? []);
+                      setCheckTreePro(resultProData[functionId]?.proTypes ?? []);
+                      setGroupCheckTreePro(resultProData[functionId]?.groups ?? []);
+                    }}
+                  >
+                    {handleDealSelectMap(functionLabel, Radio, null, 'id', 'id', 'name')}
+                  </Radio.Group>,
+                )}
               </Form.Item>
             </Form>
           </Col>
@@ -1134,7 +997,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                     placeholder="请输入产品代码或产品名称"
                     allowClear={true}
                     onSearch={value => {
-                      if (sysIdStr === '1') {
+                      if (sysIdStr === '1' || sysIdStr === '12') {
                         setProCondition(value);
                       }
                       if (sysIdStr === '4') {
@@ -1144,24 +1007,22 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                     }}
                     style={{ width: 180, margin: 10 }}
                   />
-                  {/* 注意：产品分类和我的分组在左侧树是分开的树，但是右侧共用一个表格，在实现时：先选择【产品分类-集合】，有379条数据全选，再选择【我的分组-测试4】，有1条数据选中；当取消测试4时，对于分组myGroup而言，filterCheckedKeys是空数组，则会setSelectedRowKeys为[]，但实际上，应该只将测试4的那条数组取消选中！ */}
                   <Tree
                     checkable
-                    onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'proType')}
-                    onSelect={(selectedKeys, e) => onTreeSelect(selectedKeys, e, 'proType')}
+                    onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'Tree')}
+                    onSelect={(selectedKeys, info) => onTreeSelect(selectedKeys, info, 'proType')}
                     selectedKeys={selectedKeys}
                     checkedKeys={checkTreePro}
                   >
-                    {/* 产品中心-产品分类 */}
-                    {sysIdStr === '1' && renderTreeNodes(SAVE_PRO_TREE, 'spare')}
-                    {/* 底稿系统-项目分类、系列分类 */}
+                    {(sysIdStr === '1' || sysIdStr === '12') &&
+                      renderTreeNodes(SAVE_PRO_TREE, 'spare')}
                     {sysIdStr === '4' && renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
                   </Tree>
-                  {sysIdStr === '1' && (//产品中心特有：我的分组
+                  {(sysIdStr === '1' || sysIdStr === '12') && (
                     <Tree
                       checkable
                       onCheck={(checkedKeys, e) => handleOnCheck(checkedKeys, e, 'myGroup')}
-                      onSelect={(selectedKeys, e) => onTreeSelect(selectedKeys, e, 'myGroup')}
+                      onSelect={(selectedKeys, info) => onTreeSelect(selectedKeys, info, 'myGroup')}
                       selectedKeys={selectedKeys}
                       checkedKeys={checkGroupTreePro}
                     >
@@ -1169,7 +1030,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                     </Tree>
                   )}
                 </Col>
-                {sysIdStr === '1' && [
+                {(sysIdStr === '1' || sysIdStr === '12') && [
                   <Col span={8}>
                     <div className={styles.box} onClick={() => setAddNewGroupModal(true)}>
                       <Tooltip title="添加分组">
@@ -1220,6 +1081,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                 loading={GET_PRO_PAGINATION_FETCH_LOADING}
                 pagination={handlePagination}
                 rowSelection={rowSelection}
+                onChange={handleStandardTableChange}
               />
             </Content>
           </Layout>
@@ -1227,7 +1089,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
       </>
     </Modal>,
     <Modal
-      zIndex={100}
+      // zIndex={9}
       key="4"
       destroyOnClose
       style={{ width: '90%' }}
@@ -1289,7 +1151,6 @@ const RoleInfo = (// 点击去关联产品的弹窗页
           type: 'roleManagement/SAVE_TEMP_PRO',
           payload: [],
         });
-        setLeftTreeValue('');
       }}
       mask={false}
     >
@@ -1313,13 +1174,8 @@ const RoleInfo = (// 点击去关联产品的弹窗页
               treeDefaultExpandAll
               value={leftTreeValue}
               onChange={e => {
-                if (e) {// 防止清空查询条件时，给后台传 [null]
-                  setParameter2({ proTypeList: [e] });
-                } else {
-                  setParameter2({});// 清空查询条件时，赋初始值
-                }
+                setParameter2({ proTypeList: [e] });
                 setLeftTreeValue(e);
-                setCurrent2(1);
               }}
             >
               {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
@@ -1360,17 +1216,34 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                 }
               },
             }}
+            onChange={handleStandardTableChange2}
           />
         </Col>
         <Col span={1} />
         <Col span={11} style={{ position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+            {/*            <Search
+              allowClear
+              placeholder="请输入产品代码或产品名称"
+              // onSearch={value => console.log(value)}
+              style={{ width: 200 }}
+            /> */}
+            <TreeSelect
+              allowClear
+              style={{ width: 200 }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              placeholder="请选择"
+              treeDefaultExpandAll
+              value={rightTreeValue}
+              onChange={e => setRightTreeValue(e)}
+            >
+              {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
+            </TreeSelect>
           </div>
           <div
             style={{
               height: 440,
               overflowY: 'scroll',
-              marginTop: 50,
             }}
           >
             {SAVE_TEMP_PRO.map(i => {
@@ -1435,7 +1308,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
       title="修改分组"
       onOk={handleEditProduct2Group}
       onCancel={() => setEditGroupModal(false)}
-      afterClose={() => { }}
+      afterClose={() => {}}
     >
       <Spin spinning={!!SAVE_PRODUCT_TO_GROUP_FETCH_LOADING}>
         <Row>
@@ -1458,13 +1331,8 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                 treeDefaultExpandAll
                 value={leftTreeValue}
                 onChange={e => {
-                  if (e) {// 防止清空查询条件时，给后台传 [null]
-                    setParameter2({ proTypeList: [e] });
-                  } else {
-                    setParameter2({});// 清空查询条件时，赋初始值
-                  }
+                  setParameter2({ proTypeList: [e] });
                   setLeftTreeValue(e);
-                  setCurrent2(1);
                 }}
               >
                 {renderTreeNodes2(SAVE_PRO_TREE, 'spare')}
@@ -1503,11 +1371,18 @@ const RoleInfo = (// 点击去关联产品的弹窗页
                   }
                 },
               }}
+              onChange={handleStandardTableChange2}
             />
           </Col>
           <Col span={1} />
           <Col span={11} style={{ position: 'relative' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+              {/* <Search
+                allowClear
+                placeholder="请输入产品代码或产品名称"
+                // onSearch={value => console.log(value)}
+                style={{ width: 200 }}
+              /> */}
             </div>
             <div
               style={{
@@ -1545,7 +1420,7 @@ const RoleInfo = (// 点击去关联产品的弹窗页
 
 const RoleInfoWrapper = forwardRef(RoleInfo);
 
-const RoleAdd = ({// 点击修改/新建角色的页面
+const RoleAdd = ({
   form,
   dispatch,
   roleManagement: {
@@ -1577,9 +1452,10 @@ const RoleAdd = ({// 点击修改/新建角色的页面
 }) => {
   const strategy = {
     1: authorizationStrategy, // 产品生命周期策略
+    12: authorizationStrategy, // 对客服务平台策略
     4: manuscriptStrategy, // 底稿策略
   };
-
+  console.log(authorizationStrategy)
   const childRef = useRef();
   // 步骤
   const [current, setCurrent] = useState(0);
@@ -1600,7 +1476,6 @@ const RoleAdd = ({// 点击修改/新建角色的页面
   const sysIdStr = `${sysId}`;
 
   useEffect(() => {
-
     dispatch({
       type: 'roleManagement/saveRoleDetail',
       payload: {},
@@ -1624,6 +1499,10 @@ const RoleAdd = ({// 点击修改/新建角色的页面
       type: 'workSpace/GET_USER_SYSID_FETCH',
     });
 
+    // 产品类树
+    // dispatch({
+    //   type: `roleManagement/GET_PRO_TREE_FETCH`,
+    // });
 
     // 获取我的产品分组
     dispatch({
@@ -1676,7 +1555,7 @@ const RoleAdd = ({// 点击修改/新建角色的页面
         payload: sysId,
       });
 
-      if (sysIdStr === '1') {
+      if (sysIdStr === '1' || sysIdStr === '12') {
         // 产品类树
         dispatch({
           type: `roleManagement/GET_PRO_TREE_FETCH`,
@@ -1705,7 +1584,7 @@ const RoleAdd = ({// 点击修改/新建角色的页面
     });
   };
 
-  // 底稿系统查询产品-分页
+  // 产品中心查询产品-分页
   const handleDGAllProduct = item => {
     dispatch({
       type: 'roleManagement/GET_DG_PRO_PAGINATION_FETCH',
@@ -1927,7 +1806,7 @@ const RoleAdd = ({// 点击修改/新建角色的页面
           // 岗位权限树 Array<>
           savePositionsTree={savePositionsTree}
           // 功能组件 Array<>
-          tags={tags['02']}
+          tags={[...(tags['01'] || []), ...(tags['02'] || [])]}
           // 岗位组件  Array<>
           positionsList={savePositionsList}
           // 选中的 功能组件id Array<>

@@ -397,7 +397,7 @@ class Index extends Component {
                 </Button>
               </Action>
               <Action code="contractList:delete">
-                {record.revoke == '1' ? (
+                {record.revoke === '1' ? (
                   <Button
                     type="link"
                     onClick={() => this.handleCanDelete(record, this.handleResetView)}
@@ -422,7 +422,7 @@ class Index extends Component {
               <Button type="link" onClick={() => handleShowTransferHistory(record)}>
                 流转历史
               </Button>
-              {record.revoke == '1' ? (
+              {record.revoke === '1' ? (
                 <Button
                   type="link"
                   onClick={() => this.handleCanBackOut(record, this.handleResetView)}
@@ -470,7 +470,7 @@ class Index extends Component {
           <Button type="link" onClick={() => handleShowTransferHistory(record)}>
             流转历史
           </Button>
-          {record.revoke == '1' && record.billowsStatus === 'S001_2' ? (
+          {record.revoke === '1' && record.billowsStatus === 'S001_2' ? (
             <Button type="link" onClick={() => this.handleCanBackOut(record, this.handleResetView)}>
               撤销
             </Button>
